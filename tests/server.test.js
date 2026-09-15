@@ -453,5 +453,61 @@ test('32. Login identifier auto-detects email or phone when method is omitted', 
   assert.ok(phoneLoginRes.data.data.phone.includes('9988776655'));
 });
 
+test('33. GET /api/holidays returns packages and supports filtering', async () => {
+  const allRes = await requestJson('/api/holidays');
+  assert.strictEqual(allRes.status, 200);
+  assert.strictEqual(allRes.data.success, true);
+  assert.ok(Array.isArray(allRes.data.data));
+  assert.ok(allRes.data.data.length >= 8);
 
+  // Filter by category
+  const intlRes = await requestJson('/api/holidays?category=international');
+  assert.strictEqual(intlRes.status, 200);
+  assert.ok(intlRes.data.data.every(p => p.category.toLowerCase() === 'international'));
 
+  // Filter by destination
+  const goaRes = await requestJson('/api/holidays?destination=Goa');
+  assert.strictEqual(goaRes.status, 200);
+  assert.ok(goaRes.data.data.some(p => p.destination.includes('Goa')));
+
+  // Filter by maxPrice
+  const budgetRes = await requestJson('/api/holidays?maxPrice=25000');
+  assert.strictEqual(budgetRes.status, 200);
+  assert.ok(budgetRes.data.data.every(p => p.price <= 25000));
+});
+
+test('34. GET /api/holidays/:id returns single package or 404', async () => {
+  const validRes = await requestJson('/api/holidays/HOL-101');
+  assert.strictEqual(validRes.status, 200);
+  assert.strictEqual(validRes.data.success, true);
+  assert.strictEqual(validRes.data.data.id, 'HOL-101');
+  assert.ok(Array.isArray(validRes.data.data.itinerary));
+
+  const notFoundRes = await requestJson('/api/holidays/non-existent-pkg');
+  assert.strictEqual(notFoundRes.status, 404);
+  assert.strictEqual(notFoundRes.data.success, false);
+});
+
+test('35. POST /api/bookings supports holiday package bookings', async () => {
+  const bookRes = await requestJson('/api/bookings', {
+    method: 'POST',
+    body: {
+      type: 'holiday',
+      title: 'Romantic Goa Getaway Package',
+      date: '2026-10-15',
+      totalAmount: 18999,
+      destination: 'Goa, India',
+      duration: '4 Days / 3 Nights',
+      packageId: 'hol-01',
+      passengers: [
+        { name: 'Alex Johnson', age: 30, gender: 'Male' },
+        { name: 'Maria Johnson', age: 28, gender: 'Female' }
+      ]
+    }
+  });
+  assert.strictEqual(bookRes.status, 201);
+  assert.strictEqual(bookRes.data.success, true);
+  assert.strictEqual(bookRes.data.data.type, 'holiday');
+  assert.ok(bookRes.data.data.id.startsWith('EZ-'));
+  assert.ok(bookRes.data.data.pnr);
+});

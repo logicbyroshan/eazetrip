@@ -18,6 +18,11 @@ export const HERO_BACKDROPS = {
     url: 'https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=1920&auto=format&fit=crop&q=85',
     title: 'Traverse Alpine Peaks & Scenic Rail Canyons.',
     subtitle: 'IRCTC authorized train bookings, live PNR status & guaranteed confirmation alerts.'
+  },
+  holidays: {
+    url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&auto=format&fit=crop&q=85',
+    title: 'Curated Holiday Packages & Dream Vacations.',
+    subtitle: 'All-inclusive domestic & international holiday tour packages with flights, luxury stays & sightseeing.'
   }
 };
 

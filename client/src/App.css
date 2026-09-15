@@ -8941,6 +8941,542 @@ input[type="radio"]:focus-visible {
   }
 }
 
+/* ==========================================================================
+   HOLIDAYS & TOUR PACKAGES STYLES
+   ========================================================================== */
+.tab-icon-circle.holiday-bg {
+  background: #fff7ed;
+}
+
+.hero-tab-btn.active .tab-icon-circle.holiday-bg {
+  background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
+}
+
+.hero-tab-btn.active .tab-icon-circle.holiday-bg svg path {
+  stroke: #ffffff;
+  fill: #ffffff;
+}
+
+.search-widget-box.holiday-widget {
+  padding-top: 10px;
+}
+
+.search-fields-grid.holiday-grid {
+  grid-template-columns: 2fr 1.3fr 1.3fr 1.4fr;
+  gap: 12px;
+}
+
+.holiday-submit-btn {
+  background: linear-gradient(135deg, #ea580c 0%, #f97316 100%) !important;
+  box-shadow: 0 8px 24px rgba(234, 88, 12, 0.35) !important;
+}
+
+.holiday-submit-btn:hover {
+  box-shadow: 0 12px 30px rgba(234, 88, 12, 0.45) !important;
+}
+
+.native-field-select {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #0f172a;
+  outline: none;
+  cursor: pointer;
+  padding: 8px 0;
+}
+
+.fare-chip-btn {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.fare-chip-btn:hover {
+  border-color: #f97316;
+  color: #ea580c;
+}
+
+.fare-chip-btn.active {
+  background: #fff7ed;
+  border-color: #ea580c;
+  color: #ea580c;
+}
+
+/* Holiday Listing Cards */
+.holiday-cards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.luxury-holiday-card {
+  display: grid;
+  grid-template-columns: 300px 1fr 240px;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+}
+
+.luxury-holiday-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.08);
+  border-color: #fed7aa;
+}
+
+.holiday-img-col {
+  position: relative;
+  height: 100%;
+  min-height: 220px;
+}
+
+.holiday-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.holiday-duration-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(15, 23, 42, 0.82);
+  backdrop-filter: blur(8px);
+  color: #ffffff;
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.holiday-category-badge {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  background: rgba(234, 88, 12, 0.92);
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.holiday-discount-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #16a34a;
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.holiday-content-col {
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-right: 1px solid #f1f5f9;
+}
+
+.holiday-rating-strip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.star-badge {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #b45309;
+  background: #fef3c7;
+  padding: 2px 7px;
+  border-radius: 6px;
+}
+
+.reviews-text {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.verified-pill {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #034ea2;
+  background: #eff6ff;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+.holiday-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 6px 0;
+  font-family: 'Outfit', sans-serif;
+  line-height: 1.3;
+}
+
+.holiday-dest {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.85rem;
+  color: #475569;
+}
+
+.holiday-stays-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.stay-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.holiday-inclusions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.inclusion-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: #334155;
+  font-weight: 500;
+}
+
+.holiday-price-col {
+  padding: 22px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: #fbfcfe;
+  text-align: right;
+}
+
+.orig-price {
+  text-decoration: line-through;
+  color: #94a3b8;
+  font-size: 0.85rem;
+}
+
+.main-price {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 2px;
+  color: #0f172a;
+  margin: 2px 0;
+}
+
+.main-price .curr {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ea580c;
+}
+
+.main-price strong {
+  font-size: 1.85rem;
+  font-weight: 800;
+  font-family: 'Outfit', sans-serif;
+  color: #ea580c;
+}
+
+.main-price .pax-text {
+  font-size: 0.78rem;
+  color: #64748b;
+  margin-left: 4px;
+}
+
+.tax-inclusive {
+  font-size: 0.72rem;
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.holiday-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.holiday-view-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.holiday-view-btn:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+.holiday-book-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
+  color: #ffffff;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-weight: 800;
+  font-size: 0.88rem;
+  letter-spacing: 0.4px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(234, 88, 12, 0.3);
+  transition: all 0.2s ease;
+}
+
+.holiday-book-btn:hover {
+  box-shadow: 0 8px 20px rgba(234, 88, 12, 0.45);
+  transform: translateY(-1px);
+}
+
+/* Holiday Details Modal */
+.holiday-details-modal {
+  max-width: 780px !important;
+}
+
+.holiday-modal-hero {
+  position: relative;
+  height: 240px;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+
+.modal-hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modal-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 100%);
+  display: flex;
+  align-items: flex-end;
+  padding: 16px;
+}
+
+.modal-highlights-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.modal-highlight-pill {
+  background: rgba(255, 255, 255, 0.92);
+  color: #0f172a;
+  font-weight: 700;
+  font-size: 0.76rem;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.modal-quick-stats-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 22px;
+}
+
+.modal-quick-stats-strip small {
+  display: block;
+  font-size: 0.72rem;
+  color: #64748b;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.modal-quick-stats-strip strong {
+  font-size: 0.92rem;
+  color: #0f172a;
+}
+
+.modal-price-stat strong {
+  color: #ea580c !important;
+  font-size: 1.15rem !important;
+}
+
+.itinerary-timeline-section h4,
+.inclusions-grid-box h4 {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 14px;
+}
+
+.itinerary-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.timeline-node {
+  display: flex;
+  gap: 14px;
+  position: relative;
+}
+
+.timeline-marker {
+  background: #ea580c;
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 20px;
+  height: fit-content;
+  white-space: nowrap;
+}
+
+.timeline-content {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 12px 14px;
+  flex: 1;
+}
+
+.timeline-content h5 {
+  margin: 0 0 4px 0;
+  font-size: 0.92rem;
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.timeline-content p {
+  margin: 0;
+  font-size: 0.84rem;
+  color: #475569;
+  line-height: 1.5;
+}
+
+.inclusions-checklist {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.inclusion-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.84rem;
+  color: #334155;
+  font-weight: 600;
+}
+
+.modal-footer-sticky {
+  position: sticky;
+  bottom: 0;
+  background: #ffffff;
+  border-top: 1px solid #e2e8f0;
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 0 0 16px 16px;
+}
+
+.modal-footer-price strong {
+  font-size: 1.4rem;
+  color: #ea580c;
+  font-weight: 800;
+}
+
+.modal-footer-price strong small {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+@media (max-width: 900px) {
+  .luxury-holiday-card {
+    grid-template-columns: 1fr;
+  }
+
+  .holiday-img-col {
+    height: 200px;
+  }
+
+  .search-fields-grid.holiday-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-quick-stats-strip {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .inclusions-checklist {
+    grid-template-columns: 1fr;
+  }
+}
+
+
 
 
 

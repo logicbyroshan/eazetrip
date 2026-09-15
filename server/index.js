@@ -239,6 +239,45 @@ app.get('/api/railways/:id', (req, res) => {
   res.json({ success: true, data: train });
 });
 
+// HOLIDAYS & TOUR PACKAGES API
+app.get('/api/holidays', (req, res) => {
+  const destination = toStr(req.query.destination);
+  const theme = toStr(req.query.theme);
+  const category = toStr(req.query.category);
+  const maxPrice = toStr(req.query.maxPrice);
+  let results = mockStore.holidays || [];
+
+  if (destination) {
+    results = results.filter((h) =>
+      h.destination.toLowerCase().includes(destination.toLowerCase()) ||
+      h.title.toLowerCase().includes(destination.toLowerCase())
+    );
+  }
+  if (theme && theme !== 'All Themes') {
+    results = results.filter((h) => h.theme.toLowerCase().includes(theme.toLowerCase()));
+  }
+  if (category && category !== 'All') {
+    results = results.filter((h) => h.category.toLowerCase() === category.toLowerCase());
+  }
+  if (maxPrice) {
+    results = results.filter((h) => h.price <= Number(maxPrice));
+  }
+
+  res.json({ success: true, count: results.length, data: results });
+});
+
+app.get('/api/holidays/:id', (req, res) => {
+  const reqId = String(req.params.id || '').toLowerCase().replace(/-/g, '');
+  const holiday = (mockStore.holidays || []).find((h) => {
+    const hid = String(h.id || '').toLowerCase().replace(/-/g, '');
+    return hid === reqId || h.id.toLowerCase() === (req.params.id || '').toLowerCase();
+  });
+  if (!holiday) {
+    return res.status(404).json({ success: false, error: 'Holiday package not found' });
+  }
+  res.json({ success: true, data: holiday });
+});
+
 // OFFERS & FAQS API
 app.get('/api/offers', (req, res) => {
   res.json({ success: true, count: mockStore.offers.length, data: mockStore.offers });

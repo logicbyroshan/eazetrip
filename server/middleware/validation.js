@@ -55,8 +55,8 @@ function validateRegister(req, res, next) {
 function validateBooking(req, res, next) {
   const { type, title, totalAmount, passengers } = req.body || {};
 
-  if (!type || !['flight', 'hotel', 'bus', 'train'].includes(String(type).toLowerCase())) {
-    return res.status(400).json({ success: false, error: 'Valid booking type (flight, hotel, bus, train) is required' });
+  if (!type || !['flight', 'hotel', 'bus', 'train', 'holiday'].includes(String(type).toLowerCase())) {
+    return res.status(400).json({ success: false, error: 'Valid booking type (flight, hotel, bus, train, holiday) is required' });
   }
 
   if (!title || typeof title !== 'string' || title.trim().length < 3) {

@@ -3,6 +3,7 @@ import FlightSearchWidget from '../components/search/FlightSearchWidget';
 import HotelSearchWidget from '../components/search/HotelSearchWidget';
 import BusSearchWidget from '../components/search/BusSearchWidget';
 import TrainSearchWidget from '../components/search/TrainSearchWidget';
+import HolidaySearchWidget from '../components/search/HolidaySearchWidget';
 import SpecialOffersSection from '../components/home/SpecialOffersSection';
 import PopularAirlines from '../components/home/PopularAirlines';
 import TrendingFlightRoutes from '../components/home/TrendingFlightRoutes';
@@ -12,7 +13,7 @@ import ReviewsSection from '../components/home/ReviewsSection';
 import { HERO_BACKDROPS } from '../data/siteData';
 
 export default function HomePage() {
-  const [activeTab, setActiveTab] = useState('flights'); // flights | hotels | bus | railway
+  const [activeTab, setActiveTab] = useState('flights'); // flights | hotels | bus | railway | holidays
 
   const currentHero = HERO_BACKDROPS[activeTab] || HERO_BACKDROPS.flights;
 
@@ -118,6 +119,24 @@ export default function HomePage() {
                   <span className="tab-label-text">Buses</span>
                   {activeTab === 'bus' && <div className="tab-active-indicator"></div>}
                 </button>
+
+                {/* 5. Holidays */}
+                <button
+                  type="button"
+                  className={`hero-tab-btn ${activeTab === 'holidays' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('holidays')}
+                >
+                  <div className="tab-icon-circle holiday-bg">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M13 8c0-2.76-2.46-5-5.5-5S2 5.24 2 8h11Z" fill="#ea580c" opacity="0.18" />
+                      <path d="M13 7.14A5.82 5.82 0 0 1 16.5 6c3.04 0 5.5 2.24 5.5 5h-11" stroke="#ea580c" />
+                      <path d="M5.8 11.3 2 22h20l-3.8-10.7" stroke="#ea580c" />
+                      <path d="M10 17h4" stroke="#ea580c" />
+                    </svg>
+                  </div>
+                  <span className="tab-label-text">Holidays</span>
+                  {activeTab === 'holidays' && <div className="tab-active-indicator"></div>}
+                </button>
               </div>
 
               {/* Active Tab Search Form */}
@@ -126,6 +145,7 @@ export default function HomePage() {
                 {activeTab === 'hotels' && <HotelSearchWidget />}
                 {activeTab === 'bus' && <BusSearchWidget />}
                 {activeTab === 'railway' && <TrainSearchWidget />}
+                {activeTab === 'holidays' && <HolidaySearchWidget />}
               </div>
             </div>
           </div>

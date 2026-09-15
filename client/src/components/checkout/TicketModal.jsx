@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useBooking } from '../../context/BookingContext';
-import { X, CheckCircle, Printer, Download, QrCode, Plane, Building2, Bus, Train, Calendar, User, ShieldCheck } from 'lucide-react';
+import { X, CheckCircle, Printer, Download, QrCode, Plane, Building2, Bus, Train, Palmtree, Calendar, User, ShieldCheck } from 'lucide-react';
 
 export default function TicketModal() {
   const { activeTicket, closeTicketModal, showToast } = useBooking();
@@ -29,6 +29,7 @@ export default function TicketModal() {
     if (type === 'flight') return <Plane size={24} color="#1272d5" />;
     if (type === 'hotel') return <Building2 size={24} color="#1272d5" />;
     if (type === 'bus') return <Bus size={24} color="#1272d5" />;
+    if (type === 'holiday') return <Palmtree size={24} color="#ea580c" />;
     return <Train size={24} color="#1272d5" />;
   };
 

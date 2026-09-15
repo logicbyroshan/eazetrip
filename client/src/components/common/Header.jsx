@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Plane, Building2, Bus, Train, Menu, X } from 'lucide-react';
+import { Plane, Building2, Bus, Train, Palmtree, Menu, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 
@@ -27,7 +27,8 @@ export default function Header() {
     { label: 'Flights', path: '/flight-booking', icon: Plane },
     { label: 'Hotels', path: '/hotel-booking', icon: Building2 },
     { label: 'Bus', path: '/bus-booking', icon: Bus },
-    { label: 'Railway', path: '/railway', icon: Train }
+    { label: 'Railway', path: '/railway', icon: Train },
+    { label: 'Holidays', path: '/holiday-booking', icon: Palmtree }
   ];
 
   return (

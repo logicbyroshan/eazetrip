@@ -19,6 +19,7 @@ import FlightBookingPage from './pages/FlightBookingPage';
 import HotelBookingPage from './pages/HotelBookingPage';
 import BusBookingPage from './pages/BusBookingPage';
 import RailwayBookingPage from './pages/RailwayBookingPage';
+import HolidayBookingPage from './pages/HolidayBookingPage';
 import ManageBookingsPage from './pages/ManageBookingsPage';
 import ProfilePage from './pages/ProfilePage';
 import PaymentPage from './pages/PaymentPage';
@@ -93,6 +94,9 @@ function AppContent() {
             <Route path="/hotel-booking" element={<HotelBookingPage />} />
             <Route path="/bus-booking" element={<BusBookingPage />} />
             <Route path="/railway" element={<RailwayBookingPage />} />
+            <Route path="/holiday-booking" element={<HolidayBookingPage />} />
+            <Route path="/holidays" element={<HolidayBookingPage />} />
+            <Route path="/holiday-packages" element={<HolidayBookingPage />} />
             <Route path="/manage-bookings" element={<ManageBookingsPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/payment" element={<PaymentPage />} />
