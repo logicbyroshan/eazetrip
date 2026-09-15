@@ -376,12 +376,13 @@
    HERO & SEARCH WIDGETS
 ========================================== */
 .hero-section {
-  background: linear-gradient(180deg, #12213d 0%, #17345f 100%),
-              url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1600&auto=format&fit=crop&q=80') center/cover no-repeat;
-  background-blend-mode: overlay;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
   padding: 48px 0 36px;
   color: #fff;
   position: relative;
+  transition: background 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .hero-content {
@@ -1377,9 +1378,9 @@
 }
 
 .listing-top-search-banner {
-  background: linear-gradient(180deg, #0a192f 0%, #112240 100%),
-              url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1600&auto=format&fit=crop&q=80') center/cover no-repeat;
-  background-blend-mode: overlay;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
   padding: 32px 0 28px;
   color: #fff;
   position: relative;

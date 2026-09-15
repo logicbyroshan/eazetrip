@@ -1,3 +1,26 @@
+export const HERO_BACKDROPS = {
+  flights: {
+    url: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1920&auto=format&fit=crop&q=85',
+    title: 'Affordable Travel Options At Your Fingertips.',
+    subtitle: 'Book Flights, Hotels, Buses & Train tickets with instant confirmation and great savings.'
+  },
+  hotels: {
+    url: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=1920&auto=format&fit=crop&q=85',
+    title: 'Experience Dream Stays & Luxury Escapes.',
+    subtitle: 'Handpicked luxury resorts, heritage palaces, and boutique villas across India.'
+  },
+  bus: {
+    url: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1920&auto=format&fit=crop&q=85',
+    title: 'Scenic Road Trips & Comfortable Intercity Travel.',
+    subtitle: 'AC Sleeper, Volvo & Bharat Benz buses with live GPS tracking and comfortable berths.'
+  },
+  railway: {
+    url: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1920&auto=format&fit=crop&q=85',
+    title: 'Journey Across India with Scenic Railways.',
+    subtitle: 'IRCTC authorized train bookings, live PNR status & guaranteed confirmation alerts.'
+  }
+};
+
 export const siteOffers = [
   {
     id: 1,

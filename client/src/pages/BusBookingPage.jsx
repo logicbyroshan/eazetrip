@@ -4,6 +4,7 @@ import BusSearchWidget from '../components/search/BusSearchWidget';
 import BusCard from '../components/buses/BusCard';
 import BusSeatPickerModal from '../components/buses/BusSeatPickerModal';
 import { mockBuses } from '../data/busData';
+import { HERO_BACKDROPS } from '../data/siteData';
 import { useBooking } from '../context/BookingContext';
 import { Bus, Filter, RotateCcw } from 'lucide-react';
 
@@ -52,7 +53,12 @@ export default function BusBookingPage() {
 
   return (
     <div className="listing-page-wrapper">
-      <div className="listing-top-search-banner">
+      <div
+        className="listing-top-search-banner"
+        style={{
+          backgroundImage: `linear-gradient(180deg, rgba(10, 25, 47, 0.82) 0%, rgba(17, 34, 64, 0.88) 100%), url('${HERO_BACKDROPS.bus.url}')`
+        }}
+      >
         <div className="container">
           <div className="listing-search-card-wrapper">
             <BusSearchWidget initialValues={searchState} />

@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import TrainSearchWidget from '../components/search/TrainSearchWidget';
 import TrainCard from '../components/trains/TrainCard';
 import { mockTrains } from '../data/trainData';
+import { HERO_BACKDROPS } from '../data/siteData';
 import { useBooking } from '../context/BookingContext';
 import { Train, ShieldCheck, CheckCircle2 } from 'lucide-react';
 
@@ -22,7 +23,12 @@ export default function RailwayBookingPage() {
 
   return (
     <div className="listing-page-wrapper">
-      <div className="listing-top-search-banner">
+      <div
+        className="listing-top-search-banner"
+        style={{
+          backgroundImage: `linear-gradient(180deg, rgba(10, 25, 47, 0.82) 0%, rgba(17, 34, 64, 0.88) 100%), url('${HERO_BACKDROPS.railway.url}')`
+        }}
+      >
         <div className="container">
           <div className="listing-search-card-wrapper">
             <TrainSearchWidget initialValues={searchState} />

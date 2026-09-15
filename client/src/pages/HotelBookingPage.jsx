@@ -4,6 +4,7 @@ import HotelSearchWidget from '../components/search/HotelSearchWidget';
 import HotelCard from '../components/hotels/HotelCard';
 import HotelFilters from '../components/hotels/HotelFilters';
 import { mockHotels } from '../data/hotelData';
+import { HERO_BACKDROPS } from '../data/siteData';
 import { useBooking } from '../context/BookingContext';
 import { Building2 } from 'lucide-react';
 
@@ -61,7 +62,12 @@ export default function HotelBookingPage() {
 
   return (
     <div className="listing-page-wrapper">
-      <div className="listing-top-search-banner">
+      <div
+        className="listing-top-search-banner"
+        style={{
+          backgroundImage: `linear-gradient(180deg, rgba(10, 25, 47, 0.82) 0%, rgba(17, 34, 64, 0.88) 100%), url('${HERO_BACKDROPS.hotels.url}')`
+        }}
+      >
         <div className="container">
           <div className="listing-search-card-wrapper">
             <HotelSearchWidget initialValues={searchState} />

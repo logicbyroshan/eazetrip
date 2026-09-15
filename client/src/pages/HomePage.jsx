@@ -4,13 +4,15 @@ import FlightSearchWidget from '../components/search/FlightSearchWidget';
 import HotelSearchWidget from '../components/search/HotelSearchWidget';
 import BusSearchWidget from '../components/search/BusSearchWidget';
 import TrainSearchWidget from '../components/search/TrainSearchWidget';
-import { siteOffers, siteTestimonials, siteFaqs } from '../data/siteData';
+import { siteOffers, siteTestimonials, siteFaqs, HERO_BACKDROPS } from '../data/siteData';
 import { Plane, Building2, Bus, Train, ShieldCheck, Check, Star, ArrowRight, Tag, Copy } from 'lucide-react';
 import { useBooking } from '../context/BookingContext';
 
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState('flights'); // flights | hotels | bus | railway
   const { showToast } = useBooking();
+
+  const currentHero = HERO_BACKDROPS[activeTab] || HERO_BACKDROPS.flights;
 
   const handleCopyCode = (code) => {
     navigator.clipboard.writeText(code);
@@ -19,15 +21,20 @@ export default function HomePage() {
 
   return (
     <div className="home-page">
-      {/* Hero Section */}
-      <section className="hero-section">
+      {/* Dynamic Hero Section */}
+      <section
+        className="hero-section dynamic-hero"
+        style={{
+          backgroundImage: `linear-gradient(180deg, rgba(10, 25, 47, 0.82) 0%, rgba(17, 34, 64, 0.88) 100%), url('${currentHero.url}')`
+        }}
+      >
         <div className="container">
           <div className="hero-content">
             <h1 className="hero-headline">
-              Affordable Travel Options At Your Fingertips.
+              {currentHero.title}
             </h1>
             <p className="hero-subheadline">
-              Book Flights, Hotels, Buses & Train tickets with instant confirmation and great savings.
+              {currentHero.subtitle}
             </p>
 
             {/* Hero Search Box Card */}

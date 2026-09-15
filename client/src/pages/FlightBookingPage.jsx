@@ -5,6 +5,7 @@ import FlightCard from '../components/flights/FlightCard';
 import FlightFilters from '../components/flights/FlightFilters';
 import FlightDetailsModal from '../components/flights/FlightDetailsModal';
 import { mockFlights } from '../data/flightData';
+import { HERO_BACKDROPS } from '../data/siteData';
 import { useBooking } from '../context/BookingContext';
 import { Plane, Filter, ArrowRight, ShieldCheck } from 'lucide-react';
 
@@ -101,7 +102,12 @@ export default function FlightBookingPage() {
   return (
     <div className="listing-page-wrapper">
       {/* Top Search Filter Banner & Card Wrapper */}
-      <div className="listing-top-search-banner">
+      <div
+        className="listing-top-search-banner"
+        style={{
+          backgroundImage: `linear-gradient(180deg, rgba(10, 25, 47, 0.82) 0%, rgba(17, 34, 64, 0.88) 100%), url('${HERO_BACKDROPS.flights.url}')`
+        }}
+      >
         <div className="container">
           <div className="listing-search-card-wrapper">
             <FlightSearchWidget initialValues={searchState} />
