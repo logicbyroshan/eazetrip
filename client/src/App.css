@@ -5111,7 +5111,7 @@ input[type="radio"]:focus-visible {
   overflow: hidden;
   cursor: pointer;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 .trending-card-large {
@@ -5123,24 +5123,26 @@ input[type="radio"]:focus-visible {
 }
 
 .trending-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.16);
+  transform: none; /* Keep card container exact same size without shrinking or jumping */
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
 }
 
 .trending-img-container {
   position: absolute;
   inset: 0;
+  overflow: hidden;
 }
 
 .trending-img-container img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: scale(1.05); /* slightly expanded initially */
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease;
 }
 
 .trending-card:hover .trending-img-container img {
-  transform: scale(1.06);
+  transform: scale(0.96); /* Inside image becomes smaller on hover */
 }
 
 .trending-card-overlay {
@@ -5151,7 +5153,7 @@ input[type="radio"]:focus-visible {
 }
 
 .trending-card:hover .trending-card-overlay {
-  background: linear-gradient(180deg, rgba(15, 23, 42, 0.15) 0%, rgba(15, 23, 42, 0.5) 45%, rgba(15, 23, 42, 0.94) 100%);
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.15) 0%, rgba(15, 23, 42, 0.45) 45%, rgba(15, 23, 42, 0.92) 100%);
 }
 
 .trending-city-badge {
