@@ -1,0 +1,105 @@
+import { createContext, useContext, useEffect, useState } from 'react';
+
+const AuthContext = createContext(null);
+
+const STORAGE_KEY = 'exploreeaz_user';
+
+export function AuthProvider({ children }) {
+  const [user, setUser] = useState(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
+    } else {
+      localStorage.removeItem(STORAGE_KEY);
+    }
+  }, [user]);
+
+  const login = async (credentials) => {
+    // Simulated auth logic
+    const { identifier, password, method } = credentials;
+    let loggedInUser = null;
+
+    if (method === 'phone') {
+      loggedInUser = {
+        id: 'USR-' + Math.floor(100000 + Math.random() * 900000),
+        name: 'Traveler ' + identifier.slice(-4),
+        phone: identifier,
+        email: `user${identifier.slice(-4)}@exploreeaz.com`,
+        memberSince: new Date().getFullYear(),
+        tier: 'Silver Explorer'
+      };
+    } else {
+      const namePart = identifier.split('@')[0];
+      const displayName = namePart.charAt(0).toUpperCase() + namePart.slice(1);
+      loggedInUser = {
+        id: 'USR-' + Math.floor(100000 + Math.random() * 900000),
+        name: displayName,
+        email: identifier,
+        phone: '+91 9876543210',
+        memberSince: new Date().getFullYear(),
+        tier: 'Gold Explorer'
+      };
+    }
+
+    setUser(loggedInUser);
+    setIsLoginModalOpen(false);
+    return { success: true, user: loggedInUser };
+  };
+
+  const register = async (userData) => {
+    const newUser = {
+      id: 'USR-' + Math.floor(100000 + Math.random() * 900000),
+      name: userData.name || `${userData.firstName} ${userData.lastName}`.trim(),
+      email: userData.email,
+      phone: userData.phone || '+91 9876543210',
+      memberSince: new Date().getFullYear(),
+      tier: 'Classic Explorer'
+    };
+    setUser(newUser);
+    return { success: true, user: newUser };
+  };
+
+  const logout = () => {
+    setUser(null);
+  };
+
+  const updateProfile = (updatedFields) => {
+    setUser((prev) => (prev ? { ...prev, ...updatedFields } : null));
+  };
+
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        isAuthenticated: !!user,
+        login,
+        register,
+        logout,
+        updateProfile,
+        isLoginModalOpen,
+        openLoginModal: () => setIsLoginModalOpen(true),
+        closeLoginModal: () => setIsLoginModalOpen(false)
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+export function useAuth() {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+}
