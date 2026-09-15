@@ -100,12 +100,14 @@
   align-items: center;
   gap: 6px;
   box-shadow: 0 2px 6px rgba(18, 114, 213, 0.25);
-  transition: all 0.2s ease;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .login-pill-btn:hover {
   background: var(--primary-hover);
-  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(18, 114, 213, 0.4);
 }
 
 .user-menu-wrap {
@@ -8484,7 +8486,9 @@ input[type="radio"]:focus-visible {
   border-radius: 12px;
   cursor: pointer;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
-  transition: all 0.2s ease;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .auth-floating-nav-btn:hover {
@@ -8492,7 +8496,6 @@ input[type="radio"]:focus-visible {
   color: var(--primary);
   border-color: #ffffff;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-  transform: translateY(-1px);
 }
 
 /* Main Content Grid */
@@ -8685,14 +8688,15 @@ input[type="radio"]:focus-visible {
   color: #1e293b;
   cursor: pointer;
   box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05);
-  transition: all 0.2s ease;
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .google-sso-floating-btn:hover {
   background: #f8fafc;
   border-color: #cbd5e1;
-  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.1);
-  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.12);
 }
 
 .auth-or-line-divider {
@@ -8845,22 +8849,26 @@ input[type="radio"]:focus-visible {
   border: none;
   cursor: pointer;
   box-shadow: 0 4px 16px rgba(3, 78, 162, 0.3);
-  transition: all 0.2s ease;
+  transition: background 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
   height: 42px;
   display: flex;
   align-items: center;
   justify-content: center;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: box-shadow, filter;
 }
 
 .luxury-auth-submit-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 22px rgba(3, 78, 162, 0.4);
+  background: linear-gradient(135deg, #045bc0 0%, #02438c 100%);
+  box-shadow: 0 6px 24px rgba(3, 78, 162, 0.45);
+  filter: brightness(1.05);
 }
 
 .luxury-auth-submit-btn:disabled {
   opacity: 0.7;
   cursor: not-allowed;
-  transform: none;
+  filter: none;
 }
 
 .auth-card-bottom-switch {

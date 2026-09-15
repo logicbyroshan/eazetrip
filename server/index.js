@@ -297,7 +297,7 @@ app.post('/api/auth/login', sensitiveLimiter, validateLogin, (req, res) => {
     user = {
       id: `USR-${Math.floor(100000 + Math.random() * 900000)}`,
       name: method === 'phone' ? `Traveler ${identifier.slice(-4)}` : identifier.split('@')[0],
-      email: method === 'email' ? identifier : `user${identifier.slice(-4)}@exploreeaz.com`,
+      email: method === 'email' ? identifier : `user${identifier.slice(-4)}@eazetrip.com`,
       phone: method === 'phone' ? identifier : '+91 9876543210',
       tier: 'Gold Explorer',
       token: `jwt-sim-${Date.now()}`
@@ -345,7 +345,7 @@ app.put('/api/auth/profile', sensitiveLimiter, (req, res) => {
     user = {
       id: id || `USR-${Math.floor(100000 + Math.random() * 900000)}`,
       name: name || 'Explorer User',
-      email: email || 'user@exploreeaz.com',
+      email: email || 'user@eazetrip.com',
       phone: phone || '+91 9876543210',
       city: city || 'Mumbai',
       state: state || 'Maharashtra',
