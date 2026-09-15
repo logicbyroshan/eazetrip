@@ -82,23 +82,30 @@ function AppContent() {
   ].includes(location.pathname);
 
   return (
-    <div className={`app-shell ${isAuthIsolatedPage ? 'auth-isolated-mode' : ''}`}>
-      {!isAuthIsolatedPage && <TopBar />}
-      {!isAuthIsolatedPage && <Header />}
-      
-      <main className={isAuthIsolatedPage ? 'auth-isolated-viewport' : 'main-viewport'}>
-        <ErrorBoundary>
+    <ErrorBoundary>
+      <div className={`app-shell ${isAuthIsolatedPage ? 'auth-isolated-shell' : ''}`}>
+        {!isAuthIsolatedPage && <TopBar />}
+        {!isAuthIsolatedPage && <Header />}
+        
+        <main className={isAuthIsolatedPage ? 'auth-isolated-viewport' : 'main-viewport'}>
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/flight-booking" element={<FlightBookingPage />} />
+            <Route path="/flights" element={<FlightBookingPage />} />
             <Route path="/hotel-booking" element={<HotelBookingPage />} />
+            <Route path="/hotels" element={<HotelBookingPage />} />
             <Route path="/bus-booking" element={<BusBookingPage />} />
+            <Route path="/buses" element={<BusBookingPage />} />
             <Route path="/railway" element={<RailwayBookingPage />} />
+            <Route path="/railway-booking" element={<RailwayBookingPage />} />
+            <Route path="/railways" element={<RailwayBookingPage />} />
+            <Route path="/trains" element={<RailwayBookingPage />} />
             <Route path="/holiday-booking" element={<HolidayBookingPage />} />
             <Route path="/holidays" element={<HolidayBookingPage />} />
             <Route path="/holiday-packages" element={<HolidayBookingPage />} />
             <Route path="/manage-bookings" element={<ManageBookingsPage />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/my-profile" element={<ProfilePage />} />
             <Route path="/payment" element={<PaymentPage />} />
             
             {/* User Auth Routes */}
@@ -110,6 +117,8 @@ function AppContent() {
             <Route path="/create-account" element={<AuthPage mode="register" />} />
 
             {/* Partner & B2B Routes */}
+            <Route path="/partner" element={<PartnerPage />} />
+            <Route path="/become-partner" element={<PartnerPage />} />
             <Route path="/partnerLogin" element={<PartnerPage mode="login" />} />
             <Route path="/partner-registration" element={<PartnerPage mode="register" />} />
             <Route path="/corporate-login" element={<PartnerPage mode="login" />} />
@@ -117,6 +126,7 @@ function AppContent() {
             {/* Informational & Support Pages */}
             <Route path="/offers" element={<OffersPage />} />
             <Route path="/about" element={<AboutPage />} />
+            <Route path="/about-us" element={<AboutPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/faq" element={<FaqPage />} />
             <Route path="/terms" element={<TermsPage />} />
@@ -126,18 +136,18 @@ function AppContent() {
             
             <Route path="*" element={<HomePage />} />
           </Routes>
-        </ErrorBoundary>
-      </main>
+        </main>
 
-      {!isAuthIsolatedPage && <Footer />}
-      
-      {/* Global Overlays & Modals */}
-      <Preloader />
-      <LoginModal />
-      <CheckoutModal />
-      <TicketModal />
-      <Toast />
-    </div>
+        {!isAuthIsolatedPage && <Footer />}
+        
+        {/* Global Overlays & Modals */}
+        <Preloader />
+        <LoginModal />
+        <CheckoutModal />
+        <TicketModal />
+        <Toast />
+      </div>
+    </ErrorBoundary>
   );
 }
 

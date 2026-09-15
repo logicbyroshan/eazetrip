@@ -10,7 +10,8 @@ import {
   Building,
   Wallet,
   Tag,
-  User
+  User,
+  Mail
 } from 'lucide-react';
 
 export default function CheckoutModal() {
