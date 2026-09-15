@@ -2,11 +2,12 @@ import { useState, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import BusSearchWidget from '../components/search/BusSearchWidget';
 import BusCard from '../components/buses/BusCard';
+import BusFilters from '../components/buses/BusFilters';
 import BusSeatPickerModal from '../components/buses/BusSeatPickerModal';
 import { mockBuses } from '../data/busData';
 import { HERO_BACKDROPS } from '../data/siteData';
 import { useBooking } from '../context/BookingContext';
-import { Bus, Filter, RotateCcw } from 'lucide-react';
+import { Bus, RotateCcw } from 'lucide-react';
 
 export default function BusBookingPage() {
   const location = useLocation();
@@ -14,29 +15,56 @@ export default function BusBookingPage() {
   const { startCheckout } = useBooking();
 
   const [activeBusModal, setActiveBusModal] = useState(null);
+
+  // Filters State
   const [selectedOperators, setSelectedOperators] = useState([]);
   const [acOnly, setAcOnly] = useState(false);
   const [sleeperOnly, setSleeperOnly] = useState(false);
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
+  const [maxPrice, setMaxPrice] = useState(3000);
 
   const filteredBuses = useMemo(() => {
     return mockBuses.filter((bus) => {
+      // Operator filter
       if (selectedOperators.length > 0 && !selectedOperators.includes(bus.operator)) {
         return false;
       }
+      // AC filter
       if (acOnly && !bus.busType.includes('A/C')) {
         return false;
       }
+      // Sleeper filter
       if (sleeperOnly && !bus.busType.includes('Sleeper')) {
         return false;
       }
+      // Price filter
+      if (bus.price > maxPrice) {
+        return false;
+      }
+      // Time slot filter
+      if (selectedTimeSlot) {
+        const hour = parseInt(bus.departureTime.split(':')[0], 10);
+        if (selectedTimeSlot === 'earlyMorning' && hour >= 6) return false;
+        if (selectedTimeSlot === 'morning' && (hour < 6 || hour >= 12)) return false;
+        if (selectedTimeSlot === 'afternoon' && (hour < 12 || hour >= 18)) return false;
+        if (selectedTimeSlot === 'evening' && hour < 18) return false;
+      }
       return true;
     });
-  }, [selectedOperators, acOnly, sleeperOnly]);
+  }, [selectedOperators, acOnly, sleeperOnly, selectedTimeSlot, maxPrice]);
 
   const handleToggleOperator = (operator) => {
     setSelectedOperators((prev) =>
       prev.includes(operator) ? prev.filter((o) => o !== operator) : [...prev, operator]
     );
+  };
+
+  const handleResetFilters = () => {
+    setSelectedOperators([]);
+    setAcOnly(false);
+    setSleeperOnly(false);
+    setSelectedTimeSlot(null);
+    setMaxPrice(3000);
   };
 
   const handleProceedFromSeatPicker = (selectionData) => {
@@ -53,6 +81,7 @@ export default function BusBookingPage() {
 
   return (
     <div className="listing-page-wrapper">
+      {/* Top Search Filter Banner */}
       <div
         className="listing-top-search-banner"
         style={{
@@ -67,85 +96,59 @@ export default function BusBookingPage() {
       </div>
 
       <div className="container listing-content-layout">
+        {/* Left Filter Sidebar */}
         <aside className="listing-sidebar">
-          <div className="filter-sidebar">
-            <div className="filter-header">
-              <div className="filter-title">
-                <Filter size={18} />
-                <h3>Filter Buses</h3>
-              </div>
-              <button
-                type="button"
-                className="reset-btn"
-                onClick={() => {
-                  setSelectedOperators([]);
-                  setAcOnly(false);
-                  setSleeperOnly(false);
-                }}
-              >
-                <RotateCcw size={13} /> Reset
-              </button>
-            </div>
-
-            <div className="filter-group">
-              <h4>Bus Type</h4>
-              <div className="checkbox-stack">
-                <label className="filter-checkbox-row">
-                  <input
-                    type="checkbox"
-                    checked={acOnly}
-                    onChange={(e) => setAcOnly(e.target.checked)}
-                  />
-                  <span>AC Buses Only</span>
-                </label>
-                <label className="filter-checkbox-row">
-                  <input
-                    type="checkbox"
-                    checked={sleeperOnly}
-                    onChange={(e) => setSleeperOnly(e.target.checked)}
-                  />
-                  <span>Sleeper Coaches</span>
-                </label>
-              </div>
-            </div>
-
-            <div className="filter-group">
-              <h4>Bus Operators</h4>
-              <div className="checkbox-stack">
-                {['Orange Travels', 'Zingbus Plus', 'IntrCity SmartBus'].map((op) => (
-                  <label key={op} className="filter-checkbox-row">
-                    <input
-                      type="checkbox"
-                      checked={selectedOperators.includes(op)}
-                      onChange={() => handleToggleOperator(op)}
-                    />
-                    <span>{op}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-          </div>
+          <BusFilters
+            selectedOperators={selectedOperators}
+            onToggleOperator={handleToggleOperator}
+            acOnly={acOnly}
+            onToggleAcOnly={setAcOnly}
+            sleeperOnly={sleeperOnly}
+            onToggleSleeperOnly={setSleeperOnly}
+            selectedTimeSlot={selectedTimeSlot}
+            onSelectTimeSlot={setSelectedTimeSlot}
+            maxPrice={3000}
+            currentMaxPrice={maxPrice}
+            onChangeMaxPrice={setMaxPrice}
+            onResetFilters={handleResetFilters}
+          />
         </aside>
 
+        {/* Right Search Results */}
         <main className="listing-results-col">
           <div className="results-header-bar">
             <div>
               <h2>Buses from {searchState.from || 'Pune'} to {searchState.to || 'Mumbai'}</h2>
               <span className="results-count">
-                Showing {filteredBuses.length} top-rated operators with live GPS tracking
+                Showing {filteredBuses.length} verified operators • Real-Time GPS Tracking & Live Seat Selection
               </span>
             </div>
           </div>
 
-          <div className="bus-cards-list">
-            {filteredBuses.map((bus) => (
-              <BusCard
-                key={bus.id}
-                bus={bus}
-                onSelectSeats={(b) => setActiveBusModal(b)}
-              />
-            ))}
-          </div>
+          {filteredBuses.length === 0 ? (
+            <div className="empty-results-box">
+              <Bus size={48} color="#94a3b8" />
+              <h3>No buses found matching your filter criteria</h3>
+              <p>Try clearing your bus type or operator filters.</p>
+              <button
+                type="button"
+                className="secondary-btn"
+                onClick={handleResetFilters}
+              >
+                <RotateCcw size={14} /> Reset All Filters
+              </button>
+            </div>
+          ) : (
+            <div className="bus-cards-list">
+              {filteredBuses.map((bus) => (
+                <BusCard
+                  key={bus.id}
+                  bus={bus}
+                  onSelectSeats={(b) => setActiveBusModal(b)}
+                />
+              ))}
+            </div>
+          )}
         </main>
       </div>
 

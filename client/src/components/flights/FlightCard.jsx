@@ -1,4 +1,4 @@
-import { Plane, ChevronRight, Info, Luggage, ShieldAlert } from 'lucide-react';
+import { Plane, ChevronRight, Info, Luggage, ShieldCheck, Sparkles, Clock, ArrowRight } from 'lucide-react';
 
 export default function FlightCard({
   flight,
@@ -8,58 +8,69 @@ export default function FlightCard({
   isReturn = false
 }) {
   return (
-    <div className={`flight-card ${isSelected ? 'selected' : ''}`}>
-      {/* Airline Info */}
+    <div className={`flight-card luxury-flight-card ${isSelected ? 'selected' : ''}`}>
+      {/* Airline Info Block */}
       <div className="flight-airline-col">
         <div className="airline-badge">
           <div
             className="airline-logo-box"
-            style={{ backgroundColor: flight.airlineColor ? `${flight.airlineColor}15` : '#f0f5ff' }}
+            style={{
+              backgroundColor: flight.airlineColor ? `${flight.airlineColor}15` : '#eff6ff',
+              border: `1px solid ${flight.airlineColor ? `${flight.airlineColor}35` : '#bfdbfe'}`
+            }}
           >
-            <Plane size={20} color={flight.airlineColor || '#1272d5'} />
+            <Plane size={20} color={flight.airlineColor || '#034ea2'} />
           </div>
-          <div>
-            <strong>{flight.airline}</strong>
-            <small>{flight.flightNumber}</small>
+          <div className="airline-title-group">
+            <strong className="airline-name-text">{flight.airline}</strong>
+            <div className="flight-number-row">
+              <span className="flight-code-badge">{flight.flightNumber}</span>
+              <span className="aircraft-type-text">Airbus A320</span>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Schedule & Duration */}
+      {/* Schedule & Flight Route */}
       <div className="flight-schedule-col">
         <div className="time-block origin">
-          <span className="time">{flight.departureTime}</span>
-          <span className="city">{flight.fromCity}</span>
-          <small>{flight.from}</small>
+          <span className="flight-time-big">{flight.departureTime}</span>
+          <span className="flight-airport-code">{flight.from || 'BOM'}</span>
+          <span className="flight-city-name">{flight.fromCity || flight.from}</span>
         </div>
 
         <div className="duration-block">
-          <span className="duration-text">{flight.duration}</span>
+          <span className="duration-text">
+            <Clock size={12} /> {flight.duration}
+          </span>
           <div className="flight-path-line">
             <span className="path-dot"></span>
-            <span className="path-line"></span>
+            <div className="path-track-line"></div>
             <Plane size={14} className="path-plane" />
             <span className="path-dot"></span>
           </div>
-          <span className="stops-badge">{flight.stopText}</span>
+          <span className="stops-badge">{flight.stopText || 'Non-stop · Direct'}</span>
         </div>
 
         <div className="time-block dest">
-          <span className="time">{flight.arrivalTime}</span>
-          <span className="city">{flight.toCity}</span>
-          <small>{flight.to}</small>
+          <span className="flight-time-big">{flight.arrivalTime}</span>
+          <span className="flight-airport-code">{flight.to || 'DEL'}</span>
+          <span className="flight-city-name">{flight.toCity || flight.to}</span>
         </div>
       </div>
 
-      {/* Price & Action */}
+      {/* Price & Book Action */}
       <div className="flight-price-col">
         <div className="price-box">
-          <span className="fare-tag">Special Fare</span>
+          <div className="flight-tag-row">
+            <span className="fare-tag">Special Fare</span>
+            <span className="baggage-tag">15kg Luggage</span>
+          </div>
           <div className="price-amount">
             <span className="currency">₹</span>
             <strong>{flight.price.toLocaleString('en-IN')}</strong>
           </div>
-          <span className="per-pax">per adult</span>
+          <span className="per-pax">per adult · taxes included</span>
         </div>
 
         <div className="flight-action-buttons">
@@ -68,7 +79,8 @@ export default function FlightCard({
             className="link-details-btn"
             onClick={() => onViewDetails(flight)}
           >
-            <Info size={14} /> Flight Details
+            <Info size={13} />
+            <span>Flight Details</span>
           </button>
           <button
             type="button"
