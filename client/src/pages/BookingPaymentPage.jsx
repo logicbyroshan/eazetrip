@@ -295,9 +295,9 @@ export default function BookingPaymentPage() {
         <div className="payment-left-col">
           <div className="payment-card-wrap">
             <div className="payment-card-header">
-              <div className="flex-align-center gap-3">
+              <div className="payment-card-header-left">
                 <div className="type-icon-circle"><Lock size={20} color="#034ea2" /></div>
-                <div>
+                <div className="payment-header-titles">
                   <h3 className="card-section-title">Select Payment Mode</h3>
                   <span className="card-sub-info">All transactions are encrypted with 256-bit bank-grade security</span>
                 </div>

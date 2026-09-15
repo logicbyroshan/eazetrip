@@ -124,6 +124,7 @@ html {
   -webkit-text-size-adjust: 100%;
   tab-size: 4;
   scroll-behavior: auto; /* Managed smoothly by Lenis */
+  overflow-x: clip;
 }
 
 body {
@@ -136,7 +137,7 @@ body {
   color: var(--text-main);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 #root {

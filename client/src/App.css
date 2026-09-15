@@ -9610,19 +9610,57 @@ input[type="radio"]:focus-visible {
   background: #10b981;
 }
 
+/* Helper Flex & Alignment Utilities */
+.flex-align-center {
+  display: flex !important;
+  align-items: center !important;
+}
+
+.flex-between {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+
+.flex-between-wrap {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 12px !important;
+}
+
+.gap-1 { gap: 4px !important; }
+.gap-2 { gap: 8px !important; }
+.gap-3 { gap: 14px !important; }
+.gap-4 { gap: 20px !important; }
+
 /* Main Grid Layout */
 .review-main-grid,
 .payment-main-grid {
   display: grid;
-  grid-template-columns: 1fr 380px;
+  grid-template-columns: 1fr 390px;
   gap: 28px;
   align-items: start;
 }
 
-.review-left-col {
+.review-left-col,
+.payment-left-col {
   display: flex;
   flex-direction: column;
   gap: 24px;
+}
+
+.review-right-col,
+.payment-right-col {
+  position: -webkit-sticky !important;
+  position: sticky !important;
+  top: 90px !important;
+  height: -webkit-fit-content !important;
+  height: -moz-fit-content !important;
+  height: fit-content !important;
+  align-self: start !important;
+  z-index: 20;
 }
 
 .review-card-section {
@@ -9633,51 +9671,74 @@ input[type="radio"]:focus-visible {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
 }
 
-.review-card-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.review-card-header,
+.payment-card-header {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
   border-bottom: 1px solid #f1f5f9;
   padding-bottom: 16px;
   margin-bottom: 20px;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 14px;
+}
+
+.review-card-header-left,
+.payment-card-header-left {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 16px !important;
+  flex: 1 1 auto;
+}
+
+.review-header-titles,
+.payment-header-titles {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  text-align: left !important;
 }
 
 .type-icon-circle {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  background: #eff6ff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 46px !important;
+  height: 46px !important;
+  min-width: 46px !important;
+  border-radius: 14px !important;
+  background: #eff6ff !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
 }
 
 .card-section-title {
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: #0f172a;
-  margin: 0;
+  font-family: 'Outfit', sans-serif !important;
+  font-size: 1.22rem !important;
+  font-weight: 800 !important;
+  color: #0a192f !important;
+  margin: 0 !important;
+  line-height: 1.25 !important;
 }
 
 .card-sub-info {
-  font-size: 0.85rem;
-  color: #64748b;
-  display: block;
-  margin-top: 2px;
+  font-size: 0.84rem !important;
+  color: #64748b !important;
+  display: block !important;
+  margin-top: 3px !important;
 }
 
 .refundable-badge {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
   background: #f0fdf4;
   color: #166534;
   border: 1px solid #bbf7d0;
   font-size: 0.78rem;
-  font-weight: 600;
-  padding: 4px 10px;
+  font-weight: 700;
+  padding: 5px 12px;
   border-radius: 9999px;
 }
 
@@ -10199,64 +10260,75 @@ input[type="radio"]:focus-visible {
 }
 
 .coupon-code-pill {
-  font-family: monospace;
+  font-family: 'Outfit', sans-serif;
   font-weight: 800;
-  font-size: 0.85rem;
+  font-size: 0.92rem;
   color: #034ea2;
-  background: #eff6ff;
-  border: 1px dashed #034ea2;
-  padding: 2px 8px;
-  border-radius: 4px;
+  background: #ffffff;
+  border: 1.5px dashed #034ea2;
+  padding: 3px 10px;
+  border-radius: 6px;
+  letter-spacing: 0.5px;
 }
 
 .coupon-tag-badge {
   font-size: 0.68rem;
-  font-weight: 700;
+  font-weight: 800;
   color: #ea580c;
   background: #fff7ed;
-  padding: 2px 6px;
-  border-radius: 4px;
+  border: 1px solid #ffedd5;
+  padding: 3px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.5px;
 }
 
 .promo-select-card strong {
-  font-size: 0.88rem;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
   color: #1e293b;
   margin-bottom: 4px;
 }
 
 .promo-select-card p {
-  font-size: 0.75rem;
+  font-size: 0.76rem;
   color: #64748b;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   flex: 1;
+  line-height: 1.4;
 }
 
 .coupon-action-chip {
   background: #f1f5f9;
   color: #034ea2;
-  border: none;
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 6px;
-  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 7px;
+  border-radius: 8px;
   text-align: center;
   cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.coupon-action-chip:hover {
+  background: #e0e7ff;
 }
 
 .coupon-action-chip.applied {
   background: #10b981;
+  border-color: #10b981;
   color: #ffffff;
 }
 
-/* Sticky Fare Summary Sidebar */
+/* Sticky Fare Summary Sidebar Card */
 .sticky-fare-summary-card {
-  position: sticky;
-  top: 90px;
   background: #ffffff;
   border: 1px solid #e2e8f0;
-  border-radius: 16px;
+  border-radius: 18px;
   padding: 24px;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 6px 24px rgba(15, 23, 42, 0.06);
 }
 
 .fare-card-header {

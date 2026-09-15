@@ -363,9 +363,9 @@ export default function ReviewBookingPage() {
           {/* STEP 1: Dynamic Itinerary Review Card */}
           <div className="review-card-section" id="section-itinerary">
             <div className="review-card-header">
-              <div className="flex-align-center gap-3">
+              <div className="review-card-header-left">
                 <div className="type-icon-circle">{getTypeIcon()}</div>
-                <div>
+                <div className="review-header-titles">
                   <h3 className="card-section-title">
                     {type === 'flight' && 'Flight Itinerary & Baggage'}
                     {type === 'hotel' && 'Hotel & Stay Reservation'}
@@ -553,9 +553,9 @@ export default function ReviewBookingPage() {
           {/* STEP 2: Passenger & Contact Information */}
           <div className="review-card-section" id="section-travelers">
             <div className="review-card-header">
-              <div className="flex-align-center gap-3">
+              <div className="review-card-header-left">
                 <div className="type-icon-circle"><User size={20} color="#034ea2" /></div>
-                <div>
+                <div className="review-header-titles">
                   <h3 className="card-section-title">Traveler & Guest Details</h3>
                   <span className="card-sub-info">Enter names exactly as per Government ID</span>
                 </div>
@@ -887,9 +887,9 @@ export default function ReviewBookingPage() {
           {/* STEP 3: Protection & Add-ons Section */}
           <div className="review-card-section" id="section-protection">
             <div className="review-card-header">
-              <div className="flex-align-center gap-3">
+              <div className="review-card-header-left">
                 <div className="type-icon-circle"><ShieldCheck size={20} color="#16a34a" /></div>
-                <div>
+                <div className="review-header-titles">
                   <h3 className="card-section-title">Trip Protection & Peace of Mind</h3>
                   <span className="card-sub-info">Comprehensive travel insurance & cancellation security</span>
                 </div>
@@ -951,9 +951,9 @@ export default function ReviewBookingPage() {
           {/* STEP 4: Offers & Coupons Selection Deck */}
           <div className="review-card-section" id="section-offers">
             <div className="review-card-header">
-              <div className="flex-align-center gap-3">
+              <div className="review-card-header-left">
                 <div className="type-icon-circle"><Tag size={20} color="#ea580c" /></div>
-                <div>
+                <div className="review-header-titles">
                   <h3 className="card-section-title">Select Promo Code & Instant Discount</h3>
                   <span className="card-sub-info">Unlock exclusive discounts on your journey</span>
                 </div>
