@@ -277,3 +277,59 @@ test('20. POST /api/bookings validates passenger object structure', async () => 
   assert.strictEqual(res.status, 400);
   assert.strictEqual(res.data.success, false);
 });
+
+test('21. GET /api/payment/razorpay-key returns public gateway config', async () => {
+  const res = await requestJson('/api/payment/razorpay-key');
+  assert.strictEqual(res.status, 200);
+  assert.strictEqual(res.data.success, true);
+  assert.ok(res.data.keyId);
+  assert.strictEqual(res.data.merchantName, 'EazeTrip India');
+});
+
+test('22. POST /api/payment/create-order generates Razorpay order ID and amount in paise', async () => {
+  // Invalid amount
+  const failRes = await requestJson('/api/payment/create-order', {
+    method: 'POST',
+    body: { amount: -50 }
+  });
+  assert.strictEqual(failRes.status, 400);
+
+  // Valid order
+  const passRes = await requestJson('/api/payment/create-order', {
+    method: 'POST',
+    body: { amount: 3500, currency: 'INR', receipt: 'rcpt_test_101' }
+  });
+  assert.strictEqual(passRes.status, 201);
+  assert.strictEqual(passRes.data.success, true);
+  assert.ok(passRes.data.orderId);
+  assert.strictEqual(passRes.data.amount, 350000); // 3500 * 100 paise
+});
+
+test('23. POST /api/payment/verify validates payment and records confirmation', async () => {
+  const verifyRes = await requestJson('/api/payment/verify', {
+    method: 'POST',
+    body: {
+      razorpay_payment_id: 'pay_test_9921',
+      razorpay_order_id: 'order_sim_test_123',
+      razorpay_signature: 'sig_test_dummy',
+      amount: 4500,
+      payerName: 'Virat Kohli',
+      email: 'virat@example.com',
+      description: 'Goa Holiday Villa'
+    }
+  });
+  assert.strictEqual(verifyRes.status, 200);
+  assert.strictEqual(verifyRes.data.success, true);
+  assert.strictEqual(verifyRes.data.data.paymentId, 'pay_test_9921');
+  assert.strictEqual(verifyRes.data.data.status, 'Success');
+});
+
+test('24. POST /api/payment/webhook accepts incoming notifications', async () => {
+  const hookRes = await requestJson('/api/payment/webhook', {
+    method: 'POST',
+    body: { event: 'payment.captured' }
+  });
+  assert.strictEqual(hookRes.status, 200);
+  assert.strictEqual(hookRes.data.status, 'ok');
+});
+

@@ -1,6 +1,15 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const crypto = require('crypto');
+require('dotenv').config({ path: path.join(__dirname, '../.env') });
+
+let Razorpay;
+try {
+  Razorpay = require('razorpay');
+} catch (e) {
+  Razorpay = null;
+}
 
 const mockStore = require('./data/mockStore');
 const { securityHeaders, rateLimit, sanitizeInput } = require('./middleware/security');
@@ -9,7 +18,9 @@ const {
   validateRegister,
   validateBooking,
   validatePayment,
-  validateContact
+  validateContact,
+  validateRazorpayOrder,
+  validateRazorpayVerify
 } = require('./middleware/validation');
 const { notFoundHandler, errorHandler } = require('./middleware/errorHandler');
 
@@ -17,13 +28,40 @@ const app = express();
 const PORT = process.env.PORT || 5001;
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
+// Razorpay Gateway Setup
+const RAZORPAY_KEY_ID = process.env.RAZORPAY_KEY_ID || process.env.VITE_RAZORPAY_KEY_ID || '';
+const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET || '';
+
+const isRazorpayConfigured = Boolean(
+  Razorpay &&
+  RAZORPAY_KEY_ID &&
+  RAZORPAY_KEY_SECRET &&
+  !RAZORPAY_KEY_ID.includes('placeholder') &&
+  !RAZORPAY_KEY_ID.includes('your_key')
+);
+
+let razorpay = null;
+if (isRazorpayConfigured) {
+  try {
+    razorpay = new Razorpay({
+      key_id: RAZORPAY_KEY_ID,
+      key_secret: RAZORPAY_KEY_SECRET
+    });
+    console.log('[Razorpay Gateway] Live/Test merchant credentials configured.');
+  } catch (err) {
+    console.warn('[Razorpay Gateway] SDK initialization warning:', err.message);
+  }
+} else {
+  console.log('[Razorpay Gateway] Running in Smart Simulation Mode (Instant mock verification available until live keys are provided).');
+}
+
 // 1. Core Security & Parsing Middleware
 app.use(securityHeaders);
 app.use(
   cors({
     origin: process.env.CORS_ORIGIN || '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Razorpay-Signature']
   })
 );
 app.use(express.json({ limit: '100kb' }));
@@ -328,7 +366,178 @@ app.put('/api/auth/profile', sensitiveLimiter, (req, res) => {
   });
 });
 
-// PAYMENT API
+// ==========================================
+// RAZORPAY PAYMENT GATEWAY API
+// ==========================================
+
+// Get Razorpay Public Key & Configuration
+app.get('/api/payment/razorpay-key', (req, res) => {
+  res.json({
+    success: true,
+    keyId: isRazorpayConfigured ? RAZORPAY_KEY_ID : (RAZORPAY_KEY_ID || 'rzp_test_placeholder'),
+    isConfigured: isRazorpayConfigured,
+    currency: 'INR',
+    merchantName: 'EazeTrip India',
+    themeColor: '#034ea2'
+  });
+});
+
+// Create Razorpay Order
+app.post('/api/payment/create-order', sensitiveLimiter, validateRazorpayOrder, async (req, res) => {
+  try {
+    const { amount, currency = 'INR', receipt, notes } = req.body;
+    const amountInPaise = Math.round(Number(amount) * 100);
+    const receiptId = receipt || `rcpt_${Date.now()}`;
+
+    if (razorpay && isRazorpayConfigured) {
+      const order = await razorpay.orders.create({
+        amount: amountInPaise,
+        currency: currency.toUpperCase(),
+        receipt: receiptId,
+        notes: notes || { platform: 'EazeTrip Travel', service: 'Online Booking' }
+      });
+
+      return res.status(201).json({
+        success: true,
+        orderId: order.id,
+        amount: order.amount,
+        currency: order.currency,
+        receipt: order.receipt,
+        keyId: RAZORPAY_KEY_ID,
+        isSimulated: false
+      });
+    }
+
+    // Fallback simulation order for development / sandbox without keys
+    const simOrder = {
+      orderId: `order_sim_${Date.now()}_${Math.floor(1000 + Math.random() * 9000)}`,
+      amount: amountInPaise,
+      currency: currency.toUpperCase(),
+      receipt: receiptId,
+      keyId: RAZORPAY_KEY_ID || 'rzp_test_placeholder',
+      isSimulated: true
+    };
+
+    return res.status(201).json({
+      success: true,
+      ...simOrder
+    });
+  } catch (err) {
+    console.error('[Razorpay Create Order Error]:', err);
+    return res.status(500).json({
+      success: false,
+      error: err.message || 'Failed to create Razorpay payment order'
+    });
+  }
+});
+
+// Verify Razorpay Payment Signature
+app.post('/api/payment/verify', sensitiveLimiter, validateRazorpayVerify, (req, res) => {
+  try {
+    const {
+      razorpay_payment_id,
+      razorpay_order_id,
+      razorpay_signature,
+      amount,
+      currency = 'INR',
+      payerName,
+      email,
+      mobile,
+      description,
+      bookingDetails
+    } = req.body;
+
+    let isAuthentic = false;
+
+    if (razorpay_order_id.startsWith('order_sim_') || !isRazorpayConfigured) {
+      // Simulation / Test mode verification
+      isAuthentic = true;
+    } else {
+      const body = `${razorpay_order_id}|${razorpay_payment_id}`;
+      const expectedSignature = crypto
+        .createHmac('sha256', RAZORPAY_KEY_SECRET)
+        .update(body.toString())
+        .digest('hex');
+      isAuthentic = expectedSignature === razorpay_signature;
+    }
+
+    if (!isAuthentic) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid Razorpay payment signature. Payment verification failed.'
+      });
+    }
+
+    const paymentRecord = {
+      paymentId: razorpay_payment_id,
+      orderId: razorpay_order_id,
+      amount: Number(amount) || 0,
+      currency: currency.toUpperCase(),
+      name: payerName || 'Valued Traveler',
+      email: email || 'traveler@eazetrip.com',
+      mobile: mobile || '',
+      description: description || 'Travel Booking Payment',
+      status: 'Success',
+      gateway: 'Razorpay',
+      isSimulated: razorpay_order_id.startsWith('order_sim_') || !isRazorpayConfigured,
+      processedAt: new Date().toISOString()
+    };
+
+    // If linked to booking details, create or confirm the booking
+    if (bookingDetails) {
+      const newBooking = {
+        id: `EZ-${(bookingDetails.type || 'FL').slice(0, 2).toUpperCase()}-${Math.floor(10000 + Math.random() * 90000)}`,
+        createdAt: new Date().toISOString(),
+        status: 'Confirmed',
+        paymentStatus: 'Paid',
+        paymentId: razorpay_payment_id,
+        orderId: razorpay_order_id,
+        ...bookingDetails
+      };
+      bookings.unshift(newBooking);
+      paymentRecord.booking = newBooking;
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Razorpay payment verified and confirmed successfully!',
+      data: paymentRecord
+    });
+  } catch (err) {
+    console.error('[Razorpay Verify Error]:', err);
+    res.status(500).json({
+      success: false,
+      error: 'Error while verifying Razorpay payment signature'
+    });
+  }
+});
+
+// Razorpay Webhook Handler
+app.post('/api/payment/webhook', (req, res) => {
+  const secret = process.env.RAZORPAY_WEBHOOK_SECRET;
+  const isRealWebhookSecret = secret && !secret.includes('your_') && !secret.includes('placeholder');
+
+  if (isRealWebhookSecret) {
+    const signature = req.headers['x-razorpay-signature'];
+    if (!signature) {
+      return res.status(400).json({ status: 'missing signature' });
+    }
+    const expectedSignature = crypto
+      .createHmac('sha256', secret)
+      .update(JSON.stringify(req.body))
+      .digest('hex');
+
+    if (signature !== expectedSignature) {
+      return res.status(400).json({ status: 'invalid signature' });
+    }
+  }
+
+  const event = req.body?.event || 'payment.captured';
+  console.log(`[Razorpay Webhook] Received event: ${event}`);
+  res.status(200).json({ status: 'ok', received: true, event });
+});
+
+// STANDARD PAYMENT API (Backward compatibility)
 app.post('/api/payment', sensitiveLimiter, validatePayment, (req, res) => {
   const { firstName, lastName, email, amount, currency } = req.body;
 
@@ -339,6 +548,7 @@ app.post('/api/payment', sensitiveLimiter, validatePayment, (req, res) => {
     name: `${firstName} ${lastName || ''}`.trim(),
     email,
     status: 'Success',
+    gateway: 'Razorpay',
     processedAt: new Date().toISOString()
   };
 

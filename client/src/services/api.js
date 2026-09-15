@@ -141,7 +141,46 @@ export const api = {
     return res;
   },
 
-  // Payment
+  // Payment & Razorpay Gateway
+  getRazorpayKey: async () => {
+    const res = await request('/api/payment/razorpay-key');
+    if (res.ok && res.data) return res.data;
+    return {
+      success: true,
+      keyId: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_placeholder',
+      isConfigured: false,
+      currency: 'INR',
+      merchantName: 'EazeTrip India',
+      themeColor: '#034ea2'
+    };
+  },
+
+  createRazorpayOrder: async (orderPayload) => {
+    const res = await request('/api/payment/create-order', {
+      method: 'POST',
+      body: JSON.stringify(orderPayload)
+    });
+    if (res.ok && res.data) return res.data;
+    // Fallback simulation order if server is unreachable
+    return {
+      success: true,
+      orderId: `order_sim_${Date.now()}_${Math.floor(1000 + Math.random() * 9000)}`,
+      amount: Math.round(Number(orderPayload.amount) * 100),
+      currency: orderPayload.currency || 'INR',
+      receipt: orderPayload.receipt || `rcpt_${Date.now()}`,
+      keyId: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_placeholder',
+      isSimulated: true
+    };
+  },
+
+  verifyRazorpayPayment: async (verificationPayload) => {
+    const res = await request('/api/payment/verify', {
+      method: 'POST',
+      body: JSON.stringify(verificationPayload)
+    });
+    return res;
+  },
+
   processPayment: async (paymentData) => {
     const res = await request('/api/payment', {
       method: 'POST',

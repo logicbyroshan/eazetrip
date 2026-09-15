@@ -105,6 +105,35 @@ function validatePayment(req, res, next) {
   next();
 }
 
+function validateRazorpayOrder(req, res, next) {
+  const { amount, currency } = req.body || {};
+  const numAmount = Number(amount);
+
+  if (isNaN(numAmount) || numAmount <= 0 || numAmount > 10000000) {
+    return res.status(400).json({ success: false, error: 'Valid positive amount is required' });
+  }
+
+  if (currency && typeof currency === 'string' && !['INR', 'USD', 'EUR', 'GBP', 'AED', 'SGD'].includes(currency.toUpperCase())) {
+    return res.status(400).json({ success: false, error: 'Unsupported currency specified' });
+  }
+
+  next();
+}
+
+function validateRazorpayVerify(req, res, next) {
+  const { razorpay_payment_id, razorpay_order_id } = req.body || {};
+
+  if (!razorpay_payment_id || typeof razorpay_payment_id !== 'string' || razorpay_payment_id.trim().length === 0) {
+    return res.status(400).json({ success: false, error: 'razorpay_payment_id is required' });
+  }
+
+  if (!razorpay_order_id || typeof razorpay_order_id !== 'string' || razorpay_order_id.trim().length === 0) {
+    return res.status(400).json({ success: false, error: 'razorpay_order_id is required' });
+  }
+
+  next();
+}
+
 function validateContact(req, res, next) {
   const { name, email, message } = req.body || {};
 
@@ -128,5 +157,7 @@ module.exports = {
   validateRegister,
   validateBooking,
   validatePayment,
+  validateRazorpayOrder,
+  validateRazorpayVerify,
   validateContact
 };
