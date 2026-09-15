@@ -6,6 +6,8 @@ import { Building2, Calendar, Users, MapPin } from 'lucide-react';
 export default function HotelSearchWidget({ initialValues = {}, onSearch }) {
   const navigate = useNavigate();
 
+  const today = new Date().toISOString().split('T')[0];
+
   const [city, setCity] = useState(initialValues.city || 'Goa');
   const [checkInDate, setCheckInDate] = useState(initialValues.checkInDate || '2026-10-05');
   const [checkOutDate, setCheckOutDate] = useState(initialValues.checkOutDate || '2026-10-08');
@@ -29,6 +31,13 @@ export default function HotelSearchWidget({ initialValues = {}, onSearch }) {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Ensure checkout is not before checkin
+  useEffect(() => {
+    if (checkOutDate < checkInDate) {
+      setCheckOutDate(checkInDate);
+    }
+  }, [checkInDate, checkOutDate]);
 
   const filteredCities = hotelCities.filter((c) =>
     c.toLowerCase().includes(cityQuery.toLowerCase())
@@ -70,10 +79,13 @@ export default function HotelSearchWidget({ initialValues = {}, onSearch }) {
       <div className="search-fields-grid hotel-grid">
         {/* City Destination */}
         <div className="search-field-block">
-          <label>CITY / DESTINATION / HOTEL</label>
+          <label id="hotel-city-label">CITY / DESTINATION / HOTEL</label>
           <div
             className="field-value-card"
             onClick={() => setCityDropdownOpen(!cityDropdownOpen)}
+            tabIndex={0}
+            role="button"
+            aria-labelledby="hotel-city-label"
           >
             <span className="city-title">{city}</span>
             <span className="code-sub">India • Top Destinations</span>
@@ -88,6 +100,7 @@ export default function HotelSearchWidget({ initialValues = {}, onSearch }) {
                 autoFocus
                 value={cityQuery}
                 onChange={(e) => setCityQuery(e.target.value)}
+                aria-label="Search destination city"
               />
               <div className="airport-list">
                 {filteredCities.map((item) => (
@@ -110,10 +123,12 @@ export default function HotelSearchWidget({ initialValues = {}, onSearch }) {
 
         {/* Check-in Date */}
         <div className="search-field-block">
-          <label>CHECK-IN</label>
+          <label htmlFor="hotel-checkin-date">CHECK-IN</label>
           <div className="field-value-card date-card">
             <input
+              id="hotel-checkin-date"
               type="date"
+              min={today}
               className="native-date-input"
               value={checkInDate}
               onChange={(e) => setCheckInDate(e.target.value)}
@@ -123,10 +138,12 @@ export default function HotelSearchWidget({ initialValues = {}, onSearch }) {
 
         {/* Check-out Date */}
         <div className="search-field-block">
-          <label>CHECK-OUT</label>
+          <label htmlFor="hotel-checkout-date">CHECK-OUT</label>
           <div className="field-value-card date-card">
             <input
+              id="hotel-checkout-date"
               type="date"
+              min={checkInDate || today}
               className="native-date-input"
               value={checkOutDate}
               onChange={(e) => setCheckOutDate(e.target.value)}
@@ -136,10 +153,13 @@ export default function HotelSearchWidget({ initialValues = {}, onSearch }) {
 
         {/* Rooms & Guests */}
         <div className="search-field-block" ref={guestRef}>
-          <label>ROOMS & GUESTS</label>
+          <label id="hotel-guests-label">ROOMS & GUESTS</label>
           <div
             className="field-value-card traveller-card"
             onClick={() => setGuestDropdownOpen(!guestDropdownOpen)}
+            tabIndex={0}
+            role="button"
+            aria-labelledby="hotel-guests-label"
           >
             <span className="city-title">{rooms} Room, {adults + children} Guests</span>
             <span className="code-sub">{adults} Adults, {children} Children</span>
@@ -157,6 +177,7 @@ export default function HotelSearchWidget({ initialValues = {}, onSearch }) {
                       type="button"
                       disabled={rooms <= 1}
                       onClick={() => setRooms(rooms - 1)}
+                      aria-label="Decrease rooms"
                     >
                       -
                     </button>
@@ -165,6 +186,7 @@ export default function HotelSearchWidget({ initialValues = {}, onSearch }) {
                       type="button"
                       disabled={rooms >= 5}
                       onClick={() => setRooms(rooms + 1)}
+                      aria-label="Increase rooms"
                     >
                       +
                     </button>
@@ -181,6 +203,7 @@ export default function HotelSearchWidget({ initialValues = {}, onSearch }) {
                       type="button"
                       disabled={adults <= 1}
                       onClick={() => setAdults(adults - 1)}
+                      aria-label="Decrease adults"
                     >
                       -
                     </button>
@@ -189,6 +212,7 @@ export default function HotelSearchWidget({ initialValues = {}, onSearch }) {
                       type="button"
                       disabled={adults >= 10}
                       onClick={() => setAdults(adults + 1)}
+                      aria-label="Increase adults"
                     >
                       +
                     </button>
@@ -205,6 +229,7 @@ export default function HotelSearchWidget({ initialValues = {}, onSearch }) {
                       type="button"
                       disabled={children <= 0}
                       onClick={() => setChildren(children - 1)}
+                      aria-label="Decrease children"
                     >
                       -
                     </button>
@@ -213,6 +238,7 @@ export default function HotelSearchWidget({ initialValues = {}, onSearch }) {
                       type="button"
                       disabled={children >= 6}
                       onClick={() => setChildren(children + 1)}
+                      aria-label="Increase children"
                     >
                       +
                     </button>

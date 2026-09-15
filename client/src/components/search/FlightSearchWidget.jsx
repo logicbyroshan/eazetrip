@@ -6,6 +6,8 @@ import { Plane, ArrowLeftRight, Calendar, Users, Check, ChevronDown } from 'luci
 export default function FlightSearchWidget({ initialValues = {}, onSearch }) {
   const navigate = useNavigate();
 
+  const today = new Date().toISOString().split('T')[0];
+
   const [tripType, setTripType] = useState(initialValues.tripType || 'oneWay');
   const [fromAirport, setFromAirport] = useState(initialValues.from || 'BOM');
   const [toAirport, setToAirport] = useState(initialValues.to || 'DEL');
@@ -38,6 +40,13 @@ export default function FlightSearchWidget({ initialValues = {}, onSearch }) {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Ensure return date is not before departure date
+  useEffect(() => {
+    if (tripType === 'roundTrip' && returnDate < departureDate) {
+      setReturnDate(departureDate);
+    }
+  }, [departureDate, tripType, returnDate]);
 
   const getAirport = (code) => airports.find((a) => a.code === code) || airports[0];
 
@@ -139,13 +148,16 @@ export default function FlightSearchWidget({ initialValues = {}, onSearch }) {
       <div className="search-fields-grid flight-grid">
         {/* FROM Field */}
         <div className="search-field-block">
-          <label>FROM</label>
+          <label id="flight-from-label">FROM</label>
           <div
             className="field-value-card"
             onClick={() => {
               setFromSearchOpen(!fromSearchOpen);
               setToSearchOpen(false);
             }}
+            tabIndex={0}
+            role="button"
+            aria-labelledby="flight-from-label"
           >
             <span className="city-title">{fromAirportObj.city}</span>
             <span className="code-sub">
@@ -162,6 +174,7 @@ export default function FlightSearchWidget({ initialValues = {}, onSearch }) {
                 autoFocus
                 value={fromQuery}
                 onChange={(e) => setFromQuery(e.target.value)}
+                aria-label="Search origin airport"
               />
               <div className="airport-list">
                 {filteredFromAirports.map((airport) => (
@@ -189,20 +202,24 @@ export default function FlightSearchWidget({ initialValues = {}, onSearch }) {
           type="button"
           className="swap-button"
           onClick={handleSwapAirports}
-          title="Swap locations"
+          title="Swap origin and destination"
+          aria-label="Swap origin and destination airports"
         >
           <ArrowLeftRight size={16} />
         </button>
 
         {/* TO Field */}
         <div className="search-field-block">
-          <label>TO</label>
+          <label id="flight-to-label">TO</label>
           <div
             className="field-value-card"
             onClick={() => {
               setToSearchOpen(!toSearchOpen);
               setFromSearchOpen(false);
             }}
+            tabIndex={0}
+            role="button"
+            aria-labelledby="flight-to-label"
           >
             <span className="city-title">{toAirportObj.city}</span>
             <span className="code-sub">
@@ -219,6 +236,7 @@ export default function FlightSearchWidget({ initialValues = {}, onSearch }) {
                 autoFocus
                 value={toQuery}
                 onChange={(e) => setToQuery(e.target.value)}
+                aria-label="Search destination airport"
               />
               <div className="airport-list">
                 {filteredToAirports.map((airport) => (
@@ -243,10 +261,12 @@ export default function FlightSearchWidget({ initialValues = {}, onSearch }) {
 
         {/* DEPARTURE DATE */}
         <div className="search-field-block">
-          <label>DEPARTURE</label>
+          <label htmlFor="flight-dep-date">DEPARTURE</label>
           <div className="field-value-card date-card">
             <input
+              id="flight-dep-date"
               type="date"
+              min={today}
               className="native-date-input"
               value={departureDate}
               onChange={(e) => setDepartureDate(e.target.value)}
@@ -256,11 +276,13 @@ export default function FlightSearchWidget({ initialValues = {}, onSearch }) {
 
         {/* RETURN DATE */}
         <div className={`search-field-block ${tripType !== 'roundTrip' ? 'disabled' : ''}`}>
-          <label>RETURN</label>
+          <label htmlFor="flight-ret-date">RETURN</label>
           <div className="field-value-card date-card">
             {tripType === 'roundTrip' ? (
               <input
+                id="flight-ret-date"
                 type="date"
+                min={departureDate || today}
                 className="native-date-input"
                 value={returnDate}
                 onChange={(e) => setReturnDate(e.target.value)}
@@ -275,10 +297,13 @@ export default function FlightSearchWidget({ initialValues = {}, onSearch }) {
 
         {/* TRAVELLERS & CLASS */}
         <div className="search-field-block" ref={travellerRef}>
-          <label>TRAVELLERS & CLASS</label>
+          <label id="flight-traveller-label">TRAVELLERS & CLASS</label>
           <div
             className="field-value-card traveller-card"
             onClick={() => setTravellerMenuOpen(!travellerMenuOpen)}
+            tabIndex={0}
+            role="button"
+            aria-labelledby="flight-traveller-label"
           >
             <span className="city-title">{totalPassengers} Traveller{totalPassengers > 1 ? 's' : ''}</span>
             <span className="code-sub">{cabinClass}</span>
@@ -297,6 +322,7 @@ export default function FlightSearchWidget({ initialValues = {}, onSearch }) {
                       type="button"
                       disabled={adults <= 1}
                       onClick={() => setAdults(adults - 1)}
+                      aria-label="Decrease adults"
                     >
                       -
                     </button>
@@ -305,6 +331,7 @@ export default function FlightSearchWidget({ initialValues = {}, onSearch }) {
                       type="button"
                       disabled={adults >= 9}
                       onClick={() => setAdults(adults + 1)}
+                      aria-label="Increase adults"
                     >
                       +
                     </button>
@@ -321,6 +348,7 @@ export default function FlightSearchWidget({ initialValues = {}, onSearch }) {
                       type="button"
                       disabled={children <= 0}
                       onClick={() => setChildren(children - 1)}
+                      aria-label="Decrease children"
                     >
                       -
                     </button>
@@ -329,6 +357,7 @@ export default function FlightSearchWidget({ initialValues = {}, onSearch }) {
                       type="button"
                       disabled={children >= 6}
                       onClick={() => setChildren(children + 1)}
+                      aria-label="Increase children"
                     >
                       +
                     </button>
@@ -345,6 +374,7 @@ export default function FlightSearchWidget({ initialValues = {}, onSearch }) {
                       type="button"
                       disabled={infants <= 0}
                       onClick={() => setInfants(infants - 1)}
+                      aria-label="Decrease infants"
                     >
                       -
                     </button>
@@ -353,6 +383,7 @@ export default function FlightSearchWidget({ initialValues = {}, onSearch }) {
                       type="button"
                       disabled={infants >= adults}
                       onClick={() => setInfants(infants + 1)}
+                      aria-label="Increase infants"
                     >
                       +
                     </button>

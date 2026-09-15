@@ -1,8 +1,19 @@
+import { useEffect } from 'react';
 import { useBooking } from '../../context/BookingContext';
 import { X, CheckCircle, Printer, Download, QrCode, Plane, Building2, Bus, Train, Calendar, User, ShieldCheck } from 'lucide-react';
 
 export default function TicketModal() {
   const { activeTicket, closeTicketModal, showToast } = useBooking();
+
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (e.key === 'Escape' && activeTicket) {
+        closeTicketModal();
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [activeTicket, closeTicketModal]);
 
   if (!activeTicket) return null;
 
@@ -23,10 +34,16 @@ export default function TicketModal() {
 
   return (
     <div className="modal-overlay" onClick={closeTicketModal}>
-      <div className="modal-container ticket-modal" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="modal-container ticket-modal"
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="ticket-modal-title"
+      >
         <div className="ticket-modal-header no-print">
           <div>
-            <span className="success-badge-top">
+            <span id="ticket-modal-title" className="success-badge-top">
               <CheckCircle size={16} /> Booking Confirmed & Ticket Issued
             </span>
           </div>
@@ -37,7 +54,7 @@ export default function TicketModal() {
             <button type="button" className="icon-action-btn" onClick={handleDownload} title="Download PDF">
               <Download size={16} /> Download
             </button>
-            <button className="modal-close-btn" onClick={closeTicketModal} aria-label="Close">
+            <button className="modal-close-btn" onClick={closeTicketModal} aria-label="Close ticket modal">
               <X size={20} />
             </button>
           </div>

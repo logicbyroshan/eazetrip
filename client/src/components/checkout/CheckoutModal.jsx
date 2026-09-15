@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useBooking } from '../../context/BookingContext';
 import { useAuth } from '../../context/AuthContext';
 import {
@@ -49,6 +49,16 @@ export default function CheckoutModal() {
   const [cardCvv, setCardCvv] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
 
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (e.key === 'Escape' && activeCheckoutItem && !isProcessing) {
+        closeCheckout();
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [activeCheckoutItem, isProcessing, closeCheckout]);
+
   if (!activeCheckoutItem) return null;
 
   const type = activeCheckoutItem.checkoutType || 'flight';
@@ -82,65 +92,70 @@ export default function CheckoutModal() {
     setStep(2);
   };
 
-  const handleFinalPayment = (e) => {
+  const handleFinalPayment = async (e) => {
     e.preventDefault();
     setIsProcessing(true);
 
-    setTimeout(() => {
+    const bookingPayload = {
+      type,
+      title:
+        type === 'flight'
+          ? `${activeCheckoutItem.fromCity || activeCheckoutItem.from} → ${activeCheckoutItem.toCity || activeCheckoutItem.to}`
+          : type === 'hotel'
+          ? activeCheckoutItem.name
+          : type === 'bus'
+          ? `${activeCheckoutItem.from} → ${activeCheckoutItem.to} (${activeCheckoutItem.operator})`
+          : `${activeCheckoutItem.trainName} (${activeCheckoutItem.trainNumber})`,
+      details: activeCheckoutItem,
+      date: activeCheckoutItem.departureDate || activeCheckoutItem.journeyDate || activeCheckoutItem.checkInDate || new Date().toISOString().split('T')[0],
+      totalAmount: finalTotal,
+      discount: appliedDiscount,
+      paymentMethod:
+        paymentMethod === 'upi'
+          ? `UPI (${upiId})`
+          : paymentMethod === 'card'
+          ? 'Credit/Debit Card'
+          : paymentMethod === 'netbanking'
+          ? 'Net Banking'
+          : 'Wallet',
+      passengers: [
+        {
+          name: `${title} ${firstName} ${lastName}`.trim(),
+          gender,
+          dob,
+          email: contactEmail,
+          phone: contactPhone,
+          seat: activeCheckoutItem.selectedSeats?.map((s) => s.number).join(', ') || 'Auto-Assigned'
+        }
+      ],
+      pnr: `${type.slice(0, 2).toUpperCase()}${Math.floor(1000 + Math.random() * 9000)}`
+    };
+
+    setTimeout(async () => {
+      await createBooking(bookingPayload);
       setIsProcessing(false);
-
-      const bookingPayload = {
-        type,
-        title:
-          type === 'flight'
-            ? `${activeCheckoutItem.fromCity || activeCheckoutItem.from} → ${activeCheckoutItem.toCity || activeCheckoutItem.to}`
-            : type === 'hotel'
-            ? activeCheckoutItem.name
-            : type === 'bus'
-            ? `${activeCheckoutItem.from} → ${activeCheckoutItem.to} (${activeCheckoutItem.operator})`
-            : `${activeCheckoutItem.trainName} (${activeCheckoutItem.trainNumber})`,
-        details: activeCheckoutItem,
-        date: activeCheckoutItem.departureDate || activeCheckoutItem.journeyDate || activeCheckoutItem.checkInDate || new Date().toISOString().split('T')[0],
-        totalAmount: finalTotal,
-        discount: appliedDiscount,
-        paymentMethod:
-          paymentMethod === 'upi'
-            ? `UPI (${upiId})`
-            : paymentMethod === 'card'
-            ? 'Credit/Debit Card'
-            : paymentMethod === 'netbanking'
-            ? 'Net Banking'
-            : 'Wallet',
-        passengers: [
-          {
-            name: `${title} ${firstName} ${lastName}`.trim(),
-            gender,
-            dob,
-            email: contactEmail,
-            phone: contactPhone,
-            seat: activeCheckoutItem.selectedSeats?.map((s) => s.number).join(', ') || 'Auto-Assigned'
-          }
-        ],
-        pnr: `${type.slice(0, 2).toUpperCase()}${Math.floor(1000 + Math.random() * 9000)}`
-      };
-
-      createBooking(bookingPayload);
-    }, 1500);
+    }, 1200);
   };
 
   return (
     <div className="modal-overlay" onClick={closeCheckout}>
-      <div className="modal-container checkout-modal" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="modal-container checkout-modal"
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="checkout-modal-title"
+      >
         <div className="modal-header-custom">
           <div>
-            <h3>
+            <h3 id="checkout-modal-title">
               {step === 1 ? 'Traveller Details & Review' : 'Secure Payment Gateway'}
             </h3>
             <span className="sub-tagline">
               Booking for {type.toUpperCase()} • Instant Confirmation
             </span>
           </div>
-          <button className="modal-close-btn" onClick={closeCheckout} aria-label="Close">
+          <button className="modal-close-btn" onClick={closeCheckout} aria-label="Close checkout modal">
             <X size={20} />
           </button>
         </div>
@@ -183,8 +198,9 @@ export default function CheckoutModal() {
                 </h4>
                 <div className="form-grid three-col">
                   <div className="form-group">
-                    <label>Title</label>
+                    <label htmlFor="pax-title">Title</label>
                     <select
+                      id="pax-title"
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
                       className="native-select"
@@ -195,8 +211,9 @@ export default function CheckoutModal() {
                     </select>
                   </div>
                   <div className="form-group">
-                    <label>First & Middle Name *</label>
+                    <label htmlFor="pax-first-name">First & Middle Name *</label>
                     <input
+                      id="pax-first-name"
                       type="text"
                       placeholder="e.g. Rahul"
                       value={firstName}
@@ -205,8 +222,9 @@ export default function CheckoutModal() {
                     />
                   </div>
                   <div className="form-group">
-                    <label>Last Name *</label>
+                    <label htmlFor="pax-last-name">Last Name *</label>
                     <input
+                      id="pax-last-name"
                       type="text"
                       placeholder="e.g. Sharma"
                       value={lastName}
@@ -218,8 +236,9 @@ export default function CheckoutModal() {
 
                 <div className="form-grid two-col mt-3">
                   <div className="form-group">
-                    <label>Gender</label>
+                    <label htmlFor="pax-gender">Gender</label>
                     <select
+                      id="pax-gender"
                       value={gender}
                       onChange={(e) => setGender(e.target.value)}
                       className="native-select"
@@ -230,8 +249,9 @@ export default function CheckoutModal() {
                     </select>
                   </div>
                   <div className="form-group">
-                    <label>Date of Birth</label>
+                    <label htmlFor="pax-dob">Date of Birth</label>
                     <input
+                      id="pax-dob"
                       type="date"
                       value={dob}
                       onChange={(e) => setDob(e.target.value)}
@@ -247,8 +267,9 @@ export default function CheckoutModal() {
                 </h4>
                 <div className="form-grid two-col">
                   <div className="form-group">
-                    <label>Email Address *</label>
+                    <label htmlFor="pax-email">Email Address *</label>
                     <input
+                      id="pax-email"
                       type="email"
                       placeholder="name@example.com"
                       value={contactEmail}
@@ -257,10 +278,11 @@ export default function CheckoutModal() {
                     />
                   </div>
                   <div className="form-group">
-                    <label>Mobile Number *</label>
+                    <label htmlFor="pax-phone">Mobile Number *</label>
                     <div className="input-with-prefix">
                       <span className="phone-prefix">+91</span>
                       <input
+                        id="pax-phone"
                         type="tel"
                         maxLength={10}
                         placeholder="10 digit number"
@@ -287,8 +309,9 @@ export default function CheckoutModal() {
                 {addGst && (
                   <div className="form-grid two-col mt-3">
                     <div className="form-group">
-                      <label>GSTIN</label>
+                      <label htmlFor="gstin-input">GSTIN</label>
                       <input
+                        id="gstin-input"
                         type="text"
                         placeholder="e.g. 07AAAAA0000A1Z5"
                         value={gstNumber}
@@ -296,8 +319,9 @@ export default function CheckoutModal() {
                       />
                     </div>
                     <div className="form-group">
-                      <label>Registered Company Name</label>
+                      <label htmlFor="company-name-input">Registered Company Name</label>
                       <input
+                        id="company-name-input"
                         type="text"
                         placeholder="Company Name"
                         value={companyName}
@@ -328,6 +352,7 @@ export default function CheckoutModal() {
                     placeholder="Enter Promo Code (e.g. EXPLOREEAZ)"
                     value={couponCode}
                     onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                    aria-label="Promo discount code"
                   />
                 </div>
                 <button type="submit" className="apply-coupon-btn">
@@ -383,8 +408,9 @@ export default function CheckoutModal() {
                         </div>
                       </div>
                       <div className="upi-id-row">
-                        <label>Or enter UPI ID / VPA</label>
+                        <label htmlFor="upi-vpa-input">Or enter UPI ID / VPA</label>
                         <input
+                          id="upi-vpa-input"
                           type="text"
                           value={upiId}
                           onChange={(e) => setUpiId(e.target.value)}
@@ -397,8 +423,9 @@ export default function CheckoutModal() {
                   {paymentMethod === 'card' && (
                     <div className="card-pay-box">
                       <div className="form-group mb-3">
-                        <label>Card Number</label>
+                        <label htmlFor="card-number-input">Card Number</label>
                         <input
+                          id="card-number-input"
                           type="text"
                           placeholder="4532 •••• •••• ••••"
                           maxLength={19}
@@ -409,8 +436,9 @@ export default function CheckoutModal() {
                       </div>
                       <div className="form-grid two-col">
                         <div className="form-group">
-                          <label>Expiry Date</label>
+                          <label htmlFor="card-exp-input">Expiry Date</label>
                           <input
+                            id="card-exp-input"
                             type="text"
                             placeholder="MM / YY"
                             maxLength={5}
@@ -420,8 +448,9 @@ export default function CheckoutModal() {
                           />
                         </div>
                         <div className="form-group">
-                          <label>CVV / CVC</label>
+                          <label htmlFor="card-cvv-input">CVV / CVC</label>
                           <input
+                            id="card-cvv-input"
                             type="password"
                             placeholder="•••"
                             maxLength={4}
@@ -436,8 +465,8 @@ export default function CheckoutModal() {
 
                   {paymentMethod === 'netbanking' && (
                     <div className="netbanking-pay-box">
-                      <label>Select Your Bank</label>
-                      <select className="native-select">
+                      <label htmlFor="netbank-select">Select Your Bank</label>
+                      <select id="netbank-select" className="native-select">
                         <option>HDFC Bank</option>
                         <option>State Bank of India (SBI)</option>
                         <option>ICICI Bank</option>
@@ -450,8 +479,8 @@ export default function CheckoutModal() {
 
                   {paymentMethod === 'wallet' && (
                     <div className="wallet-pay-box">
-                      <label>Select Mobile Wallet</label>
-                      <select className="native-select">
+                      <label htmlFor="wallet-select">Select Mobile Wallet</label>
+                      <select id="wallet-select" className="native-select">
                         <option>Paytm Wallet</option>
                         <option>Amazon Pay</option>
                         <option>PhonePe Wallet</option>

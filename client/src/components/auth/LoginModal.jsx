@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useBooking } from '../../context/BookingContext';
 import { X, Phone, Mail, Lock, Eye, EyeOff, RefreshCw, CheckCircle } from 'lucide-react';
@@ -21,6 +21,17 @@ export default function LoginModal() {
   const [captchaCode, setCaptchaCode] = useState('7R9K2');
   const [captchaInput, setCaptchaInput] = useState('');
   const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (e.key === 'Escape' && isLoginModalOpen) {
+        closeLoginModal();
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isLoginModalOpen, closeLoginModal]);
 
   const refreshCaptcha = () => {
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -33,7 +44,7 @@ export default function LoginModal() {
 
   if (!isLoginModalOpen) return null;
 
-  const handlePhoneSubmit = (e) => {
+  const handlePhoneSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
@@ -52,7 +63,9 @@ export default function LoginModal() {
       showToast(`OTP sent to +91 ${phoneNumber}. (Use 1234 to login)`);
     } else {
       if (otp === '1234' || otp.length === 4) {
-        login({ identifier: phoneNumber, method: 'phone' });
+        setIsSubmitting(true);
+        await login({ identifier: phoneNumber, method: 'phone' });
+        setIsSubmitting(false);
         showToast('Login successful! Welcome to ExploreEase.');
       } else {
         setError('Invalid OTP code. Please enter 1234.');
@@ -60,7 +73,7 @@ export default function LoginModal() {
     }
   };
 
-  const handleEmailSubmit = (e) => {
+  const handleEmailSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
@@ -79,14 +92,26 @@ export default function LoginModal() {
       return;
     }
 
-    login({ identifier: email, password, method: 'email' });
+    setIsSubmitting(true);
+    await login({ identifier: email, password, method: 'email' });
+    setIsSubmitting(false);
     showToast('Signed in successfully! Welcome back.');
   };
 
   return (
     <div className="modal-overlay" onClick={closeLoginModal}>
-      <div className="modal-container auth-modal" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close-btn" onClick={closeLoginModal} aria-label="Close modal">
+      <div
+        className="modal-container auth-modal"
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="login-modal-title"
+      >
+        <button
+          className="modal-close-btn"
+          onClick={closeLoginModal}
+          aria-label="Close modal"
+        >
           <X size={20} />
         </button>
 
@@ -95,7 +120,7 @@ export default function LoginModal() {
             <span className="brand-name-explore">Explore</span>
             <span className="brand-name-eaz">Eaz</span>
           </div>
-          <h2>Welcome Back</h2>
+          <h2 id="login-modal-title">Welcome Back</h2>
           <p>Login to manage your bookings, special fares & fast checkout</p>
         </div>
 
@@ -131,10 +156,11 @@ export default function LoginModal() {
             {!otpSent ? (
               <>
                 <div className="form-group">
-                  <label>Mobile Number</label>
+                  <label htmlFor="auth-phone">Mobile Number</label>
                   <div className="input-with-prefix">
                     <span className="phone-prefix">+91</span>
                     <input
+                      id="auth-phone"
                       type="tel"
                       maxLength={10}
                       placeholder="Enter 10 digit number"
@@ -146,7 +172,7 @@ export default function LoginModal() {
                 </div>
 
                 <div className="form-group captcha-group">
-                  <label>Security Captcha</label>
+                  <label htmlFor="auth-captcha-phone">Security Captcha</label>
                   <div className="captcha-row">
                     <div className="captcha-badge">{captchaCode}</div>
                     <button
@@ -154,10 +180,12 @@ export default function LoginModal() {
                       className="captcha-refresh-btn"
                       onClick={refreshCaptcha}
                       title="Refresh Captcha"
+                      aria-label="Refresh captcha code"
                     >
                       <RefreshCw size={16} />
                     </button>
                     <input
+                      id="auth-captcha-phone"
                       type="text"
                       placeholder="Enter text"
                       value={captchaInput}
@@ -168,7 +196,11 @@ export default function LoginModal() {
                   </div>
                 </div>
 
-                <button type="submit" className="primary-btn full auth-submit-btn">
+                <button
+                  type="submit"
+                  className="primary-btn full auth-submit-btn"
+                  disabled={isSubmitting}
+                >
                   Send OTP
                 </button>
               </>
@@ -179,8 +211,9 @@ export default function LoginModal() {
                   <span>OTP sent to +91 {phoneNumber}</span>
                 </div>
                 <div className="form-group">
-                  <label>Enter 4-digit OTP (Demo code: 1234)</label>
+                  <label htmlFor="auth-otp">Enter 4-digit OTP (Demo code: 1234)</label>
                   <input
+                    id="auth-otp"
                     type="text"
                     maxLength={4}
                     placeholder="• • • •"
@@ -191,8 +224,12 @@ export default function LoginModal() {
                     autoFocus
                   />
                 </div>
-                <button type="submit" className="primary-btn full auth-submit-btn">
-                  Verify & Sign In
+                <button
+                  type="submit"
+                  className="primary-btn full auth-submit-btn"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'Verifying...' : 'Verify & Sign In'}
                 </button>
                 <button
                   type="button"
@@ -207,10 +244,11 @@ export default function LoginModal() {
         ) : (
           <form onSubmit={handleEmailSubmit} className="auth-form">
             <div className="form-group">
-              <label>Email Address</label>
+              <label htmlFor="auth-email">Email Address</label>
               <div className="input-with-icon">
                 <Mail size={16} className="field-icon" />
                 <input
+                  id="auth-email"
                   type="email"
                   placeholder="name@example.com"
                   value={email}
@@ -222,14 +260,22 @@ export default function LoginModal() {
 
             <div className="form-group">
               <div className="label-with-action">
-                <label>Password</label>
-                <a href="#forgot" onClick={(e) => { e.preventDefault(); showToast('Password reset link sent if account exists.'); }} className="forgot-link">
+                <label htmlFor="auth-password">Password</label>
+                <a
+                  href="#forgot"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    showToast('Password reset link sent if account exists.');
+                  }}
+                  className="forgot-link"
+                >
                   Forgot Password?
                 </a>
               </div>
               <div className="input-with-icon">
                 <Lock size={16} className="field-icon" />
                 <input
+                  id="auth-password"
                   type={showPassword ? 'text' : 'password'}
                   placeholder="Enter your password"
                   value={password}
@@ -240,6 +286,7 @@ export default function LoginModal() {
                   type="button"
                   className="password-toggle-btn"
                   onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
@@ -247,7 +294,7 @@ export default function LoginModal() {
             </div>
 
             <div className="form-group captcha-group">
-              <label>Security Captcha</label>
+              <label htmlFor="auth-captcha-email">Security Captcha</label>
               <div className="captcha-row">
                 <div className="captcha-badge">{captchaCode}</div>
                 <button
@@ -255,10 +302,12 @@ export default function LoginModal() {
                   className="captcha-refresh-btn"
                   onClick={refreshCaptcha}
                   title="Refresh Captcha"
+                  aria-label="Refresh captcha code"
                 >
                   <RefreshCw size={16} />
                 </button>
                 <input
+                  id="auth-captcha-email"
                   type="text"
                   placeholder="Enter text"
                   value={captchaInput}
@@ -269,8 +318,12 @@ export default function LoginModal() {
               </div>
             </div>
 
-            <button type="submit" className="primary-btn full auth-submit-btn">
-              Sign In with Email
+            <button
+              type="submit"
+              className="primary-btn full auth-submit-btn"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Signing in...' : 'Sign In with Email'}
             </button>
           </form>
         )}

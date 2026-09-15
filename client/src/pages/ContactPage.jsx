@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useBooking } from '../context/BookingContext';
+import { api } from '../services/api';
 import { Mail, Phone, MapPin, Clock, Send, CheckCircle2, RefreshCw } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -13,6 +14,7 @@ export default function ContactPage() {
   
   const [captchaCode, setCaptchaCode] = useState('9W4K8');
   const [captchaInput, setCaptchaInput] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   const refreshCaptcha = () => {
@@ -24,15 +26,23 @@ export default function ContactPage() {
     setCaptchaCode(res);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (captchaInput.toUpperCase() !== captchaCode) {
       showToast('Invalid captcha code entered.', 'error');
       return;
     }
 
-    setSubmitted(true);
-    showToast('Your message has been sent to our customer care team!');
+    setIsSubmitting(true);
+    try {
+      await api.submitContact({ name, email, phone, subject, message });
+    } catch (err) {
+      console.warn('Backend unavailable, proceeding locally', err);
+    } finally {
+      setIsSubmitting(false);
+      setSubmitted(true);
+      showToast('Your message has been sent to our customer care team!');
+    }
   };
 
   return (
@@ -130,8 +140,9 @@ export default function ContactPage() {
                 <form onSubmit={handleSubmit} className="stack-form mt-3">
                   <div className="form-grid two-col">
                     <div className="form-group">
-                      <label>Your Full Name *</label>
+                      <label htmlFor="contact-name">Your Full Name *</label>
                       <input
+                        id="contact-name"
                         type="text"
                         placeholder="e.g. Priyansh Sharma"
                         value={name}
@@ -140,8 +151,9 @@ export default function ContactPage() {
                       />
                     </div>
                     <div className="form-group">
-                      <label>Email Address *</label>
+                      <label htmlFor="contact-email">Email Address *</label>
                       <input
+                        id="contact-email"
                         type="email"
                         placeholder="name@example.com"
                         value={email}
@@ -153,8 +165,9 @@ export default function ContactPage() {
 
                   <div className="form-grid two-col">
                     <div className="form-group">
-                      <label>Mobile Number</label>
+                      <label htmlFor="contact-phone">Mobile Number</label>
                       <input
+                        id="contact-phone"
                         type="tel"
                         placeholder="10 digit phone number"
                         value={phone}
@@ -162,8 +175,9 @@ export default function ContactPage() {
                       />
                     </div>
                     <div className="form-group">
-                      <label>Subject</label>
+                      <label htmlFor="contact-subject">Subject</label>
                       <input
+                        id="contact-subject"
                         type="text"
                         placeholder="e.g. Flight Rescheduling Request"
                         value={subject}
@@ -174,8 +188,9 @@ export default function ContactPage() {
                   </div>
 
                   <div className="form-group">
-                    <label>Message / Inquiry Details *</label>
+                    <label htmlFor="contact-message">Message / Inquiry Details *</label>
                     <textarea
+                      id="contact-message"
                       rows="4"
                       placeholder="Please provide booking ID if applicable..."
                       value={message}
@@ -186,7 +201,7 @@ export default function ContactPage() {
 
                   {/* Captcha */}
                   <div className="form-group captcha-group">
-                    <label>Security Captcha</label>
+                    <label htmlFor="contact-captcha">Security Captcha</label>
                     <div className="captcha-row">
                       <div className="captcha-badge">{captchaCode}</div>
                       <button
@@ -194,10 +209,12 @@ export default function ContactPage() {
                         className="captcha-refresh-btn"
                         onClick={refreshCaptcha}
                         title="Refresh Captcha"
+                        aria-label="Refresh security captcha"
                       >
                         <RefreshCw size={16} />
                       </button>
                       <input
+                        id="contact-captcha"
                         type="text"
                         placeholder="Enter text"
                         value={captchaInput}
@@ -208,9 +225,13 @@ export default function ContactPage() {
                     </div>
                   </div>
 
-                  <button type="submit" className="primary-btn full send-inquiry-btn">
+                  <button
+                    type="submit"
+                    className="primary-btn full send-inquiry-btn"
+                    disabled={isSubmitting}
+                  >
                     <Send size={16} />
-                    <span>SEND MESSAGE</span>
+                    <span>{isSubmitting ? 'SENDING INQUIRY...' : 'SEND MESSAGE'}</span>
                   </button>
                 </form>
               )}

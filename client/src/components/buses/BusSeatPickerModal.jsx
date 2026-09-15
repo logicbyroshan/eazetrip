@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X, Armchair, MapPin, CheckCircle2 } from 'lucide-react';
 
 export default function BusSeatPickerModal({ bus, onClose, onProceed }) {
@@ -9,6 +9,16 @@ export default function BusSeatPickerModal({ bus, onClose, onProceed }) {
   const [selectedDropping, setSelectedDropping] = useState(
     bus?.droppingPoints?.[0]?.location || 'Main Dropping Point'
   );
+
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (e.key === 'Escape' && bus) {
+        onClose();
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [bus, onClose]);
 
   if (!bus) return null;
 
@@ -29,13 +39,19 @@ export default function BusSeatPickerModal({ bus, onClose, onProceed }) {
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-container seat-picker-modal" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="modal-container seat-picker-modal"
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="seat-picker-title"
+      >
         <div className="modal-header-custom">
           <div>
-            <h3>Select Seats • {bus.operator}</h3>
+            <h3 id="seat-picker-title">Select Seats • {bus.operator}</h3>
             <span className="sub-tagline">{bus.from} → {bus.to} ({bus.busType})</span>
           </div>
-          <button className="modal-close-btn" onClick={onClose} aria-label="Close">
+          <button className="modal-close-btn" onClick={onClose} aria-label="Close seat picker modal">
             <X size={20} />
           </button>
         </div>
@@ -81,6 +97,7 @@ export default function BusSeatPickerModal({ bus, onClose, onProceed }) {
                         } ${isSelected ? 'selected' : ''}`}
                         onClick={() => handleSeatClick(seat)}
                         title={`Seat ${seat.number} - ₹${seat.price}`}
+                        aria-label={`Seat ${seat.number}, ${seat.isBooked ? 'Booked' : isSelected ? 'Selected' : 'Available'}`}
                       >
                         <Armchair size={16} />
                         <small>{seat.number}</small>
@@ -110,6 +127,7 @@ export default function BusSeatPickerModal({ bus, onClose, onProceed }) {
                           } ${isSelected ? 'selected' : ''}`}
                           onClick={() => handleSeatClick(seat)}
                           title={`Berth ${seat.number} - ₹${seat.price}`}
+                          aria-label={`Berth ${seat.number}, ${seat.isBooked ? 'Booked' : isSelected ? 'Selected' : 'Available'}`}
                         >
                           <span className="berth-icon">🛏️</span>
                           <small>{seat.number}</small>
@@ -128,8 +146,9 @@ export default function BusSeatPickerModal({ bus, onClose, onProceed }) {
               <h4>Boarding & Dropping Points</h4>
 
               <div className="form-group mb-3">
-                <label>Boarding Point:</label>
+                <label htmlFor="boarding-point-select">Boarding Point:</label>
                 <select
+                  id="boarding-point-select"
                   value={selectedBoarding}
                   onChange={(e) => setSelectedBoarding(e.target.value)}
                   className="native-select"
@@ -143,8 +162,9 @@ export default function BusSeatPickerModal({ bus, onClose, onProceed }) {
               </div>
 
               <div className="form-group">
-                <label>Dropping Point:</label>
+                <label htmlFor="dropping-point-select">Dropping Point:</label>
                 <select
+                  id="dropping-point-select"
                   value={selectedDropping}
                   onChange={(e) => setSelectedDropping(e.target.value)}
                   className="native-select"

@@ -1,20 +1,36 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X, Plane, Luggage, ShieldAlert, Receipt, Clock, Calendar, CheckCircle2 } from 'lucide-react';
 
 export default function FlightDetailsModal({ flight, onClose, onBook }) {
   const [activeTab, setActiveTab] = useState('schedule'); // schedule | baggage | cancellation | fare
 
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (e.key === 'Escape' && flight) {
+        onClose();
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [flight, onClose]);
+
   if (!flight) return null;
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-container flight-details-modal" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="modal-container flight-details-modal"
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="flight-details-title"
+      >
         <div className="modal-header-custom">
           <div>
-            <h3>Flight Information & Fare Rules</h3>
+            <h3 id="flight-details-title">Flight Information & Fare Rules</h3>
             <span className="sub-tagline">{flight.airline} • {flight.flightNumber} ({flight.from} → {flight.to})</span>
           </div>
-          <button className="modal-close-btn" onClick={onClose} aria-label="Close">
+          <button className="modal-close-btn" onClick={onClose} aria-label="Close flight details modal">
             <X size={20} />
           </button>
         </div>

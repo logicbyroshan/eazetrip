@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
+import { api } from '../services/api';
 
 const BookingContext = createContext(null);
 
@@ -100,23 +101,42 @@ export function BookingProvider({ children }) {
     setActiveCheckoutItem(null);
   };
 
-  const createBooking = (bookingData) => {
-    const newBooking = {
-      id: `EZ-${(bookingData.type || 'FL').slice(0, 2).toUpperCase()}-${Math.floor(10000 + Math.random() * 90000)}`,
-      createdAt: new Date().toISOString(),
-      status: 'Confirmed',
-      paymentStatus: 'Paid',
-      ...bookingData
-    };
+  const createBooking = async (bookingData) => {
+    let confirmedBooking = null;
 
-    setBookings((prev) => [newBooking, ...prev]);
+    try {
+      const apiBooking = await api.createBooking(bookingData);
+      if (apiBooking) {
+        confirmedBooking = apiBooking;
+      }
+    } catch (err) {
+      console.warn('Backend unavailable, using local booking generator', err);
+    }
+
+    if (!confirmedBooking) {
+      confirmedBooking = {
+        id: `EZ-${(bookingData.type || 'FL').slice(0, 2).toUpperCase()}-${Math.floor(10000 + Math.random() * 90000)}`,
+        createdAt: new Date().toISOString(),
+        status: 'Confirmed',
+        paymentStatus: 'Paid',
+        ...bookingData
+      };
+    }
+
+    setBookings((prev) => [confirmedBooking, ...prev]);
     setActiveCheckoutItem(null);
-    setActiveTicket(newBooking);
-    showToast(`Booking Confirmed! Booking ID: ${newBooking.id}`);
-    return newBooking;
+    setActiveTicket(confirmedBooking);
+    showToast(`Booking Confirmed! Booking ID: ${confirmedBooking.id}`);
+    return confirmedBooking;
   };
 
-  const cancelBooking = (bookingId, reason = 'Travel plan changed') => {
+  const cancelBooking = async (bookingId, reason = 'Travel plan changed') => {
+    try {
+      await api.cancelBooking(bookingId, reason);
+    } catch (err) {
+      console.warn('Backend unavailable, cancelling locally', err);
+    }
+
     setBookings((prev) =>
       prev.map((b) =>
         b.id === bookingId

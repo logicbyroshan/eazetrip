@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
+import { api } from '../services/api';
 
 const AuthContext = createContext(null);
 
@@ -25,30 +26,35 @@ export function AuthProvider({ children }) {
   }, [user]);
 
   const login = async (credentials) => {
-    // Simulated auth logic
-    const { identifier, password, method } = credentials;
+    const apiRes = await api.login(credentials);
     let loggedInUser = null;
 
-    if (method === 'phone') {
-      loggedInUser = {
-        id: 'USR-' + Math.floor(100000 + Math.random() * 900000),
-        name: 'Traveler ' + identifier.slice(-4),
-        phone: identifier,
-        email: `user${identifier.slice(-4)}@exploreeaz.com`,
-        memberSince: new Date().getFullYear(),
-        tier: 'Silver Explorer'
-      };
+    if (apiRes.ok && apiRes.data?.data) {
+      loggedInUser = apiRes.data.data;
     } else {
-      const namePart = identifier.split('@')[0];
-      const displayName = namePart.charAt(0).toUpperCase() + namePart.slice(1);
-      loggedInUser = {
-        id: 'USR-' + Math.floor(100000 + Math.random() * 900000),
-        name: displayName,
-        email: identifier,
-        phone: '+91 9876543210',
-        memberSince: new Date().getFullYear(),
-        tier: 'Gold Explorer'
-      };
+      // Fallback in offline / simulated mode
+      const { identifier, method } = credentials;
+      if (method === 'phone') {
+        loggedInUser = {
+          id: 'USR-' + Math.floor(100000 + Math.random() * 900000),
+          name: 'Traveler ' + identifier.slice(-4),
+          phone: identifier,
+          email: `user${identifier.slice(-4)}@exploreeaz.com`,
+          memberSince: new Date().getFullYear(),
+          tier: 'Silver Explorer'
+        };
+      } else {
+        const namePart = identifier.split('@')[0];
+        const displayName = namePart.charAt(0).toUpperCase() + namePart.slice(1);
+        loggedInUser = {
+          id: 'USR-' + Math.floor(100000 + Math.random() * 900000),
+          name: displayName,
+          email: identifier,
+          phone: '+91 9876543210',
+          memberSince: new Date().getFullYear(),
+          tier: 'Gold Explorer'
+        };
+      }
     }
 
     setUser(loggedInUser);
@@ -57,14 +63,22 @@ export function AuthProvider({ children }) {
   };
 
   const register = async (userData) => {
-    const newUser = {
-      id: 'USR-' + Math.floor(100000 + Math.random() * 900000),
-      name: userData.name || `${userData.firstName} ${userData.lastName}`.trim(),
-      email: userData.email,
-      phone: userData.phone || '+91 9876543210',
-      memberSince: new Date().getFullYear(),
-      tier: 'Classic Explorer'
-    };
+    const apiRes = await api.register(userData);
+    let newUser = null;
+
+    if (apiRes.ok && apiRes.data?.data) {
+      newUser = apiRes.data.data;
+    } else {
+      newUser = {
+        id: 'USR-' + Math.floor(100000 + Math.random() * 900000),
+        name: userData.name || `${userData.firstName} ${userData.lastName}`.trim(),
+        email: userData.email,
+        phone: userData.phone || '+91 9876543210',
+        memberSince: new Date().getFullYear(),
+        tier: 'Classic Explorer'
+      };
+    }
+
     setUser(newUser);
     return { success: true, user: newUser };
   };

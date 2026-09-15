@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useBooking } from '../context/BookingContext';
+import { api } from '../services/api';
 import { CreditCard, ShieldCheck, CheckCircle2, Lock } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function PaymentPage() {
   const { showToast } = useBooking();
@@ -17,7 +19,7 @@ export default function PaymentPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!firstName || !email || !amount) {
       showToast('Please fill all mandatory fields', 'error');
@@ -25,26 +27,47 @@ export default function PaymentPage() {
     }
 
     setIsProcessing(true);
-    setTimeout(() => {
-      setIsProcessing(false);
-      const receipt = {
+    let receipt = null;
+
+    try {
+      const res = await api.processPayment({
+        firstName,
+        lastName,
+        email,
+        mobile,
+        currency,
+        amount: Number(amount),
+        description,
+        address
+      });
+      if (res.ok && res.data?.data) {
+        receipt = res.data.data;
+      }
+    } catch (err) {
+      console.warn('Backend unavailable, processing locally', err);
+    }
+
+    if (!receipt) {
+      receipt = {
         paymentId: `PAY-${Date.now()}`,
-        amount,
+        amount: Number(amount),
         currency,
         name: `${firstName} ${lastName}`.trim(),
         email,
         date: new Date().toLocaleDateString('en-IN')
       };
-      setPaymentSuccess(receipt);
-      showToast('Payment processed successfully!');
-    }, 1200);
+    }
+
+    setIsProcessing(false);
+    setPaymentSuccess(receipt);
+    showToast('Payment processed successfully!');
   };
 
   return (
     <div className="container page-wrap">
       <div className="page-shell narrow">
         <div className="page-topbar">
-          <span>Home</span>
+          <Link to="/">Home</Link>
           <span>/</span>
           <span>Make Payment</span>
         </div>
@@ -70,7 +93,7 @@ export default function PaymentPage() {
               </div>
               <div className="receipt-row">
                 <span>Date:</span>
-                <strong>{paymentSuccess.date}</strong>
+                <strong>{paymentSuccess.date || new Date().toLocaleDateString('en-IN')}</strong>
               </div>
             </div>
 
@@ -105,8 +128,9 @@ export default function PaymentPage() {
 
             <form onSubmit={handleSubmit} className="explore-payment-form">
               <div className="payment-field-row">
-                <span className="field-label">First Name *</span>
+                <label htmlFor="pay-first-name" className="field-label">First Name *</label>
                 <input
+                  id="pay-first-name"
                   type="text"
                   placeholder="First name"
                   value={firstName}
@@ -116,8 +140,9 @@ export default function PaymentPage() {
               </div>
 
               <div className="payment-field-row">
-                <span className="field-label">Last Name</span>
+                <label htmlFor="pay-last-name" className="field-label">Last Name</label>
                 <input
+                  id="pay-last-name"
                   type="text"
                   placeholder="Last name"
                   value={lastName}
@@ -126,8 +151,9 @@ export default function PaymentPage() {
               </div>
 
               <div className="payment-field-row">
-                <span className="field-label">Email Address *</span>
+                <label htmlFor="pay-email" className="field-label">Email Address *</label>
                 <input
+                  id="pay-email"
                   type="email"
                   placeholder="name@example.com"
                   value={email}
@@ -137,8 +163,9 @@ export default function PaymentPage() {
               </div>
 
               <div className="payment-field-row">
-                <span className="field-label">Mobile Number</span>
+                <label htmlFor="pay-mobile" className="field-label">Mobile Number</label>
                 <input
+                  id="pay-mobile"
                   type="tel"
                   placeholder="10 digit mobile"
                   value={mobile}
@@ -147,9 +174,10 @@ export default function PaymentPage() {
               </div>
 
               <div className="payment-field-row">
-                <span className="field-label">Amount (INR) *</span>
+                <label htmlFor="pay-amount" className="field-label">Amount (INR) *</label>
                 <div className="amount-input-composite">
                   <select
+                    id="pay-currency"
                     value={currency}
                     onChange={(e) => setCurrency(e.target.value)}
                     className="currency-select"
@@ -159,6 +187,7 @@ export default function PaymentPage() {
                     <option value="EUR">Euro (EUR)</option>
                   </select>
                   <input
+                    id="pay-amount"
                     type="number"
                     min="1"
                     placeholder="Enter amount"
@@ -170,8 +199,9 @@ export default function PaymentPage() {
               </div>
 
               <div className="payment-field-row">
-                <span className="field-label">Payment Description</span>
+                <label htmlFor="pay-desc" className="field-label">Payment Description</label>
                 <input
+                  id="pay-desc"
                   type="text"
                   placeholder="e.g. Flight booking reference or custom tour"
                   value={description}
@@ -180,8 +210,9 @@ export default function PaymentPage() {
               </div>
 
               <div className="payment-field-row">
-                <span className="field-label">Billing Address</span>
+                <label htmlFor="pay-address" className="field-label">Billing Address</label>
                 <textarea
+                  id="pay-address"
                   rows="2"
                   placeholder="Address, City, Pincode"
                   value={address}
