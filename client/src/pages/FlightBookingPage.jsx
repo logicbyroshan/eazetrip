@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import FlightSearchWidget from '../components/search/FlightSearchWidget';
 import FlightCard from '../components/flights/FlightCard';
 import FlightFilters from '../components/flights/FlightFilters';
@@ -11,6 +11,7 @@ import { Plane } from 'lucide-react';
 
 export default function FlightBookingPage() {
   const location = useLocation();
+  const navigate = useNavigate();
   const searchState = location.state || {};
   const { startCheckout } = useBooking();
 
@@ -74,7 +75,14 @@ export default function FlightBookingPage() {
 
   const handleSelectFlight = (flight, isReturn = false) => {
     if (!isRoundTrip) {
-      startCheckout(flight, 'flight');
+      const item = {
+        ...flight,
+        departureDate: searchState.departureDate || '2026-10-15',
+        passengersCount: searchState.travellers || 1,
+        cabinClass: searchState.cabinClass || 'Economy'
+      };
+      startCheckout(item, 'flight');
+      navigate('/review-booking', { state: { item } });
     } else {
       if (isReturn) {
         setSelectedReturnFlight(flight);
@@ -89,14 +97,16 @@ export default function FlightBookingPage() {
     const combinedItem = {
       id: `RT-${selectedOnwardFlight.id}-${selectedReturnFlight.id}`,
       type: 'flight',
+      checkoutType: 'flight',
       title: `${selectedOnwardFlight.fromCity} ⇄ ${selectedOnwardFlight.toCity} (Round Trip)`,
       onward: selectedOnwardFlight,
       returnFlight: selectedReturnFlight,
       price: selectedOnwardFlight.price + selectedReturnFlight.price,
-      departureDate: searchState.departureDate,
-      returnDate: searchState.returnDate
+      departureDate: searchState.departureDate || '2026-10-15',
+      returnDate: searchState.returnDate || '2026-10-22'
     };
     startCheckout(combinedItem, 'flight');
+    navigate('/review-booking', { state: { item: combinedItem } });
   };
 
   return (

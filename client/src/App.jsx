@@ -20,6 +20,8 @@ import HotelBookingPage from './pages/HotelBookingPage';
 import BusBookingPage from './pages/BusBookingPage';
 import RailwayBookingPage from './pages/RailwayBookingPage';
 import HolidayBookingPage from './pages/HolidayBookingPage';
+import ReviewBookingPage from './pages/ReviewBookingPage';
+import BookingPaymentPage from './pages/BookingPaymentPage';
 import ManageBookingsPage from './pages/ManageBookingsPage';
 import ProfilePage from './pages/ProfilePage';
 import PaymentPage from './pages/PaymentPage';
@@ -103,6 +105,13 @@ function AppContent() {
             <Route path="/holiday-booking" element={<HolidayBookingPage />} />
             <Route path="/holidays" element={<HolidayBookingPage />} />
             <Route path="/holiday-packages" element={<HolidayBookingPage />} />
+
+            {/* Dedicated Multi-Step Booking & Payment Flow */}
+            <Route path="/review-booking" element={<ReviewBookingPage />} />
+            <Route path="/booking-review" element={<ReviewBookingPage />} />
+            <Route path="/booking" element={<ReviewBookingPage />} />
+            <Route path="/booking-payment" element={<BookingPaymentPage />} />
+
             <Route path="/manage-bookings" element={<ManageBookingsPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/my-profile" element={<ProfilePage />} />

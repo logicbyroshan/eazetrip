@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import TrainSearchWidget from '../components/search/TrainSearchWidget';
 import TrainCard from '../components/trains/TrainCard';
 import TrainFilters from '../components/trains/TrainFilters';
@@ -10,6 +10,7 @@ import { Train, CheckCircle2, RotateCcw } from 'lucide-react';
 
 export default function RailwayBookingPage() {
   const location = useLocation();
+  const navigate = useNavigate();
   const searchState = location.state || {};
   const { startCheckout } = useBooking();
 
@@ -74,12 +75,15 @@ export default function RailwayBookingPage() {
   };
 
   const handleBookTrainClass = (train, classObj) => {
-    startCheckout({
+    const item = {
       ...train,
-      selectedClass: classObj,
-      price: classObj.price,
+      checkoutType: 'train',
+      selectedClass: classObj?.name || classObj?.code || '3A',
+      price: classObj?.price || 1200,
       travelDate: searchState.travelDate || '2026-09-25'
-    }, 'train');
+    };
+    startCheckout(item, 'train');
+    navigate('/review-booking', { state: { item } });
   };
 
   return (

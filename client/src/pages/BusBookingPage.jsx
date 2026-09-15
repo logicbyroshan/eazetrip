@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import BusSearchWidget from '../components/search/BusSearchWidget';
 import BusCard from '../components/buses/BusCard';
 import BusFilters from '../components/buses/BusFilters';
@@ -11,6 +11,7 @@ import { Bus, RotateCcw } from 'lucide-react';
 
 export default function BusBookingPage() {
   const location = useLocation();
+  const navigate = useNavigate();
   const searchState = location.state || {};
   const { startCheckout } = useBooking();
 
@@ -69,14 +70,17 @@ export default function BusBookingPage() {
 
   const handleProceedFromSeatPicker = (selectionData) => {
     setActiveBusModal(null);
-    startCheckout({
+    const item = {
       ...selectionData.bus,
+      checkoutType: 'bus',
       selectedSeats: selectionData.selectedSeats,
       boardingPoint: selectionData.boardingPoint,
       droppingPoint: selectionData.droppingPoint,
       price: selectionData.totalPrice,
       journeyDate: searchState.journeyDate || '2026-09-28'
-    }, 'bus');
+    };
+    startCheckout(item, 'bus');
+    navigate('/review-booking', { state: { item } });
   };
 
   return (

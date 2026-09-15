@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import HotelSearchWidget from '../components/search/HotelSearchWidget';
 import HotelCard from '../components/hotels/HotelCard';
 import HotelFilters from '../components/hotels/HotelFilters';
@@ -10,6 +10,7 @@ import { Building2 } from 'lucide-react';
 
 export default function HotelBookingPage() {
   const location = useLocation();
+  const navigate = useNavigate();
   const searchState = location.state || {};
   const { startCheckout } = useBooking();
 
@@ -50,14 +51,17 @@ export default function HotelBookingPage() {
   };
 
   const handleBookHotel = (hotel) => {
-    startCheckout({
+    const item = {
       ...hotel,
+      checkoutType: 'hotel',
       price: hotel.pricePerNight,
       taxes: hotel.taxes,
       checkInDate: searchState.checkInDate || '2026-10-05',
       checkOutDate: searchState.checkOutDate || '2026-10-08',
       guests: `${searchState.adults || 2} Adults, ${searchState.rooms || 1} Room`
-    }, 'hotel');
+    };
+    startCheckout(item, 'hotel');
+    navigate('/review-booking', { state: { item } });
   };
 
   return (

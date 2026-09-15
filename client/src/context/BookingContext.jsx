@@ -71,7 +71,24 @@ export function BookingProvider({ children }) {
     }
   });
 
-  const [activeCheckoutItem, setActiveCheckoutItem] = useState(null);
+  const [activeCheckoutItem, setActiveCheckoutItem] = useState(() => {
+    try {
+      const saved = sessionStorage.getItem('eazetrip_active_booking');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  const [bookingDraft, setBookingDraft] = useState(() => {
+    try {
+      const saved = sessionStorage.getItem('eazetrip_booking_draft');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+
   const [activeTicket, setActiveTicket] = useState(null);
   const [toastMessage, setToastMessage] = useState(null);
 
@@ -91,14 +108,33 @@ export function BookingProvider({ children }) {
   };
 
   const startCheckout = (item, type) => {
-    setActiveCheckoutItem({
+    const enriched = {
       ...item,
-      checkoutType: type || item.type || 'flight'
-    });
+      checkoutType: type || item.checkoutType || item.type || 'flight'
+    };
+    setActiveCheckoutItem(enriched);
+    try {
+      sessionStorage.setItem('eazetrip_active_booking', JSON.stringify(enriched));
+    } catch (e) {
+      console.warn('Could not save booking to sessionStorage', e);
+    }
+  };
+
+  const saveBookingDraft = (draft) => {
+    setBookingDraft(draft);
+    try {
+      sessionStorage.setItem('eazetrip_booking_draft', JSON.stringify(draft));
+    } catch (e) {
+      console.warn('Could not save draft to sessionStorage', e);
+    }
   };
 
   const closeCheckout = () => {
     setActiveCheckoutItem(null);
+    try {
+      sessionStorage.removeItem('eazetrip_active_booking');
+      sessionStorage.removeItem('eazetrip_booking_draft');
+    } catch {}
   };
 
   const createBooking = async (bookingData) => {
@@ -125,6 +161,11 @@ export function BookingProvider({ children }) {
 
     setBookings((prev) => [confirmedBooking, ...prev]);
     setActiveCheckoutItem(null);
+    setBookingDraft(null);
+    try {
+      sessionStorage.removeItem('eazetrip_active_booking');
+      sessionStorage.removeItem('eazetrip_booking_draft');
+    } catch {}
     setActiveTicket(confirmedBooking);
     showToast(`Booking Confirmed! Booking ID: ${confirmedBooking.id}`);
     return confirmedBooking;
@@ -166,10 +207,12 @@ export function BookingProvider({ children }) {
       value={{
         bookings,
         activeCheckoutItem,
+        bookingDraft,
         activeTicket,
         toastMessage,
         showToast,
         startCheckout,
+        saveBookingDraft,
         closeCheckout,
         createBooking,
         cancelBooking,

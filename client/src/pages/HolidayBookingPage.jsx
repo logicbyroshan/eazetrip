@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import HolidaySearchWidget from '../components/search/HolidaySearchWidget';
 import HolidayCard from '../components/holidays/HolidayCard';
 import HolidayFilters from '../components/holidays/HolidayFilters';
@@ -11,6 +11,7 @@ import { Compass } from 'lucide-react';
 
 export default function HolidayBookingPage() {
   const location = useLocation();
+  const navigate = useNavigate();
   const searchState = location.state || {};
   const { startCheckout } = useBooking();
 
@@ -65,14 +66,17 @@ export default function HolidayBookingPage() {
   };
 
   const handleBookPackage = (pkg) => {
-    startCheckout({
+    const item = {
       ...pkg,
+      checkoutType: 'holiday',
       price: pkg.price,
       taxes: pkg.taxes,
       travelDate: searchState.month || '2026-10-15',
       departureCity: searchState.fromCity || 'Mumbai',
       guests: '2 Travelers'
-    }, 'holiday');
+    };
+    startCheckout(item, 'holiday');
+    navigate('/review-booking', { state: { item } });
   };
 
   const heroImage = HERO_BACKDROPS.holidays?.url || 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&auto=format&fit=crop&q=85';
