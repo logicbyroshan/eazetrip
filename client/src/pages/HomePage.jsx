@@ -9,8 +9,8 @@ import PopularAirlines from '../components/home/PopularAirlines';
 import TrendingFlightRoutes from '../components/home/TrendingFlightRoutes';
 import TrendingDestinations from '../components/home/TrendingDestinations';
 import TravelCategoriesSection from '../components/home/TravelCategoriesSection';
-import { siteTestimonials, siteFaqs, HERO_BACKDROPS } from '../data/siteData';
-import { Plane, Building2, Bus, Train, ShieldCheck, Check, Star, ArrowRight } from 'lucide-react';
+import ReviewsSection from '../components/home/ReviewsSection';
+import { HERO_BACKDROPS } from '../data/siteData';
 
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState('flights'); // flights | hotels | bus | railway
@@ -19,7 +19,7 @@ export default function HomePage() {
 
   return (
     <div className="home-page">
-      {/* Dynamic Hero Section - Light Luminous Gradient Overlay */}
+      {/* Dynamic Hero Section with Luminous Backdrop Overlay */}
       <section
         className="hero-section dynamic-hero"
         style={{
@@ -35,22 +35,19 @@ export default function HomePage() {
               {currentHero.subtitle}
             </p>
 
-            {/* Hero Search Box Card - Glassmorphism Translucent Styling */}
+            {/* Hero Search Box Card - Translucent Glassmorphic Container */}
             <div className="hero-search-wrapper glassmorphic-search-card">
-              {/* Category Switcher Tabs (Matching Screenshot 1) */}
-              <div className="hero-search-tabs illustrated-tabs">
+              {/* Clean Travel Category Switcher Tabs */}
+              <div className="hero-search-tabs modern-clean-tabs">
                 {/* 1. Flights */}
                 <button
                   type="button"
                   className={`hero-tab-btn ${activeTab === 'flights' ? 'active' : ''}`}
                   onClick={() => setActiveTab('flights')}
                 >
-                  <div className="tab-icon-peach-circle">
-                    <svg viewBox="0 0 48 48" width="30" height="30" className="tab-svg-art">
-                      <path d="M8 26 L22 22 L38 12 C41 10 44 11 44 14 C44 16 42 18 39 19 L26 27 L28 38 L23 40 L18 30 L10 32 L8 26 Z" fill="#0284c7" />
-                      <path d="M12 28 L24 24 L36 15 C38 14 40 14 41 16 C41 17 40 18 38 19 L26 26 L24 34 L21 35 L19 28 L14 29 Z" fill="#ffffff" opacity="0.9" />
-                      <circle cx="28" cy="28" r="3" fill="#f97316" />
-                      <path d="M4 36 C14 36 28 32 44 26" stroke="#fbbf24" strokeWidth="2.5" strokeLinecap="round" fill="none" opacity="0.8" />
+                  <div className="tab-icon-circle flight-bg">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z" fill="#0284c7" stroke="#0284c7" />
                     </svg>
                   </div>
                   <span className="tab-label-text">Flights</span>
@@ -63,39 +60,38 @@ export default function HomePage() {
                   className={`hero-tab-btn ${activeTab === 'hotels' ? 'active' : ''}`}
                   onClick={() => setActiveTab('hotels')}
                 >
-                  <div className="tab-discount-tag-pill">Flat 80% Off</div>
-                  <div className="tab-icon-peach-circle">
-                    <svg viewBox="0 0 48 48" width="30" height="30" className="tab-svg-art">
-                      <rect x="12" y="12" width="24" height="28" rx="2" fill="#0284c7" />
-                      <rect x="16" y="16" width="4" height="4" fill="#ffffff" />
-                      <rect x="24" y="16" width="4" height="4" fill="#ffffff" />
-                      <rect x="16" y="24" width="4" height="4" fill="#ffffff" />
-                      <rect x="24" y="24" width="4" height="4" fill="#ffffff" />
-                      <rect x="16" y="32" width="4" height="4" fill="#ffffff" />
-                      <rect x="24" y="32" width="4" height="4" fill="#ffffff" />
-                      <path d="M20 40 L28 40 L28 34 L20 34 Z" fill="#0f172a" />
-                      <path d="M36 20 L42 24 L42 40 L36 40 Z" fill="#38bdf8" />
+                  <div className="tab-icon-circle hotel-bg">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M18 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2Z" fill="#0097a7" stroke="#0097a7" opacity="0.15" />
+                      <path d="M18 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2Z" stroke="#0097a7" />
+                      <path d="M9 16v4" stroke="#0097a7" />
+                      <path d="M15 16v4" stroke="#0097a7" />
+                      <path d="M8 6h2" stroke="#0097a7" />
+                      <path d="M14 6h2" stroke="#0097a7" />
+                      <path d="M8 10h2" stroke="#0097a7" />
+                      <path d="M14 10h2" stroke="#0097a7" />
                     </svg>
                   </div>
                   <span className="tab-label-text">Hotels</span>
                   {activeTab === 'hotels' && <div className="tab-active-indicator"></div>}
                 </button>
 
-                {/* 3. Railway / Trains */}
+                {/* 3. Trains */}
                 <button
                   type="button"
                   className={`hero-tab-btn ${activeTab === 'railway' ? 'active' : ''}`}
                   onClick={() => setActiveTab('railway')}
                 >
-                  <div className="tab-icon-peach-circle">
-                    <svg viewBox="0 0 48 48" width="30" height="30" className="tab-svg-art">
-                      <path d="M14 10 C14 8 16 6 24 6 C32 6 34 8 34 10 L36 34 C36 37 33 38 24 38 C15 38 12 37 12 34 Z" fill="#034ea2" />
-                      <rect x="16" y="12" width="16" height="10" rx="2" fill="#ffffff" />
-                      <path d="M16 12 L32 12 L32 18 L16 18 Z" fill="#38bdf8" />
-                      <circle cx="18" cy="28" r="2.5" fill="#f59e0b" />
-                      <circle cx="30" cy="28" r="2.5" fill="#f59e0b" />
-                      <rect x="20" y="26" width="8" height="4" rx="1" fill="#f97316" />
-                      <path d="M14 38 L10 44 M34 38 L38 44" stroke="#0f172a" strokeWidth="3" strokeLinecap="round" />
+                  <div className="tab-icon-circle train-bg">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="4" y="3" width="16" height="16" rx="2" fill="#7c3aed" opacity="0.15" />
+                      <rect x="4" y="3" width="16" height="16" rx="2" stroke="#7c3aed" />
+                      <path d="M4 11h16" stroke="#7c3aed" />
+                      <path d="M12 3v8" stroke="#7c3aed" />
+                      <path d="m8 19-3 3" stroke="#7c3aed" />
+                      <path d="m16 19 3 3" stroke="#7c3aed" />
+                      <circle cx="8" cy="15" r="1" fill="#7c3aed" />
+                      <circle cx="16" cy="15" r="1" fill="#7c3aed" />
                     </svg>
                   </div>
                   <span className="tab-label-text">Trains</span>
@@ -108,16 +104,16 @@ export default function HomePage() {
                   className={`hero-tab-btn ${activeTab === 'bus' ? 'active' : ''}`}
                   onClick={() => setActiveTab('bus')}
                 >
-                  <div className="tab-icon-peach-circle">
-                    <svg viewBox="0 0 48 48" width="30" height="30" className="tab-svg-art">
-                      <path d="M12 10 C12 8 15 6 24 6 C33 6 36 8 36 10 L38 34 C38 37 35 38 24 38 C13 38 10 37 10 34 Z" fill="#0284c7" />
-                      <rect x="14" y="12" width="20" height="12" rx="2" fill="#ffffff" />
-                      <path d="M14 12 L34 12 L34 19 L14 19 Z" fill="#38bdf8" />
-                      <circle cx="16" cy="30" r="2.5" fill="#f97316" />
-                      <circle cx="32" cy="30" r="2.5" fill="#f97316" />
-                      <rect x="19" y="28" width="10" height="4" rx="1" fill="#ffffff" />
-                      <circle cx="13" cy="38" r="3" fill="#0f172a" />
-                      <circle cx="35" cy="38" r="3" fill="#0f172a" />
+                  <div className="tab-icon-circle bus-bg">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M8 6v6" stroke="#16a34a" />
+                      <path d="M16 6v6" stroke="#16a34a" />
+                      <path d="M4 6h16" stroke="#16a34a" />
+                      <path d="M4 16h16" stroke="#16a34a" />
+                      <rect x="4" y="3" width="16" height="15" rx="2" fill="#16a34a" opacity="0.15" />
+                      <rect x="4" y="3" width="16" height="15" rx="2" stroke="#16a34a" />
+                      <path d="m6 18-2 3" stroke="#16a34a" />
+                      <path d="m18 18 2 3" stroke="#16a34a" />
                     </svg>
                   </div>
                   <span className="tab-label-text">Buses</span>
@@ -159,19 +155,19 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Special Offers Section with Bank Offers Carousel & Campaign Banner (Image 2 Style) */}
+      {/* Special Offers Section with Bank Offers Carousel & Campaign Banner */}
       <SpecialOffersSection />
 
-      {/* Popular Domestic Airlines Strip (Screenshot 2 Style) */}
+      {/* Popular Airlines Strip with Domestic & International Tabs */}
       <PopularAirlines />
 
-      {/* Trending Flight Routes Grid (Screenshot 3 Style) */}
+      {/* Trending Flight Routes Grid */}
       <TrendingFlightRoutes />
 
-      {/* Trending Destinations with India & International Tabs (Image 4 Style) */}
+      {/* Trending Destinations with India & International Tabs */}
       <TrendingDestinations />
 
-      {/* Travel Categories 5-Card Staggered Wave Section (Screenshot 1 Style) */}
+      {/* Travel Categories 5-Card Staggered Wave Section */}
       <TravelCategoriesSection />
 
       {/* Why Choose Us Section */}
@@ -209,56 +205,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="section-block testimonials-section bg-muted">
-        <div className="container">
-          <div className="section-header center">
-            <span className="section-tag">REVIEWS</span>
-            <h2>What Travellers Say</h2>
-          </div>
-
-          <div className="testimonials-grid">
-            {siteTestimonials.map((t, idx) => (
-              <div key={idx} className="testimonial-card">
-                <div className="testimonial-stars">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} size={15} fill="#f59e0b" color="#f59e0b" />
-                  ))}
-                </div>
-                <p className="testimonial-quote">“{t.quote}”</p>
-                <div className="testimonial-author">
-                  <strong>{t.author}</strong>
-                  <small>{t.city} • {t.service}</small>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Preview Section */}
-      <section className="section-block home-faq-section">
-        <div className="container">
-          <div className="section-header">
-            <div>
-              <span className="section-tag">NEED HELP?</span>
-              <h2>Frequently Asked Questions</h2>
-            </div>
-            <Link to="/faq" className="view-all-link">
-              View All FAQs <ArrowRight size={16} />
-            </Link>
-          </div>
-
-          <div className="faq-preview-grid">
-            {siteFaqs[0].items.map((item, idx) => (
-              <div key={idx} className="faq-card-preview">
-                <h4>{item.q}</h4>
-                <p>{item.a}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Modern Verified Reviews & Ratings Section */}
+      <ReviewsSection />
     </div>
   );
 }

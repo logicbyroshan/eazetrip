@@ -5,18 +5,18 @@ export const HERO_BACKDROPS = {
     subtitle: 'Book Flights, Hotels, Buses & Train tickets with instant confirmation and great savings.'
   },
   hotels: {
-    url: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=1920&auto=format&fit=crop&q=85',
-    title: 'Experience Dream Stays & Luxury Escapes.',
-    subtitle: 'Handpicked luxury resorts, heritage palaces, and boutique villas across India.'
+    url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&auto=format&fit=crop&q=85',
+    title: 'Discover Tropical Escapes & Beach Sanctuaries.',
+    subtitle: 'Handpicked luxury beach stays, boutique retreats, and heritage villas across dream destinations.'
   },
   bus: {
-    url: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1920&auto=format&fit=crop&q=85',
-    title: 'Scenic Road Trips & Comfortable Intercity Travel.',
-    subtitle: 'AC Sleeper, Volvo & Bharat Benz buses with live GPS tracking and comfortable berths.'
+    url: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1920&auto=format&fit=crop&q=85',
+    title: 'Journey Through Majestic Mountain Valleys.',
+    subtitle: 'AC Sleeper, Volvo & luxury bus routes with live GPS tracking through panoramic routes.'
   },
   railway: {
-    url: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1920&auto=format&fit=crop&q=85',
-    title: 'Journey Across India with Scenic Railways.',
+    url: 'https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=1920&auto=format&fit=crop&q=85',
+    title: 'Traverse Alpine Peaks & Scenic Rail Canyons.',
     subtitle: 'IRCTC authorized train bookings, live PNR status & guaranteed confirmation alerts.'
   }
 };
@@ -523,62 +523,108 @@ export const siteTestimonials = [
   }
 ];
 
-export const popularAirlines = [
-  {
-    id: 'indigo',
-    name: 'IndiGo',
-    code: '6E',
-    color: '#001b94',
-    logo: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=100&auto=format&fit=crop&q=80',
-    tailColor: '#001b94',
-    category: 'domestic'
-  },
-  {
-    id: 'airindia',
-    name: 'Air India',
-    code: 'AI',
-    color: '#ed1c24',
-    logo: 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=100&auto=format&fit=crop&q=80',
-    tailColor: '#ed1c24',
-    category: 'domestic'
-  },
-  {
-    id: 'airindiaexpress',
-    name: 'Air India Express',
-    code: 'IX',
-    color: '#f37021',
-    logo: 'https://images.unsplash.com/photo-1569154941061-e231b4725ef1?w=100&auto=format&fit=crop&q=80',
-    tailColor: '#f37021',
-    category: 'domestic'
-  },
-  {
-    id: 'akasaair',
-    name: 'Akasa Air',
-    code: 'QP',
-    color: '#5b2c6f',
-    logo: 'https://images.unsplash.com/photo-1506015391300-4802dc74de2e?w=100&auto=format&fit=crop&q=80',
-    tailColor: '#ff6600',
-    category: 'domestic'
-  },
-  {
-    id: 'allianceair',
-    name: 'Alliance Air',
-    code: '9I',
-    color: '#c0392b',
-    logo: 'https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?w=100&auto=format&fit=crop&q=80',
-    tailColor: '#c0392b',
-    category: 'domestic'
-  },
-  {
-    id: 'spicejet',
-    name: 'SpiceJet',
-    code: 'SG',
-    color: '#e74c3c',
-    logo: 'https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=100&auto=format&fit=crop&q=80',
-    tailColor: '#e74c3c',
-    category: 'domestic'
-  }
-];
+export const popularAirlines = {
+  domestic: [
+    {
+      id: 'indigo',
+      name: 'IndiGo',
+      code: '6E',
+      color: '#001b94',
+      hub: 'Delhi, Mumbai, Bengaluru',
+      tag: 'India’s #1 On-Time Carrier'
+    },
+    {
+      id: 'airindia',
+      name: 'Air India',
+      code: 'AI',
+      color: '#ed1c24',
+      hub: 'Delhi, Mumbai',
+      tag: 'Full Service National Airline'
+    },
+    {
+      id: 'airindiaexpress',
+      name: 'Air India Express',
+      code: 'IX',
+      color: '#f37021',
+      hub: 'Kochi, Delhi, Mumbai',
+      tag: 'Smart Value Travel'
+    },
+    {
+      id: 'akasaair',
+      name: 'Akasa Air',
+      code: 'QP',
+      color: '#5b2c6f',
+      hub: 'Mumbai, Bengaluru',
+      tag: 'Warm & Affordable Airline'
+    },
+    {
+      id: 'allianceair',
+      name: 'Alliance Air',
+      code: '9I',
+      color: '#c0392b',
+      hub: 'Delhi, Kolkata',
+      tag: 'Regional Connectivity'
+    },
+    {
+      id: 'spicejet',
+      name: 'SpiceJet',
+      code: 'SG',
+      color: '#e74c3c',
+      hub: 'Delhi, Hyderabad',
+      tag: 'Red. Hot. Spicy.'
+    }
+  ],
+  international: [
+    {
+      id: 'emirates',
+      name: 'Emirates',
+      code: 'EK',
+      color: '#d71921',
+      hub: 'Dubai (DXB)',
+      tag: 'World-Class Luxury'
+    },
+    {
+      id: 'singaporeair',
+      name: 'Singapore Airlines',
+      code: 'SQ',
+      color: '#00205b',
+      hub: 'Singapore (SIN)',
+      tag: 'A Great Way to Fly'
+    },
+    {
+      id: 'qatar',
+      name: 'Qatar Airways',
+      code: 'QR',
+      color: '#5c0632',
+      hub: 'Doha (DOH)',
+      tag: 'World’s Best Business Class'
+    },
+    {
+      id: 'etihad',
+      name: 'Etihad Airways',
+      code: 'EY',
+      color: '#bd9b60',
+      hub: 'Abu Dhabi (AUH)',
+      tag: 'Exceptional Arabian Hospitality'
+    },
+    {
+      id: 'britishairways',
+      name: 'British Airways',
+      code: 'BA',
+      color: '#075aaa',
+      hub: 'London Heathrow (LHR)',
+      tag: 'To Fly. To Serve.'
+    },
+    {
+      id: 'lufthansa',
+      name: 'Lufthansa',
+      code: 'LH',
+      color: '#05164d',
+      hub: 'Frankfurt (FRA)',
+      tag: 'Nonstop You'
+    }
+  ]
+};
 
 export const trendingFlightRoutesGrid = {
   domestic: [

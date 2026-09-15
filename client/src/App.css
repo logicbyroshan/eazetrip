@@ -3551,21 +3551,23 @@
 }
 
 /* ==========================================
-   FOOTER
+   FOOTER (Unified Full Dark Theme)
 ========================================== */
 .footer {
-  background: #0f1d33;
+  background: #060e1a;
   color: #cbd5e1;
-  padding: 50px 0 24px;
-  margin-top: auto;
+  padding: 0 0 28px 0;
+  margin-top: 72px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .footer-top {
   display: grid;
   grid-template-columns: 1.4fr 3fr;
-  gap: 40px;
+  gap: 48px;
+  padding-top: 48px;
   padding-bottom: 36px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .footer-tagline {
@@ -3586,58 +3588,86 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  color: #94a3b8;
+}
+
+.contact-item a {
+  color: #38bdf8;
+  transition: color 0.2s ease;
+}
+
+.contact-item a:hover {
+  color: #7dd3fc;
+  text-decoration: underline;
 }
 
 .footer-links-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  gap: 24px;
 }
 
 .footer-col h4 {
-  color: #fff;
+  color: #ffffff;
   font-size: 0.95rem;
-  margin-bottom: 14px;
+  font-weight: 800;
+  margin-bottom: 16px;
+  letter-spacing: -0.2px;
 }
 
 .footer-col a {
   display: block;
   font-size: 0.82rem;
-  color: #cbd5e1;
-  margin-bottom: 8px;
+  color: #94a3b8;
+  margin-bottom: 9px;
+  transition: color 0.2s ease;
 }
 
 .footer-col a:hover {
-  color: #fff;
+  color: #38bdf8;
   text-decoration: underline;
 }
 
 .security-badge-box {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   font-size: 0.75rem;
-  margin-top: 12px;
+  margin-top: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .badge-row {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  color: #e2e8f0;
 }
 
 .footer-bottom {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 20px;
+  padding-top: 24px;
   font-size: 0.78rem;
   color: #64748b;
 }
 
 .footer-bottom-links {
   display: flex;
-  gap: 10px;
+  gap: 12px;
+}
+
+.footer-bottom-links a {
+  color: #94a3b8;
+  transition: color 0.2s ease;
+}
+
+.footer-bottom-links a:hover {
+  color: #38bdf8;
 }
 
 /* ==========================================
@@ -4675,65 +4705,66 @@ input[type="radio"]:focus-visible {
 }
 
 /* ==========================================================================
-   4. SEO FOOTER DIRECTORY (Image 3 Yatra Style)
+   4. SEO FOOTER DIRECTORY (Full Dark Theme)
    ========================================================================== */
 .seo-directory-wrapper {
-  background: #f8fafc;
-  border-bottom: 1px solid #e2e8f0;
-  padding: 36px 0 24px 0;
-  color: #475569;
+  background: #081426;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 44px 0 28px 0;
+  color: #94a3b8;
 }
 
 .seo-directory-group {
-  margin-bottom: 22px;
+  margin-bottom: 24px;
 }
 
 .seo-directory-group.last-group {
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .seo-group-title {
-  font-size: 0.9rem;
+  font-size: 0.92rem;
   font-weight: 800;
-  color: #1e293b;
-  margin: 0 0 10px 0;
+  color: #f1f5f9;
+  margin: 0 0 12px 0;
   letter-spacing: -0.2px;
 }
 
 .seo-links-inline-grid {
   display: flex;
   flex-wrap: wrap;
-  column-gap: 16px;
-  row-gap: 7px;
+  column-gap: 18px;
+  row-gap: 8px;
   font-size: 0.78rem;
-  line-height: 1.45;
+  line-height: 1.5;
 }
 
 .seo-dir-link {
-  color: #64748b;
+  color: #94a3b8;
   text-decoration: none;
   transition: color 0.2s ease;
   white-space: nowrap;
 }
 
 .seo-dir-link:hover {
-  color: var(--primary);
+  color: #38bdf8;
   text-decoration: underline;
 }
 
 .products-row .product-pill {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 6px;
-  padding: 3px 10px;
-  font-weight: 600;
-  color: var(--text-main);
+  padding: 4px 12px;
+  font-weight: 700;
+  color: #e2e8f0;
+  transition: all 0.2s ease;
 }
 
 .products-row .product-pill:hover {
-  border-color: var(--primary);
-  background: #edf5fc;
-  color: var(--primary);
+  border-color: #0284c7;
+  background: #034ea2;
+  color: #ffffff;
   text-decoration: none;
 }
 
@@ -4787,7 +4818,7 @@ input[type="radio"]:focus-visible {
 }
 
 /* ==========================================================================
-   6. GLASSMORPHIC HERO SEARCH & ILLUSTRATED 3D TABS (Screenshot 1)
+   6. GLASSMORPHIC HERO SEARCH & MODERN CLEAN TABS
    ========================================================================== */
 .glassmorphic-search-card {
   background: rgba(255, 255, 255, 0.94) !important;
@@ -4799,57 +4830,58 @@ input[type="radio"]:focus-visible {
   overflow: visible !important;
 }
 
-.hero-search-tabs.illustrated-tabs {
+.hero-search-tabs.modern-clean-tabs {
   display: flex;
-  align-items: flex-end;
-  gap: 28px;
-  padding: 12px 24px 0 24px;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 20px;
   border-bottom: 1px solid #e2e8f0;
   background: transparent;
   overflow-x: auto;
 }
 
-.hero-search-tabs.illustrated-tabs .hero-tab-btn {
+.hero-search-tabs.modern-clean-tabs .hero-tab-btn {
   position: relative;
   background: transparent;
   border: none;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 8px 18px 8px;
+  gap: 10px;
+  padding: 8px 16px;
+  border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
   flex-shrink: 0;
 }
 
-.tab-icon-peach-circle {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: #ffedd5;
+.hero-search-tabs.modern-clean-tabs .hero-tab-btn:hover {
+  background: #f1f5f9;
+}
+
+.hero-search-tabs.modern-clean-tabs .hero-tab-btn.active {
+  background: #edf5fc;
+}
+
+.tab-icon-circle {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
   display: grid;
   place-items: center;
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease;
-  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.15);
+  transition: transform 0.2s ease;
 }
 
-.hero-tab-btn:hover .tab-icon-peach-circle {
-  transform: scale(1.08) translateY(-2px);
-  background: #fed7aa;
+.hero-tab-btn:hover .tab-icon-circle {
+  transform: scale(1.08);
 }
 
-.hero-tab-btn.active .tab-icon-peach-circle {
-  transform: scale(1.1);
-  background: #ffedd5;
-  box-shadow: 0 4px 14px rgba(249, 115, 22, 0.28);
-}
-
-.tab-svg-art {
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-}
+.tab-icon-circle.flight-bg { background: #e0f2fe; color: #0284c7; }
+.tab-icon-circle.hotel-bg { background: #e0f7fa; color: #0097a7; }
+.tab-icon-circle.train-bg { background: #f3e8ff; color: #7c3aed; }
+.tab-icon-circle.bus-bg { background: #dcfce7; color: #16a34a; }
 
 .tab-label-text {
-  font-size: 1.05rem;
+  font-size: 0.98rem;
   font-weight: 700;
   color: #334155;
   transition: color 0.2s ease;
@@ -4862,62 +4894,75 @@ input[type="radio"]:focus-visible {
 
 .tab-active-indicator {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
+  bottom: -14px;
+  left: 16px;
+  right: 16px;
+  height: 3px;
   background: var(--primary);
-  border-radius: 4px 4px 0 0;
-  animation: tabUnderlineIn 0.3s ease;
-}
-
-@keyframes tabUnderlineIn {
-  0% { transform: scaleX(0.3); opacity: 0; }
-  100% { transform: scaleX(1); opacity: 1; }
-}
-
-.tab-discount-tag-pill {
-  position: absolute;
-  top: -6px;
-  left: 36px;
-  background: #7e22ce;
-  color: #ffffff;
-  font-size: 0.65rem;
-  font-weight: 800;
-  padding: 2px 8px;
-  border-radius: 9999px;
-  letter-spacing: 0.3px;
-  box-shadow: 0 2px 6px rgba(126, 34, 206, 0.35);
-  white-space: nowrap;
-  animation: discountFloat 2.4s ease-in-out infinite alternate;
-  z-index: 5;
-}
-
-@keyframes discountFloat {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-3px); }
+  border-radius: 3px 3px 0 0;
 }
 
 /* ==========================================================================
-   7. POPULAR DOMESTIC AIRLINES STRIP (Screenshot 2)
+   7. POPULAR AIRLINES STRIP
    ========================================================================== */
 .popular-airlines-block {
-  padding: 32px 0 16px 0;
+  padding: 36px 0 20px 0;
   background: #ffffff;
 }
 
+.popular-airlines-header-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
 .popular-airlines-title {
-  font-size: 1.25rem;
+  font-size: 1.45rem;
   font-weight: 800;
   color: var(--text-main);
-  margin-bottom: 16px;
+  margin: 0 0 4px 0;
+}
+
+.popular-airlines-sub {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.airline-scope-tabs {
+  display: flex;
+  gap: 6px;
+  background: #f1f5f9;
+  padding: 4px;
+  border-radius: 10px;
+}
+
+.airline-tab-btn {
+  background: transparent;
+  border: none;
+  padding: 6px 18px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.airline-tab-btn.active {
+  background: #ffffff;
+  color: var(--primary);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 .popular-airlines-card {
   background: #ffffff;
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  padding: 18px 24px;
+  padding: 20px 24px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
 }
 
@@ -4959,10 +5004,21 @@ input[type="radio"]:focus-visible {
   transform: scale(1.12);
 }
 
+.airline-text-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .airline-name-text {
   font-size: 0.88rem;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: -0.2px;
+}
+
+.airline-hub-text {
+  font-size: 0.7rem;
+  color: var(--text-muted);
 }
 
 /* ==========================================================================
@@ -5319,6 +5375,203 @@ input[type="radio"]:focus-visible {
   border-radius: 16px !important;
   padding: 16px 28px !important;
 }
+
+/* ==========================================================================
+   10. REVIEWS & TRUST SECTION
+   ========================================================================== */
+.reviews-experience-block {
+  padding: 68px 0;
+  background: #f8fafc;
+}
+
+.reviews-header-center {
+  text-align: center;
+  max-width: 650px;
+  margin: 0 auto 44px auto;
+}
+
+.reviews-trust-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #dcfce7;
+  color: #16a34a;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+
+.reviews-title {
+  font-size: 2.1rem;
+  font-weight: 900;
+  color: var(--text-main);
+  margin: 0 0 8px 0;
+  letter-spacing: -0.4px;
+}
+
+.reviews-subtitle {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.reviews-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.review-card-elevated {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+}
+
+.review-card-elevated:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(3, 78, 162, 0.12);
+  border-color: #cbd5e1;
+}
+
+.review-card-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.review-stars-row {
+  display: flex;
+  gap: 3px;
+}
+
+.review-verified-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #f0fdf4;
+  color: #16a34a;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  border: 1px solid #bbf7d0;
+}
+
+.review-body-text {
+  font-size: 0.92rem;
+  color: #334155;
+  line-height: 1.6;
+  font-style: italic;
+  margin: 0 0 24px 0;
+  flex: 1;
+}
+
+.review-author-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.review-avatar-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  flex-shrink: 0;
+}
+
+.review-author-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.author-full-name {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin: 0 0 2px 0;
+}
+
+.author-location-service {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.highlight-service {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+/* Trust Metrics Strip */
+.trust-metrics-strip {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+}
+
+.metric-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.metric-number {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--primary);
+  letter-spacing: -0.5px;
+}
+
+.metric-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.metric-divider {
+  width: 1px;
+  height: 36px;
+  background: #e2e8f0;
+}
+
+@media (max-width: 900px) {
+  .reviews-cards-grid {
+    grid-template-columns: 1fr;
+  }
+  .trust-metrics-strip {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .metric-divider {
+    display: none;
+  }
+}
+
 
 
 
