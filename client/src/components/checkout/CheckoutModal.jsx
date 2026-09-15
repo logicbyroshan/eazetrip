@@ -58,9 +58,11 @@ export default function CheckoutModal() {
 
   if (!activeCheckoutItem) return null;
 
-  const type = activeCheckoutItem.checkoutType || 'flight';
-  const basePrice = Number(activeCheckoutItem.price || activeCheckoutItem.totalPrice || activeCheckoutItem.pricePerNight || 4999);
-  const taxes = Number(activeCheckoutItem.taxes || Math.round(basePrice * 0.12));
+  const type = activeCheckoutItem.checkoutType || activeCheckoutItem.type || 'flight';
+  const rawPrice = Number(activeCheckoutItem.price || activeCheckoutItem.totalPrice || activeCheckoutItem.pricePerNight || 4999);
+  const basePrice = isNaN(rawPrice) || rawPrice <= 0 ? 4999 : rawPrice;
+  const rawTaxes = Number(activeCheckoutItem.taxes);
+  const taxes = isNaN(rawTaxes) || rawTaxes <= 0 ? Math.round(basePrice * 0.12) : rawTaxes;
   const convenienceFee = 0; // Free on EazeTrip
   const finalTotal = Math.max(0, basePrice + taxes + convenienceFee - appliedDiscount);
 
@@ -95,19 +97,20 @@ export default function CheckoutModal() {
     setIsProcessing(true);
 
     const bookingTitle =
-      type === 'flight'
-        ? `${activeCheckoutItem.fromCity || activeCheckoutItem.from} → ${activeCheckoutItem.toCity || activeCheckoutItem.to}`
+      activeCheckoutItem.title ||
+      (type === 'flight'
+        ? `${activeCheckoutItem.fromCity || activeCheckoutItem.from || 'Origin'} → ${activeCheckoutItem.toCity || activeCheckoutItem.to || 'Destination'}`
         : type === 'hotel'
-        ? activeCheckoutItem.name
+        ? activeCheckoutItem.name || 'Luxury Hotel Stay'
         : type === 'bus'
-        ? `${activeCheckoutItem.from} → ${activeCheckoutItem.to} (${activeCheckoutItem.operator})`
-        : `${activeCheckoutItem.trainName} (${activeCheckoutItem.trainNumber})`;
+        ? `${activeCheckoutItem.from || 'Origin'} → ${activeCheckoutItem.to || 'Destination'} (${activeCheckoutItem.operator || 'Bus'})`
+        : `${activeCheckoutItem.trainName || 'Express Train'} (${activeCheckoutItem.trainNumber || ''})`);
 
     const bookingPayload = {
       type,
       title: bookingTitle,
       details: activeCheckoutItem,
-      date: activeCheckoutItem.departureDate || activeCheckoutItem.journeyDate || activeCheckoutItem.checkInDate || new Date().toISOString().split('T')[0],
+      date: activeCheckoutItem.departureDate || activeCheckoutItem.journeyDate || activeCheckoutItem.travelDate || activeCheckoutItem.checkInDate || activeCheckoutItem.date || new Date().toISOString().split('T')[0],
       totalAmount: finalTotal,
       discount: appliedDiscount,
       paymentMethod:
@@ -125,7 +128,9 @@ export default function CheckoutModal() {
           dob,
           email: contactEmail,
           phone: contactPhone,
-          seat: activeCheckoutItem.selectedSeats?.map((s) => s.number).join(', ') || 'Auto-Assigned'
+          seat: Array.isArray(activeCheckoutItem.selectedSeats)
+            ? activeCheckoutItem.selectedSeats.map((s) => (typeof s === 'object' ? s.number : s)).filter(Boolean).join(', ') || 'Auto-Assigned'
+            : 'Auto-Assigned'
         }
       ],
       pnr: `${type.slice(0, 2).toUpperCase()}${Math.floor(1000 + Math.random() * 9000)}`
@@ -250,12 +255,16 @@ export default function CheckoutModal() {
                   <strong>
                     {activeCheckoutItem.title ||
                       activeCheckoutItem.name ||
-                      `${activeCheckoutItem.fromCity || activeCheckoutItem.from} to ${activeCheckoutItem.toCity || activeCheckoutItem.to}`}
+                      activeCheckoutItem.trainName ||
+                      activeCheckoutItem.operator ||
+                      (activeCheckoutItem.from && activeCheckoutItem.to
+                        ? `${activeCheckoutItem.fromCity || activeCheckoutItem.from} to ${activeCheckoutItem.toCity || activeCheckoutItem.to}`
+                        : 'EazeTrip Verified Booking')}
                   </strong>
                   <span className="summary-price">₹{finalTotal.toLocaleString('en-IN')}</span>
                 </div>
                 <small className="summary-date">
-                  Date: {activeCheckoutItem.departureDate || activeCheckoutItem.journeyDate || activeCheckoutItem.checkInDate || 'Confirmed Date'}
+                  Date: {activeCheckoutItem.departureDate || activeCheckoutItem.journeyDate || activeCheckoutItem.travelDate || activeCheckoutItem.checkInDate || activeCheckoutItem.date || 'Instant Confirmation'}
                 </small>
               </div>
 
@@ -272,27 +281,30 @@ export default function CheckoutModal() {
                         localStorage.getItem('exploreeaz_travellers') ||
                         '[]'
                       );
-                      if (list.length > 0) {
+                      if (Array.isArray(list) && list.length > 0) {
                         return (
                           <div className="quick-traveller-pills">
                             <span className="quick-lbl">Quick Fill:</span>
-                            {list.map((t) => (
-                              <button
-                                key={t.id}
-                                type="button"
-                                className="quick-pax-btn"
-                                onClick={() => {
-                                  const parts = t.name.split(' ');
-                                  setFirstName(parts[0] || '');
-                                  setLastName(parts.slice(1).join(' ') || 'Traveler');
-                                  if (t.gender) setGender(t.gender);
-                                  if (t.dob) setDob(t.dob);
-                                  showToast(`Auto-filled details for ${t.name}`);
-                                }}
-                              >
-                                + {t.name}
-                              </button>
-                            ))}
+                            {list.map((t, idx) => {
+                              if (!t || !t.name) return null;
+                              return (
+                                <button
+                                  key={t.id || idx}
+                                  type="button"
+                                  className="quick-pax-btn"
+                                  onClick={() => {
+                                    const parts = String(t.name || '').trim().split(' ');
+                                    setFirstName(parts[0] || '');
+                                    setLastName(parts.slice(1).join(' ') || 'Traveler');
+                                    if (t.gender) setGender(t.gender);
+                                    if (t.dob) setDob(t.dob);
+                                    showToast(`Auto-filled details for ${t.name}`);
+                                  }}
+                                >
+                                  + {t.name}
+                                </button>
+                              );
+                            })}
                           </div>
                         );
                       }

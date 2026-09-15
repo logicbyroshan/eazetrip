@@ -1,24 +1,34 @@
 import { useState, useEffect } from 'react';
 
 export default function Preloader() {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => {
+    try {
+      return !sessionStorage.getItem('eazetrip_preloader_seen');
+    } catch {
+      return false;
+    }
+  });
   const [fading, setFading] = useState(false);
 
   useEffect(() => {
-    // Show only the clean brand logo with subtle fade, gone in 1.8 - 2.0 seconds
+    if (!loading) return;
+    try {
+      sessionStorage.setItem('eazetrip_preloader_seen', 'true');
+    } catch {}
+
     const fadeTimer = setTimeout(() => {
       setFading(true);
-    }, 1500);
+    }, 1000);
 
     const removeTimer = setTimeout(() => {
       setLoading(false);
-    }, 2000);
+    }, 1400);
 
     return () => {
       clearTimeout(fadeTimer);
       clearTimeout(removeTimer);
     };
-  }, []);
+  }, [loading]);
 
   if (!loading) return null;
 
