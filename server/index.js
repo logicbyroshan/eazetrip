@@ -28,6 +28,25 @@ const app = express();
 const PORT = process.env.PORT || 5001;
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
+// Trust reverse proxy for accurate client IP resolution in rate limiting & logs
+app.set('trust proxy', 1);
+
+// Cryptographically constant-time string comparison to prevent timing side-channel attacks
+function timingSafeEqualStr(a, b) {
+  if (typeof a !== 'string' || typeof b !== 'string') return false;
+  const bufA = Buffer.from(a, 'utf8');
+  const bufB = Buffer.from(b, 'utf8');
+  if (bufA.length !== bufB.length) return false;
+  return crypto.timingSafeEqual(bufA, bufB);
+}
+
+// Defensive helper to safely extract single string values from query parameters (HPP mitigation)
+function toStr(val) {
+  if (Array.isArray(val)) return typeof val[0] === 'string' ? val[0].trim() : '';
+  if (typeof val === 'string') return val.trim();
+  return '';
+}
+
 // Razorpay Gateway Setup
 const RAZORPAY_KEY_ID = process.env.RAZORPAY_KEY_ID || process.env.VITE_RAZORPAY_KEY_ID || '';
 const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET || '';
@@ -102,7 +121,10 @@ app.get('/api/health', (req, res) => {
 
 // FLIGHTS API
 app.get('/api/flights', (req, res) => {
-  const { from, to, airline, maxPrice } = req.query;
+  const from = toStr(req.query.from);
+  const to = toStr(req.query.to);
+  const airline = toStr(req.query.airline);
+  const maxPrice = toStr(req.query.maxPrice);
   let results = mockStore.flights;
 
   if (from) {
@@ -139,7 +161,9 @@ app.get('/api/flights/:id', (req, res) => {
 
 // HOTELS API
 app.get('/api/hotels', (req, res) => {
-  const { city, stars, maxPrice } = req.query;
+  const city = toStr(req.query.city);
+  const stars = toStr(req.query.stars);
+  const maxPrice = toStr(req.query.maxPrice);
   let results = mockStore.hotels;
 
   if (city) {
@@ -165,7 +189,9 @@ app.get('/api/hotels/:id', (req, res) => {
 
 // BUSES API
 app.get('/api/buses', (req, res) => {
-  const { from, to, operator } = req.query;
+  const from = toStr(req.query.from);
+  const to = toStr(req.query.to);
+  const operator = toStr(req.query.operator);
   let results = mockStore.buses;
 
   if (from) {
@@ -191,7 +217,8 @@ app.get('/api/buses/:id', (req, res) => {
 
 // RAILWAYS API
 app.get('/api/railways', (req, res) => {
-  const { from, to } = req.query;
+  const from = toStr(req.query.from);
+  const to = toStr(req.query.to);
   let results = mockStore.railways;
 
   if (from) {
@@ -223,7 +250,10 @@ app.get('/api/faqs', (req, res) => {
 
 // BOOKINGS API
 app.get('/api/bookings', (req, res) => {
-  const { userId, email, status, type } = req.query;
+  const userId = toStr(req.query.userId);
+  const email = toStr(req.query.email);
+  const status = toStr(req.query.status);
+  const type = toStr(req.query.type);
   let results = bookings;
 
   if (userId) {
@@ -277,14 +307,14 @@ app.post('/api/bookings', validateBooking, (req, res) => {
 app.post('/api/bookings/:id/cancel', (req, res) => {
   const { id } = req.params;
   const { reason } = req.body || {};
-  const bookingIndex = bookings.findIndex((b) => b.id === id);
+  const bookingIndex = bookings.findIndex((b) => b.id === id || b.pnr === id);
 
   if (bookingIndex === -1) {
     return res.status(404).json({ success: false, error: 'Booking not found' });
   }
 
   bookings[bookingIndex].status = 'Cancelled';
-  bookings[bookingIndex].cancellationReason = reason || 'User requested cancellation';
+  bookings[bookingIndex].cancellationReason = typeof reason === 'string' ? reason.slice(0, 500) : 'User requested cancellation';
   bookings[bookingIndex].cancelledAt = new Date().toISOString();
   bookings[bookingIndex].refundStatus = 'Initiated (Processed in 5-7 days)';
 
@@ -306,14 +336,17 @@ app.post('/api/auth/login', sensitiveLimiter, validateLogin, (req, res) => {
       u.phone.replace(/[\s-]/g, '') === identifier.replace(/[\s-]/g, '')
   );
 
+  const isEmail = method === 'email' || (!method && identifier.includes('@'));
+  const isPhone = method === 'phone' || (!method && !identifier.includes('@'));
+
   if (!user) {
     user = {
       id: `USR-${Math.floor(100000 + Math.random() * 900000)}`,
-      name: method === 'phone' ? `Traveler ${identifier.slice(-4)}` : identifier.split('@')[0],
-      email: method === 'email' ? identifier : `user${identifier.slice(-4)}@eazetrip.com`,
-      phone: method === 'phone' ? identifier : '+91 9876543210',
+      name: isPhone ? `Traveler ${identifier.slice(-4)}` : identifier.split('@')[0],
+      email: isEmail ? identifier : `user${identifier.slice(-4)}@eazetrip.com`,
+      phone: isPhone ? identifier : '+91 9876543210',
       tier: 'Gold Explorer',
-      token: `jwt-sim-${Date.now()}`
+      token: crypto.randomBytes(32).toString('hex')
     };
     users.push(user);
   }
@@ -339,7 +372,7 @@ app.post('/api/auth/register', sensitiveLimiter, validateRegister, (req, res) =>
     email,
     phone: phone || '+91 9876543210',
     tier: 'Classic Explorer',
-    token: `jwt-sim-${Date.now()}`
+    token: crypto.randomBytes(32).toString('hex')
   };
 
   users.push(user);
@@ -471,7 +504,7 @@ app.post('/api/payment/verify', sensitiveLimiter, validateRazorpayVerify, (req, 
         .createHmac('sha256', RAZORPAY_KEY_SECRET)
         .update(body.toString())
         .digest('hex');
-      isAuthentic = expectedSignature === razorpay_signature;
+      isAuthentic = timingSafeEqualStr(expectedSignature, razorpay_signature);
     }
 
     if (!isAuthentic) {
@@ -544,7 +577,7 @@ app.post('/api/payment/webhook', (req, res) => {
       .update(JSON.stringify(req.body))
       .digest('hex');
 
-    if (signature !== expectedSignature) {
+    if (!timingSafeEqualStr(signature, expectedSignature)) {
       return res.status(400).json({ status: 'invalid signature' });
     }
   }

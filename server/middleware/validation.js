@@ -13,11 +13,11 @@ function validateLogin(req, res, next) {
 
   const cleanIdentifier = identifier.trim();
 
-  if (method === 'email') {
+  if (method === 'email' || (!method && cleanIdentifier.includes('@'))) {
     if (!EMAIL_REGEX.test(cleanIdentifier) || cleanIdentifier.length > 254) {
       return res.status(400).json({ success: false, error: 'Please provide a valid email address' });
     }
-  } else if (method === 'phone') {
+  } else if (method === 'phone' || !method) {
     const digitsOnly = cleanIdentifier.replace(/[\s-]/g, '');
     if (!PHONE_REGEX.test(digitsOnly) || digitsOnly.length < 10) {
       return res.status(400).json({ success: false, error: 'Please provide a valid 10-15 digit phone number' });

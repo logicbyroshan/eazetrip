@@ -387,4 +387,71 @@ test('27. Promo codes EAZETRIP and brand discounts exist in mockStore', () => {
   assert.ok(promoMap.has('TRAINEAZ'));
 });
 
+test('28. HTTP Parameter Pollution (duplicate query keys) is handled safely', async () => {
+  const res = await requestJson('/api/flights?from=BOM&from=DEL&airline=IndiGo&airline=Air+India');
+  assert.strictEqual(res.status, 200);
+  assert.strictEqual(res.data.success, true);
+  assert.ok(Array.isArray(res.data.data));
+});
+
+test('29. Bookings can be cancelled using PNR code', async () => {
+  const createRes = await requestJson('/api/bookings', {
+    method: 'POST',
+    body: {
+      type: 'flight',
+      title: 'Goa Weekend Trip',
+      date: '2026-11-01',
+      totalAmount: 3800,
+      passengers: [{ name: 'Test Traveler' }]
+    }
+  });
+  assert.strictEqual(createRes.status, 201);
+  const pnr = createRes.data.data.pnr;
+  assert.ok(pnr);
+
+  // Cancel via PNR
+  const cancelRes = await requestJson(`/api/bookings/${pnr}/cancel`, {
+    method: 'POST',
+    body: { reason: 'Change of plans' }
+  });
+  assert.strictEqual(cancelRes.status, 200);
+  assert.strictEqual(cancelRes.data.data.status, 'Cancelled');
+});
+
+test('30. User login and registration produce 64-character (256-bit) crypto tokens', async () => {
+  const regEmail = `crypto_${Date.now()}@example.com`;
+  const regRes = await requestJson('/api/auth/register', {
+    method: 'POST',
+    body: { name: 'Crypto User', email: regEmail, password: 'password123' }
+  });
+  assert.strictEqual(regRes.status, 201);
+  assert.strictEqual(typeof regRes.data.data.token, 'string');
+  assert.strictEqual(regRes.data.data.token.length, 64);
+});
+
+test('31. OWASP & CSP Security Headers are all verified', async () => {
+  const { headers } = await requestJson('/api/health');
+  assert.strictEqual(headers.get('x-dns-prefetch-control'), 'off');
+  assert.strictEqual(headers.get('x-download-options'), 'noopen');
+  assert.strictEqual(headers.get('cross-origin-opener-policy'), 'same-origin-allow-popups');
+  assert.strictEqual(headers.get('referrer-policy'), 'strict-origin-when-cross-origin');
+});
+
+test('32. Login identifier auto-detects email or phone when method is omitted', async () => {
+  const emailLoginRes = await requestJson('/api/auth/login', {
+    method: 'POST',
+    body: { identifier: 'autodetect@example.com', password: 'securepassword' }
+  });
+  assert.strictEqual(emailLoginRes.status, 200);
+  assert.strictEqual(emailLoginRes.data.data.email, 'autodetect@example.com');
+
+  const phoneLoginRes = await requestJson('/api/auth/login', {
+    method: 'POST',
+    body: { identifier: '+91 9988776655' }
+  });
+  assert.strictEqual(phoneLoginRes.status, 200);
+  assert.ok(phoneLoginRes.data.data.phone.includes('9988776655'));
+});
+
+
 
