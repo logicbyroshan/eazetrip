@@ -8498,8 +8498,8 @@ input[type="radio"]:focus-visible {
 /* Main Content Grid */
 .auth-hero-content-grid {
   display: grid;
-  grid-template-columns: 1.1fr 1fr;
-  gap: 48px;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 40px;
   align-items: center;
   margin: auto 0;
 }
@@ -8612,7 +8612,6 @@ input[type="radio"]:focus-visible {
 }
 
 /* Right Floating Form Card Directly on Destination Background */
-/* Right Floating Form Card Directly on Destination Background */
 .auth-hero-right-col {
   display: flex;
   justify-content: flex-end;
@@ -8621,9 +8620,9 @@ input[type="radio"]:focus-visible {
 .auth-floating-form-card {
   background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(20px);
-  border: 1.5px solid rgba(255, 255, 255, 0.8);
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
   border-radius: 24px;
-  padding: 26px 30px;
+  padding: 26px 32px;
   box-shadow: 0 24px 60px -8px rgba(0, 0, 0, 0.5), 0 8px 24px -4px rgba(0, 0, 0, 0.25);
   display: flex;
   flex-direction: column;
@@ -8633,7 +8632,8 @@ input[type="radio"]:focus-visible {
 }
 
 .auth-floating-form-card.compact-side-by-side {
-  max-width: 540px;
+  max-width: 600px;
+  padding: 28px 36px;
 }
 
 .auth-card-badge-row {
@@ -8736,7 +8736,7 @@ input[type="radio"]:focus-visible {
 .auth-form-row-2col {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 14px;
   align-items: start;
 }
 
@@ -8782,8 +8782,8 @@ input[type="radio"]:focus-visible {
   border: 1.5px solid #e2e8f0;
   border-radius: 10px;
   background: #f8fafc;
-  padding: 0 10px;
-  height: 40px;
+  padding: 0 12px;
+  height: 42px;
   transition: all 0.2s ease;
   box-sizing: border-box;
 }

@@ -239,18 +239,34 @@ export default function AuthPage({ mode = 'register' }) {
               <form onSubmit={handleSubmit} className="auth-card-form-stack">
                 {isRegister ? (
                   <>
-                    {/* Row 1: Side by Side (Full Name + Mobile) */}
+                    {/* Row 1: Full Name */}
+                    <div className="form-group">
+                      <label htmlFor="reg-name">Full Name *</label>
+                      <div className="input-with-icon">
+                        <User size={16} className="field-icon" />
+                        <input
+                          id="reg-name"
+                          type="text"
+                          placeholder="e.g. Priyansh Sharma"
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    {/* Row 2: Side by Side (Email Address + Mobile Number) */}
                     <div className="auth-form-row-2col">
                       <div className="form-group">
-                        <label htmlFor="reg-name">Full Name *</label>
+                        <label htmlFor="reg-email">Email Address *</label>
                         <div className="input-with-icon">
-                          <User size={16} className="field-icon" />
+                          <Mail size={16} className="field-icon" />
                           <input
-                            id="reg-name"
-                            type="text"
-                            placeholder="e.g. Priyansh Sharma"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
+                            id="reg-email"
+                            type="email"
+                            placeholder="name@example.com"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             required
                           />
                         </div>
@@ -269,22 +285,6 @@ export default function AuthPage({ mode = 'register' }) {
                             onChange={(e) => setPhone(e.target.value.replace(/\D/g, ''))}
                           />
                         </div>
-                      </div>
-                    </div>
-
-                    {/* Row 2: Full width Email Address */}
-                    <div className="form-group">
-                      <label htmlFor="reg-email">Email Address *</label>
-                      <div className="input-with-icon">
-                        <Mail size={16} className="field-icon" />
-                        <input
-                          id="reg-email"
-                          type="email"
-                          placeholder="name@example.com"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          required
-                        />
                       </div>
                     </div>
 
