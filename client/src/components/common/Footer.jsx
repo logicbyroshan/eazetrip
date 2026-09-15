@@ -1,9 +1,13 @@
 import { Link } from 'react-router-dom';
 import { Phone, Mail, MapPin, ShieldCheck, CreditCard, Clock } from 'lucide-react';
+import SeoFooterDirectory from './SeoFooterDirectory';
 
 export default function Footer() {
   return (
     <footer className="footer">
+      {/* Massive Multi-Category SEO Directory Links (Image 3 Style) */}
+      <SeoFooterDirectory />
+
       <div className="container footer-top">
         <div className="footer-brand-col">
           <div className="brand-logo-img-wrap footer-logo-wrap">

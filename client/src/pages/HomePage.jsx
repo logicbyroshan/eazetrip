@@ -4,20 +4,15 @@ import FlightSearchWidget from '../components/search/FlightSearchWidget';
 import HotelSearchWidget from '../components/search/HotelSearchWidget';
 import BusSearchWidget from '../components/search/BusSearchWidget';
 import TrainSearchWidget from '../components/search/TrainSearchWidget';
-import { siteOffers, siteTestimonials, siteFaqs, HERO_BACKDROPS } from '../data/siteData';
-import { Plane, Building2, Bus, Train, ShieldCheck, Check, Star, ArrowRight, Tag, Copy } from 'lucide-react';
-import { useBooking } from '../context/BookingContext';
+import SpecialOffersSection from '../components/home/SpecialOffersSection';
+import TrendingDestinations from '../components/home/TrendingDestinations';
+import { siteTestimonials, siteFaqs, HERO_BACKDROPS } from '../data/siteData';
+import { Plane, Building2, Bus, Train, ShieldCheck, Check, Star, ArrowRight } from 'lucide-react';
 
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState('flights'); // flights | hotels | bus | railway
-  const { showToast } = useBooking();
 
   const currentHero = HERO_BACKDROPS[activeTab] || HERO_BACKDROPS.flights;
-
-  const handleCopyCode = (code) => {
-    navigator.clipboard.writeText(code);
-    showToast(`Promo Code ${code} copied to clipboard!`);
-  };
 
   return (
     <div className="home-page">
@@ -109,47 +104,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Latest Offers Section */}
-      <section className="section-block offers-section">
-        <div className="container">
-          <div className="section-header">
-            <div>
-              <span className="section-tag">HOT DEALS</span>
-              <h2>Latest Travel Offers</h2>
-            </div>
-            <Link to="/offers" className="view-all-link">
-              View All Offers <ArrowRight size={16} />
-            </Link>
-          </div>
+      {/* Special Offers Section with Bank Offers Carousel & Campaign Banner (Image 2 Style) */}
+      <SpecialOffersSection />
 
-          <div className="offers-grid">
-            {siteOffers.map((offer) => (
-              <div key={offer.id} className="offer-card">
-                <div className="offer-img-box">
-                  <img src={offer.image} alt={offer.title} />
-                  <span className="offer-category-badge">{offer.category}</span>
-                </div>
-                <div className="offer-content">
-                  <div className="offer-discount-tag">{offer.discount}</div>
-                  <h3>{offer.title}</h3>
-                  <p>{offer.description}</p>
-                  <div className="offer-code-row">
-                    <span className="coupon-code-pill">CODE: {offer.code}</span>
-                    <button
-                      type="button"
-                      className="copy-code-btn"
-                      onClick={() => handleCopyCode(offer.code)}
-                      title="Copy Code"
-                    >
-                      <Copy size={14} /> Copy
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Trending Destinations with India & International Tabs (Image 4 Style) */}
+      <TrendingDestinations />
 
       {/* Explore by Category */}
       <section className="section-block categories-section bg-muted">

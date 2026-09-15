@@ -43,6 +43,7 @@ import TopBar from './components/common/TopBar';
 import Header from './components/common/Header';
 import Footer from './components/common/Footer';
 import Toast from './components/common/Toast';
+import Preloader from './components/common/Preloader';
 import LoginModal from './components/auth/LoginModal';
 import CheckoutModal from './components/checkout/CheckoutModal';
 import TicketModal from './components/checkout/TicketModal';
@@ -105,6 +106,7 @@ export default function App() {
             <Footer />
             
             {/* Global Overlays & Modals */}
+            <Preloader />
             <LoginModal />
             <CheckoutModal />
             <TicketModal />
