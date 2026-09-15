@@ -87,8 +87,13 @@ export function AuthProvider({ children }) {
     setUser(null);
   };
 
-  const updateProfile = (updatedFields) => {
-    setUser((prev) => (prev ? { ...prev, ...updatedFields } : null));
+  const updateProfile = async (updatedFields) => {
+    setUser((prev) => {
+      const merged = prev ? { ...prev, ...updatedFields } : updatedFields;
+      // Sync with backend asynchronously
+      api.updateProfile(merged).catch((err) => console.warn('Could not sync profile to backend:', err));
+      return merged;
+    });
   };
 
   return (

@@ -85,8 +85,15 @@ export const api = {
   },
 
   // Bookings
-  getBookings: async () => {
-    const res = await request('/api/bookings');
+  getBookings: async (params = {}) => {
+    const query = new URLSearchParams(params).toString();
+    const res = await request(`/api/bookings${query ? `?${query}` : ''}`);
+    if (res.ok && res.data?.data) return res.data.data;
+    return null;
+  },
+
+  getBookingById: async (id) => {
+    const res = await request(`/api/bookings/${id}`);
     if (res.ok && res.data?.data) return res.data.data;
     return null;
   },
@@ -122,6 +129,14 @@ export const api = {
     const res = await request('/api/auth/register', {
       method: 'POST',
       body: JSON.stringify(userData)
+    });
+    return res;
+  },
+
+  updateProfile: async (profileData) => {
+    const res = await request('/api/auth/profile', {
+      method: 'PUT',
+      body: JSON.stringify(profileData)
     });
     return res;
   },

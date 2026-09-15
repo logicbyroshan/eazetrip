@@ -14,15 +14,36 @@ export default function ProfilePage() {
   const [city, setCity] = useState('Mumbai');
   const [state, setState] = useState('Maharashtra');
 
-  const [savedTravellers, setSavedTravellers] = useState([
-    { id: 1, name: 'Rohit Sharma', gender: 'Male', dob: '1992-04-30', relation: 'Self' },
-    { id: 2, name: 'Ritika Sharma', gender: 'Female', dob: '1995-12-21', relation: 'Spouse' }
-  ]);
+  const [savedTravellers, setSavedTravellers] = useState(() => {
+    try {
+      const saved = localStorage.getItem('exploreeaz_travellers');
+      return saved
+        ? JSON.parse(saved)
+        : [
+            { id: 1, name: 'Rohit Sharma', gender: 'Male', dob: '1992-04-30', relation: 'Self' },
+            { id: 2, name: 'Ritika Sharma', gender: 'Female', dob: '1995-12-21', relation: 'Spouse' }
+          ];
+    } catch {
+      return [
+        { id: 1, name: 'Rohit Sharma', gender: 'Male', dob: '1992-04-30', relation: 'Self' },
+        { id: 2, name: 'Ritika Sharma', gender: 'Female', dob: '1995-12-21', relation: 'Spouse' }
+      ];
+    }
+  });
 
   const [newTravellerName, setNewTravellerName] = useState('');
   const [newTravellerGender, setNewTravellerGender] = useState('Male');
   const [newTravellerRelation, setNewTravellerRelation] = useState('Friend');
   const [showAddTraveller, setShowAddTraveller] = useState(false);
+
+  const saveTravellersToStorage = (list) => {
+    setSavedTravellers(list);
+    try {
+      localStorage.setItem('exploreeaz_travellers', JSON.stringify(list));
+    } catch (e) {
+      console.error('Failed to save travellers to storage', e);
+    }
+  };
 
   if (!isAuthenticated && !user) {
     return (
@@ -46,25 +67,27 @@ export default function ProfilePage() {
 
   const handleAddTraveller = (e) => {
     e.preventDefault();
-    if (!newTravellerName) return;
+    if (!newTravellerName.trim()) return;
 
-    setSavedTravellers([
+    const updated = [
       ...savedTravellers,
       {
         id: Date.now(),
-        name: newTravellerName,
+        name: newTravellerName.trim(),
         gender: newTravellerGender,
         dob: '1998-01-01',
         relation: newTravellerRelation
       }
-    ]);
+    ];
+    saveTravellersToStorage(updated);
     setNewTravellerName('');
     setShowAddTraveller(false);
     showToast('Traveller added to your quick-book list!');
   };
 
   const handleRemoveTraveller = (id) => {
-    setSavedTravellers(savedTravellers.filter((t) => t.id !== id));
+    const updated = savedTravellers.filter((t) => t.id !== id);
+    saveTravellersToStorage(updated);
     showToast('Traveller removed.');
   };
 

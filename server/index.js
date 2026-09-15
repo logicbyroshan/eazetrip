@@ -177,7 +177,32 @@ app.get('/api/faqs', (req, res) => {
 
 // BOOKINGS API
 app.get('/api/bookings', (req, res) => {
-  res.json({ success: true, count: bookings.length, data: bookings });
+  const { userId, email, status, type } = req.query;
+  let results = bookings;
+
+  if (userId) {
+    results = results.filter((b) => b.userId === userId);
+  }
+  if (email) {
+    results = results.filter((b) => b.email?.toLowerCase() === email.toLowerCase() || b.passengers?.some(p => p.email?.toLowerCase() === email.toLowerCase()));
+  }
+  if (status) {
+    results = results.filter((b) => b.status?.toLowerCase() === status.toLowerCase());
+  }
+  if (type) {
+    results = results.filter((b) => b.type?.toLowerCase() === type.toLowerCase());
+  }
+
+  res.json({ success: true, count: results.length, data: results });
+});
+
+app.get('/api/bookings/:id', (req, res) => {
+  const { id } = req.params;
+  const booking = bookings.find((b) => b.id === id || b.pnr === id);
+  if (!booking) {
+    return res.status(404).json({ success: false, error: 'Booking not found' });
+  }
+  res.json({ success: true, data: booking });
 });
 
 app.post('/api/bookings', validateBooking, (req, res) => {
@@ -223,14 +248,24 @@ app.post('/api/bookings/:id/cancel', (req, res) => {
 app.post('/api/auth/login', sensitiveLimiter, validateLogin, (req, res) => {
   const { identifier, method } = req.body;
 
-  const user = {
-    id: `USR-${Math.floor(100000 + Math.random() * 900000)}`,
-    name: method === 'phone' ? `Traveler ${identifier.slice(-4)}` : identifier.split('@')[0],
-    email: method === 'email' ? identifier : `user${identifier.slice(-4)}@exploreeaz.com`,
-    phone: method === 'phone' ? identifier : '+91 9876543210',
-    tier: 'Gold Explorer',
-    token: `jwt-sim-${Date.now()}`
-  };
+  // Find existing user or generate session profile
+  let user = users.find(
+    (u) =>
+      u.email.toLowerCase() === identifier.toLowerCase() ||
+      u.phone.replace(/[\s-]/g, '') === identifier.replace(/[\s-]/g, '')
+  );
+
+  if (!user) {
+    user = {
+      id: `USR-${Math.floor(100000 + Math.random() * 900000)}`,
+      name: method === 'phone' ? `Traveler ${identifier.slice(-4)}` : identifier.split('@')[0],
+      email: method === 'email' ? identifier : `user${identifier.slice(-4)}@exploreeaz.com`,
+      phone: method === 'phone' ? identifier : '+91 9876543210',
+      tier: 'Gold Explorer',
+      token: `jwt-sim-${Date.now()}`
+    };
+    users.push(user);
+  }
 
   res.json({
     success: true,
@@ -241,6 +276,11 @@ app.post('/api/auth/login', sensitiveLimiter, validateLogin, (req, res) => {
 
 app.post('/api/auth/register', sensitiveLimiter, validateRegister, (req, res) => {
   const { name, email, phone } = req.body;
+
+  const existingUser = users.find((u) => u.email.toLowerCase() === email.toLowerCase());
+  if (existingUser) {
+    return res.status(409).json({ success: false, error: 'An account with this email address already exists' });
+  }
 
   const user = {
     id: `USR-${Math.floor(100000 + Math.random() * 900000)}`,
@@ -255,6 +295,35 @@ app.post('/api/auth/register', sensitiveLimiter, validateRegister, (req, res) =>
   res.status(201).json({
     success: true,
     message: 'Account registered successfully',
+    data: user
+  });
+});
+
+app.put('/api/auth/profile', sensitiveLimiter, (req, res) => {
+  const { id, name, email, phone, city, state } = req.body || {};
+  let user = users.find((u) => u.id === id || (email && u.email.toLowerCase() === email.toLowerCase()));
+
+  if (!user) {
+    user = {
+      id: id || `USR-${Math.floor(100000 + Math.random() * 900000)}`,
+      name: name || 'Explorer User',
+      email: email || 'user@exploreeaz.com',
+      phone: phone || '+91 9876543210',
+      city: city || 'Mumbai',
+      state: state || 'Maharashtra',
+      tier: 'Gold Explorer'
+    };
+    users.push(user);
+  } else {
+    if (name) user.name = name;
+    if (phone) user.phone = phone;
+    if (city) user.city = city;
+    if (state) user.state = state;
+  }
+
+  res.json({
+    success: true,
+    message: 'Profile updated successfully',
     data: user
   });
 });
@@ -306,8 +375,13 @@ app.use(notFoundHandler);
 // 3. Static Assets & Client Serving
 app.use(express.static(path.join(__dirname, '../client/dist')));
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+app.get('*', (req, res, next) => {
+  const indexPath = path.join(__dirname, '../client/dist/index.html');
+  res.sendFile(indexPath, (err) => {
+    if (err) {
+      res.status(200).send('ExploreEase (EazeTrip) API Server is active. Client bundle available under /client.');
+    }
+  });
 });
 
 // 4. Centralized Error Handler

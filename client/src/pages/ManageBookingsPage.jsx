@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useBooking } from '../context/BookingContext';
 import { Plane, Building2, Bus, Train, Calendar, ShieldAlert, FileText, Download, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -9,6 +9,18 @@ export default function ManageBookingsPage() {
   const [filterStatus, setFilterStatus] = useState('all'); // all | Confirmed | Cancelled
   const [cancellingBookingId, setCancellingBookingId] = useState(null);
   const [cancelReason, setCancelReason] = useState('Travel plans changed');
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setCancellingBookingId(null);
+      }
+    };
+    if (cancellingBookingId) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [cancellingBookingId]);
 
   const filteredBookings = bookings.filter((b) => {
     if (filterType !== 'all' && b.type !== filterType) return false;

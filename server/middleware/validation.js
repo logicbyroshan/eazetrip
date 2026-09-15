@@ -1,36 +1,52 @@
 /**
- * Request Validation Middleware & Schemas
+ * Production-Grade Request Validation Middleware & Schemas
  */
 
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PHONE_REGEX = /^[6-9]\d{9}$/;
+const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const PHONE_REGEX = /^\+?[0-9\s-]{10,15}$/;
 
 function validateLogin(req, res, next) {
-  const { identifier, method } = req.body || {};
-  if (!identifier) {
+  const { identifier, method, password } = req.body || {};
+  if (!identifier || typeof identifier !== 'string' || identifier.trim().length === 0) {
     return res.status(400).json({ success: false, error: 'Mobile number or email identifier is required' });
   }
 
-  if (method === 'email' && !EMAIL_REGEX.test(identifier)) {
-    return res.status(400).json({ success: false, error: 'Please provide a valid email address' });
+  const cleanIdentifier = identifier.trim();
+
+  if (method === 'email') {
+    if (!EMAIL_REGEX.test(cleanIdentifier) || cleanIdentifier.length > 254) {
+      return res.status(400).json({ success: false, error: 'Please provide a valid email address' });
+    }
+  } else if (method === 'phone') {
+    const digitsOnly = cleanIdentifier.replace(/[\s-]/g, '');
+    if (!PHONE_REGEX.test(digitsOnly) || digitsOnly.length < 10) {
+      return res.status(400).json({ success: false, error: 'Please provide a valid 10-15 digit phone number' });
+    }
   }
 
   next();
 }
 
 function validateRegister(req, res, next) {
-  const { name, email, password } = req.body || {};
+  const { name, email, password, phone } = req.body || {};
   
-  if (!name || name.trim().length < 2) {
-    return res.status(400).json({ success: false, error: 'Full name must be at least 2 characters long' });
+  if (!name || typeof name !== 'string' || name.trim().length < 2 || name.length > 100) {
+    return res.status(400).json({ success: false, error: 'Full name must be between 2 and 100 characters long' });
   }
 
-  if (!email || !EMAIL_REGEX.test(email)) {
+  if (!email || typeof email !== 'string' || !EMAIL_REGEX.test(email.trim()) || email.length > 254) {
     return res.status(400).json({ success: false, error: 'A valid email address is required' });
   }
 
-  if (!password || password.length < 6) {
-    return res.status(400).json({ success: false, error: 'Password must be at least 6 characters long' });
+  if (!password || typeof password !== 'string' || password.length < 6 || password.length > 128) {
+    return res.status(400).json({ success: false, error: 'Password must be between 6 and 128 characters' });
+  }
+
+  if (phone) {
+    const digitsOnly = String(phone).replace(/[\s-]/g, '');
+    if (!PHONE_REGEX.test(digitsOnly)) {
+      return res.status(400).json({ success: false, error: 'Please provide a valid phone number' });
+    }
   }
 
   next();
@@ -39,39 +55,51 @@ function validateRegister(req, res, next) {
 function validateBooking(req, res, next) {
   const { type, title, totalAmount, passengers } = req.body || {};
 
-  if (!type || !['flight', 'hotel', 'bus', 'train'].includes(type.toLowerCase())) {
+  if (!type || !['flight', 'hotel', 'bus', 'train'].includes(String(type).toLowerCase())) {
     return res.status(400).json({ success: false, error: 'Valid booking type (flight, hotel, bus, train) is required' });
   }
 
-  if (!title) {
+  if (!title || typeof title !== 'string' || title.trim().length < 3) {
     return res.status(400).json({ success: false, error: 'Booking title or itinerary description is required' });
   }
 
-  if (typeof totalAmount !== 'number' || totalAmount <= 0) {
-    return res.status(400).json({ success: false, error: 'Total amount must be a positive number' });
+  const numAmount = Number(totalAmount);
+  if (isNaN(numAmount) || numAmount <= 0 || numAmount > 10000000) {
+    return res.status(400).json({ success: false, error: 'Total amount must be a positive number up to ₹1,00,00,000' });
   }
 
   if (!Array.isArray(passengers) || passengers.length === 0) {
     return res.status(400).json({ success: false, error: 'At least one passenger or guest detail is required' });
   }
 
+  for (let i = 0; i < passengers.length; i++) {
+    const p = passengers[i];
+    if (!p || typeof p !== 'object' || !p.name || typeof p.name !== 'string' || p.name.trim().length < 2) {
+      return res.status(400).json({ success: false, error: `Passenger #${i + 1} must have a valid full name` });
+    }
+  }
+
   next();
 }
 
 function validatePayment(req, res, next) {
-  const { firstName, email, amount } = req.body || {};
+  const { firstName, email, amount, currency } = req.body || {};
 
-  if (!firstName || firstName.trim().length < 1) {
-    return res.status(400).json({ success: false, error: 'First name is required' });
+  if (!firstName || typeof firstName !== 'string' || firstName.trim().length < 1 || firstName.length > 60) {
+    return res.status(400).json({ success: false, error: 'First name is required (max 60 characters)' });
   }
 
-  if (!email || !EMAIL_REGEX.test(email)) {
+  if (!email || typeof email !== 'string' || !EMAIL_REGEX.test(email.trim()) || email.length > 254) {
     return res.status(400).json({ success: false, error: 'A valid email address is required' });
   }
 
   const numAmount = Number(amount);
-  if (isNaN(numAmount) || numAmount <= 0) {
-    return res.status(400).json({ success: false, error: 'Amount must be a positive number' });
+  if (isNaN(numAmount) || numAmount <= 0 || numAmount > 10000000) {
+    return res.status(400).json({ success: false, error: 'Amount must be a valid positive number' });
+  }
+
+  if (currency && typeof currency === 'string' && !['INR', 'USD', 'EUR', 'GBP', 'AED', 'SGD'].includes(currency.toUpperCase())) {
+    return res.status(400).json({ success: false, error: 'Unsupported currency specified' });
   }
 
   next();
@@ -80,16 +108,16 @@ function validatePayment(req, res, next) {
 function validateContact(req, res, next) {
   const { name, email, message } = req.body || {};
 
-  if (!name || name.trim().length < 2) {
-    return res.status(400).json({ success: false, error: 'Name must be at least 2 characters long' });
+  if (!name || typeof name !== 'string' || name.trim().length < 2 || name.length > 100) {
+    return res.status(400).json({ success: false, error: 'Name must be between 2 and 100 characters long' });
   }
 
-  if (!email || !EMAIL_REGEX.test(email)) {
+  if (!email || typeof email !== 'string' || !EMAIL_REGEX.test(email.trim()) || email.length > 254) {
     return res.status(400).json({ success: false, error: 'A valid email address is required' });
   }
 
-  if (!message || message.trim().length < 5) {
-    return res.status(400).json({ success: false, error: 'Message must be at least 5 characters long' });
+  if (!message || typeof message !== 'string' || message.trim().length < 5 || message.length > 3000) {
+    return res.status(400).json({ success: false, error: 'Message must be between 5 and 3000 characters long' });
   }
 
   next();

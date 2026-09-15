@@ -87,6 +87,38 @@ Authenticates a user via email or phone.
   }
   ```
 
+### `PUT /api/auth/profile`
+Updates traveler account information and saved details.
+
+- **Auth Required:** Optional (matches by user ID or email)
+- **Rate Limit:** 20 req/min
+- **Request Body:**
+  ```json
+  {
+    "id": "USR-1",
+    "name": "Priyansh Sharma",
+    "phone": "+91 9876543210",
+    "city": "Bengaluru",
+    "state": "Karnataka"
+  }
+  ```
+- **Response `200 OK`:**
+  ```json
+  {
+    "success": true,
+    "message": "Profile updated successfully",
+    "data": {
+      "id": "USR-1",
+      "name": "Priyansh Sharma",
+      "email": "priyansh@example.com",
+      "phone": "+91 9876543210",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "tier": "Gold Explorer"
+    }
+  }
+  ```
+
 ---
 
 ## 3. Flight Booking Services
@@ -142,24 +174,7 @@ Search and list available hotels.
   - `city` (string): City name (e.g., `Goa`, `Mumbai`, `Delhi`, `Jaipur`)
   - `minRating` (number): Minimum guest review rating (e.g., `4.5`)
   - `maxPrice` (number): Maximum price per night
-- **Response `200 OK`:**
-  ```json
-  {
-    "success": true,
-    "count": 6,
-    "data": [
-      {
-        "id": "HT-101",
-        "name": "Taj Fort Aguada Resort & Spa",
-        "city": "Goa",
-        "rating": 4.8,
-        "reviews": 1240,
-        "pricePerNight": 12500,
-        "amenities": ["Free WiFi", "Pool", "Spa", "Beach Access", "Breakfast Included"]
-      }
-    ]
-  }
-  ```
+- **Response `200 OK`:** List of verified hotel properties.
 
 ### `GET /api/hotels/:id`
 Retrieves detailed information for a single hotel.
@@ -171,29 +186,8 @@ Retrieves detailed information for a single hotel.
 ### `GET /api/buses`
 Lists intercity luxury and sleeper buses.
 
-- **Query Parameters:** `from`, `to`, `busType` (e.g. `AC Sleeper`, `Volvo Multi-Axle`)
-- **Response `200 OK`:**
-  ```json
-  {
-    "success": true,
-    "count": 4,
-    "data": [
-      {
-        "id": "BS-201",
-        "operator": "Zingbus Plus",
-        "busType": "AC Sleeper 2+1",
-        "from": "Delhi",
-        "to": "Manali",
-        "departure": "08:30 PM",
-        "arrival": "08:00 AM",
-        "duration": "11h 30m",
-        "rating": 4.6,
-        "price": 1299,
-        "seatsAvailable": 14
-      }
-    ]
-  }
-  ```
+- **Query Parameters:** `from`, `to`, `operator`
+- **Response `200 OK`:** List of bus services.
 
 ---
 
@@ -202,18 +196,29 @@ Lists intercity luxury and sleeper buses.
 ### `GET /api/railways`
 Lists high-speed and express train schedules.
 
-- **Query Parameters:** `from`, `to`, `trainNumber`
-- **Response `200 OK`:** List of train schedules, classes (1A, 2A, 3A, SL, CC, EC), and live seat availability.
+- **Query Parameters:** `from`, `to`
+- **Response `200 OK`:** List of train schedules and class seat availability.
 
 ---
 
 ## 7. Bookings Management
 
 ### `GET /api/bookings`
-Retrieves user booking history.
+Retrieves booking history with optional query filters.
 
-- **Query Parameters:** `userId` (optional)
-- **Response `200 OK`:** Array of confirmed, pending, and completed bookings.
+- **Query Parameters:**
+  - `userId` (string): Filter by user account ID
+  - `email` (string): Filter by passenger or account email
+  - `status` (string): `Confirmed` or `Cancelled`
+  - `type` (string): `flight`, `hotel`, `bus`, or `train`
+- **Response `200 OK`:** Array of booking records.
+
+### `GET /api/bookings/:id`
+Retrieves a specific booking by its ID or PNR.
+
+- **Path Parameter:** `id` (e.g., `EZ-FL-74892`)
+- **Response `200 OK`:** Full booking record
+- **Response `404 Not Found`:** If booking does not exist
 
 ### `POST /api/bookings`
 Creates a new booking record with unique PNR / Booking ID.
@@ -234,7 +239,7 @@ Creates a new booking record with unique PNR / Booking ID.
 - **Response `201 Created`:** Booking details with generated `id` (e.g., `EZ-FL-1789469998863`) and status `Confirmed`.
 
 ### `POST /api/bookings/:id/cancel`
-Cancels an existing booking.
+Cancels an existing booking and initiates refund processing.
 
 - **Request Body:**
   ```json

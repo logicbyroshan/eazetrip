@@ -5,6 +5,20 @@
 function rateLimit({ windowMs = 60 * 1000, max = 60, message = 'Too many requests, please try again later.' } = {}) {
   const instanceMap = new Map();
 
+  // Periodic pruning of stale rate limiter records to prevent memory leaks
+  const cleanupTimer = setInterval(() => {
+    const now = Date.now();
+    for (const [ip, record] of instanceMap.entries()) {
+      if (now - record.startTime > windowMs * 2) {
+        instanceMap.delete(ip);
+      }
+    }
+  }, Math.max(windowMs, 30000));
+
+  if (cleanupTimer.unref) {
+    cleanupTimer.unref();
+  }
+
   return (req, res, next) => {
     if (process.env.NODE_ENV === 'test') {
       return next();
@@ -20,7 +34,7 @@ function rateLimit({ windowMs = 60 * 1000, max = 60, message = 'Too many request
       record.count += 1;
     }
 
-    // Set rate limit headers
+    // Set standard rate limit headers
     res.setHeader('X-RateLimit-Limit', max);
     res.setHeader('X-RateLimit-Remaining', Math.max(0, max - record.count));
     res.setHeader('X-RateLimit-Reset', Math.ceil((record.startTime + windowMs) / 1000));
@@ -53,14 +67,30 @@ function securityHeaders(req, res, next) {
   next();
 }
 
-// Simple string sanitizer to prevent injection
+// Deep recursive string sanitizer to strip null bytes and trim whitespace
+function sanitizeValue(value) {
+  if (typeof value === 'string') {
+    return value.replace(/\0/g, '').trim();
+  }
+  if (Array.isArray(value)) {
+    return value.map(sanitizeValue);
+  }
+  if (value !== null && typeof value === 'object') {
+    const cleaned = {};
+    for (const key of Object.keys(value)) {
+      cleaned[key] = sanitizeValue(value[key]);
+    }
+    return cleaned;
+  }
+  return value;
+}
+
 function sanitizeInput(req, res, next) {
   if (req.body && typeof req.body === 'object') {
-    for (const key of Object.keys(req.body)) {
-      if (typeof req.body[key] === 'string') {
-        req.body[key] = req.body[key].trim();
-      }
-    }
+    req.body = sanitizeValue(req.body);
+  }
+  if (req.query && typeof req.query === 'object') {
+    req.query = sanitizeValue(req.query);
   }
   next();
 }
@@ -70,3 +100,4 @@ module.exports = {
   securityHeaders,
   sanitizeInput
 };
+

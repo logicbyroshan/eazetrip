@@ -181,3 +181,99 @@ test('12. POST /api/contact validates inputs and confirms submission', async () 
   assert.strictEqual(passRes.status, 201);
   assert.strictEqual(passRes.data.success, true);
 });
+
+test('13. GET /api/bookings/:id fetches booking details or 404', async () => {
+  // Create a known booking
+  const createRes = await requestJson('/api/bookings', {
+    method: 'POST',
+    body: {
+      type: 'hotel',
+      title: 'Grand Palace Goa',
+      date: '2026-10-01 to 2026-10-04',
+      totalAmount: 14500,
+      passengers: [{ name: 'Rohit Sharma' }]
+    }
+  });
+  const bookingId = createRes.data.data.id;
+
+  const fetchRes = await requestJson(`/api/bookings/${bookingId}`);
+  assert.strictEqual(fetchRes.status, 200);
+  assert.strictEqual(fetchRes.data.data.id, bookingId);
+
+  const notFoundRes = await requestJson('/api/bookings/EZ-INVALID-9999');
+  assert.strictEqual(notFoundRes.status, 404);
+});
+
+test('14. GET /api/bookings supports status and type query filtering', async () => {
+  const { status, data } = await requestJson('/api/bookings?type=flight');
+  assert.strictEqual(status, 200);
+  assert.ok(Array.isArray(data.data));
+  assert.ok(data.data.every((b) => b.type === 'flight'));
+});
+
+test('15. POST /api/auth/register rejects duplicate registration with 409 Conflict', async () => {
+  const duplicateEmail = `dup_${Date.now()}@example.com`;
+
+  const res1 = await requestJson('/api/auth/register', {
+    method: 'POST',
+    body: { name: 'User One', email: duplicateEmail, password: 'password123' }
+  });
+  assert.strictEqual(res1.status, 201);
+
+  const res2 = await requestJson('/api/auth/register', {
+    method: 'POST',
+    body: { name: 'User Two', email: duplicateEmail, password: 'password123' }
+  });
+  assert.strictEqual(res2.status, 409);
+  assert.strictEqual(res2.data.success, false);
+});
+
+test('16. PUT /api/auth/profile updates user state', async () => {
+  const res = await requestJson('/api/auth/profile', {
+    method: 'PUT',
+    body: { email: 'profile.user@example.com', name: 'Updated Explorer Name', city: 'Bengaluru' }
+  });
+  assert.strictEqual(res.status, 200);
+  assert.strictEqual(res.data.data.name, 'Updated Explorer Name');
+  assert.strictEqual(res.data.data.city, 'Bengaluru');
+});
+
+test('17. Sanitization middleware trims whitespace and strips null bytes', async () => {
+  const res = await requestJson('/api/contact', {
+    method: 'POST',
+    body: { name: '  NullByte\\0Stripped  ', email: 'clean@example.com', message: '  Cleaned message body  ' }
+  });
+  assert.strictEqual(res.status, 201);
+  assert.strictEqual(res.data.data.name, 'NullByte\\0Stripped');
+  assert.strictEqual(res.data.data.message, 'Cleaned message body');
+});
+
+test('18. POST /api/payment rejects unsupported currency codes', async () => {
+  const res = await requestJson('/api/payment', {
+    method: 'POST',
+    body: { firstName: 'Test', email: 'test@example.com', amount: 1000, currency: 'INVALID_CURRENCY' }
+  });
+  assert.strictEqual(res.status, 400);
+  assert.strictEqual(res.data.success, false);
+});
+
+test('19. Non-existent API route returns structured JSON 404', async () => {
+  const res = await requestJson('/api/unknown-service/route');
+  assert.strictEqual(res.status, 404);
+  assert.strictEqual(res.data.success, false);
+  assert.ok(res.data.error.includes('not found'));
+});
+
+test('20. POST /api/bookings validates passenger object structure', async () => {
+  const res = await requestJson('/api/bookings', {
+    method: 'POST',
+    body: {
+      type: 'bus',
+      title: 'Delhi to Manali',
+      totalAmount: 1200,
+      passengers: [{ name: '' }] // Invalid empty passenger name
+    }
+  });
+  assert.strictEqual(res.status, 400);
+  assert.strictEqual(res.data.success, false);
+});
