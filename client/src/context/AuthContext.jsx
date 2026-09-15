@@ -62,6 +62,22 @@ export function AuthProvider({ children }) {
     return { success: true, user: loggedInUser };
   };
 
+  const loginWithGoogle = async () => {
+    const googleUser = {
+      id: 'USR-' + Math.floor(100000 + Math.random() * 900000),
+      name: 'Priyansh Sharma',
+      email: 'priyansh.sharma@gmail.com',
+      phone: '+91 9876543210',
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
+      memberSince: new Date().getFullYear(),
+      tier: 'Gold Member',
+      authProvider: 'Google'
+    };
+    setUser(googleUser);
+    setIsLoginModalOpen(false);
+    return { success: true, user: googleUser };
+  };
+
   const register = async (userData) => {
     const apiRes = await api.register(userData);
     let newUser = null;
@@ -102,6 +118,7 @@ export function AuthProvider({ children }) {
         user,
         isAuthenticated: !!user,
         login,
+        loginWithGoogle,
         register,
         logout,
         updateProfile,
