@@ -193,9 +193,43 @@ export default function CheckoutModal() {
 
               {/* Primary Traveller Info */}
               <div className="form-card-section">
-                <h4>
-                  <User size={16} /> Passenger / Guest Details (Adult 1)
-                </h4>
+                <div className="section-title-with-action">
+                  <h4>
+                    <User size={16} /> Passenger / Guest Details (Adult 1)
+                  </h4>
+                  {(() => {
+                    try {
+                      const list = JSON.parse(localStorage.getItem('exploreeaz_travellers') || '[]');
+                      if (list.length > 0) {
+                        return (
+                          <div className="quick-traveller-pills">
+                            <span className="quick-lbl">Quick Fill:</span>
+                            {list.map((t) => (
+                              <button
+                                key={t.id}
+                                type="button"
+                                className="quick-pax-btn"
+                                onClick={() => {
+                                  const parts = t.name.split(' ');
+                                  setFirstName(parts[0] || '');
+                                  setLastName(parts.slice(1).join(' ') || 'Traveler');
+                                  if (t.gender) setGender(t.gender);
+                                  if (t.dob) setDob(t.dob);
+                                  showToast(`Auto-filled details for ${t.name}`);
+                                }}
+                              >
+                                + {t.name}
+                              </button>
+                            ))}
+                          </div>
+                        );
+                      }
+                    } catch {
+                      return null;
+                    }
+                    return null;
+                  })()}
+                </div>
                 <div className="form-grid three-col">
                   <div className="form-group">
                     <label htmlFor="pax-title">Title</label>

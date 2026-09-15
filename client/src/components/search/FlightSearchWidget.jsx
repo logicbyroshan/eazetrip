@@ -30,15 +30,34 @@ export default function FlightSearchWidget({ initialValues = {}, onSearch }) {
   const [toQuery, setToQuery] = useState('');
 
   const travellerRef = useRef(null);
+  const fromFieldRef = useRef(null);
+  const toFieldRef = useRef(null);
 
   useEffect(() => {
     function handleClickOutside(e) {
       if (travellerRef.current && !travellerRef.current.contains(e.target)) {
         setTravellerMenuOpen(false);
       }
+      if (fromFieldRef.current && !fromFieldRef.current.contains(e.target)) {
+        setFromSearchOpen(false);
+      }
+      if (toFieldRef.current && !toFieldRef.current.contains(e.target)) {
+        setToSearchOpen(false);
+      }
+    }
+    function handleKeyDown(e) {
+      if (e.key === 'Escape') {
+        setTravellerMenuOpen(false);
+        setFromSearchOpen(false);
+        setToSearchOpen(false);
+      }
     }
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
   }, []);
 
   // Ensure return date is not before departure date
@@ -147,7 +166,7 @@ export default function FlightSearchWidget({ initialValues = {}, onSearch }) {
       {/* Main Input Grid */}
       <div className="search-fields-grid flight-grid">
         {/* FROM Field */}
-        <div className="search-field-block">
+        <div className="search-field-block" ref={fromFieldRef}>
           <label id="flight-from-label">FROM</label>
           <div
             className="field-value-card"
@@ -209,7 +228,7 @@ export default function FlightSearchWidget({ initialValues = {}, onSearch }) {
         </button>
 
         {/* TO Field */}
-        <div className="search-field-block">
+        <div className="search-field-block" ref={toFieldRef}>
           <label id="flight-to-label">TO</label>
           <div
             className="field-value-card"

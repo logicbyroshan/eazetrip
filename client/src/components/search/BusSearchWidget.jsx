@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { busCities } from '../../data/busData';
 import { Bus, ArrowLeftRight, Calendar, MapPin } from 'lucide-react';
@@ -14,6 +14,32 @@ export default function BusSearchWidget({ initialValues = {}, onSearch }) {
   const [toDropdownOpen, setToDropdownOpen] = useState(false);
   const [fromQuery, setFromQuery] = useState('');
   const [toQuery, setToQuery] = useState('');
+
+  const fromRef = useRef(null);
+  const toRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (fromRef.current && !fromRef.current.contains(e.target)) {
+        setFromDropdownOpen(false);
+      }
+      if (toRef.current && !toRef.current.contains(e.target)) {
+        setToDropdownOpen(false);
+      }
+    }
+    function handleKeyDown(e) {
+      if (e.key === 'Escape') {
+        setFromDropdownOpen(false);
+        setToDropdownOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   const handleSwap = () => {
     const temp = fromCity;
@@ -52,7 +78,7 @@ export default function BusSearchWidget({ initialValues = {}, onSearch }) {
 
       <div className="search-fields-grid bus-grid">
         {/* FROM City */}
-        <div className="search-field-block">
+        <div className="search-field-block" ref={fromRef}>
           <label>FROM</label>
           <div
             className="field-value-card"
@@ -105,7 +131,7 @@ export default function BusSearchWidget({ initialValues = {}, onSearch }) {
         </button>
 
         {/* TO City */}
-        <div className="search-field-block">
+        <div className="search-field-block" ref={toRef}>
           <label>TO</label>
           <div
             className="field-value-card"

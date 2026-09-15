@@ -21,15 +21,29 @@ export default function HotelSearchWidget({ initialValues = {}, onSearch }) {
   const [cityQuery, setCityQuery] = useState('');
 
   const guestRef = useRef(null);
+  const cityRef = useRef(null);
 
   useEffect(() => {
     function handleClickOutside(e) {
       if (guestRef.current && !guestRef.current.contains(e.target)) {
         setGuestDropdownOpen(false);
       }
+      if (cityRef.current && !cityRef.current.contains(e.target)) {
+        setCityDropdownOpen(false);
+      }
+    }
+    function handleKeyDown(e) {
+      if (e.key === 'Escape') {
+        setGuestDropdownOpen(false);
+        setCityDropdownOpen(false);
+      }
     }
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
   }, []);
 
   // Ensure checkout is not before checkin
@@ -78,7 +92,7 @@ export default function HotelSearchWidget({ initialValues = {}, onSearch }) {
 
       <div className="search-fields-grid hotel-grid">
         {/* City Destination */}
-        <div className="search-field-block">
+        <div className="search-field-block" ref={cityRef}>
           <label id="hotel-city-label">CITY / DESTINATION / HOTEL</label>
           <div
             className="field-value-card"

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { railwayStations } from '../../data/trainData';
 import { Train, ArrowLeftRight, Calendar, MapPin } from 'lucide-react';
@@ -16,6 +16,32 @@ export default function TrainSearchWidget({ initialValues = {}, onSearch }) {
   const [toDropdownOpen, setToDropdownOpen] = useState(false);
   const [fromQuery, setFromQuery] = useState('');
   const [toQuery, setToQuery] = useState('');
+
+  const fromRef = useRef(null);
+  const toRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (fromRef.current && !fromRef.current.contains(e.target)) {
+        setFromDropdownOpen(false);
+      }
+      if (toRef.current && !toRef.current.contains(e.target)) {
+        setToDropdownOpen(false);
+      }
+    }
+    function handleKeyDown(e) {
+      if (e.key === 'Escape') {
+        setFromDropdownOpen(false);
+        setToDropdownOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   const getStation = (code) => railwayStations.find((s) => s.code === code) || railwayStations[0];
 
@@ -76,7 +102,7 @@ export default function TrainSearchWidget({ initialValues = {}, onSearch }) {
 
       <div className="search-fields-grid train-grid">
         {/* FROM Station */}
-        <div className="search-field-block">
+        <div className="search-field-block" ref={fromRef}>
           <label>FROM STATION</label>
           <div
             className="field-value-card"
@@ -134,7 +160,7 @@ export default function TrainSearchWidget({ initialValues = {}, onSearch }) {
         </button>
 
         {/* TO Station */}
-        <div className="search-field-block">
+        <div className="search-field-block" ref={toRef}>
           <label>TO STATION</label>
           <div
             className="field-value-card"
