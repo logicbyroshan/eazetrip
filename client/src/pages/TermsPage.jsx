@@ -18,7 +18,7 @@ export default function TermsPage({ title = 'Terms & Conditions' }) {
           <section className="legal-section">
             <h2>1. Acceptance of Terms</h2>
             <p>
-              By accessing, browsing, or using ExploreEase (ExploreEaz) platform, you agree to be bound by these Terms and Conditions and all applicable laws and regulations. If you do not agree with any of these terms, you are prohibited from using or accessing this site.
+              By accessing, browsing, or using the EazeTrip platform, you agree to be bound by these Terms and Conditions and all applicable laws and regulations. If you do not agree with any of these terms, you are prohibited from using or accessing this site.
             </p>
           </section>
 
@@ -32,7 +32,7 @@ export default function TermsPage({ title = 'Terms & Conditions' }) {
           <section className="legal-section">
             <h2>3. Travel Service Bookings & Third-Party Suppliers</h2>
             <p>
-              ExploreEase acts as a booking facilitator between users and third-party travel service providers (including airlines, hotels, bus operators, and Indian Railways). The carriage, lodging, and journey terms are governed by the respective provider's terms of service and fare rules.
+              EazeTrip acts as a booking facilitator between users and third-party travel service providers (including airlines, hotels, bus operators, and Indian Railways). The carriage, lodging, and journey terms are governed by the respective provider's terms of service and fare rules.
             </p>
             <ul>
               <li><strong>Airlines:</strong> Baggage limits, flight delays, schedule changes, and cancellations are subject to airline conditions.</li>
@@ -51,14 +51,14 @@ export default function TermsPage({ title = 'Terms & Conditions' }) {
           <section className="legal-section">
             <h2>5. Limitation of Liability</h2>
             <p>
-              ExploreEase shall not be liable for any indirect, incidental, or consequential damages resulting from flight delays, weather disruptions, supplier insolvency, or unforeseen technical issues beyond reasonable control.
+              EazeTrip shall not be liable for any indirect, incidental, or consequential damages resulting from flight delays, weather disruptions, supplier insolvency, or unforeseen technical issues beyond reasonable control.
             </p>
           </section>
 
           <section className="legal-section">
             <h2>6. Contact & Legal Jurisdiction</h2>
             <p>
-              For legal inquiries, contact: <a href="mailto:priyansh@exploreeaz.com" className="accent-link">priyansh@exploreeaz.com</a>.<br />
+              For legal inquiries, contact: <a href="mailto:support@eazetrip.com" className="accent-link">support@eazetrip.com</a>.<br />
               All disputes are subject to the exclusive jurisdiction of the competent courts in Madhya Pradesh, India.
             </p>
           </section>

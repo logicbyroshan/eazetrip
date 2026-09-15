@@ -65,9 +65,10 @@ export default function TicketModal() {
           {/* Header */}
           <div className="voucher-header">
             <div className="voucher-brand">
-              <span className="brand-name-explore">Explore</span>
-              <span className="brand-name-eaz">Eaz</span>
-              <span className="brand-dot">.</span>
+              <div className="voucher-logo-row">
+                <img src="/logo.png" alt="EazeTrip" className="voucher-logo-img" />
+                <span className="voucher-brand-title">Eaze<span className="voucher-brand-trip">Trip</span></span>
+              </div>
               <p>Official E-Ticket & Confirmation Voucher</p>
             </div>
             <div className="voucher-qr">
@@ -149,7 +150,7 @@ export default function TicketModal() {
             <ul>
               <li>Please carry a valid government-issued photo ID (Aadhaar, Passport, Driving License, Voter ID).</li>
               <li>For domestic flights, report at the airport at least 2 hours prior to scheduled departure.</li>
-              <li>For cancellations or rescheduling, visit <strong>Manage Bookings</strong> on ExploreEase.</li>
+              <li>For cancellations or rescheduling, visit <strong>Manage Bookings</strong> on EazeTrip.</li>
             </ul>
           </div>
         </div>

@@ -30,7 +30,7 @@ export default function AuthPage({ mode = 'register' }) {
       }
 
       await register({ name, email, phone, password });
-      showToast('Account created successfully! Welcome to ExploreEase.');
+      showToast('Account created successfully! Welcome to EazeTrip.');
       navigate('/');
     } else {
       await login({ identifier: email, password, method: 'email' });
@@ -44,11 +44,13 @@ export default function AuthPage({ mode = 'register' }) {
       <div className="page-shell narrow auth-page-shell">
         <div className="content-card form-card auth-page-card">
           <div className="auth-head-center">
-            <div className="brand-logo-custom">
-              <span className="brand-name-explore">Explore</span>
-              <span className="brand-name-eaz">Eaz</span>
+            <div className="brand-logo-img-wrap auth-logo-center">
+              <img src="/logo.png" alt="EazeTrip Logo" className="brand-logo-img auth-logo" />
+              <div className="brand-text-block">
+                <span className="brand-name-eaze">Eaze<span className="brand-name-trip">Trip</span></span>
+              </div>
             </div>
-            <h1>{mode === 'register' ? 'Create an Account' : 'Sign In to ExploreEase'}</h1>
+            <h1>{mode === 'register' ? 'Create an Account' : 'Sign In to EazeTrip'}</h1>
             <p>
               {mode === 'register'
                 ? 'Join thousands of smart travelers getting the best airfares and hotel deals'
@@ -160,7 +162,7 @@ export default function AuthPage({ mode = 'register' }) {
               </p>
             ) : (
               <p>
-                New to ExploreEase?{' '}
+                New to EazeTrip?{' '}
                 <Link to="/user-register" className="accent-link">
                   Create an Account
                 </Link>

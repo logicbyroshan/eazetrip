@@ -59,7 +59,7 @@ export default function ContactPage() {
           <div className="contact-info-col">
             <div className="content-card info-card-themed">
               <span className="section-tag">24/7 HELPDESK</span>
-              <h2>Get in Touch with ExploreEase</h2>
+              <h2>Get in Touch with EazeTrip</h2>
               <p>
                 Have questions regarding your flight booking, hotel check-in, or need emergency cancellation assistance? Our dedicated support team is available round the clock.
               </p>
@@ -91,7 +91,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <strong>Official Email Support</strong>
-                    <p><a href="mailto:priyansh@exploreeaz.com">priyansh@exploreeaz.com</a></p>
+                    <p><a href="mailto:support@eazetrip.com">support@eazetrip.com</a></p>
                   </div>
                 </div>
 

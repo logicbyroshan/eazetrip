@@ -18,7 +18,7 @@ export default function PrivacyPage() {
           <section className="legal-section">
             <h2>1. Information We Collect</h2>
             <p>
-              When you use ExploreEase to search or book flights, hotels, buses, or train tickets, we collect information necessary to fulfill your bookings and enhance your travel experience.
+              When you use EazeTrip to search or book flights, hotels, buses, or train tickets, we collect information necessary to fulfill your bookings and enhance your travel experience.
             </p>
             <ul>
               <li><strong>Personal Identifiers:</strong> Name, gender, date of birth, nationality, email address, phone number, and passport details (for international flights).</li>
@@ -55,7 +55,7 @@ export default function PrivacyPage() {
           <section className="legal-section">
             <h2>5. Your Rights & Data Access</h2>
             <p>
-              You can access, update, or request the deletion of your personal account data at any time by visiting <Link to="/profile" className="accent-link">My Profile</Link> or contacting our privacy officer at <a href="mailto:priyansh@exploreeaz.com" className="accent-link">priyansh@exploreeaz.com</a>.
+              You can access, update, or request the deletion of your personal account data at any time by visiting <Link to="/profile" className="accent-link">My Profile</Link> or contacting our privacy officer at <a href="mailto:support@eazetrip.com" className="accent-link">support@eazetrip.com</a>.
             </p>
           </section>
         </div>

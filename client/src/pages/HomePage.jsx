@@ -198,7 +198,7 @@ export default function HomePage() {
         <div className="container">
           <div className="section-header center">
             <span className="section-tag">WHY US</span>
-            <h2>Why Choose ExploreEase</h2>
+            <h2>Why Choose EazeTrip</h2>
             <p>We combine cutting-edge travel technology with exceptional customer care</p>
           </div>
 

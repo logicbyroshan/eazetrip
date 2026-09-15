@@ -28,7 +28,7 @@ export default function CheckoutModal() {
   const [lastName, setLastName] = useState(user?.name?.split(' ')[1] || 'Traveler');
   const [gender, setGender] = useState('Male');
   const [dob, setDob] = useState('1994-05-15');
-  const [contactEmail, setContactEmail] = useState(user?.email || 'traveler@exploreeaz.com');
+  const [contactEmail, setContactEmail] = useState(user?.email || 'traveler@eazetrip.com');
   const [contactPhone, setContactPhone] = useState(user?.phone || '9876543210');
   
   // GST Details
@@ -64,22 +64,23 @@ export default function CheckoutModal() {
   const type = activeCheckoutItem.checkoutType || 'flight';
   const basePrice = Number(activeCheckoutItem.price || activeCheckoutItem.totalPrice || activeCheckoutItem.pricePerNight || 4999);
   const taxes = Number(activeCheckoutItem.taxes || Math.round(basePrice * 0.12));
-  const convenienceFee = 0; // Free on ExploreEaz
+  const convenienceFee = 0; // Free on EazeTrip
   const finalTotal = Math.max(0, basePrice + taxes + convenienceFee - appliedDiscount);
 
   const handleApplyCoupon = (e) => {
     e.preventDefault();
-    if (couponCode.toUpperCase() === 'EXPLOREEAZ') {
+    const code = couponCode.toUpperCase().trim();
+    if (code === 'EAZETRIP' || code === 'EXPLOREEAZ' || code === 'EAZETRIP500') {
       setAppliedDiscount(500);
-      setCouponSuccess('Coupon EXPLOREEAZ applied: ₹500 saved!');
-      showToast('Coupon EXPLOREEAZ applied successfully!');
-    } else if (couponCode.toUpperCase() === 'STAYEAZY' || couponCode.toUpperCase() === 'BUSEAZ' || couponCode.toUpperCase() === 'TRAINEAZ') {
-      const discount = Math.min(300, Math.round(basePrice * 0.1));
+      setCouponSuccess('Coupon EAZETRIP applied: ₹500 saved!');
+      showToast('Coupon EAZETRIP applied successfully!');
+    } else if (code === 'STAYEAZY' || code === 'BUSEAZ' || code === 'TRAINEAZ' || code === 'EAZETRIP1000') {
+      const discount = code === 'EAZETRIP1000' ? Math.min(1000, Math.round(basePrice * 0.15)) : Math.min(300, Math.round(basePrice * 0.1));
       setAppliedDiscount(discount);
-      setCouponSuccess(`Coupon applied: ₹${discount} saved!`);
-      showToast(`Coupon applied successfully: ₹${discount} off!`);
+      setCouponSuccess(`Coupon ${code} applied: ₹${discount} saved!`);
+      showToast(`Coupon ${code} applied successfully: ₹${discount} off!`);
     } else {
-      showToast('Invalid promo code. Try EXPLOREEAZ', 'error');
+      showToast('Invalid promo code. Try EAZETRIP', 'error');
     }
   };
 

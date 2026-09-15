@@ -66,7 +66,7 @@ export default function LoginModal() {
         setIsSubmitting(true);
         await login({ identifier: phoneNumber, method: 'phone' });
         setIsSubmitting(false);
-        showToast('Login successful! Welcome to ExploreEase.');
+        showToast('Login successful! Welcome to EazeTrip.');
       } else {
         setError('Invalid OTP code. Please enter 1234.');
       }
@@ -117,8 +117,8 @@ export default function LoginModal() {
 
         <div className="auth-header">
           <div className="auth-brand">
-            <span className="brand-name-explore">Explore</span>
-            <span className="brand-name-eaz">Eaz</span>
+            <img src="/logo.png" alt="EazeTrip Logo" className="modal-brand-logo" />
+            <span className="brand-name-eaze">Eaze<span className="brand-name-trip">Trip</span></span>
           </div>
           <h2 id="login-modal-title">Welcome Back</h2>
           <p>Login to manage your bookings, special fares & fast checkout</p>

@@ -19,29 +19,30 @@
   --text-4xl: 2.25rem;   /* 36px */
   --text-5xl: 3rem;      /* 48px */
 
-  /* Primary Brand (EazeTrip Cyan/Blue) */
-  --primary: #0284c7;
-  --primary-hover: #0369a1;
-  --primary-active: #075985;
-  --primary-light: #f0f9ff;
-  --primary-border: #bae6fd;
-  --primary-glow: rgba(2, 132, 199, 0.25);
+  /* Primary Brand (EazeTrip Logo Royal Blue) */
+  --primary: #034ea2;
+  --primary-hover: #023d80;
+  --primary-active: #012b5b;
+  --primary-light: #edf5fc;
+  --primary-border: #b3d4fc;
+  --primary-glow: rgba(3, 78, 162, 0.25);
 
-  /* Secondary Accent (Vibrant Warm Orange/Amber) */
-  --secondary: #f97316;
-  --secondary-hover: #ea580c;
-  --secondary-active: #c2410c;
-  --secondary-light: #fff7ed;
-  --secondary-border: #fed7aa;
+  /* Secondary Accent (EazeTrip Logo Tropical Teal) */
+  --secondary: #0097a7;
+  --secondary-hover: #00838f;
+  --secondary-active: #006064;
+  --secondary-light: #e0f7fa;
+  --secondary-border: #80deea;
+  --secondary-glow: rgba(0, 151, 167, 0.25);
 
   /* Deep Slate & Navy Palettes */
-  --navy: #0f172a;
-  --navy-dark: #0b1329;
-  --navy-card: #1e293b;
-  --navy-light: #334155;
+  --navy: #0a192f;
+  --navy-dark: #060e1a;
+  --navy-card: #112240;
+  --navy-light: #233554;
 
   /* Backgrounds & Surfaces */
-  --bg: #f8fafc;
+  --bg: #f6f9fc;
   --surface: #ffffff;
   --surface-alt: #f1f5f9;
   --surface-muted: #f8fafc;
@@ -50,10 +51,10 @@
   /* Borders & Dividers */
   --border: #e2e8f0;
   --border-hover: #cbd5e1;
-  --border-focus: #0284c7;
+  --border-focus: #034ea2;
 
   /* Typography Colors */
-  --text-main: #0f172a;
+  --text-main: #0a192f;
   --text-secondary: #475569;
   --text-muted: #64748b;
   --text-light: #94a3b8;

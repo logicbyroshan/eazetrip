@@ -16,7 +16,7 @@ export default function ProfilePage() {
 
   const [savedTravellers, setSavedTravellers] = useState(() => {
     try {
-      const saved = localStorage.getItem('exploreeaz_travellers');
+      const saved = localStorage.getItem('eazetrip_travellers') || localStorage.getItem('exploreeaz_travellers');
       return saved
         ? JSON.parse(saved)
         : [
@@ -39,7 +39,7 @@ export default function ProfilePage() {
   const saveTravellersToStorage = (list) => {
     setSavedTravellers(list);
     try {
-      localStorage.setItem('exploreeaz_travellers', JSON.stringify(list));
+      localStorage.setItem('eazetrip_travellers', JSON.stringify(list));
     } catch (e) {
       console.error('Failed to save travellers to storage', e);
     }
@@ -100,7 +100,7 @@ export default function ProfilePage() {
             {name?.charAt(0) || 'U'}
           </div>
           <h3>{name}</h3>
-          <span className="user-tier-pill">{user?.tier || 'Gold Explorer'}</span>
+          <span className="user-tier-pill">{user?.tier || 'Gold Member'}</span>
 
           <div className="sidebar-contact-meta">
             <div className="meta-line">

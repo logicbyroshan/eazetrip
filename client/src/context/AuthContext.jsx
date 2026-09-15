@@ -3,12 +3,12 @@ import { api } from '../services/api';
 
 const AuthContext = createContext(null);
 
-const STORAGE_KEY = 'exploreeaz_user';
+const STORAGE_KEY = 'eazetrip_user';
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
     try {
-      const saved = localStorage.getItem(STORAGE_KEY);
+      const saved = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('exploreeaz_user');
       return saved ? JSON.parse(saved) : null;
     } catch {
       return null;
@@ -39,9 +39,9 @@ export function AuthProvider({ children }) {
           id: 'USR-' + Math.floor(100000 + Math.random() * 900000),
           name: 'Traveler ' + identifier.slice(-4),
           phone: identifier,
-          email: `user${identifier.slice(-4)}@exploreeaz.com`,
+          email: `user${identifier.slice(-4)}@eazetrip.com`,
           memberSince: new Date().getFullYear(),
-          tier: 'Silver Explorer'
+          tier: 'Silver Member'
         };
       } else {
         const namePart = identifier.split('@')[0];
@@ -52,7 +52,7 @@ export function AuthProvider({ children }) {
           email: identifier,
           phone: '+91 9876543210',
           memberSince: new Date().getFullYear(),
-          tier: 'Gold Explorer'
+          tier: 'Gold Member'
         };
       }
     }
@@ -75,7 +75,7 @@ export function AuthProvider({ children }) {
         email: userData.email,
         phone: userData.phone || '+91 9876543210',
         memberSince: new Date().getFullYear(),
-        tier: 'Classic Explorer'
+        tier: 'Classic Member'
       };
     }
 

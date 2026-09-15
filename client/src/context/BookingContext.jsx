@@ -3,7 +3,7 @@ import { api } from '../services/api';
 
 const BookingContext = createContext(null);
 
-const STORAGE_KEY = 'exploreeaz_bookings';
+const STORAGE_KEY = 'eazetrip_bookings';
 
 const initialDemoBookings = [
   {
@@ -64,7 +64,7 @@ const initialDemoBookings = [
 export function BookingProvider({ children }) {
   const [bookings, setBookings] = useState(() => {
     try {
-      const saved = localStorage.getItem(STORAGE_KEY);
+      const saved = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('exploreeaz_bookings');
       return saved ? JSON.parse(saved) : initialDemoBookings;
     } catch {
       return initialDemoBookings;

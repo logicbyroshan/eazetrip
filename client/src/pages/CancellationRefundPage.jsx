@@ -28,7 +28,7 @@ export default function CancellationRefundPage() {
               <div className="step-card">
                 <strong>Method 2: Support Desk Helpline</strong>
                 <p>
-                  Call our 24/7 customer service at <a href="tel:+918269054018" className="accent-link">+91 8269054018</a> or email <a href="mailto:priyansh@exploreeaz.com" className="accent-link">priyansh@exploreeaz.com</a> with your Booking Reference ID.
+                  Call our 24/7 customer service at <a href="tel:+918269054018" className="accent-link">+91 8269054018</a> or email <a href="mailto:support@eazetrip.com" className="accent-link">support@eazetrip.com</a> with your Booking Reference ID.
                 </p>
               </div>
             </div>

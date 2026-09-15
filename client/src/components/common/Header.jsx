@@ -33,13 +33,14 @@ export default function Header() {
   return (
     <header className="header">
       <div className="container header-inner">
-        <Link to="/" className="brand-wrap">
-          <div className="brand-logo-custom">
-            <span className="brand-name-explore">Explore</span>
-            <span className="brand-name-eaz">Eaz</span>
-            <span className="brand-dot">.</span>
+        <Link to="/" className="brand-wrap" aria-label="EazeTrip Home">
+          <div className="brand-logo-img-wrap">
+            <img src="/logo.png" alt="EazeTrip Logo" className="brand-logo-img" />
+            <div className="brand-text-block">
+              <span className="brand-name-eaze">Eaze<span className="brand-name-trip">Trip</span></span>
+              <span className="brand-tagline">YOUR SMART TRAVEL PARTNER</span>
+            </div>
           </div>
-          <span className="brand-tagline">YOUR SMART TRAVEL PARTNER</span>
         </Link>
 
         {/* Desktop Nav */}

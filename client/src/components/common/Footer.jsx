@@ -6,10 +6,12 @@ export default function Footer() {
     <footer className="footer">
       <div className="container footer-top">
         <div className="footer-brand-col">
-          <div className="brand-logo-custom white">
-            <span className="brand-name-explore">Explore</span>
-            <span className="brand-name-eaz">Eaz</span>
-            <span className="brand-dot">.</span>
+          <div className="brand-logo-img-wrap footer-logo-wrap">
+            <img src="/logo.png" alt="EazeTrip Logo" className="brand-logo-img footer-logo" />
+            <div className="brand-text-block">
+              <span className="brand-name-eaze light">Eaze<span className="brand-name-trip">Trip</span></span>
+              <span className="brand-tagline light">YOUR SMART TRAVEL PARTNER</span>
+            </div>
           </div>
           <p className="footer-tagline">
             Your reliable travel companion across India. Simple bookings, transparent fares, and 24/7 dedicated customer assistance.
@@ -25,7 +27,7 @@ export default function Footer() {
             </div>
             <div className="contact-item">
               <Mail size={16} />
-              <a href="mailto:priyansh@exploreeaz.com">priyansh@exploreeaz.com</a>
+              <a href="mailto:support@eazetrip.com">support@eazetrip.com</a>
             </div>
           </div>
         </div>
@@ -82,7 +84,7 @@ export default function Footer() {
       </div>
 
       <div className="container footer-bottom">
-        <p>© {new Date().getFullYear()} ExploreEase (ExploreEaz). All rights reserved.</p>
+        <p>© {new Date().getFullYear()} EazeTrip Technologies. All rights reserved.</p>
         <div className="footer-bottom-links">
           <Link to="/privacy">Privacy</Link>
           <span>•</span>

@@ -2,9 +2,9 @@ export const siteOffers = [
   {
     id: 1,
     title: 'Take Off with Big Savings',
-    description: 'Fly smarter and save big! Use code EXPLOREEAZ to get up to ₹1,500 off on domestic flight bookings.',
+    description: 'Fly smarter and save big! Use code EAZETRIP to get up to ₹1,500 off on domestic flight bookings.',
     category: 'Flights',
-    code: 'EXPLOREEAZ',
+    code: 'EAZETRIP',
     discount: 'Up to ₹1,500 OFF',
     image: 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=500&auto=format&fit=crop&q=80',
     validTill: '31 Dec 2026'
@@ -46,7 +46,7 @@ export const siteFaqs = [
     category: 'Flights',
     items: [
       {
-        q: 'How do I book a flight on ExploreEase?',
+        q: 'How do I book a flight on EazeTrip?',
         a: 'Simply select your trip type (One-Way, Round-Trip, or Multi-City), enter origin and destination airports, choose your travel dates, passenger counts, and click SEARCH. Filter flights according to your schedule and book in a few clicks.'
       },
       {
@@ -89,7 +89,7 @@ export const siteFaqs = [
     category: 'Payments & Refunds',
     items: [
       {
-        q: 'What payment modes are accepted on ExploreEase?',
+        q: 'What payment modes are accepted on EazeTrip?',
         a: 'We support all major payment options including UPI (Google Pay, PhonePe, Paytm, BHIM, QR code), Credit Cards, Debit Cards, Net Banking across 50+ banks, EMI, and Mobile Wallets.'
       },
       {
@@ -102,7 +102,7 @@ export const siteFaqs = [
 
 export const siteTestimonials = [
   {
-    quote: 'Booking flights and hotels through ExploreEase was effortless. Got instant confirmation and the best airfare deal for our Goa trip!',
+    quote: 'Booking flights and hotels through EazeTrip was effortless. Got instant confirmation and the best airfare deal for our Goa trip!',
     author: 'Aarav Sharma',
     city: 'Mumbai',
     service: 'Flights & Hotels'

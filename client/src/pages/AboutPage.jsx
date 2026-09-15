@@ -15,7 +15,7 @@ export default function AboutPage() {
           <span className="section-tag">OUR MISSION</span>
           <h1>Empowering Hassle-Free Travel Across India</h1>
           <p className="lead">
-            ExploreEase (ExploreEaz) was founded with a single mission: to simplify travel planning and bring high transparency, lower fares, and round-the-clock peace of mind to millions of Indian travelers.
+            EazeTrip was founded with a single mission: to simplify travel planning and bring high transparency, lower fares, and round-the-clock peace of mind to millions of Indian travelers.
           </p>
 
           <div className="stats-counter-strip">
@@ -86,10 +86,10 @@ export default function AboutPage() {
         <div className="content-card mt-4">
           <h2>Registered Office & Headquarters</h2>
           <p>
-            <strong>ExploreEase Technologies</strong><br />
+            <strong>EazeTrip Technologies Pvt. Ltd.</strong><br />
             Saubhagya Bindiya Tower, MP, India<br />
             Helpline: <a href="tel:+918269054018" className="accent-link">+91 8269054018</a><br />
-            Email: <a href="mailto:priyansh@exploreeaz.com" className="accent-link">priyansh@exploreeaz.com</a>
+            Email: <a href="mailto:support@eazetrip.com" className="accent-link">support@eazetrip.com</a>
           </p>
         </div>
       </div>

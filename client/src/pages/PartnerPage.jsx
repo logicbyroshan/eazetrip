@@ -44,7 +44,7 @@ export default function PartnerPage({ mode = 'login' }) {
             <div className="text-center py-4">
               <CheckCircle2 size={48} color="#16a34a" className="mx-auto mb-2" />
               <h3>Request Processed Successfully</h3>
-              <p>Welcome to the ExploreEase B2B Partner Network.</p>
+              <p>Welcome to the EazeTrip B2B Partner Network.</p>
               <Link to="/" className="primary-btn mt-3">
                 Go to Homepage
               </Link>

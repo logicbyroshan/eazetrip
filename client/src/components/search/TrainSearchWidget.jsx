@@ -1,7 +1,23 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { railwayStations } from '../../data/trainData';
-import { Train, ArrowLeftRight, Calendar, MapPin } from 'lucide-react';
+import { Train, ArrowLeftRight, Calendar, MapPin, ChevronDown, Check } from 'lucide-react';
+
+const QUOTA_OPTIONS = [
+  { code: 'GN', label: 'General Quota (GN)' },
+  { code: 'TQ', label: 'Tatkal Quota (TQ)' },
+  { code: 'LD', label: 'Ladies Quota (LD)' },
+  { code: 'SS', label: 'Senior Citizen (SS)' }
+];
+
+const CLASS_OPTIONS = [
+  { code: 'ALL', label: 'All Classes', shortName: 'All Classes' },
+  { code: '1A', label: 'AC First Class (1A)', shortName: 'AC First (1A)' },
+  { code: '2A', label: 'AC 2 Tier (2A)', shortName: 'AC 2 Tier (2A)' },
+  { code: '3A', label: 'AC 3 Tier (3A)', shortName: 'AC 3 Tier (3A)' },
+  { code: '3E', label: 'AC 3 Economy (3E)', shortName: 'AC 3 Econ (3E)' },
+  { code: 'SL', label: 'Sleeper Class (SL)', shortName: 'Sleeper (SL)' }
+];
 
 export default function TrainSearchWidget({ initialValues = {}, onSearch }) {
   const navigate = useNavigate();
@@ -14,11 +30,16 @@ export default function TrainSearchWidget({ initialValues = {}, onSearch }) {
 
   const [fromDropdownOpen, setFromDropdownOpen] = useState(false);
   const [toDropdownOpen, setToDropdownOpen] = useState(false);
+  const [quotaDropdownOpen, setQuotaDropdownOpen] = useState(false);
+  const [classDropdownOpen, setClassDropdownOpen] = useState(false);
+
   const [fromQuery, setFromQuery] = useState('');
   const [toQuery, setToQuery] = useState('');
 
   const fromRef = useRef(null);
   const toRef = useRef(null);
+  const quotaRef = useRef(null);
+  const classRef = useRef(null);
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -28,11 +49,19 @@ export default function TrainSearchWidget({ initialValues = {}, onSearch }) {
       if (toRef.current && !toRef.current.contains(e.target)) {
         setToDropdownOpen(false);
       }
+      if (quotaRef.current && !quotaRef.current.contains(e.target)) {
+        setQuotaDropdownOpen(false);
+      }
+      if (classRef.current && !classRef.current.contains(e.target)) {
+        setClassDropdownOpen(false);
+      }
     }
     function handleKeyDown(e) {
       if (e.key === 'Escape') {
         setFromDropdownOpen(false);
         setToDropdownOpen(false);
+        setQuotaDropdownOpen(false);
+        setClassDropdownOpen(false);
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
@@ -68,6 +97,9 @@ export default function TrainSearchWidget({ initialValues = {}, onSearch }) {
       s.city.toLowerCase().includes(toQuery.toLowerCase())
   );
 
+  const currentQuotaObj = QUOTA_OPTIONS.find((q) => q.code === quota) || QUOTA_OPTIONS[0];
+  const currentClassObj = CLASS_OPTIONS.find((c) => c.code === travelClass) || CLASS_OPTIONS[0];
+
   const handleSearchSubmit = (e) => {
     if (e) e.preventDefault();
     const searchParams = {
@@ -89,14 +121,40 @@ export default function TrainSearchWidget({ initialValues = {}, onSearch }) {
     <div className="search-widget-box train-widget">
       <div className="search-top-bar">
         <span className="widget-badge-text">IRCTC Authorized Train Ticket Booking & PNR Status</span>
-        <div className="quota-select-wrap">
-          <label>Quota:</label>
-          <select value={quota} onChange={(e) => setQuota(e.target.value)}>
-            <option value="GN">General Quota</option>
-            <option value="TQ">Tatkal Quota</option>
-            <option value="LD">Ladies Quota</option>
-            <option value="SS">Senior Citizen</option>
-          </select>
+        
+        {/* Custom Sleek Quota Dropdown */}
+        <div className="quota-select-custom-wrap" ref={quotaRef}>
+          <span className="quota-prefix-label">Quota:</span>
+          <button
+            type="button"
+            className="quota-custom-trigger"
+            onClick={() => setQuotaDropdownOpen(!quotaDropdownOpen)}
+            aria-haspopup="listbox"
+            aria-expanded={quotaDropdownOpen}
+          >
+            <span>{currentQuotaObj.label}</span>
+            <ChevronDown size={15} className={`chevron-indicator ${quotaDropdownOpen ? 'rotated' : ''}`} />
+          </button>
+
+          {quotaDropdownOpen && (
+            <div className="custom-floating-menu quota-menu" role="listbox">
+              {QUOTA_OPTIONS.map((item) => (
+                <div
+                  key={item.code}
+                  className={`custom-menu-item ${item.code === quota ? 'selected' : ''}`}
+                  onClick={() => {
+                    setQuota(item.code);
+                    setQuotaDropdownOpen(false);
+                  }}
+                  role="option"
+                  aria-selected={item.code === quota}
+                >
+                  <span className="menu-item-text">{item.label}</span>
+                  {item.code === quota && <Check size={14} className="menu-check-icon" />}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
@@ -109,7 +167,10 @@ export default function TrainSearchWidget({ initialValues = {}, onSearch }) {
             onClick={() => {
               setFromDropdownOpen(!fromDropdownOpen);
               setToDropdownOpen(false);
+              setClassDropdownOpen(false);
             }}
+            tabIndex={0}
+            role="button"
           >
             <span className="city-title">{fromStationObj.city}</span>
             <span className="code-sub">
@@ -155,6 +216,7 @@ export default function TrainSearchWidget({ initialValues = {}, onSearch }) {
           className="swap-button"
           onClick={handleSwap}
           title="Swap stations"
+          aria-label="Swap from and to stations"
         >
           <ArrowLeftRight size={16} />
         </button>
@@ -167,7 +229,10 @@ export default function TrainSearchWidget({ initialValues = {}, onSearch }) {
             onClick={() => {
               setToDropdownOpen(!toDropdownOpen);
               setFromDropdownOpen(false);
+              setClassDropdownOpen(false);
             }}
+            tabIndex={0}
+            role="button"
           >
             <span className="city-title">{toStationObj.city}</span>
             <span className="code-sub">
@@ -220,23 +285,45 @@ export default function TrainSearchWidget({ initialValues = {}, onSearch }) {
           </div>
         </div>
 
-        {/* Class Selection */}
-        <div className="search-field-block">
+        {/* Class Selection Custom Dropdown Card */}
+        <div className="search-field-block" ref={classRef}>
           <label>CLASS</label>
-          <div className="field-value-card select-card">
-            <select
-              value={travelClass}
-              onChange={(e) => setTravelClass(e.target.value)}
-              className="native-select"
-            >
-              <option value="ALL">All Classes</option>
-              <option value="1A">AC First Class (1A)</option>
-              <option value="2A">AC 2 Tier (2A)</option>
-              <option value="3A">AC 3 Tier (3A)</option>
-              <option value="3E">AC 3 Economy (3E)</option>
-              <option value="SL">Sleeper (SL)</option>
-            </select>
+          <div
+            className="field-value-card select-card"
+            onClick={() => {
+              setClassDropdownOpen(!classDropdownOpen);
+              setFromDropdownOpen(false);
+              setToDropdownOpen(false);
+            }}
+            tabIndex={0}
+            role="button"
+          >
+            <span className="city-title">{currentClassObj.shortName}</span>
+            <span className="code-sub">{currentClassObj.label}</span>
           </div>
+
+          {classDropdownOpen && (
+            <div className="custom-floating-menu class-menu" role="listbox">
+              {CLASS_OPTIONS.map((item) => (
+                <div
+                  key={item.code}
+                  className={`custom-menu-item ${item.code === travelClass ? 'selected' : ''}`}
+                  onClick={() => {
+                    setTravelClass(item.code);
+                    setClassDropdownOpen(false);
+                  }}
+                  role="option"
+                  aria-selected={item.code === travelClass}
+                >
+                  <div className="class-option-meta">
+                    <strong>{item.shortName}</strong>
+                    <small>{item.label}</small>
+                  </div>
+                  {item.code === travelClass && <Check size={14} className="menu-check-icon" />}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
