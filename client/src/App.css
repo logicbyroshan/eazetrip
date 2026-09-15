@@ -373,47 +373,93 @@
 }
 
 /* ==========================================
-   HERO & SEARCH WIDGETS
+   HERO & SEARCH WIDGETS (FULL VIEWPORT HEIGHT)
 ========================================== */
 .hero-section {
-  background-position: center;
+  background-position: center center;
   background-size: cover;
   background-repeat: no-repeat;
-  padding: 48px 0 36px;
+  min-height: calc(100vh - 106px); /* Full screen below topbar (38px) + header (68px) */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 32px 0 24px;
   color: #fff;
   position: relative;
   transition: background 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.hero-section .container:first-child {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .hero-content {
   text-align: center;
-  max-width: 1080px;
+  max-width: 1120px;
   margin: 0 auto;
+  width: 100%;
 }
 
 .hero-headline {
   font-size: clamp(2rem, 3.5vw, 2.8rem);
   color: #fff;
-  margin-bottom: 8px;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  margin-bottom: 6px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
 }
 
 .hero-subheadline {
   font-size: 1.05rem;
   color: #e2e8f0;
-  margin-bottom: 28px;
-  text-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  margin-bottom: 22px;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
 }
 
 .hero-search-wrapper {
   background: #ffffff;
   border-radius: var(--radius-lg);
-  box-shadow: 0 12px 35px rgba(0,0,0,0.25);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
   color: var(--text-main);
   text-align: left;
   overflow: visible;
   position: relative;
   z-index: 20;
+}
+
+/* Hero Assurance Banner */
+.assurance-banner {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-radius: var(--radius-md);
+  padding: 12px 22px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  margin-top: 20px;
+}
+
+.assurance-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.assurance-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.assurance-item p {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--navy);
+  line-height: 1.35;
+  margin: 0;
 }
 
 .hero-search-tabs {
@@ -4729,24 +4775,29 @@ input[type="radio"]:focus-visible {
 }
 
 .carousel-arrow-btn {
-  width: 38px;
-  height: 38px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1.5px solid #cbd5e1;
   display: grid;
   place-items: center;
   cursor: pointer;
-  color: var(--text-main);
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  color: var(--navy);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .carousel-arrow-btn:hover {
-  background: var(--primary-light);
-  color: var(--primary);
-  border-color: var(--primary-border);
-  transform: scale(1.05);
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+  transform: scale(1.08);
+  box-shadow: 0 4px 14px rgba(3, 78, 162, 0.3);
+}
+
+.carousel-arrow-btn:active {
+  transform: scale(0.95);
 }
 
 /* Category Filter Tabs */
@@ -4756,6 +4807,14 @@ input[type="radio"]:focus-visible {
   margin-bottom: 24px;
   overflow-x: auto;
   padding-bottom: 4px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.special-offers-tabs::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
 }
 
 .offer-filter-tab {
@@ -4783,18 +4842,23 @@ input[type="radio"]:focus-visible {
   font-weight: 700;
 }
 
-/* Bank Offer Cards Carousel */
+/* Bank Offer Cards Carousel - Scrollbar Completely Hidden */
 .bank-offers-carousel {
   display: flex;
   gap: 20px;
-  overflow-x: auto;
-  padding-bottom: 12px;
+  overflow-x: scroll;
+  scroll-behavior: smooth;
+  padding: 6px 2px 14px 2px;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
+  scrollbar-width: none !important; /* Firefox */
+  -ms-overflow-style: none !important; /* IE and Edge */
 }
 
 .bank-offers-carousel::-webkit-scrollbar {
-  height: 6px;
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 .bank-offer-card {

@@ -27,13 +27,13 @@ export default function SpecialOffersSection() {
 
   const scrollLeft = () => {
     if (carouselRef.current) {
-      carouselRef.current.scrollBy({ left: -360, behavior: 'smooth' });
+      carouselRef.current.scrollBy({ left: -370, behavior: 'smooth' });
     }
   };
 
   const scrollRight = () => {
     if (carouselRef.current) {
-      carouselRef.current.scrollBy({ left: 360, behavior: 'smooth' });
+      carouselRef.current.scrollBy({ left: 370, behavior: 'smooth' });
     }
   };
 
