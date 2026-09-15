@@ -5,14 +5,14 @@ export default function Preloader() {
   const [fading, setFading] = useState(false);
 
   useEffect(() => {
-    // Show preloader for 1.7 seconds, then fade out smoothly
+    // Show only the clean brand logo with subtle fade, gone in 1.8 - 2.0 seconds
     const fadeTimer = setTimeout(() => {
       setFading(true);
-    }, 1600);
+    }, 1500);
 
     const removeTimer = setTimeout(() => {
       setLoading(false);
-    }, 2100);
+    }, 2000);
 
     return () => {
       clearTimeout(fadeTimer);
@@ -24,20 +24,8 @@ export default function Preloader() {
 
   return (
     <div className={`site-preloader-overlay ${fading ? 'preloader-fade-out' : ''}`}>
-      <div className="preloader-content">
-        <div className="preloader-logo-wrap">
-          <img src="/logo.png" alt="EazeTrip" className="preloader-logo-img" />
-          <div className="preloader-brand-title">
-            <span className="brand-eaze">Eaze</span><span className="brand-trip">Trip</span>
-          </div>
-          <span className="preloader-tagline">YOUR SMART TRAVEL PARTNER</span>
-        </div>
-
-        <div className="preloader-progress-track">
-          <div className="preloader-progress-bar"></div>
-        </div>
-
-        <p className="preloader-subtext">Loading best flight, hotel & train deals...</p>
+      <div className="preloader-content-minimal">
+        <img src="/logo.png" alt="EazeTrip" className="preloader-pure-logo" />
       </div>
     </div>
   );

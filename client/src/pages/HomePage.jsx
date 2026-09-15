@@ -8,6 +8,7 @@ import SpecialOffersSection from '../components/home/SpecialOffersSection';
 import PopularAirlines from '../components/home/PopularAirlines';
 import TrendingFlightRoutes from '../components/home/TrendingFlightRoutes';
 import TrendingDestinations from '../components/home/TrendingDestinations';
+import TravelCategoriesSection from '../components/home/TravelCategoriesSection';
 import { siteTestimonials, siteFaqs, HERO_BACKDROPS } from '../data/siteData';
 import { Plane, Building2, Bus, Train, ShieldCheck, Check, Star, ArrowRight } from 'lucide-react';
 
@@ -170,54 +171,8 @@ export default function HomePage() {
       {/* Trending Destinations with India & International Tabs (Image 4 Style) */}
       <TrendingDestinations />
 
-      {/* Explore by Category */}
-      <section className="section-block categories-section bg-muted">
-        <div className="container">
-          <div className="section-header center">
-            <span className="section-tag">SERVICES</span>
-            <h2>Explore by Category</h2>
-            <p>Seamless booking experience across all key travel verticals</p>
-          </div>
-
-          <div className="category-cards-grid">
-            <Link to="/flight-booking" className="cat-card">
-              <div className="cat-icon-box flight-cat">
-                <Plane size={32} />
-              </div>
-              <h3>Flights</h3>
-              <p>Domestic & International flights at lowest guaranteed fares</p>
-              <span className="cat-link-text">Book Flights →</span>
-            </Link>
-
-            <Link to="/hotel-booking" className="cat-card">
-              <div className="cat-icon-box hotel-cat">
-                <Building2 size={32} />
-              </div>
-              <h3>Hotels & Stays</h3>
-              <p>Handpicked luxury resorts, boutique hotels and budget stays</p>
-              <span className="cat-link-text">Explore Stays →</span>
-            </Link>
-
-            <Link to="/bus-booking" className="cat-card">
-              <div className="cat-icon-box bus-cat">
-                <Bus size={32} />
-              </div>
-              <h3>Bus Tickets</h3>
-              <p>AC Sleeper, Bharat Benz & Volvo buses with live tracking</p>
-              <span className="cat-link-text">Find Buses →</span>
-            </Link>
-
-            <Link to="/railway" className="cat-card">
-              <div className="cat-icon-box train-cat">
-                <Train size={32} />
-              </div>
-              <h3>Railway</h3>
-              <p>IRCTC authorized train bookings, PNR status & seat alerts</p>
-              <span className="cat-link-text">Search Trains →</span>
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* Travel Categories 5-Card Staggered Wave Section (Screenshot 1 Style) */}
+      <TravelCategoriesSection />
 
       {/* Why Choose Us Section */}
       <section className="section-block why-choose-section">

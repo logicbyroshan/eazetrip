@@ -4044,7 +4044,7 @@ input[type="radio"]:focus-visible {
 }
 
 /* ==========================================================================
-   1. ULTRA-SLEEK BRAND PRELOADER (Image 1 Style)
+   1. ULTRA-SLEEK BRAND PRELOADER (Image 1 Style - Minimal Logo Only)
    ========================================================================== */
 .site-preloader-overlay {
   position: fixed;
@@ -4064,95 +4064,25 @@ input[type="radio"]:focus-visible {
   pointer-events: none;
 }
 
-.preloader-content {
+.preloader-content-minimal {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  text-align: center;
-  animation: preloaderScaleIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  justify-content: center;
+  animation: preloaderPureLogoFade 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-@keyframes preloaderScaleIn {
-  0% { transform: scale(0.92); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-.preloader-logo-wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 24px;
-}
-
-.preloader-logo-img {
-  width: 140px;
+.preloader-pure-logo {
+  width: 160px;
   height: auto;
   object-fit: contain;
-  filter: drop-shadow(0 6px 16px rgba(3, 78, 162, 0.15));
-  animation: preloaderLogoPulse 1.8s ease-in-out infinite alternate;
+  filter: drop-shadow(0 8px 24px rgba(3, 78, 162, 0.2));
 }
 
-@keyframes preloaderLogoPulse {
-  0% { transform: scale(1); filter: drop-shadow(0 4px 10px rgba(3, 78, 162, 0.12)); }
-  100% { transform: scale(1.04); filter: drop-shadow(0 8px 22px rgba(3, 78, 162, 0.25)); }
-}
-
-.preloader-brand-title {
-  font-size: 2.2rem;
-  font-weight: 900;
-  letter-spacing: -0.5px;
-  display: flex;
-  align-items: center;
-}
-
-.preloader-brand-title .brand-eaze {
-  color: var(--primary);
-}
-
-.preloader-brand-title .brand-trip {
-  color: var(--secondary);
-}
-
-.preloader-tagline {
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 2px;
-  color: var(--text-muted);
-  text-transform: uppercase;
-}
-
-.preloader-progress-track {
-  width: 220px;
-  height: 4px;
-  background: #f1f5f9;
-  border-radius: 9999px;
-  overflow: hidden;
-  position: relative;
-  margin-bottom: 14px;
-}
-
-.preloader-progress-bar {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
-  border-radius: 9999px;
-  animation: preloaderProgressFill 1.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-}
-
-@keyframes preloaderProgressFill {
-  0% { width: 5%; }
-  50% { width: 68%; }
-  100% { width: 100%; }
-}
-
-.preloader-subtext {
-  font-size: 0.82rem;
-  color: #64748b;
-  font-weight: 500;
+@keyframes preloaderPureLogoFade {
+  0% { transform: scale(0.92); opacity: 0; }
+  25% { transform: scale(1); opacity: 1; }
+  80% { transform: scale(1.02); opacity: 1; }
+  100% { transform: scale(1.04); opacity: 0.95; }
 }
 
 /* ==========================================================================
@@ -5179,5 +5109,216 @@ input[type="radio"]:focus-visible {
   color: #0284c7;
   transform: scale(1.15);
 }
+
+/* ==========================================================================
+   9. TRAVEL CATEGORIES STAGGERED WAVE (Screenshot 1)
+   ========================================================================== */
+.travel-categories-block {
+  padding: 60px 0 70px 0;
+  background: #ffffff;
+  position: relative;
+  overflow: hidden;
+}
+
+.relative-container {
+  position: relative;
+}
+
+/* Floating Playful Stickers (Screenshot 1) */
+.floating-sticker {
+  position: absolute;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.sticker-camera {
+  top: -12px;
+  left: 20%;
+  animation: stickerFloat1 3.5s ease-in-out infinite alternate;
+}
+
+.sticker-ticket {
+  top: -20px;
+  right: 20%;
+  animation: stickerFloat2 4s ease-in-out infinite alternate;
+}
+
+.sticker-bubble {
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border: 1.5px solid #f1f5f9;
+}
+
+.sticker-emoji {
+  font-size: 1.6rem;
+}
+
+@keyframes stickerFloat1 {
+  0% { transform: translateY(0) rotate(-8deg); }
+  100% { transform: translateY(-12px) rotate(6deg); }
+}
+
+@keyframes stickerFloat2 {
+  0% { transform: translateY(0) rotate(10deg); }
+  100% { transform: translateY(-14px) rotate(-6deg); }
+}
+
+.categories-arc-header {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.cursive-tagline {
+  display: block;
+  font-size: 1.4rem;
+  color: #0284c7;
+  font-style: italic;
+  font-weight: 700;
+  margin-bottom: 4px;
+  letter-spacing: -0.2px;
+}
+
+.categories-main-title {
+  font-size: 2.3rem;
+  font-weight: 900;
+  color: #0f172a;
+  letter-spacing: -0.5px;
+  margin: 0;
+}
+
+/* 5-Card Staggered Wave Layout */
+.categories-staggered-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 22px;
+  align-items: flex-start;
+  padding: 10px 0;
+}
+
+.category-arc-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.category-arc-card.offset-step-1 {
+  margin-top: 0px;
+}
+
+.category-arc-card.offset-step-2 {
+  margin-top: 36px;
+}
+
+.category-arc-card.offset-step-3 {
+  margin-top: 64px;
+}
+
+.cat-photo-frame {
+  width: 100%;
+  aspect-ratio: 1 / 1.05;
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  position: relative;
+  background: #f1f5f9;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+}
+
+.cat-photo-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cat-photo-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 55%, rgba(15, 23, 42, 0.35) 100%);
+}
+
+.category-arc-card:hover .cat-photo-frame {
+  transform: translateY(-8px);
+  box-shadow: 0 18px 40px rgba(3, 78, 162, 0.2);
+}
+
+.category-arc-card:hover .cat-photo-frame img {
+  transform: scale(1.1);
+}
+
+.cat-title-caption {
+  text-align: center;
+  margin-top: 14px;
+}
+
+.cat-title-caption h4 {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 3px 0;
+  transition: color 0.2s ease;
+}
+
+.category-arc-card:hover .cat-title-caption h4 {
+  color: var(--primary);
+}
+
+.cat-sub-caption {
+  font-size: 0.78rem;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.35;
+}
+
+@media (max-width: 1024px) {
+  .categories-staggered-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .category-arc-card.offset-step-1,
+  .category-arc-card.offset-step-2,
+  .category-arc-card.offset-step-3 {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .categories-staggered-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Enhanced Bank Offer Card Dimensions (Screenshot 2) */
+.bank-offer-card {
+  flex: 0 0 350px !important;
+  max-width: 350px !important;
+  min-height: 380px !important;
+  border-radius: 18px !important;
+}
+
+.bank-card-media {
+  height: 165px !important;
+}
+
+.bank-card-details {
+  padding: 18px !important;
+}
+
+.bank-offer-amount {
+  font-size: 1.25rem !important;
+}
+
+.campaign-promo-banner {
+  min-height: 64px !important;
+  border-radius: 16px !important;
+  padding: 16px 28px !important;
+}
+
 
 
