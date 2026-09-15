@@ -196,9 +196,9 @@ export default function AuthPage({ mode = 'register' }) {
             </div>
           </div>
 
-          {/* Right Floating Form Card Directly On Top of Image */}
+          {/* Right Floating Compact Form Card Directly On Top of Image */}
           <div className="auth-hero-right-col">
-            <div className="auth-floating-form-card">
+            <div className="auth-floating-form-card compact-side-by-side">
               <div className="auth-card-top-header">
                 <div className="auth-card-badge-row">
                   <span className="auth-card-badge">
@@ -209,8 +209,8 @@ export default function AuthPage({ mode = 'register' }) {
                 <h2>{isRegister ? 'Create an Account' : 'Welcome Back'}</h2>
                 <p>
                   {isRegister
-                    ? 'Start planning your next trip with member-only discounts.'
-                    : 'Log in to access your tickets, saved travelers and faster checkouts.'}
+                    ? 'Fill in your details below to unlock member discounts.'
+                    : 'Log in to access your bookings and faster checkout.'}
                 </p>
               </div>
 
@@ -237,115 +237,158 @@ export default function AuthPage({ mode = 'register' }) {
               {errorMsg && <div className="auth-card-error-msg">{errorMsg}</div>}
 
               <form onSubmit={handleSubmit} className="auth-card-form-stack">
-                {isRegister && (
-                  <div className="form-group">
-                    <label htmlFor="reg-name">Full Name *</label>
-                    <div className="input-with-icon">
-                      <User size={16} className="field-icon" />
-                      <input
-                        id="reg-name"
-                        type="text"
-                        placeholder="e.g. Priyansh Sharma"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        required
-                      />
+                {isRegister ? (
+                  <>
+                    {/* Row 1: Side by Side (Full Name + Mobile) */}
+                    <div className="auth-form-row-2col">
+                      <div className="form-group">
+                        <label htmlFor="reg-name">Full Name *</label>
+                        <div className="input-with-icon">
+                          <User size={16} className="field-icon" />
+                          <input
+                            id="reg-name"
+                            type="text"
+                            placeholder="e.g. Priyansh Sharma"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <div className="form-group">
+                        <label htmlFor="reg-phone">Mobile Number</label>
+                        <div className="input-with-prefix">
+                          <span className="phone-prefix">+91</span>
+                          <input
+                            id="reg-phone"
+                            type="tel"
+                            maxLength={10}
+                            placeholder="10 digit number"
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value.replace(/\D/g, ''))}
+                          />
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                )}
 
-                <div className="form-group">
-                  <label htmlFor="reg-email">Email Address *</label>
-                  <div className="input-with-icon">
-                    <Mail size={16} className="field-icon" />
-                    <input
-                      id="reg-email"
-                      type="email"
-                      placeholder="name@example.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                    />
-                  </div>
-                </div>
-
-                {isRegister && (
-                  <div className="form-group">
-                    <label htmlFor="reg-phone">Mobile Number</label>
-                    <div className="input-with-prefix">
-                      <span className="phone-prefix">+91</span>
-                      <input
-                        id="reg-phone"
-                        type="tel"
-                        maxLength={10}
-                        placeholder="10 digit mobile number"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value.replace(/\D/g, ''))}
-                      />
+                    {/* Row 2: Full width Email Address */}
+                    <div className="form-group">
+                      <label htmlFor="reg-email">Email Address *</label>
+                      <div className="input-with-icon">
+                        <Mail size={16} className="field-icon" />
+                        <input
+                          id="reg-email"
+                          type="email"
+                          placeholder="name@example.com"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          required
+                        />
+                      </div>
                     </div>
-                  </div>
-                )}
 
-                <div className="form-group">
-                  <div className="label-with-action">
-                    <label htmlFor="reg-password">Password *</label>
-                    {!isRegister && (
-                      <a
-                        href="#forgot"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          showToast('Password reset link sent to your registered email.');
-                        }}
-                        className="forgot-link"
-                      >
-                        Forgot Password?
-                      </a>
-                    )}
-                  </div>
-                  <div className="input-with-icon">
-                    <Lock size={16} className="field-icon" />
-                    <input
-                      id="reg-password"
-                      type={showPassword ? 'text' : 'password'}
-                      placeholder={isRegister ? 'Create password (min. 6 chars)' : 'Enter your password'}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                    />
-                    <button
-                      type="button"
-                      className="password-toggle-btn"
-                      onClick={() => setShowPassword(!showPassword)}
-                      aria-label={showPassword ? 'Hide password' : 'Show password'}
-                    >
-                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                    </button>
-                  </div>
-                </div>
+                    {/* Row 3: Side by Side (Password + Confirm Password) */}
+                    <div className="auth-form-row-2col">
+                      <div className="form-group">
+                        <label htmlFor="reg-password">Password *</label>
+                        <div className="input-with-icon">
+                          <Lock size={16} className="field-icon" />
+                          <input
+                            id="reg-password"
+                            type={showPassword ? 'text' : 'password'}
+                            placeholder="Min. 6 chars"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                          />
+                          <button
+                            type="button"
+                            className="password-toggle-btn"
+                            onClick={() => setShowPassword(!showPassword)}
+                            aria-label={showPassword ? 'Hide password' : 'Show password'}
+                          >
+                            {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+                          </button>
+                        </div>
+                      </div>
 
-                {isRegister && (
-                  <div className="form-group">
-                    <label htmlFor="reg-confirm-password">Confirm Password *</label>
-                    <div className="input-with-icon">
-                      <Lock size={16} className="field-icon" />
-                      <input
-                        id="reg-confirm-password"
-                        type={showConfirmPassword ? 'text' : 'password'}
-                        placeholder="Re-enter your password"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        required
-                      />
-                      <button
-                        type="button"
-                        className="password-toggle-btn"
-                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                        aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
-                      >
-                        {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                      </button>
+                      <div className="form-group">
+                        <label htmlFor="reg-confirm-password">Confirm Password *</label>
+                        <div className="input-with-icon">
+                          <Lock size={16} className="field-icon" />
+                          <input
+                            id="reg-confirm-password"
+                            type={showConfirmPassword ? 'text' : 'password'}
+                            placeholder="Re-enter password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            required
+                          />
+                          <button
+                            type="button"
+                            className="password-toggle-btn"
+                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                            aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                          >
+                            {showConfirmPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="form-group">
+                      <label htmlFor="reg-email">Email Address *</label>
+                      <div className="input-with-icon">
+                        <Mail size={16} className="field-icon" />
+                        <input
+                          id="reg-email"
+                          type="email"
+                          placeholder="name@example.com"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="form-group">
+                      <div className="label-with-action">
+                        <label htmlFor="reg-password">Password *</label>
+                        <a
+                          href="#forgot"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            showToast('Password reset link sent to your registered email.');
+                          }}
+                          className="forgot-link"
+                        >
+                          Forgot Password?
+                        </a>
+                      </div>
+                      <div className="input-with-icon">
+                        <Lock size={16} className="field-icon" />
+                        <input
+                          id="reg-password"
+                          type={showPassword ? 'text' : 'password'}
+                          placeholder="Enter your password"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          required
+                        />
+                        <button
+                          type="button"
+                          className="password-toggle-btn"
+                          onClick={() => setShowPassword(!showPassword)}
+                          aria-label={showPassword ? 'Hide password' : 'Show password'}
+                        >
+                          {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+                        </button>
+                      </div>
+                    </div>
+                  </>
                 )}
 
                 {isRegister && (
@@ -358,7 +401,7 @@ export default function AuthPage({ mode = 'register' }) {
                     <span>
                       I agree to EazeTrip's{' '}
                       <Link to="/terms" target="_blank" className="accent-link">
-                        Terms of Service
+                        Terms
                       </Link>{' '}
                       and{' '}
                       <Link to="/privacy" target="_blank" className="accent-link">
