@@ -22,8 +22,12 @@ export default function RailwayBookingPage() {
 
   return (
     <div className="listing-page-wrapper">
-      <div className="listing-top-search container">
-        <TrainSearchWidget initialValues={searchState} />
+      <div className="listing-top-search-banner">
+        <div className="container">
+          <div className="listing-search-card-wrapper">
+            <TrainSearchWidget initialValues={searchState} />
+          </div>
+        </div>
       </div>
 
       <div className="container railway-page-layout">

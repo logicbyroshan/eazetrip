@@ -52,8 +52,12 @@ export default function BusBookingPage() {
 
   return (
     <div className="listing-page-wrapper">
-      <div className="listing-top-search container">
-        <BusSearchWidget initialValues={searchState} />
+      <div className="listing-top-search-banner">
+        <div className="container">
+          <div className="listing-search-card-wrapper">
+            <BusSearchWidget initialValues={searchState} />
+          </div>
+        </div>
       </div>
 
       <div className="container listing-content-layout">

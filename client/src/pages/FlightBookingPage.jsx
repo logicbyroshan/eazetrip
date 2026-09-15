@@ -100,9 +100,13 @@ export default function FlightBookingPage() {
 
   return (
     <div className="listing-page-wrapper">
-      {/* Top Search Filter Widget */}
-      <div className="listing-top-search container">
-        <FlightSearchWidget initialValues={searchState} />
+      {/* Top Search Filter Banner & Card Wrapper */}
+      <div className="listing-top-search-banner">
+        <div className="container">
+          <div className="listing-search-card-wrapper">
+            <FlightSearchWidget initialValues={searchState} />
+          </div>
+        </div>
       </div>
 
       <div className="container listing-content-layout">
