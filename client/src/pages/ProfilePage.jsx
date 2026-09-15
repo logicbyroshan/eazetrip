@@ -1,18 +1,40 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useBooking } from '../context/BookingContext';
-import { User, Mail, Phone, MapPin, Calendar, ShieldCheck, Plus, Trash2, CheckCircle2 } from 'lucide-react';
+import {
+  User,
+  Mail,
+  Phone,
+  MapPin,
+  Calendar,
+  ShieldCheck,
+  Plus,
+  Trash2,
+  CheckCircle2,
+  Award,
+  Luggage,
+  Sparkles,
+  Plane,
+  Heart
+} from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function ProfilePage() {
   const { user, updateProfile, openLoginModal, isAuthenticated } = useAuth();
   const { showToast } = useBooking();
 
+  const [activeTab, setActiveTab] = useState('personal'); // personal | travellers | preferences
+
   const [name, setName] = useState(user?.name || 'Rohit Sharma');
   const [email, setEmail] = useState(user?.email || 'rohit.sharma@example.com');
   const [phone, setPhone] = useState(user?.phone || '+91 9876543210');
   const [city, setCity] = useState('Mumbai');
   const [state, setState] = useState('Maharashtra');
+
+  // Preferences
+  const [seatPref, setSeatPref] = useState('Window');
+  const [mealPref, setMealPref] = useState('Vegetarian');
+  const [frequentFlyer, setFrequentFlyer] = useState('AI-994821');
 
   const [savedTravellers, setSavedTravellers] = useState(() => {
     try {
@@ -48,9 +70,12 @@ export default function ProfilePage() {
   if (!isAuthenticated && !user) {
     return (
       <div className="container page-wrap">
-        <div className="content-card form-card text-center">
-          <h2>Please Sign In</h2>
-          <p>You need to be logged in to view and edit your profile.</p>
+        <div className="content-card form-card text-center py-5">
+          <div className="profile-lock-icon mx-auto mb-3">
+            <User size={48} color="#034ea2" />
+          </div>
+          <h2>Please Sign In to Access Your Account</h2>
+          <p className="lead">You need to be signed in to view and manage your travel profile, bookings, and saved passengers.</p>
           <button type="button" className="primary-btn mt-3" onClick={openLoginModal}>
             Sign In / Register
           </button>
@@ -63,6 +88,11 @@ export default function ProfilePage() {
     e.preventDefault();
     updateProfile({ name, email, phone });
     showToast('Profile information updated successfully!');
+  };
+
+  const handleSavePreferences = (e) => {
+    e.preventDefault();
+    showToast('Travel preferences saved successfully!');
   };
 
   const handleAddTraveller = (e) => {
@@ -93,86 +123,175 @@ export default function ProfilePage() {
 
   return (
     <div className="container profile-page-wrap">
-      <div className="profile-layout-grid">
-        {/* Left Profile Overview Card */}
-        <aside className="profile-sidebar-card">
-          <div className="profile-avatar-large">
-            {name?.charAt(0) || 'U'}
-          </div>
-          <h3>{name}</h3>
-          <span className="user-tier-pill">{user?.tier || 'Gold Member'}</span>
+      <div className="page-shell">
+        <div className="page-topbar">
+          <Link to="/">Home</Link>
+          <span>/</span>
+          <span>My Profile & Account</span>
+        </div>
 
-          <div className="sidebar-contact-meta">
-            <div className="meta-line">
-              <Mail size={14} />
-              <span>{email}</span>
+        {/* Top Hero Account Banner */}
+        <div className="profile-hero-banner">
+          <div className="profile-avatar-block">
+            <div className="avatar-ring-box">
+              {user?.avatar ? (
+                <img src={user.avatar} alt={name} className="avatar-img" />
+              ) : (
+                <div className="avatar-initials">{name?.charAt(0) || 'U'}</div>
+              )}
             </div>
-            <div className="meta-line">
-              <Phone size={14} />
-              <span>{phone}</span>
-            </div>
-            <div className="meta-line">
-              <MapPin size={14} />
-              <span>{city}, {state}</span>
+            <div className="profile-title-block">
+              <div className="name-row">
+                <h1>{name}</h1>
+                <span className="gold-member-badge">
+                  <Award size={14} /> {user?.tier || 'Gold Member'}
+                </span>
+              </div>
+              <p className="profile-meta-sub">
+                Member since {user?.memberSince || '2024'} • Verified Traveler • EazeTrip Rewards
+              </p>
             </div>
           </div>
 
-          <div className="profile-sidebar-links">
-            <Link to="/manage-bookings" className="sidebar-link">
-              <ShieldCheck size={16} /> My Bookings
+          <div className="profile-quick-actions">
+            <Link to="/manage-bookings" className="profile-head-btn">
+              <Luggage size={15} /> My Bookings
             </Link>
-            <Link to="/payment" className="sidebar-link">
-              Make Invoice Payment
-            </Link>
-            <Link to="/offers" className="sidebar-link">
-              Exclusive Offers
+            <Link to="/payment" className="profile-head-btn">
+              Make Payment
             </Link>
           </div>
-        </aside>
+        </div>
 
-        {/* Right Main Content */}
-        <main className="profile-main-content">
-          {/* Edit Profile Form */}
-          <div className="content-card form-card">
-            <h2>Personal Information</h2>
+        {/* Travel Stats Metrics Row */}
+        <div className="profile-stats-strip mt-4">
+          <div className="stat-metric-card">
+            <div className="metric-icon-box blue">
+              <Plane size={20} />
+            </div>
+            <div>
+              <strong>14</strong>
+              <small>Total Bookings</small>
+            </div>
+          </div>
+
+          <div className="stat-metric-card">
+            <div className="metric-icon-box teal">
+              <CheckCircle2 size={20} />
+            </div>
+            <div>
+              <strong>12</strong>
+              <small>Trips Completed</small>
+            </div>
+          </div>
+
+          <div className="stat-metric-card">
+            <div className="metric-icon-box amber">
+              <Sparkles size={20} />
+            </div>
+            <div>
+              <strong>2,450 pts</strong>
+              <small>EazeRewards Balance</small>
+            </div>
+          </div>
+
+          <div className="stat-metric-card">
+            <div className="metric-icon-box purple">
+              <User size={20} />
+            </div>
+            <div>
+              <strong>{savedTravellers.length}</strong>
+              <small>Saved Travellers</small>
+            </div>
+          </div>
+        </div>
+
+        {/* Profile Tabs Navigation */}
+        <div className="profile-tabs-strip mt-4">
+          <button
+            type="button"
+            className={`profile-nav-tab ${activeTab === 'personal' ? 'active' : ''}`}
+            onClick={() => setActiveTab('personal')}
+          >
+            <User size={16} />
+            <span>Personal Information</span>
+          </button>
+          <button
+            type="button"
+            className={`profile-nav-tab ${activeTab === 'travellers' ? 'active' : ''}`}
+            onClick={() => setActiveTab('travellers')}
+          >
+            <Luggage size={16} />
+            <span>Saved Travellers ({savedTravellers.length})</span>
+          </button>
+          <button
+            type="button"
+            className={`profile-nav-tab ${activeTab === 'preferences' ? 'active' : ''}`}
+            onClick={() => setActiveTab('preferences')}
+          >
+            <Heart size={16} />
+            <span>Travel Preferences</span>
+          </button>
+        </div>
+
+        {/* Tab 1: Personal Information Form */}
+        {activeTab === 'personal' && (
+          <div className="content-card form-card mt-3">
+            <div className="section-title-wrap mb-3">
+              <h2>Personal & Contact Information</h2>
+              <p>Manage your account details and contact preferences for e-ticket delivery</p>
+            </div>
+
             <form onSubmit={handleSaveProfile} className="profile-form-grid">
               <div className="form-group">
-                <label>Full Name</label>
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                />
+                <label>Full Name *</label>
+                <div className="input-with-icon">
+                  <User size={16} className="field-icon" />
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                  />
+                </div>
               </div>
 
               <div className="form-group">
-                <label>Email Address</label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
+                <label>Email Address *</label>
+                <div className="input-with-icon">
+                  <Mail size={16} className="field-icon" />
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
               </div>
 
               <div className="form-group">
-                <label>Mobile Number</label>
-                <input
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  required
-                />
+                <label>Mobile Number *</label>
+                <div className="input-with-icon">
+                  <Phone size={16} className="field-icon" />
+                  <input
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    required
+                  />
+                </div>
               </div>
 
               <div className="form-group">
                 <label>City</label>
-                <input
-                  type="text"
-                  value={city}
-                  onChange={(e) => setCity(e.target.value)}
-                />
+                <div className="input-with-icon">
+                  <MapPin size={16} className="field-icon" />
+                  <input
+                    type="text"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                  />
+                </div>
               </div>
 
               <div className="form-group">
@@ -184,35 +303,38 @@ export default function ProfilePage() {
                 />
               </div>
 
-              <div className="form-full-row">
+              <div className="form-full-row mt-2">
                 <button type="submit" className="primary-btn">
                   Save Changes
                 </button>
               </div>
             </form>
           </div>
+        )}
 
-          {/* Saved Travellers Section */}
-          <div className="content-card mt-4">
-            <div className="section-header">
+        {/* Tab 2: Saved Travellers */}
+        {activeTab === 'travellers' && (
+          <div className="content-card mt-3">
+            <div className="section-header-row">
               <div>
-                <h2>Saved Travellers (Fast Checkout)</h2>
-                <p>Add family & friends for 1-click booking on flights, hotels, and buses</p>
+                <h2>Saved Co-Travellers (Fast Checkout)</h2>
+                <p>Pre-save family and colleagues to autofill passenger details during flight, hotel, and train booking.</p>
               </div>
               <button
                 type="button"
-                className="secondary-btn small"
+                className="primary-btn small"
                 onClick={() => setShowAddTraveller(!showAddTraveller)}
               >
-                <Plus size={15} /> Add Traveller
+                <Plus size={15} /> {showAddTraveller ? 'Cancel' : 'Add New Traveller'}
               </button>
             </div>
 
             {showAddTraveller && (
-              <form onSubmit={handleAddTraveller} className="add-traveller-form">
+              <form onSubmit={handleAddTraveller} className="add-traveller-form-elevated mt-3">
+                <h4 className="form-subheading">Enter Traveller Details</h4>
                 <div className="form-grid three-col">
                   <div className="form-group">
-                    <label>Full Name</label>
+                    <label>Full Name (as per Govt ID) *</label>
                     <input
                       type="text"
                       placeholder="e.g. Ananya Roy"
@@ -222,7 +344,7 @@ export default function ProfilePage() {
                     />
                   </div>
                   <div className="form-group">
-                    <label>Gender</label>
+                    <label>Gender *</label>
                     <select
                       value={newTravellerGender}
                       onChange={(e) => setNewTravellerGender(e.target.value)}
@@ -234,7 +356,7 @@ export default function ProfilePage() {
                     </select>
                   </div>
                   <div className="form-group">
-                    <label>Relation</label>
+                    <label>Relationship *</label>
                     <select
                       value={newTravellerRelation}
                       onChange={(e) => setNewTravellerRelation(e.target.value)}
@@ -245,31 +367,31 @@ export default function ProfilePage() {
                       <option value="Child">Child</option>
                       <option value="Parent">Parent</option>
                       <option value="Friend">Friend</option>
+                      <option value="Colleague">Colleague</option>
                     </select>
                   </div>
                 </div>
-                <div className="mt-3">
-                  <button type="submit" className="primary-btn small">
-                    Save Traveller
-                  </button>
-                </div>
+                <button type="submit" className="primary-btn small mt-2">
+                  Save to Quick-Book List
+                </button>
               </form>
             )}
 
-            <div className="travellers-list">
+            <div className="travellers-grid mt-4">
               {savedTravellers.map((traveller) => (
-                <div key={traveller.id} className="traveller-item-card">
-                  <div className="traveller-info">
+                <div key={traveller.id} className="elevated-traveller-card">
+                  <div className="traveller-avatar">
+                    {traveller.name.charAt(0)}
+                  </div>
+                  <div className="traveller-meta">
                     <strong>{traveller.name}</strong>
-                    <span className="traveller-sub">
-                      {traveller.gender} • {traveller.relation}
-                    </span>
+                    <span>{traveller.gender} • {traveller.relation}</span>
                   </div>
                   <button
                     type="button"
                     className="delete-traveller-btn"
                     onClick={() => handleRemoveTraveller(traveller.id)}
-                    title="Remove"
+                    title="Remove traveller"
                   >
                     <Trash2 size={16} />
                   </button>
@@ -277,7 +399,64 @@ export default function ProfilePage() {
               ))}
             </div>
           </div>
-        </main>
+        )}
+
+        {/* Tab 3: Travel Preferences */}
+        {activeTab === 'preferences' && (
+          <div className="content-card form-card mt-3">
+            <div className="section-title-wrap mb-3">
+              <h2>Travel Preferences & Loyalty</h2>
+              <p>Customise your preferred seat selection, meal plans, and airline frequent flyer numbers.</p>
+            </div>
+
+            <form onSubmit={handleSavePreferences} className="profile-form-grid">
+              <div className="form-group">
+                <label>Preferred Flight Seat</label>
+                <select
+                  value={seatPref}
+                  onChange={(e) => setSeatPref(e.target.value)}
+                  className="native-select"
+                >
+                  <option value="Window">Window Seat</option>
+                  <option value="Aisle">Aisle Seat</option>
+                  <option value="Extra Legroom">Extra Legroom (Exit Row)</option>
+                  <option value="No Preference">No Preference</option>
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label>Preferred In-flight Meal</label>
+                <select
+                  value={mealPref}
+                  onChange={(e) => setMealPref(e.target.value)}
+                  className="native-select"
+                >
+                  <option value="Vegetarian">Vegetarian Hindu Meal (AVML)</option>
+                  <option value="Non-Vegetarian">Non-Vegetarian Meal</option>
+                  <option value="Jain Meal">Jain Vegetarian Meal (VJML)</option>
+                  <option value="Diabetic">Diabetic Meal (DBML)</option>
+                  <option value="No Meal">No In-flight Meal</option>
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label>Air India / IndiGo Frequent Flyer ID</label>
+                <input
+                  type="text"
+                  placeholder="e.g. AI-994821"
+                  value={frequentFlyer}
+                  onChange={(e) => setFrequentFlyer(e.target.value)}
+                />
+              </div>
+
+              <div className="form-full-row mt-2">
+                <button type="submit" className="primary-btn">
+                  Update Preferences
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
       </div>
     </div>
   );

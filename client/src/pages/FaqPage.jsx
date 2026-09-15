@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { siteFaqs } from '../data/siteData';
-import { ChevronDown, ChevronUp, HelpCircle, Search } from 'lucide-react';
+import { ChevronDown, ChevronUp, HelpCircle, Search, Sparkles, MessageCircle, Phone } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function FaqPage() {
-  const [openItems, setOpenItems] = useState({ 'Flights-0': true });
+  const [openItems, setOpenItems] = useState({ 'Flights-0': true, 'Hotels-0': true });
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
 
@@ -35,21 +35,23 @@ export default function FaqPage() {
         <div className="page-topbar">
           <Link to="/">Home</Link>
           <span>/</span>
-          <span>Help & FAQ</span>
+          <span>Help Center & FAQ</span>
         </div>
 
+        {/* Hero Search Box */}
         <div className="faq-hero-box content-card text-center">
-          <div className="faq-hero-icon mx-auto">
-            <HelpCircle size={36} color="#1272d5" />
+          <div className="faq-hero-icon mx-auto mb-2">
+            <HelpCircle size={36} color="#034ea2" />
           </div>
+          <span className="section-tag">KNOWLEDGE BASE & SUPPORT</span>
           <h1>Frequently Asked Questions</h1>
-          <p className="lead">Find answers to common questions about flights, hotels, trains, payments, and refunds.</p>
+          <p className="lead">Instant answers to common questions about air tickets, hotel check-ins, IRCTC train rules, and instant refunds.</p>
 
-          <div className="faq-search-input-wrap">
+          <div className="faq-search-input-wrap mt-3">
             <Search size={18} className="search-icon" />
             <input
               type="text"
-              placeholder="Search by keywords (e.g. baggage, cancel, refund, seat)..."
+              placeholder="Search by keywords (e.g. baggage allowance, cancellation, refund timeline, meal)..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -70,20 +72,20 @@ export default function FaqPage() {
           ))}
         </div>
 
-        {/* FAQ Accordions */}
+        {/* FAQ Accordions List */}
         <div className="faq-sections-list mt-4">
           {filteredFaqs.length === 0 ? (
-            <div className="content-card text-center py-4">
-              <p>No FAQ questions found matching "{searchQuery}".</p>
+            <div className="content-card text-center py-5">
+              <p className="lead">No questions found matching "{searchQuery}".</p>
               <button
                 type="button"
-                className="secondary-btn mt-2"
+                className="secondary-btn mt-3"
                 onClick={() => {
                   setSearchQuery('');
                   setSelectedCategory('All');
                 }}
               >
-                Clear Search
+                Clear Search Filter
               </button>
             </div>
           ) : (
@@ -100,9 +102,12 @@ export default function FaqPage() {
                           type="button"
                           className="faq-question-btn"
                           onClick={() => toggleItem(key)}
+                          aria-expanded={isOpen}
                         >
-                          <span>{item.q}</span>
-                          {isOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                          <span className="faq-q-text">{item.q}</span>
+                          <span className="faq-icon-arrow">
+                            {isOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                          </span>
                         </button>
                         {isOpen && (
                           <div className="faq-answer-content">
@@ -118,16 +123,19 @@ export default function FaqPage() {
           )}
         </div>
 
-        {/* Contact fallback */}
+        {/* 24/7 Contact Fallback Resolution Card */}
         <div className="content-card contact-cta-card text-center mt-4">
-          <h3>Still have questions?</h3>
-          <p>Our 24/7 dedicated customer care team is here to assist you anytime.</p>
-          <div className="cta-actions-row">
+          <div className="cta-icon-box mx-auto mb-2">
+            <MessageCircle size={28} color="#034ea2" />
+          </div>
+          <h3>Still Need Assistance with Your Booking?</h3>
+          <p>Our dedicated travel support specialists are available round-the-clock to assist you.</p>
+          <div className="cta-actions-row mt-3">
             <Link to="/contact" className="primary-btn">
-              Contact Support Desk
+              Contact 24/7 Helpdesk
             </Link>
             <a href="tel:+918269054018" className="secondary-btn">
-              Call +91 8269054018
+              <Phone size={15} /> Call +91 8269054018
             </a>
           </div>
         </div>

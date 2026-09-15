@@ -1,7 +1,18 @@
 import { useState } from 'react';
 import { useBooking } from '../context/BookingContext';
 import { api } from '../services/api';
-import { Mail, Phone, MapPin, Clock, Send, CheckCircle2, RefreshCw } from 'lucide-react';
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Clock,
+  Send,
+  CheckCircle2,
+  RefreshCw,
+  MessageSquare,
+  HelpCircle,
+  Headphones
+} from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function ContactPage() {
@@ -51,23 +62,43 @@ export default function ContactPage() {
         <div className="page-topbar">
           <Link to="/">Home</Link>
           <span>/</span>
-          <span>Contact Us</span>
+          <span>Contact & Support Helpdesk</span>
         </div>
 
         <div className="contact-layout-grid">
           {/* Left Contact Information */}
           <div className="contact-info-col">
             <div className="content-card info-card-themed">
-              <span className="section-tag">24/7 HELPDESK</span>
+              <span className="section-tag">24/7 DEDICATED HELPDESK</span>
               <h2>Get in Touch with EazeTrip</h2>
               <p>
-                Have questions regarding your flight booking, hotel check-in, or need emergency cancellation assistance? Our dedicated support team is available round the clock.
+                Have questions regarding flight web check-in, hotel vouchers, emergency cancellations, or custom tour itineraries? Our dedicated traveler support team is available 24 hours a day.
               </p>
 
               <div className="contact-details-stack mt-4">
                 <div className="contact-box-item">
                   <div className="contact-icon-box">
-                    <MapPin size={20} />
+                    <Phone size={20} color="#034ea2" />
+                  </div>
+                  <div>
+                    <strong>24x7 Customer Care Helpline</strong>
+                    <p><a href="tel:+918269054018" className="accent-link">+91 8269054018</a> (Toll-Free & Priority)</p>
+                  </div>
+                </div>
+
+                <div className="contact-box-item">
+                  <div className="contact-icon-box">
+                    <Mail size={20} color="#0097a7" />
+                  </div>
+                  <div>
+                    <strong>Official Email Support</strong>
+                    <p><a href="mailto:support@eazetrip.com" className="accent-link">support@eazetrip.com</a></p>
+                  </div>
+                </div>
+
+                <div className="contact-box-item">
+                  <div className="contact-icon-box">
+                    <MapPin size={20} color="#e11d48" />
                   </div>
                   <div>
                     <strong>Corporate Headquarters</strong>
@@ -77,32 +108,31 @@ export default function ContactPage() {
 
                 <div className="contact-box-item">
                   <div className="contact-icon-box">
-                    <Phone size={20} />
+                    <Clock size={20} color="#16a34a" />
                   </div>
                   <div>
-                    <strong>Customer Support Helpline</strong>
-                    <p><a href="tel:+918269054018">+91 8269054018</a> (Toll-Free)</p>
+                    <strong>Operational Availability</strong>
+                    <p>365 Days a Year • 24 Hours / 7 Days a Week</p>
                   </div>
                 </div>
+              </div>
 
-                <div className="contact-box-item">
-                  <div className="contact-icon-box">
-                    <Mail size={20} />
-                  </div>
-                  <div>
-                    <strong>Official Email Support</strong>
-                    <p><a href="mailto:support@eazetrip.com">support@eazetrip.com</a></p>
-                  </div>
+              {/* Instant WhatsApp Help Block */}
+              <div className="whatsapp-help-box mt-4">
+                <div className="wa-icon-glow">
+                  <MessageSquare size={20} color="#16a34a" />
                 </div>
-
-                <div className="contact-box-item">
-                  <div className="contact-icon-box">
-                    <Clock size={20} />
-                  </div>
-                  <div>
-                    <strong>Operating Hours</strong>
-                    <p>24 Hours / 7 Days a Week</p>
-                  </div>
+                <div>
+                  <strong>Need Instant WhatsApp Support?</strong>
+                  <p>Chat with our live flight & hotel concierge directly on WhatsApp.</p>
+                  <a
+                    href="https://api.whatsapp.com/send?phone=918269054018"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="whatsapp-action-link"
+                  >
+                    Start WhatsApp Chat ↗
+                  </a>
                 </div>
               </div>
             </div>
@@ -115,10 +145,10 @@ export default function ContactPage() {
               <p>Fill out the form below and an agent will respond within 30 minutes.</p>
 
               {submitted ? (
-                <div className="contact-success-state text-center py-4">
-                  <CheckCircle2 size={48} color="#16a34a" className="mx-auto mb-2" />
+                <div className="contact-success-state text-center py-5">
+                  <CheckCircle2 size={52} color="#16a34a" className="mx-auto mb-2" />
                   <h3>Thank You for Contacting Us!</h3>
-                  <p>Your inquiry reference #INQ-{Math.floor(10000 + Math.random() * 90000)} has been registered. Our representative will contact you shortly.</p>
+                  <p className="lead">Your inquiry reference #INQ-{Math.floor(10000 + Math.random() * 90000)} has been registered. Our representative will contact you shortly.</p>
                   <button
                     type="button"
                     className="primary-btn mt-3"
@@ -175,11 +205,11 @@ export default function ContactPage() {
                       />
                     </div>
                     <div className="form-group">
-                      <label htmlFor="contact-subject">Subject</label>
+                      <label htmlFor="contact-subject">Subject / Service Type *</label>
                       <input
                         id="contact-subject"
                         type="text"
-                        placeholder="e.g. Flight Rescheduling Request"
+                        placeholder="e.g. Flight Rescheduling or Hotel Query"
                         value={subject}
                         onChange={(e) => setSubject(e.target.value)}
                         required
@@ -192,7 +222,7 @@ export default function ContactPage() {
                     <textarea
                       id="contact-message"
                       rows="4"
-                      placeholder="Please provide booking ID if applicable..."
+                      placeholder="Please provide Booking Reference ID or travel dates if applicable..."
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
                       required
@@ -201,7 +231,7 @@ export default function ContactPage() {
 
                   {/* Captcha */}
                   <div className="form-group captcha-group">
-                    <label htmlFor="contact-captcha">Security Captcha</label>
+                    <label htmlFor="contact-captcha">Security Verification Captcha *</label>
                     <div className="captcha-row">
                       <div className="captcha-badge">{captchaCode}</div>
                       <button
@@ -216,7 +246,7 @@ export default function ContactPage() {
                       <input
                         id="contact-captcha"
                         type="text"
-                        placeholder="Enter text"
+                        placeholder="Enter 5 characters"
                         value={captchaInput}
                         onChange={(e) => setCaptchaInput(e.target.value.toUpperCase())}
                         maxLength={5}
