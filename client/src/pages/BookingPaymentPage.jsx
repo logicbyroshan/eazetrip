@@ -272,12 +272,12 @@ export default function BookingPaymentPage() {
 
   return (
     <div className="booking-payment-page-layout">
-      {/* Top Strip */}
-      <div className="payment-top-strip">
-        <div className="container flex-between-wrap">
+      {/* Top Header & Breadcrumb Strip directly in Container */}
+      <div className="container">
+        <div className="review-header-top-row">
           <button
             type="button"
-            className="back-to-results-btn"
+            className="back-breadcrumb-link"
             onClick={() => navigate('/review-booking', { state: { item } })}
           >
             <ArrowLeft size={16} /> Back to Review Details

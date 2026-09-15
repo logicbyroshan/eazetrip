@@ -281,12 +281,12 @@ export default function ReviewBookingPage() {
 
   return (
     <div className="review-booking-page-layout">
-      {/* Top Header & Breadcrumb Strip */}
-      <div className="booking-top-strip">
-        <div className="container flex-between-wrap">
+      {/* Top Header & Breadcrumb Strip directly in Container */}
+      <div className="container">
+        <div className="review-header-top-row">
           <button
             type="button"
-            className="back-to-results-btn"
+            className="back-breadcrumb-link"
             onClick={() => navigate(-1)}
           >
             <ArrowLeft size={16} /> Back to Search Results
@@ -296,10 +296,8 @@ export default function ReviewBookingPage() {
             <Lock size={14} color="#16a34a" /> 256-Bit SSL Encrypted & IATA Verified
           </div>
         </div>
-      </div>
 
-      {/* Modern 4-Step Progress Tracker */}
-      <div className="container">
+        {/* Modern 4-Step Progress Tracker */}
         <div className="booking-step-tracker-bar">
           <div
             className={`step-tracker-node ${currentStep >= 1 ? 'completed active' : ''}`}
