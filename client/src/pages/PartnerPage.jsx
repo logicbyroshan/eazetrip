@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useBooking } from '../context/BookingContext';
 import {
   Building2,
-  ShieldCheck,
   Mail,
   Lock,
   User,

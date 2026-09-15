@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { airports } from '../../data/flightData';
-import { Plane, ArrowLeftRight, Calendar, Users, Check, ChevronDown } from 'lucide-react';
+import { ArrowLeftRight } from 'lucide-react';
 
 export default function FlightSearchWidget({ initialValues = {}, onSearch }) {
   const navigate = useNavigate();

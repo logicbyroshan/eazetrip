@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import FlightSearchWidget from '../components/search/FlightSearchWidget';
 import HotelSearchWidget from '../components/search/HotelSearchWidget';
 import BusSearchWidget from '../components/search/BusSearchWidget';

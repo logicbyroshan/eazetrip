@@ -56,7 +56,12 @@ function securityHeaders(req, res, next) {
   res.setHeader('X-Frame-Options', 'SAMEORIGIN');
   res.setHeader('X-XSS-Protection', '1; mode=block');
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
   res.removeHeader('X-Powered-By');
+
+  if (process.env.NODE_ENV === 'production') {
+    res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+  }
   
   if (req.path.startsWith('/api/')) {
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
@@ -67,7 +72,7 @@ function securityHeaders(req, res, next) {
   next();
 }
 
-// Deep recursive string sanitizer to strip null bytes and trim whitespace
+// Deep recursive string sanitizer to strip null bytes, trim whitespace, and guard against prototype pollution
 function sanitizeValue(value) {
   if (typeof value === 'string') {
     return value.replace(/\0/g, '').trim();
@@ -76,8 +81,11 @@ function sanitizeValue(value) {
     return value.map(sanitizeValue);
   }
   if (value !== null && typeof value === 'object') {
-    const cleaned = {};
+    const cleaned = Object.create(null);
     for (const key of Object.keys(value)) {
+      if (key === '__proto__' || key === 'constructor' || key === 'prototype') {
+        continue;
+      }
       cleaned[key] = sanitizeValue(value[key]);
     }
     return cleaned;

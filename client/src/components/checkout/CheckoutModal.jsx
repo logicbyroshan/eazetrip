@@ -9,13 +9,8 @@ import {
   QrCode,
   Building,
   Wallet,
-  ShieldCheck,
-  CheckCircle2,
   Tag,
-  User,
-  Phone,
-  Mail,
-  FileText
+  User
 } from 'lucide-react';
 
 export default function CheckoutModal() {
@@ -272,7 +267,11 @@ export default function CheckoutModal() {
                   </h4>
                   {(() => {
                     try {
-                      const list = JSON.parse(localStorage.getItem('exploreeaz_travellers') || '[]');
+                      const list = JSON.parse(
+                        localStorage.getItem('eazetrip_travellers') ||
+                        localStorage.getItem('exploreeaz_travellers') ||
+                        '[]'
+                      );
                       if (list.length > 0) {
                         return (
                           <div className="quick-traveller-pills">

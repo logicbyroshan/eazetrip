@@ -7,7 +7,7 @@ import FlightDetailsModal from '../components/flights/FlightDetailsModal';
 import { mockFlights } from '../data/flightData';
 import { HERO_BACKDROPS } from '../data/siteData';
 import { useBooking } from '../context/BookingContext';
-import { Plane, Filter, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Plane } from 'lucide-react';
 
 export default function FlightBookingPage() {
   const location = useLocation();

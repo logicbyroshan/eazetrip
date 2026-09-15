@@ -6,8 +6,6 @@ import {
   Mail,
   Phone,
   MapPin,
-  Calendar,
-  ShieldCheck,
   Plus,
   Trash2,
   CheckCircle2,

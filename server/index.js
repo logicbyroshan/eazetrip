@@ -57,9 +57,17 @@ if (isRazorpayConfigured) {
 
 // 1. Core Security & Parsing Middleware
 app.use(securityHeaders);
+
+const rawOrigins = process.env.CORS_ORIGIN || '*';
+const allowedOrigins = rawOrigins.includes(',')
+  ? rawOrigins.split(',').map((s) => s.trim())
+  : rawOrigins === '*'
+  ? '*'
+  : [rawOrigins];
+
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN || '*',
+    origin: allowedOrigins,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Razorpay-Signature']
   })
@@ -245,8 +253,13 @@ app.get('/api/bookings/:id', (req, res) => {
 
 app.post('/api/bookings', validateBooking, (req, res) => {
   const bookingData = req.body;
+  const pnr = bookingData.pnr || `${(bookingData.type || 'FL').slice(0, 2).toUpperCase()}${Math.floor(1000 + Math.random() * 9000)}`;
+  const email = bookingData.email || bookingData.passengers?.[0]?.email || 'traveler@eazetrip.com';
   const newBooking = {
-    id: `EZ-${(bookingData.type || 'FL').slice(0, 2).toUpperCase()}-${Math.floor(10000 + Math.random() * 90000)}`,
+    id: bookingData.id || `EZ-${(bookingData.type || 'FL').slice(0, 2).toUpperCase()}-${Math.floor(10000 + Math.random() * 90000)}`,
+    pnr,
+    email,
+    userId: bookingData.userId || 'USR-1',
     createdAt: new Date().toISOString(),
     status: 'Confirmed',
     paymentStatus: 'Paid',
@@ -485,8 +498,12 @@ app.post('/api/payment/verify', sensitiveLimiter, validateRazorpayVerify, (req, 
 
     // If linked to booking details, create or confirm the booking
     if (bookingDetails) {
+      const pnr = bookingDetails.pnr || `${(bookingDetails.type || 'FL').slice(0, 2).toUpperCase()}${Math.floor(1000 + Math.random() * 9000)}`;
       const newBooking = {
-        id: `EZ-${(bookingDetails.type || 'FL').slice(0, 2).toUpperCase()}-${Math.floor(10000 + Math.random() * 90000)}`,
+        id: bookingDetails.id || `EZ-${(bookingDetails.type || 'FL').slice(0, 2).toUpperCase()}-${Math.floor(10000 + Math.random() * 90000)}`,
+        pnr,
+        email: email || bookingDetails.email || bookingDetails.passengers?.[0]?.email || 'traveler@eazetrip.com',
+        userId: bookingDetails.userId || 'USR-1',
         createdAt: new Date().toISOString(),
         status: 'Confirmed',
         paymentStatus: 'Paid',

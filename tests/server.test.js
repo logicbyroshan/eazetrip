@@ -333,3 +333,58 @@ test('24. POST /api/payment/webhook accepts incoming notifications', async () =>
   assert.strictEqual(hookRes.data.status, 'ok');
 });
 
+test('25. Booking creation assigns PNR, email, and supports email/userId filtering', async () => {
+  const testEmail = `traveller_${Date.now()}@test.com`;
+  const createRes = await requestJson('/api/bookings', {
+    method: 'POST',
+    body: {
+      type: 'flight',
+      title: 'Delhi to Mumbai Express Flight',
+      date: '2026-10-15',
+      totalAmount: 5200,
+      email: testEmail,
+      userId: 'usr_audit_99',
+      passengers: [{ name: 'Ananya Birla', seat: '3A' }]
+    }
+  });
+  assert.strictEqual(createRes.status, 201);
+  assert.ok(createRes.data.data.pnr);
+  assert.strictEqual(createRes.data.data.email, testEmail);
+
+  // Query filter by email
+  const filterEmailRes = await requestJson(`/api/bookings?email=${encodeURIComponent(testEmail)}`);
+  assert.strictEqual(filterEmailRes.status, 200);
+  assert.strictEqual(filterEmailRes.data.data.length, 1);
+  assert.strictEqual(filterEmailRes.data.data[0].email, testEmail);
+
+  // Query filter by userId
+  const filterUserRes = await requestJson('/api/bookings?userId=usr_audit_99');
+  assert.strictEqual(filterUserRes.status, 200);
+  assert.ok(filterUserRes.data.data.some(b => b.userId === 'usr_audit_99'));
+});
+
+test('26. Prototype pollution payloads are safely neutralized by security middleware', async () => {
+  const res = await requestJson('/api/contact', {
+    method: 'POST',
+    body: {
+      name: 'Safe Sender',
+      email: 'safe@example.com',
+      message: 'Testing prototype pollution defense',
+      __proto__: { polluted: 'true' }
+    }
+  });
+  assert.strictEqual(res.status, 201);
+  assert.strictEqual(({}).polluted, undefined);
+});
+
+test('27. Promo codes EAZETRIP and brand discounts exist in mockStore', () => {
+  const { offers } = require('../server/data/mockStore.js');
+  const promoMap = new Map(offers.map(p => [p.code, p]));
+  assert.ok(promoMap.has('EAZETRIP'));
+  assert.ok(promoMap.has('EAZETRIP1000'));
+  assert.ok(promoMap.has('STAYEAZY'));
+  assert.ok(promoMap.has('BUSEAZ'));
+  assert.ok(promoMap.has('TRAINEAZ'));
+});
+
+

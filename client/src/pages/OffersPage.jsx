@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { specialBankOffers, siteOffers } from '../data/siteData';
-import { Tag, Copy, ArrowRight, Sparkles, Check, Gift } from 'lucide-react';
+import { Copy, ArrowRight, Sparkles, Check } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useBooking } from '../context/BookingContext';
 

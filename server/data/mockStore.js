@@ -318,10 +318,12 @@ const railways = [
 ];
 
 const offers = [
-  { id: 1, title: 'Take Off with Big Savings', code: 'EXPLOREEAZ', discount: 'Up to ₹1,500 OFF', category: 'Flights' },
-  { id: 2, title: 'Exclusive Luxury Hotel Deals', code: 'STAYEAZY', discount: 'Flat 20% OFF', category: 'Hotels' },
-  { id: 3, title: 'Intercity Bus Bonanza', code: 'BUSEAZ', discount: 'Up to ₹250 OFF', category: 'Buses' },
-  { id: 4, title: 'Special Railway Fast Track', code: 'TRAINEAZ', discount: 'Zero Fee', category: 'Railway' }
+  { id: 1, title: 'Take Off with Big Savings', code: 'EAZETRIP', discount: 'Flat ₹500 OFF', category: 'Flights' },
+  { id: 2, title: 'Mega Explorer Discount', code: 'EAZETRIP1000', discount: 'Up to ₹1,000 OFF', category: 'Flights' },
+  { id: 3, title: 'Exclusive Luxury Hotel Deals', code: 'STAYEAZY', discount: 'Flat 20% OFF', category: 'Hotels' },
+  { id: 4, title: 'Intercity Bus Bonanza', code: 'BUSEAZ', discount: 'Up to ₹300 OFF', category: 'Buses' },
+  { id: 5, title: 'Special Railway Fast Track', code: 'TRAINEAZ', discount: 'Zero Surcharge', category: 'Railway' },
+  { id: 6, title: 'ExploreEaz Legacy Savings', code: 'EXPLOREEAZ', discount: 'Flat ₹500 OFF', category: 'Universal' }
 ];
 
 const faqs = [
