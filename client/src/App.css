@@ -10067,16 +10067,47 @@ input[type="radio"]:focus-visible {
   background: #ffffff;
   color: #034ea2;
   border: 1.5px dashed #034ea2;
-  padding: 12px;
-  border-radius: 10px;
-  font-size: 0.9rem;
+  padding: 14px;
+  border-radius: 12px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.92rem;
   font-weight: 700;
   cursor: pointer;
+  margin-top: 18px;
+  margin-bottom: 24px;
   transition: all 0.2s ease;
 }
 
 .add-traveler-btn:hover {
   background: #eff6ff;
+  border-color: #023875;
+}
+
+.contact-info-block {
+  margin-top: 28px !important;
+  padding-top: 24px !important;
+  border-top: 1px dashed #cbd5e1 !important;
+}
+
+.sub-section-title {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 10px !important;
+  font-family: 'Outfit', sans-serif !important;
+  font-size: 1.05rem !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  margin-bottom: 18px !important;
+  line-height: 1.4 !important;
+}
+
+.sub-section-title svg {
+  color: #034ea2 !important;
+  flex-shrink: 0 !important;
+  width: 18px !important;
+  height: 18px !important;
+  margin: 0 !important;
 }
 
 .remove-pax-btn {
@@ -10093,36 +10124,39 @@ input[type="radio"]:focus-visible {
 
 .phone-input-wrap {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   border: 1px solid #cbd5e1;
   border-radius: 8px;
   background: #ffffff;
   overflow: hidden;
+  height: 44px;
 }
 
 .phone-prefix {
-  padding: 0 12px;
+  padding: 0 14px;
   font-size: 0.9rem;
-  font-weight: 600;
+  font-weight: 700;
   color: #64748b;
   background: #f1f5f9;
   border-right: 1px solid #cbd5e1;
   display: flex;
   align-items: center;
-  height: 100%;
-  line-height: 42px;
+  justify-content: center;
 }
 
 .phone-input-wrap input {
   border: none !important;
   box-shadow: none !important;
+  height: 100% !important;
+  padding: 0 14px !important;
 }
 
 .gst-toggle-card {
   background: #f8fafc;
   border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  padding: 14px;
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 22px !important;
 }
 
 .custom-check-text strong {
@@ -10188,40 +10222,70 @@ input[type="radio"]:focus-visible {
 /* Promo Cards */
 .custom-promo-bar {
   display: flex;
-  gap: 10px;
+  gap: 12px;
+  min-height: 52px;
+  margin-top: 4px;
 }
 
 .promo-input-group {
   flex: 1;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   background: #ffffff;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  padding: 0 14px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 12px;
+  padding: 0 16px;
+  min-height: 52px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+  transition: all 0.2s ease;
+}
+
+.promo-input-group:focus-within {
+  border-color: #034ea2;
+  box-shadow: 0 0 0 3px rgba(3, 78, 162, 0.12);
+}
+
+.promo-input-group svg {
+  flex-shrink: 0;
 }
 
 .promo-input-group input {
   border: none !important;
   box-shadow: none !important;
-  font-weight: 600;
+  font-family: 'Outfit', sans-serif !important;
+  font-size: 0.98rem !important;
+  font-weight: 700 !important;
   text-transform: uppercase;
+  color: #0f172a !important;
+  height: 100% !important;
+  width: 100% !important;
+  background: transparent !important;
+  padding: 0 !important;
 }
 
 .apply-promo-btn {
-  background: #034ea2;
+  background: linear-gradient(135deg, #034ea2 0%, #0077b6 100%);
   color: #ffffff;
   border: none;
-  padding: 0 20px;
-  border-radius: 8px;
-  font-weight: 700;
+  padding: 0 28px;
+  min-height: 52px;
+  border-radius: 12px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 800;
   cursor: pointer;
-  transition: background 0.2s ease;
+  box-shadow: 0 4px 12px rgba(3, 78, 162, 0.25);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .apply-promo-btn:hover {
-  background: #023875;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(3, 78, 162, 0.35);
 }
 
 .coupon-active-banner {
@@ -10405,7 +10469,7 @@ input[type="radio"]:focus-visible {
   align-items: flex-end;
   border-top: 1px solid #e2e8f0;
   padding-top: 16px;
-  margin-bottom: 20px;
+  margin-bottom: 16px !important;
 }
 
 .total-label {
@@ -10443,6 +10507,7 @@ input[type="radio"]:focus-visible {
   cursor: pointer;
   box-shadow: 0 4px 16px rgba(3, 78, 162, 0.3);
   transition: all 0.2s ease;
+  margin-bottom: 14px !important;
 }
 
 .proceed-to-payment-btn:hover {
@@ -10453,11 +10518,12 @@ input[type="radio"]:focus-visible {
 .security-assurances-card {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   background: #f8fafc;
-  padding: 12px;
-  border-radius: 10px;
-  border: 1px solid #f1f5f9;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  margin-top: 0 !important;
 }
 
 .assurance-item {
