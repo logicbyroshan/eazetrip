@@ -4831,3 +4831,353 @@ input[type="radio"]:focus-visible {
   }
 }
 
+/* ==========================================================================
+   5. TOPBAR WHATSAPP SVG ICON
+   ========================================================================== */
+.topbar-whatsapp {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #16a34a !important;
+  font-weight: 700;
+  padding: 3px 8px;
+  background: #dcfce7;
+  border-radius: 9999px;
+  transition: all 0.2s ease;
+}
+
+.topbar-whatsapp:hover {
+  background: #bbf7d0;
+  transform: translateY(-1px);
+}
+
+.wa-svg-icon {
+  fill: #16a34a;
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   6. GLASSMORPHIC HERO SEARCH & ILLUSTRATED 3D TABS (Screenshot 1)
+   ========================================================================== */
+.glassmorphic-search-card {
+  background: rgba(255, 255, 255, 0.94) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.75) !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25) !important;
+  border-radius: 20px !important;
+  overflow: visible !important;
+}
+
+.hero-search-tabs.illustrated-tabs {
+  display: flex;
+  align-items: flex-end;
+  gap: 28px;
+  padding: 12px 24px 0 24px;
+  border-bottom: 1px solid #e2e8f0;
+  background: transparent;
+  overflow-x: auto;
+}
+
+.hero-search-tabs.illustrated-tabs .hero-tab-btn {
+  position: relative;
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 8px 18px 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.tab-icon-peach-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #ffedd5;
+  display: grid;
+  place-items: center;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease;
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.15);
+}
+
+.hero-tab-btn:hover .tab-icon-peach-circle {
+  transform: scale(1.08) translateY(-2px);
+  background: #fed7aa;
+}
+
+.hero-tab-btn.active .tab-icon-peach-circle {
+  transform: scale(1.1);
+  background: #ffedd5;
+  box-shadow: 0 4px 14px rgba(249, 115, 22, 0.28);
+}
+
+.tab-svg-art {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.tab-label-text {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #334155;
+  transition: color 0.2s ease;
+}
+
+.hero-tab-btn.active .tab-label-text {
+  color: var(--primary);
+  font-weight: 800;
+}
+
+.tab-active-indicator {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--primary);
+  border-radius: 4px 4px 0 0;
+  animation: tabUnderlineIn 0.3s ease;
+}
+
+@keyframes tabUnderlineIn {
+  0% { transform: scaleX(0.3); opacity: 0; }
+  100% { transform: scaleX(1); opacity: 1; }
+}
+
+.tab-discount-tag-pill {
+  position: absolute;
+  top: -6px;
+  left: 36px;
+  background: #7e22ce;
+  color: #ffffff;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  letter-spacing: 0.3px;
+  box-shadow: 0 2px 6px rgba(126, 34, 206, 0.35);
+  white-space: nowrap;
+  animation: discountFloat 2.4s ease-in-out infinite alternate;
+  z-index: 5;
+}
+
+@keyframes discountFloat {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-3px); }
+}
+
+/* ==========================================================================
+   7. POPULAR DOMESTIC AIRLINES STRIP (Screenshot 2)
+   ========================================================================== */
+.popular-airlines-block {
+  padding: 32px 0 16px 0;
+  background: #ffffff;
+}
+
+.popular-airlines-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 16px;
+}
+
+.popular-airlines-card {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 18px 24px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+}
+
+.airlines-grid-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.airline-logo-item {
+  background: transparent;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+}
+
+.airline-logo-item:hover {
+  background: #f8fafc;
+  transform: translateY(-3px);
+}
+
+.airline-tailfin-wrap {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  transition: transform 0.25s ease;
+}
+
+.airline-logo-item:hover .airline-tailfin-wrap {
+  transform: scale(1.12);
+}
+
+.airline-name-text {
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+
+/* ==========================================================================
+   8. TRENDING FLIGHT ROUTES (Screenshot 3)
+   ========================================================================== */
+.trending-flight-routes-block {
+  padding: 36px 0;
+  background: #f8fafc;
+}
+
+.trending-routes-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.routes-main-title {
+  font-size: 1.65rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin: 0 0 4px 0;
+}
+
+.routes-highlight-red {
+  color: #e11d48;
+}
+
+.routes-sub-desc {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.routes-toggle-group {
+  display: flex;
+  gap: 8px;
+}
+
+.routes-toggle-btn {
+  background: transparent;
+  border: 1.5px solid #0284c7;
+  color: #0284c7;
+  padding: 6px 18px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.routes-toggle-btn.active {
+  background: #0284c7;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3);
+}
+
+.routes-toggle-btn:hover:not(.active) {
+  background: #e0f2fe;
+}
+
+/* 4-Column Grid for Route Cards */
+.routes-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 1100px) {
+  .routes-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .routes-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.route-item-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+.route-item-card:hover {
+  transform: translateY(-2px);
+  border-color: #0284c7;
+  box-shadow: 0 6px 18px rgba(2, 132, 199, 0.12);
+}
+
+.route-thumb-box {
+  width: 60px;
+  height: 48px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.route-thumb-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.route-item-card:hover .route-thumb-box img {
+  transform: scale(1.1);
+}
+
+.route-details-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.route-city-name {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-main);
+  white-space: nowrap;
+}
+
+.route-arrow-icon-wrap {
+  color: #64748b;
+  display: grid;
+  place-items: center;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.route-item-card:hover .route-arrow-icon-wrap {
+  color: #0284c7;
+  transform: scale(1.15);
+}
+
+

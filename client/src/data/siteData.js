@@ -522,3 +522,284 @@ export const siteTestimonials = [
     service: 'Railways & Flights'
   }
 ];
+
+export const popularAirlines = [
+  {
+    id: 'indigo',
+    name: 'IndiGo',
+    code: '6E',
+    color: '#001b94',
+    logo: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=100&auto=format&fit=crop&q=80',
+    tailColor: '#001b94',
+    category: 'domestic'
+  },
+  {
+    id: 'airindia',
+    name: 'Air India',
+    code: 'AI',
+    color: '#ed1c24',
+    logo: 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=100&auto=format&fit=crop&q=80',
+    tailColor: '#ed1c24',
+    category: 'domestic'
+  },
+  {
+    id: 'airindiaexpress',
+    name: 'Air India Express',
+    code: 'IX',
+    color: '#f37021',
+    logo: 'https://images.unsplash.com/photo-1569154941061-e231b4725ef1?w=100&auto=format&fit=crop&q=80',
+    tailColor: '#f37021',
+    category: 'domestic'
+  },
+  {
+    id: 'akasaair',
+    name: 'Akasa Air',
+    code: 'QP',
+    color: '#5b2c6f',
+    logo: 'https://images.unsplash.com/photo-1506015391300-4802dc74de2e?w=100&auto=format&fit=crop&q=80',
+    tailColor: '#ff6600',
+    category: 'domestic'
+  },
+  {
+    id: 'allianceair',
+    name: 'Alliance Air',
+    code: '9I',
+    color: '#c0392b',
+    logo: 'https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?w=100&auto=format&fit=crop&q=80',
+    tailColor: '#c0392b',
+    category: 'domestic'
+  },
+  {
+    id: 'spicejet',
+    name: 'SpiceJet',
+    code: 'SG',
+    color: '#e74c3c',
+    logo: 'https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=100&auto=format&fit=crop&q=80',
+    tailColor: '#e74c3c',
+    category: 'domestic'
+  }
+];
+
+export const trendingFlightRoutesGrid = {
+  domestic: [
+    {
+      id: 'agr-blr',
+      from: 'Agra',
+      to: 'Bengaluru',
+      fromCode: 'AGR',
+      toCode: 'BLR',
+      image: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=300&auto=format&fit=crop&q=80',
+      price: '₹4,499'
+    },
+    {
+      id: 'ixg-hyd',
+      from: 'Belgaum',
+      to: 'Hyderabad',
+      fromCode: 'IXG',
+      toCode: 'HYD',
+      image: 'https://images.unsplash.com/photo-1605649487212-47bdab064df7?w=300&auto=format&fit=crop&q=80',
+      price: '₹3,299'
+    },
+    {
+      id: 'blr-cok',
+      from: 'Bengaluru',
+      to: 'Kochi',
+      fromCode: 'BLR',
+      toCode: 'COK',
+      image: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=300&auto=format&fit=crop&q=80',
+      price: '₹2,899'
+    },
+    {
+      id: 'blr-bom',
+      from: 'Bengaluru',
+      to: 'Mumbai',
+      fromCode: 'BLR',
+      toCode: 'BOM',
+      image: 'https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=300&auto=format&fit=crop&q=80',
+      price: '₹3,450'
+    },
+    {
+      id: 'del-amd',
+      from: 'Delhi',
+      to: 'Ahmedabad',
+      fromCode: 'DEL',
+      toCode: 'AMD',
+      image: 'https://images.unsplash.com/photo-1609766857041-ed402ea8069a?w=300&auto=format&fit=crop&q=80',
+      price: '₹3,150'
+    },
+    {
+      id: 'del-blr',
+      from: 'Delhi',
+      to: 'Bengaluru',
+      fromCode: 'DEL',
+      toCode: 'BLR',
+      image: 'https://images.unsplash.com/photo-1596176530529-78163a4f7af2?w=300&auto=format&fit=crop&q=80',
+      price: '₹5,200'
+    },
+    {
+      id: 'del-ccu',
+      from: 'Delhi',
+      to: 'Kolkata',
+      fromCode: 'DEL',
+      toCode: 'CCU',
+      image: 'https://images.unsplash.com/photo-1558431382-27e303142255?w=300&auto=format&fit=crop&q=80',
+      price: '₹4,300'
+    },
+    {
+      id: 'del-sxr',
+      from: 'Delhi',
+      to: 'Srinagar',
+      fromCode: 'DEL',
+      toCode: 'SXR',
+      image: 'https://images.unsplash.com/photo-1598091383021-15ddea10925d?w=300&auto=format&fit=crop&q=80',
+      price: '₹4,750'
+    },
+    {
+      id: 'hyd-blr',
+      from: 'Hyderabad',
+      to: 'Bengaluru',
+      fromCode: 'HYD',
+      toCode: 'BLR',
+      image: 'https://images.unsplash.com/photo-1596176530529-78163a4f7af2?w=300&auto=format&fit=crop&q=80',
+      price: '₹2,699'
+    },
+    {
+      id: 'hyd-del',
+      from: 'Hyderabad',
+      to: 'Delhi',
+      fromCode: 'HYD',
+      toCode: 'DEL',
+      image: 'https://images.unsplash.com/photo-1587474260584-136574528ed5?w=300&auto=format&fit=crop&q=80',
+      price: '₹4,100'
+    },
+    {
+      id: 'cok-bom',
+      from: 'Kochi',
+      to: 'Mumbai',
+      fromCode: 'COK',
+      toCode: 'BOM',
+      image: 'https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=300&auto=format&fit=crop&q=80',
+      price: '₹3,850'
+    },
+    {
+      id: 'bom-del',
+      from: 'Mumbai',
+      to: 'Delhi',
+      fromCode: 'BOM',
+      toCode: 'DEL',
+      image: 'https://images.unsplash.com/photo-1587474260584-136574528ed5?w=300&auto=format&fit=crop&q=80',
+      price: '₹4,600'
+    }
+  ],
+  international: [
+    {
+      id: 'del-dxb',
+      from: 'Delhi',
+      to: 'Dubai',
+      fromCode: 'DEL',
+      toCode: 'DXB',
+      image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=300&auto=format&fit=crop&q=80',
+      price: '₹14,999'
+    },
+    {
+      id: 'bom-sin',
+      from: 'Mumbai',
+      to: 'Singapore',
+      fromCode: 'BOM',
+      toCode: 'SIN',
+      image: 'https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=300&auto=format&fit=crop&q=80',
+      price: '₹16,500'
+    },
+    {
+      id: 'blr-bkk',
+      from: 'Bengaluru',
+      to: 'Bangkok',
+      fromCode: 'BLR',
+      toCode: 'BKK',
+      image: 'https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=300&auto=format&fit=crop&q=80',
+      price: '₹12,800'
+    },
+    {
+      id: 'del-lhr',
+      from: 'Delhi',
+      to: 'London',
+      fromCode: 'DEL',
+      toCode: 'LHR',
+      image: 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=300&auto=format&fit=crop&q=80',
+      price: '₹38,900'
+    },
+    {
+      id: 'bom-dps',
+      from: 'Mumbai',
+      to: 'Bali',
+      fromCode: 'BOM',
+      toCode: 'DPS',
+      image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=300&auto=format&fit=crop&q=80',
+      price: '₹19,400'
+    },
+    {
+      id: 'maa-kul',
+      from: 'Chennai',
+      to: 'Kuala Lumpur',
+      fromCode: 'MAA',
+      toCode: 'KUL',
+      image: 'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=300&auto=format&fit=crop&q=80',
+      price: '₹11,500'
+    },
+    {
+      id: 'del-cdg',
+      from: 'Delhi',
+      to: 'Paris',
+      fromCode: 'DEL',
+      toCode: 'CDG',
+      image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=300&auto=format&fit=crop&q=80',
+      price: '₹41,200'
+    },
+    {
+      id: 'bom-mle',
+      from: 'Mumbai',
+      to: 'Maldives',
+      fromCode: 'BOM',
+      toCode: 'MLE',
+      image: 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=300&auto=format&fit=crop&q=80',
+      price: '₹15,600'
+    },
+    {
+      id: 'blr-mel',
+      from: 'Bengaluru',
+      to: 'Melbourne',
+      fromCode: 'BLR',
+      toCode: 'MEL',
+      image: 'https://images.unsplash.com/photo-1514395462725-fb4566210144?w=300&auto=format&fit=crop&q=80',
+      price: '₹46,800'
+    },
+    {
+      id: 'del-nrt',
+      from: 'Delhi',
+      to: 'Tokyo',
+      fromCode: 'DEL',
+      toCode: 'NRT',
+      image: 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=300&auto=format&fit=crop&q=80',
+      price: '₹44,000'
+    },
+    {
+      id: 'bom-yyz',
+      from: 'Mumbai',
+      to: 'Toronto',
+      fromCode: 'BOM',
+      toCode: 'YYZ',
+      image: 'https://images.unsplash.com/photo-1517090504586-fde19ea6066f?w=300&auto=format&fit=crop&q=80',
+      price: '₹58,000'
+    },
+    {
+      id: 'del-jfk',
+      from: 'Delhi',
+      to: 'New York',
+      fromCode: 'DEL',
+      toCode: 'JFK',
+      image: 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=300&auto=format&fit=crop&q=80',
+      price: '₹54,500'
+    }
+  ]
+};
+

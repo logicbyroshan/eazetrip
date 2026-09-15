@@ -5,6 +5,8 @@ import HotelSearchWidget from '../components/search/HotelSearchWidget';
 import BusSearchWidget from '../components/search/BusSearchWidget';
 import TrainSearchWidget from '../components/search/TrainSearchWidget';
 import SpecialOffersSection from '../components/home/SpecialOffersSection';
+import PopularAirlines from '../components/home/PopularAirlines';
+import TrendingFlightRoutes from '../components/home/TrendingFlightRoutes';
 import TrendingDestinations from '../components/home/TrendingDestinations';
 import { siteTestimonials, siteFaqs, HERO_BACKDROPS } from '../data/siteData';
 import { Plane, Building2, Bus, Train, ShieldCheck, Check, Star, ArrowRight } from 'lucide-react';
@@ -16,11 +18,11 @@ export default function HomePage() {
 
   return (
     <div className="home-page">
-      {/* Dynamic Hero Section */}
+      {/* Dynamic Hero Section - Light Luminous Gradient Overlay */}
       <section
         className="hero-section dynamic-hero"
         style={{
-          backgroundImage: `linear-gradient(180deg, rgba(10, 25, 47, 0.82) 0%, rgba(17, 34, 64, 0.88) 100%), url('${currentHero.url}')`
+          backgroundImage: `linear-gradient(180deg, rgba(10, 25, 47, 0.40) 0%, rgba(17, 34, 64, 0.52) 100%), url('${currentHero.url}')`
         }}
       >
         <div className="container">
@@ -32,41 +34,93 @@ export default function HomePage() {
               {currentHero.subtitle}
             </p>
 
-            {/* Hero Search Box Card */}
-            <div className="hero-search-wrapper">
-              {/* Category Switcher Tabs */}
-              <div className="hero-search-tabs">
+            {/* Hero Search Box Card - Glassmorphism Translucent Styling */}
+            <div className="hero-search-wrapper glassmorphic-search-card">
+              {/* Category Switcher Tabs (Matching Screenshot 1) */}
+              <div className="hero-search-tabs illustrated-tabs">
+                {/* 1. Flights */}
                 <button
                   type="button"
                   className={`hero-tab-btn ${activeTab === 'flights' ? 'active' : ''}`}
                   onClick={() => setActiveTab('flights')}
                 >
-                  <Plane size={18} />
-                  <span>Flights</span>
+                  <div className="tab-icon-peach-circle">
+                    <svg viewBox="0 0 48 48" width="30" height="30" className="tab-svg-art">
+                      <path d="M8 26 L22 22 L38 12 C41 10 44 11 44 14 C44 16 42 18 39 19 L26 27 L28 38 L23 40 L18 30 L10 32 L8 26 Z" fill="#0284c7" />
+                      <path d="M12 28 L24 24 L36 15 C38 14 40 14 41 16 C41 17 40 18 38 19 L26 26 L24 34 L21 35 L19 28 L14 29 Z" fill="#ffffff" opacity="0.9" />
+                      <circle cx="28" cy="28" r="3" fill="#f97316" />
+                      <path d="M4 36 C14 36 28 32 44 26" stroke="#fbbf24" strokeWidth="2.5" strokeLinecap="round" fill="none" opacity="0.8" />
+                    </svg>
+                  </div>
+                  <span className="tab-label-text">Flights</span>
+                  {activeTab === 'flights' && <div className="tab-active-indicator"></div>}
                 </button>
+
+                {/* 2. Hotels */}
                 <button
                   type="button"
                   className={`hero-tab-btn ${activeTab === 'hotels' ? 'active' : ''}`}
                   onClick={() => setActiveTab('hotels')}
                 >
-                  <Building2 size={18} />
-                  <span>Hotels</span>
+                  <div className="tab-discount-tag-pill">Flat 80% Off</div>
+                  <div className="tab-icon-peach-circle">
+                    <svg viewBox="0 0 48 48" width="30" height="30" className="tab-svg-art">
+                      <rect x="12" y="12" width="24" height="28" rx="2" fill="#0284c7" />
+                      <rect x="16" y="16" width="4" height="4" fill="#ffffff" />
+                      <rect x="24" y="16" width="4" height="4" fill="#ffffff" />
+                      <rect x="16" y="24" width="4" height="4" fill="#ffffff" />
+                      <rect x="24" y="24" width="4" height="4" fill="#ffffff" />
+                      <rect x="16" y="32" width="4" height="4" fill="#ffffff" />
+                      <rect x="24" y="32" width="4" height="4" fill="#ffffff" />
+                      <path d="M20 40 L28 40 L28 34 L20 34 Z" fill="#0f172a" />
+                      <path d="M36 20 L42 24 L42 40 L36 40 Z" fill="#38bdf8" />
+                    </svg>
+                  </div>
+                  <span className="tab-label-text">Hotels</span>
+                  {activeTab === 'hotels' && <div className="tab-active-indicator"></div>}
                 </button>
-                <button
-                  type="button"
-                  className={`hero-tab-btn ${activeTab === 'bus' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('bus')}
-                >
-                  <Bus size={18} />
-                  <span>Bus</span>
-                </button>
+
+                {/* 3. Railway / Trains */}
                 <button
                   type="button"
                   className={`hero-tab-btn ${activeTab === 'railway' ? 'active' : ''}`}
                   onClick={() => setActiveTab('railway')}
                 >
-                  <Train size={18} />
-                  <span>Railway</span>
+                  <div className="tab-icon-peach-circle">
+                    <svg viewBox="0 0 48 48" width="30" height="30" className="tab-svg-art">
+                      <path d="M14 10 C14 8 16 6 24 6 C32 6 34 8 34 10 L36 34 C36 37 33 38 24 38 C15 38 12 37 12 34 Z" fill="#034ea2" />
+                      <rect x="16" y="12" width="16" height="10" rx="2" fill="#ffffff" />
+                      <path d="M16 12 L32 12 L32 18 L16 18 Z" fill="#38bdf8" />
+                      <circle cx="18" cy="28" r="2.5" fill="#f59e0b" />
+                      <circle cx="30" cy="28" r="2.5" fill="#f59e0b" />
+                      <rect x="20" y="26" width="8" height="4" rx="1" fill="#f97316" />
+                      <path d="M14 38 L10 44 M34 38 L38 44" stroke="#0f172a" strokeWidth="3" strokeLinecap="round" />
+                    </svg>
+                  </div>
+                  <span className="tab-label-text">Trains</span>
+                  {activeTab === 'railway' && <div className="tab-active-indicator"></div>}
+                </button>
+
+                {/* 4. Buses */}
+                <button
+                  type="button"
+                  className={`hero-tab-btn ${activeTab === 'bus' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('bus')}
+                >
+                  <div className="tab-icon-peach-circle">
+                    <svg viewBox="0 0 48 48" width="30" height="30" className="tab-svg-art">
+                      <path d="M12 10 C12 8 15 6 24 6 C33 6 36 8 36 10 L38 34 C38 37 35 38 24 38 C13 38 10 37 10 34 Z" fill="#0284c7" />
+                      <rect x="14" y="12" width="20" height="12" rx="2" fill="#ffffff" />
+                      <path d="M14 12 L34 12 L34 19 L14 19 Z" fill="#38bdf8" />
+                      <circle cx="16" cy="30" r="2.5" fill="#f97316" />
+                      <circle cx="32" cy="30" r="2.5" fill="#f97316" />
+                      <rect x="19" y="28" width="10" height="4" rx="1" fill="#ffffff" />
+                      <circle cx="13" cy="38" r="3" fill="#0f172a" />
+                      <circle cx="35" cy="38" r="3" fill="#0f172a" />
+                    </svg>
+                  </div>
+                  <span className="tab-label-text">Buses</span>
+                  {activeTab === 'bus' && <div className="tab-active-indicator"></div>}
                 </button>
               </div>
 
@@ -106,6 +160,12 @@ export default function HomePage() {
 
       {/* Special Offers Section with Bank Offers Carousel & Campaign Banner (Image 2 Style) */}
       <SpecialOffersSection />
+
+      {/* Popular Domestic Airlines Strip (Screenshot 2 Style) */}
+      <PopularAirlines />
+
+      {/* Trending Flight Routes Grid (Screenshot 3 Style) */}
+      <TrendingFlightRoutes />
 
       {/* Trending Destinations with India & International Tabs (Image 4 Style) */}
       <TrendingDestinations />
