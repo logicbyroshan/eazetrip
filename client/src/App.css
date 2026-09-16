@@ -11414,5 +11414,215 @@ input[type="radio"]:focus-visible {
   }
 }
 
+/* ==========================================================================
+   PROFILE TRIPS & BOOKINGS TAB STYLING
+   ========================================================================== */
+.logout-head-btn {
+  background: #fef2f2 !important;
+  color: #dc2626 !important;
+  border-color: #fecaca !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.logout-head-btn:hover {
+  background: #fee2e2 !important;
+  color: #b91c1c !important;
+  border-color: #fca5a5 !important;
+}
+
+.profile-trip-filter-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.trip-cat-chip {
+  background: #f8fafc;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Outfit', sans-serif;
+}
+
+.trip-cat-chip:hover {
+  background: #eff6ff;
+  color: #034ea2;
+  border-color: #bfdbfe;
+}
+
+.trip-cat-chip.active {
+  background: #034ea2;
+  color: #ffffff;
+  border-color: #034ea2;
+  box-shadow: 0 2px 8px rgba(3, 78, 162, 0.25);
+}
+
+.profile-bookings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.profile-booking-item-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px 20px;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+}
+
+.profile-booking-item-card:hover {
+  border-color: #bfdbfe;
+  box-shadow: 0 6px 20px rgba(3, 78, 162, 0.06);
+  transform: translateY(-1px);
+}
+
+.booking-item-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+  min-width: 0;
+}
+
+.type-badge-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.booking-item-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.booking-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+
+.booking-title-row strong {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.status-pill-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  text-transform: uppercase;
+}
+
+.status-pill-badge.confirmed {
+  background: #f0fdf4;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.status-pill-badge.cancelled {
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.booking-meta-chips {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  font-size: 0.82rem;
+  color: #64748b;
+}
+
+.booking-meta-chips span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.booking-item-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-shrink: 0;
+}
+
+.booking-amount-box {
+  text-align: right;
+}
+
+.booking-amount-box small {
+  display: block;
+  font-size: 0.72rem;
+  color: #64748b;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.booking-amount-box strong {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #034ea2;
+  font-family: 'Outfit', sans-serif;
+}
+
+.view-ticket-btn {
+  background: #eff6ff;
+  color: #034ea2;
+  border: 1px solid #bfdbfe;
+  font-size: 0.84rem;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Outfit', sans-serif;
+}
+
+.view-ticket-btn:hover {
+  background: #034ea2;
+  color: #ffffff;
+  border-color: #034ea2;
+  box-shadow: 0 4px 12px rgba(3, 78, 162, 0.2);
+}
+
+@media (max-width: 768px) {
+  .profile-booking-item-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .booking-item-right {
+    width: 100%;
+    justify-content: space-between;
+    border-top: 1px dashed #e2e8f0;
+    padding-top: 12px;
+  }
+}
+
+
 
 

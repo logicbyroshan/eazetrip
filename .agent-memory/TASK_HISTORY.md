@@ -4,6 +4,25 @@ This file logs meaningful agent tasks, architectural milestones, and fixes chron
 
 ---
 
+### Task: User Profile & Trip Management Dashboard Enhancement
+* **Date**: 2026-09-16
+* **Reason**: User requested deep verification and audit of post-login / account creation user profile management, past trips, and user data management.
+* **Branch / PR**: `feature/profile-and-trip-management-audit` (PR pending merge).
+* **Files Affected**:
+  - `client/src/pages/ProfilePage.jsx`
+  - `client/src/App.css`
+  - `CHANGELOG.md`
+  - `.agent-memory/CURRENT_STATE.md`
+  - `.agent-memory/TASK_HISTORY.md`
+* **What Changed**:
+  - Added dynamic "My Trips & Bookings" hub to `/profile` with type filters (`all`, `flight`, `hotel`, `bus`, `train`, `holiday`).
+  - Added PNR badges, travel date & route display, and instant **View E-Ticket** modal triggers.
+  - Linked top summary stats (Total Bookings, Trips Confirmed, EazeRewards balance, Saved Travellers) directly to active booking context state.
+  - Added user state synchronization on authentication changes and header logout button.
+* **Testing Performed**: Verified via browser subagent with screenshot captures, all 35 backend tests passing (`npm test`), Vite production build clean (`npm run build`).
+
+---
+
 ### Task: Google One-Tap Floating Prompt & Authentication Suite Verification
 * **Date**: 2026-09-16
 * **Reason**: User requested verification of full authentication suite and implementation of Google One-Tap landing prompt card in top-right corner.

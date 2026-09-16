@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useBooking } from '../context/BookingContext';
 import {
@@ -13,18 +13,28 @@ import {
   Luggage,
   Sparkles,
   Plane,
-  Heart
+  Building2,
+  Bus,
+  Train,
+  Palmtree,
+  Heart,
+  LogOut,
+  FileText,
+  Calendar,
+  Clock,
+  ArrowRight
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function ProfilePage() {
-  const { user, updateProfile, openLoginModal, isAuthenticated } = useAuth();
-  const { showToast } = useBooking();
+  const { user, updateProfile, openLoginModal, isAuthenticated, logout } = useAuth();
+  const { bookings, openTicketModal, showToast } = useBooking();
 
-  const [activeTab, setActiveTab] = useState('personal'); // personal | travellers | preferences
+  const [activeTab, setActiveTab] = useState('trips'); // 'trips' | 'personal' | 'travellers' | 'preferences'
+  const [tripFilter, setTripFilter] = useState('all'); // 'all' | 'flight' | 'hotel' | 'bus' | 'train' | 'holiday'
 
-  const [name, setName] = useState(user?.name || 'Rohit Sharma');
-  const [email, setEmail] = useState(user?.email || 'rohit.sharma@example.com');
+  const [name, setName] = useState(user?.name || 'Traveler');
+  const [email, setEmail] = useState(user?.email || 'traveler@eazetrip.com');
   const [phone, setPhone] = useState(user?.phone || '+91 9876543210');
   const [city, setCity] = useState('Mumbai');
   const [state, setState] = useState('Maharashtra');
@@ -33,6 +43,14 @@ export default function ProfilePage() {
   const [seatPref, setSeatPref] = useState('Window');
   const [mealPref, setMealPref] = useState('Vegetarian');
   const [frequentFlyer, setFrequentFlyer] = useState('AI-994821');
+
+  useEffect(() => {
+    if (user) {
+      if (user.name) setName(user.name);
+      if (user.email) setEmail(user.email);
+      if (user.phone) setPhone(user.phone);
+    }
+  }, [user]);
 
   const [savedTravellers, setSavedTravellers] = useState(() => {
     try {
@@ -119,6 +137,20 @@ export default function ProfilePage() {
     showToast('Traveller removed.');
   };
 
+  const getTypeIcon = (type) => {
+    if (type === 'flight') return <Plane size={18} color="#034ea2" />;
+    if (type === 'hotel') return <Building2 size={18} color="#0097a7" />;
+    if (type === 'bus') return <Bus size={18} color="#ea580c" />;
+    if (type === 'holiday') return <Palmtree size={18} color="#16a34a" />;
+    return <Train size={18} color="#7c3aed" />;
+  };
+
+  const confirmedCount = bookings.filter((b) => b.status === 'Confirmed').length;
+  const filteredBookings = bookings.filter((b) => {
+    if (tripFilter === 'all') return true;
+    return b.type === tripFilter;
+  });
+
   return (
     <div className="container profile-page-wrap">
       <div className="page-shell">
@@ -146,18 +178,23 @@ export default function ProfilePage() {
                 </span>
               </div>
               <p className="profile-meta-sub">
-                Member since {user?.memberSince || '2024'} • Verified Traveler • EazeTrip Rewards
+                Member since {user?.memberSince || '2024'} • {email} • {phone}
               </p>
             </div>
           </div>
 
           <div className="profile-quick-actions">
             <Link to="/manage-bookings" className="profile-head-btn">
-              <Luggage size={15} /> My Bookings
+              <Luggage size={15} /> All Bookings
             </Link>
-            <Link to="/payment" className="profile-head-btn">
-              Make Payment
-            </Link>
+            <button
+              type="button"
+              className="profile-head-btn logout-head-btn"
+              onClick={logout}
+              title="Sign Out of Account"
+            >
+              <LogOut size={15} /> Logout
+            </button>
           </div>
         </div>
 
@@ -168,7 +205,7 @@ export default function ProfilePage() {
               <Plane size={20} />
             </div>
             <div>
-              <strong>14</strong>
+              <strong>{bookings.length}</strong>
               <small>Total Bookings</small>
             </div>
           </div>
@@ -178,8 +215,8 @@ export default function ProfilePage() {
               <CheckCircle2 size={20} />
             </div>
             <div>
-              <strong>12</strong>
-              <small>Trips Completed</small>
+              <strong>{confirmedCount}</strong>
+              <small>Trips Confirmed</small>
             </div>
           </div>
 
@@ -188,7 +225,7 @@ export default function ProfilePage() {
               <Sparkles size={20} />
             </div>
             <div>
-              <strong>2,450 pts</strong>
+              <strong>{(confirmedCount * 250 + 1200).toLocaleString('en-IN')} pts</strong>
               <small>EazeRewards Balance</small>
             </div>
           </div>
@@ -208,6 +245,14 @@ export default function ProfilePage() {
         <div className="profile-tabs-strip mt-4">
           <button
             type="button"
+            className={`profile-nav-tab ${activeTab === 'trips' ? 'active' : ''}`}
+            onClick={() => setActiveTab('trips')}
+          >
+            <Luggage size={16} />
+            <span>My Trips & Bookings ({bookings.length})</span>
+          </button>
+          <button
+            type="button"
             className={`profile-nav-tab ${activeTab === 'personal' ? 'active' : ''}`}
             onClick={() => setActiveTab('personal')}
           >
@@ -219,7 +264,7 @@ export default function ProfilePage() {
             className={`profile-nav-tab ${activeTab === 'travellers' ? 'active' : ''}`}
             onClick={() => setActiveTab('travellers')}
           >
-            <Luggage size={16} />
+            <User size={16} />
             <span>Saved Travellers ({savedTravellers.length})</span>
           </button>
           <button
@@ -231,6 +276,81 @@ export default function ProfilePage() {
             <span>Travel Preferences</span>
           </button>
         </div>
+
+        {/* Tab 0: Trips & Bookings */}
+        {activeTab === 'trips' && (
+          <div className="content-card form-card mt-3">
+            <div className="section-title-wrap flex-between-center mb-3">
+              <div>
+                <h2>Recent Trips & Active Reservations</h2>
+                <p>Track your confirmed flights, hotels, trains, and bus tickets</p>
+              </div>
+              <Link to="/manage-bookings" className="secondary-btn small flex-align-center gap-1">
+                Full Management Hub <ArrowRight size={14} />
+              </Link>
+            </div>
+
+            {/* Filter Pills */}
+            <div className="profile-trip-filter-row mb-3">
+              {['all', 'flight', 'hotel', 'bus', 'train', 'holiday'].map((cat) => (
+                <button
+                  key={cat}
+                  type="button"
+                  className={`trip-cat-chip ${tripFilter === cat ? 'active' : ''}`}
+                  onClick={() => setTripFilter(cat)}
+                >
+                  {cat.toUpperCase()}
+                </button>
+              ))}
+            </div>
+
+            {filteredBookings.length === 0 ? (
+              <div className="empty-state-card text-center py-4">
+                <p>No {tripFilter !== 'all' ? tripFilter : ''} bookings found.</p>
+                <Link to="/" className="primary-btn small mt-2 inline-block">
+                  Book a New Trip →
+                </Link>
+              </div>
+            ) : (
+              <div className="profile-bookings-list">
+                {filteredBookings.map((b) => (
+                  <div key={b.id} className="profile-booking-item-card">
+                    <div className="booking-item-left">
+                      <div className="type-badge-icon">{getTypeIcon(b.type)}</div>
+                      <div className="booking-item-details">
+                        <div className="booking-title-row">
+                          <strong>{b.title}</strong>
+                          <span className={`status-pill-badge ${b.status?.toLowerCase()}`}>
+                            {b.status === 'Confirmed' ? '✓ Confirmed' : b.status}
+                          </span>
+                        </div>
+                        <div className="booking-meta-chips">
+                          <span><Calendar size={13} /> {b.date}</span>
+                          <span><strong>PNR:</strong> {b.pnr || b.bookingRef || b.id}</span>
+                          {b.passengers?.[0]?.name && <span><strong>Lead:</strong> {b.passengers[0].name}</span>}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="booking-item-right">
+                      <div className="booking-amount-box">
+                        <small>Total Paid</small>
+                        <strong>₹{(b.totalAmount || 4999).toLocaleString('en-IN')}</strong>
+                      </div>
+                      <button
+                        type="button"
+                        className="view-ticket-btn flex-align-center gap-1"
+                        onClick={() => openTicketModal(b)}
+                      >
+                        <FileText size={14} /> View E-Ticket
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Tab 1: Personal Information Form */}
         {activeTab === 'personal' && (
