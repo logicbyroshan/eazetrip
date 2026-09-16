@@ -13,6 +13,7 @@ try {
 
 const mockStore = require('./data/mockStore');
 const notificationService = require('./services/notificationService');
+const supportService = require('./services/supportService');
 const { securityHeaders, rateLimit, sanitizeInput } = require('./middleware/security');
 const {
   validateLogin,
@@ -881,6 +882,142 @@ app.put('/api/notifications/preferences', (req, res) => {
     success: true,
     message: 'Notification channel preferences saved successfully',
     data: notificationService.userPreferences[userId]
+  });
+});
+
+// ==========================================
+// HELPDESK & PROBLEM MESSAGING SUPPORT API
+// ==========================================
+
+// Create new problem / support ticket
+app.post('/api/support/tickets', (req, res) => {
+  const {
+    userId = 'USR-1',
+    pnr = '',
+    category = 'General Inquiry',
+    subject = '',
+    description = '',
+    name = 'Valued Traveler',
+    email = 'traveler@eazetrip.com',
+    phone = '+91 98765 43210',
+    urgency = 'Normal'
+  } = req.body || {};
+
+  if (!description.trim()) {
+    return res.status(400).json({ success: false, error: 'Problem description is required' });
+  }
+
+  const ticket = supportService.createTicket({
+    userId,
+    pnr,
+    category,
+    subject,
+    description,
+    name,
+    email,
+    phone,
+    urgency
+  });
+
+  // Automatically enqueue acknowledgment notification
+  try {
+    notificationService.enqueueNotification({
+      userId,
+      channels: ['in_app', 'email', 'whatsapp'],
+      template: 'custom',
+      data: {
+        name,
+        email,
+        phone,
+        message: `Support Ticket #${ticket.id} (${category}) has been logged. Senior Concierge Specialist assigned with ${urgency} priority. Response within 15 minutes.`
+      },
+      priority: urgency === 'Emergency' ? 'high' : 'medium'
+    });
+  } catch (e) {
+    console.warn('[Support Ticket Notification]:', e.message);
+  }
+
+  res.status(201).json({
+    success: true,
+    message: `Support ticket #${ticket.id} created successfully! Our team will respond shortly.`,
+    data: ticket
+  });
+});
+
+// List user support tickets
+app.get('/api/support/tickets', (req, res) => {
+  const userId = toStr(req.query.userId) || 'USR-1';
+  const email = toStr(req.query.email);
+  const pnr = toStr(req.query.pnr);
+  const status = toStr(req.query.status);
+  const category = toStr(req.query.category);
+
+  const tickets = supportService.getTickets({ userId, email, pnr, status, category });
+
+  res.json({
+    success: true,
+    count: tickets.length,
+    data: tickets
+  });
+});
+
+// Get single ticket by ID
+app.get('/api/support/tickets/:id', (req, res) => {
+  const ticket = supportService.getTicketById(req.params.id);
+  if (!ticket) {
+    return res.status(404).json({ success: false, error: 'Support ticket not found' });
+  }
+  res.json({ success: true, data: ticket });
+});
+
+// Reply / message in ticket thread
+app.post('/api/support/tickets/:id/message', (req, res) => {
+  const { sender = 'You', text = '', role = 'user' } = req.body || {};
+  if (!text.trim()) {
+    return res.status(400).json({ success: false, error: 'Message text is required' });
+  }
+
+  const newMsg = supportService.addMessage(req.params.id, sender, text, role);
+  if (!newMsg) {
+    return res.status(404).json({ success: false, error: 'Support ticket not found' });
+  }
+
+  res.status(201).json({
+    success: true,
+    message: 'Message added to ticket conversation',
+    data: newMsg
+  });
+});
+
+// Request 5-minute instant callback
+app.post('/api/support/callback', (req, res) => {
+  const { name, phone, topic, pnr } = req.body || {};
+  if (!phone || String(phone).trim().length < 8) {
+    return res.status(400).json({ success: false, error: 'Valid phone number is required for callback' });
+  }
+
+  const callbackReq = supportService.createCallback({ name, phone, topic, pnr });
+
+  res.status(201).json({
+    success: true,
+    message: 'Instant callback requested! A dedicated support specialist will call you within 5 minutes.',
+    data: callbackReq
+  });
+});
+
+// Direct in-app mail to support team
+app.post('/api/support/direct-mail', (req, res) => {
+  const { name, email, phone, subject, message, pnr } = req.body || {};
+  if (!message || !email) {
+    return res.status(400).json({ success: false, error: 'Email and message content are required' });
+  }
+
+  const mailRecord = supportService.sendDirectMail({ name, email, phone, subject, message, pnr });
+
+  res.status(201).json({
+    success: true,
+    message: 'Direct email dispatched to support@eazetrip.com. Response will be delivered to your inbox.',
+    data: mailRecord
   });
 });
 

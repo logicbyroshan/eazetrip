@@ -4,6 +4,33 @@ This file logs meaningful agent tasks, architectural milestones, and fixes chron
 
 ---
 
+### Task: 24/7 Concierge Help Desk, Problem Escalation & Multi-Channel Connect Hub
+* **Date**: 2026-09-16
+* **Reason**: User requested a comprehensive 24/7 help desk messaging system where travelers can directly report their problem, connect via official WhatsApp with pre-filled details, send direct support emails, request a 5-minute priority call-back, and track support ticket conversations in real time.
+* **Branch / PR**: `feature/help-desk-messaging-and-support-hub` (PR pending merge).
+* **Files Affected**:
+  - `server/services/supportService.js`
+  - `server/index.js`
+  - `tests/server.test.js`
+  - `client/src/services/api.js`
+  - `client/src/components/common/HelpDeskWidget.jsx`
+  - `client/src/pages/ContactPage.jsx`
+  - `client/src/App.jsx`
+  - `client/src/App.css`
+  - `CHANGELOG.md`
+  - `.agent-memory/CURRENT_STATE.md`
+  - `.agent-memory/TASK_HISTORY.md`
+* **What Changed**:
+  - Built full-stack support service (`supportService.js`) handling problem tickets, conversation replies, 5-minute callback queue, and direct mail dispatches.
+  - Implemented REST API routes with input validation and rate limiting (`/api/support/tickets`, `/api/support/callback`, `/api/support/direct-mail`).
+  - Added multi-channel auto-acknowledgment triggering instant In-App, Email, and WhatsApp notifications upon ticket creation via `notificationService`.
+  - Built global floating 24/7 Help Desk drawer widget (`HelpDeskWidget.jsx`) featuring Report Problem form, Direct WhatsApp connector (`+91 8269054018`), Direct Mail composer (`support@eazetrip.com`), 5-minute callback form, and Track My Tickets live chat thread.
+  - Enhanced `/contact` page with multi-mode switcher (Inquiry, Report Issue Ticket, Priority 5-Min Callback).
+  - Added 5 new automated tests to `tests/server.test.js` (45 / 45 tests passing).
+* **Testing Performed**: Automated test suite (45/45 tests passing), Vite production build clean, browser subagent end-to-end verified ticket filing, WhatsApp link generation, and ticket thread tracking.
+
+---
+
 ### Task: Smart Multi-Channel Notification Engine & Resilient Queue / DLQ Architecture
 * **Date**: 2026-09-16
 * **Reason**: User requested deep audit & implementation of notification system across Email and WhatsApp with personalized campaigns (e.g. 3-month inactivity holiday offer), exponential backoff retries, and Dead-Letter Queue (DLQ) recovery.

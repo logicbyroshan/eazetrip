@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.6.0] - 2026-09-16
+
+### 24/7 Concierge Help Desk, Problem Escalation & Multi-Channel Connect Hub
+
+#### Added
+- **Global Floating Help Desk Drawer (`HelpDeskWidget.jsx`)**: Added a 24/7 floating concierge launcher (`🎧 24/7 Help Desk`) accessible across the entire application with a glassmorphic drawer modal.
+- **Direct Problem Reporting & Instant Ticket Generation**: Travelers can submit issues with problem categorization (`Booking Issue`, `Cancellation & Refund`, `Flight Reschedule / Delay`, `Payment / Billing`, `Special Assistance`), urgency tagging (`Urgent (Within 1 hr)`, `High (Within 3 hrs)`, `Normal (Within 24 hrs)`), linked PNR code, and automatic ticket assignment (`#TKT-XXXXX`).
+- **1-Click Official WhatsApp Connect**: Embedded WhatsApp chat launcher (`+91 8269054018`) with auto-generated contextual message pre-filling the traveler's name, linked PNR, and problem description directly into `https://wa.me/918269054018`.
+- **Direct Email Us Composer & Client Launch**: Integrated in-app direct email composer dispatching to `support@eazetrip.com` alongside a 1-click external email client launcher (`mailto:support@eazetrip.com`).
+- **5-Minute Priority Call-Back Queue**: Priority voice assistance request channel that places travelers in the concierge callback queue with a guaranteed 5-minute SLA.
+- **Interactive Ticket Tracking & Live Conversation Thread**: Built a real-time ticket viewer allowing travelers to track ticket status (`Open`, `In Progress`, `Resolved`), assigned concierge specialist, and send follow-up replies in chat bubble threads.
+- **Multi-Channel Auto-Acknowledgment**: Every filed ticket automatically queues acknowledgment notifications across In-App, Email, and WhatsApp via `notificationService`.
+- **Contact Page (`ContactPage.jsx`) Mode Switcher**: Integrated seamless switching between Inquiry Mode, Report Issue Ticket Mode, and Priority 5-Min Callback Mode.
+- **Support Backend Service & REST API**: Implemented `server/services/supportService.js` with endpoints:
+  - `POST /api/support/tickets`
+  - `GET /api/support/tickets` & `GET /api/support/tickets/:id`
+  - `POST /api/support/tickets/:id/message`
+  - `POST /api/support/callback`
+  - `POST /api/support/direct-mail`
+- **Automated Test Suite Expansion**: Added 5 new automated tests (Tests 41–45) in `server.test.js` (45 / 45 tests passing with 100% success rate).
+
+---
+
 ## [1.5.0] - 2026-09-16
 
 ### Smart Multi-Channel Notification Engine & Resilient Delivery Queue with Dead-Letter Recovery (DLQ)

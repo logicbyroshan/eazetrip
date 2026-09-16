@@ -276,5 +276,51 @@ export const api = {
       body: JSON.stringify({ userId, preferences })
     });
     return res;
+  },
+
+  // Help Desk & Problem Messaging Support System
+  createSupportTicket: async (ticketPayload) => {
+    const res = await request('/api/support/tickets', {
+      method: 'POST',
+      body: JSON.stringify(ticketPayload)
+    });
+    return res;
+  },
+
+  getSupportTickets: async (params = {}) => {
+    const query = new URLSearchParams(params).toString();
+    const res = await request(`/api/support/tickets${query ? `?${query}` : ''}`);
+    if (res.ok && res.data) return res.data;
+    return { success: true, count: 0, data: [] };
+  },
+
+  getSupportTicketById: async (id) => {
+    const res = await request(`/api/support/tickets/${id}`);
+    if (res.ok && res.data) return res.data;
+    return null;
+  },
+
+  addTicketMessage: async (ticketId, messagePayload) => {
+    const res = await request(`/api/support/tickets/${ticketId}/message`, {
+      method: 'POST',
+      body: JSON.stringify(messagePayload)
+    });
+    return res;
+  },
+
+  requestCallback: async (callbackPayload) => {
+    const res = await request('/api/support/callback', {
+      method: 'POST',
+      body: JSON.stringify(callbackPayload)
+    });
+    return res;
+  },
+
+  sendDirectSupportMail: async (mailPayload) => {
+    const res = await request('/api/support/direct-mail', {
+      method: 'POST',
+      body: JSON.stringify(mailPayload)
+    });
+    return res;
   }
 };
