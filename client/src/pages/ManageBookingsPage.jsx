@@ -24,7 +24,8 @@ import {
   ChevronRight,
   ExternalLink,
   Receipt,
-  RotateCcw
+  RotateCcw,
+  Compass
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -191,18 +192,20 @@ export default function ManageBookingsPage() {
         <div className="bookings-hero-banner">
           <div className="bookings-banner-left">
             <div className="banner-tag">
-              <Luggage size={16} />
+              <Luggage size={15} />
               <span>ITINERARY & RESERVATIONS HUB</span>
             </div>
             <h1>{firstName ? `Manage Your Bookings, ${firstName}` : 'Manage Your Bookings'}</h1>
             <p>{firstName ? `Welcome back, ${firstName}. Access your confirmed flight tickets, hotel vouchers, train PNRs, and track instant refund disbursements.` : 'Access your confirmed flight tickets, hotel vouchers, train PNRs, and track instant refund disbursements.'}</p>
           </div>
           <div className="bookings-banner-right">
-            <Link to="/cancellation-refund" className="secondary-btn me-2">
-              <Receipt size={16} /> Refund Status Hub
+            <Link to="/cancellation-refund" className="banner-action-btn secondary">
+              <Receipt size={16} />
+              <span>Refund Status Hub</span>
             </Link>
-            <Link to="/" className="primary-btn">
-              + Plan New Journey
+            <Link to="/" className="banner-action-btn primary">
+              <Compass size={16} />
+              <span>Plan New Journey</span>
             </Link>
           </div>
         </div>
@@ -250,7 +253,7 @@ export default function ManageBookingsPage() {
                 <Search size={16} />
                 <input
                   type="text"
-                  placeholder="Search by Booking ID, PNR, City..."
+                  placeholder="Search by ID, PNR, City..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />

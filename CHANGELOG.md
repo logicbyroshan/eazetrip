@@ -7,6 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.1.7] - 2026-09-16
+
+### Manage Bookings Alignment & Enterprise About Us Showcase
+
+#### Manage Bookings Layout & Alignment Fixes (`client/src/pages/ManageBookingsPage.jsx`, `client/src/App.css`)
+- **Action Buttons Alignment**:
+  - Rebuilt the hero banner action buttons (`Refund Status Hub` and `Plan New Journey`) using unified `.banner-action-btn` classes with consistent 42px height, 18px horizontal padding, 10px rounded corners, and balanced Lucide icons (`Receipt`, `Compass`).
+  - Added `.bookings-banner-right` flex wrapper (`display: flex; align-items: center; gap: 12px; flex-wrap: wrap;`) ensuring both buttons sit side-by-side with perfect geometry.
+- **Search & Filter Controls**:
+  - Shortened placeholder text to `"Search by ID, PNR, City..."` and increased search input width to `320px` in `App.css` to prevent text clipping across screen resolutions.
+
+#### Enterprise About Us Page Showcase (`client/src/pages/AboutPage.jsx`, `client/src/App.css`)
+- **Luxury Showcase Architecture**:
+  - Rebuilt `AboutPage.jsx` into a comprehensive 1200px corporate showcase featuring a gradient hero banner with ambient glow, mission statement, and direct CTA buttons (`Explore Flights & Holidays`, `24/7 Concierge Help Desk`).
+- **6 High-Contrast Stat Cards**:
+  - `1.2M+ Happy Travelers`, `450+ Airline & Bus Partners`, `15,000+ Verified Hotels & Stays`, `99.8% On-Time Ticketing SLA`, `< 15 Mins Concierge Response SLA`, and `4.9 / 5.0 Customer Trust Score`.
+- **Story & 5-Year Milestone Timeline**:
+  - Detailed narrative of EazeTrip's founding in 2022 to combat surge traps, accompanied by a 2022–2026 growth roadmap.
+- **6 Core Customer Pillars**:
+  - *Zero Hidden Surcharges*, *Zero Shield™ Instant UPI Refunds*, *24/7 Human-First Concierge*, *Live GDS & IRCTC Inventory*, *Eco-Conscious Travel Offsets*, and *Corporate & B2B Travel Desk*.
+- **Executive Leadership & National Presence**:
+  - 4 leadership profile cards (CEO, CTO, VP Alliances, Head of CX) and 4 office cards (HQ in MP, Mumbai, New Delhi, Bengaluru).
+- **Security & Compliance Accreditations**:
+  - *IATA Certified*, *IRCTC Authorized*, *256-Bit SSL Vault*, and *ISO 27001 Certified*.
+
+---
+
 ## [2.1.6] - 2026-09-16
 
 ### Dedicated 24/7 Help Desk Page & Floating Modal Formatting Overhaul

@@ -2,7 +2,7 @@
 
 ## 1. Release Baseline & Status
 * **Status**: Stable / Feature Complete / 100% Passing Tests
-* **Version**: `2.1.6`
+* **Version**: `2.1.7`
 * **Test Suite**: 62 / 62 automated tests passing (`npm test`).
 * **Client Build**: Clean Vite production build (`npm run build`).
 * **Active Branch**: `main`
