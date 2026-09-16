@@ -1072,7 +1072,7 @@ export default function ProfilePage() {
                 <div className="campaign-card featured-campaign">
                   <div className="campaign-badge">Recommended</div>
                   <div className="flex items-start gap-3 mb-3">
-                    <div className="campaign-icon-wrap bg-amber-100 text-amber-800">
+                    <div className="campaign-icon-wrap amber">
                       <Palmtree size={22} />
                     </div>
                     <div>
@@ -1080,7 +1080,7 @@ export default function ProfilePage() {
                         🌴 3-Month Inactivity Holiday Offer Campaign
                       </h4>
                       <p className="text-xs text-slate-600 mb-0">
-                        Sends a tailored vacation voucher (<strong>HOLIDAY25</strong> - 25% OFF) to customers who haven't taken a trip in over 90 days.
+                        Sends a tailored vacation voucher (<strong>HOLIDAY25</strong> — 25% OFF) to customers who haven't taken a trip in over 90 days.
                       </p>
                     </div>
                   </div>
@@ -1100,7 +1100,7 @@ export default function ProfilePage() {
                     </button>
                     <button
                       type="button"
-                      className="camp-btn preview-email"
+                      className="camp-btn preview-mail"
                       onClick={() =>
                         openPreview('reengagement_inactivity', 'email', {
                           monthsInactive: 3,
@@ -1134,7 +1134,7 @@ export default function ProfilePage() {
                 {/* Campaign 2: Instant Booking E-Ticket Delivery */}
                 <div className="campaign-card">
                   <div className="flex items-start gap-3 mb-3">
-                    <div className="campaign-icon-wrap bg-blue-100 text-blue-800">
+                    <div className="campaign-icon-wrap blue">
                       <Plane size={22} />
                     </div>
                     <div>
@@ -1166,7 +1166,7 @@ export default function ProfilePage() {
                     </button>
                     <button
                       type="button"
-                      className="camp-btn preview-email"
+                      className="camp-btn preview-mail"
                       onClick={() =>
                         openPreview('booking_confirmation', 'email', {
                           pnr: 'FL2775',
@@ -1208,7 +1208,7 @@ export default function ProfilePage() {
                 {/* Campaign 3: 24h Web Check-in Reminder */}
                 <div className="campaign-card">
                   <div className="flex items-start gap-3 mb-3">
-                    <div className="campaign-icon-wrap bg-purple-100 text-purple-800">
+                    <div className="campaign-icon-wrap purple">
                       <Clock size={22} />
                     </div>
                     <div>
@@ -1250,7 +1250,7 @@ export default function ProfilePage() {
                 {/* Campaign 4: Smart Price Drop Alert */}
                 <div className="campaign-card">
                   <div className="flex items-start gap-3 mb-3">
-                    <div className="campaign-icon-wrap bg-emerald-100 text-emerald-800">
+                    <div className="campaign-icon-wrap emerald">
                       <Zap size={22} />
                     </div>
                     <div>
@@ -1293,7 +1293,7 @@ export default function ProfilePage() {
 
             {/* Sub-Section 3: Resilient Delivery Queue & Dead-Letter Queue (DLQ) */}
             <div className="queue-monitor-section">
-              <div className="flex-between-center mb-3">
+              <div className="flex-between-center mb-3 flex-wrap gap-2">
                 <div>
                   <h3 className="text-base font-semibold text-slate-800 mb-1 flex items-center gap-2">
                     <RotateCw size={18} className="text-blue-600" />
@@ -1307,7 +1307,7 @@ export default function ProfilePage() {
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
-                    className="secondary-btn small text-amber-700 border-amber-300 bg-amber-50"
+                    className="secondary-btn small"
                     disabled={simulatingFail}
                     onClick={async () => {
                       setSimulatingFail(true);
@@ -1323,7 +1323,7 @@ export default function ProfilePage() {
                     }}
                     title="Simulate transient provider failure to test retry engine"
                   >
-                    <AlertOctagon size={13} /> Simulate Provider Glitch
+                    <AlertOctagon size={13} color="#ea580c" /> Simulate Provider Glitch
                   </button>
 
                   <button
@@ -1350,19 +1350,19 @@ export default function ProfilePage() {
                   <span className="q-metric-val">{queueStatus?.metrics?.totalHandled || 0}</span>
                   <span className="q-metric-label">Total Handled</span>
                 </div>
-                <div className="q-metric-box text-emerald-600">
-                  <span className="q-metric-val">{queueStatus?.metrics?.totalDelivered || 0}</span>
+                <div className="q-metric-box">
+                  <span className="q-metric-val text-emerald-600">{queueStatus?.metrics?.totalDelivered || 0}</span>
                   <span className="q-metric-label">Delivered Successfully</span>
                 </div>
-                <div className="q-metric-box text-blue-600">
-                  <span className="q-metric-val">{queueStatus?.metrics?.activePending || 0}</span>
+                <div className="q-metric-box">
+                  <span className="q-metric-val text-blue-600">{queueStatus?.metrics?.activePending || 0}</span>
                   <span className="q-metric-label">In Active Queue</span>
                 </div>
-                <div className="q-metric-box text-red-600">
-                  <span className="q-metric-val">{queueStatus?.metrics?.deadLetterQueueCount || 0}</span>
+                <div className="q-metric-box">
+                  <span className="q-metric-val text-red-600">{queueStatus?.metrics?.deadLetterQueueCount || 0}</span>
                   <span className="q-metric-label">Dead-Letter Queue (DLQ)</span>
                 </div>
-                <div className="q-metric-box text-slate-800">
+                <div className="q-metric-box">
                   <span className="q-metric-val">{queueStatus?.metrics?.successRatePercent || 100}%</span>
                   <span className="q-metric-label">Delivery Success Rate</span>
                 </div>
@@ -1372,20 +1372,20 @@ export default function ProfilePage() {
               <div className="dlq-table-wrapper">
                 <div className="dlq-table-header flex-between-center">
                   <div className="flex items-center gap-2">
-                    <AlertOctagon size={16} className="text-red-600" />
+                    <AlertOctagon size={16} color="#dc2626" />
                     <span className="font-semibold text-sm text-slate-800">
                       Dead-Letter Queue (Failed Messages Quarantined)
                     </span>
                   </div>
-                  <span className="text-xs text-slate-500">
+                  <span className="text-xs text-slate-500 font-semibold">
                     {queueStatus?.deadLetterQueue?.length || 0} items quarantined
                   </span>
                 </div>
 
                 {(!queueStatus?.deadLetterQueue || queueStatus.deadLetterQueue.length === 0) ? (
                   <div className="dlq-empty-state">
-                    <CheckCircle2 size={32} className="text-emerald-500 mb-2 mx-auto" />
-                    <p className="font-semibold text-slate-700 text-sm mb-0">Dead-Letter Queue is Clean</p>
+                    <CheckCircle2 size={32} color="#10b981" className="mb-2 mx-auto" />
+                    <p className="font-semibold text-slate-700 text-sm mb-1">Dead-Letter Queue is Clean</p>
                     <p className="text-xs text-slate-400 mb-0">Zero failed messages. All outbound notifications delivered smoothly.</p>
                   </div>
                 ) : (

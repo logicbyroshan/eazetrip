@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.1.0] - 2026-09-16
+
+### Legal Hub & Profile Communications UI/UX Consolidation
+
+#### Legal & Compliance Hub (`client/src/pages/TermsPage.jsx`, `client/src/pages/PrivacyPage.jsx`)
+- **Master Legal Design System & Layout**:
+  - Rebuilt Terms & Conditions (`/terms`), User Agreement (`/user-agreement`), and Privacy Policy (`/privacy`) into an enterprise-grade 2-column layout (`280px` sticky sidebar + structured document card).
+  - Integrated rich gradient hero banners with real-time clause search filter and Print Agreement action buttons.
+  - Added sticky Table of Contents navigation with smooth-scrolling section anchors.
+  - Structured all statutory clauses (Acceptance, User Eligibility, DGCA/IRCTC carrier rules, RBI Payment Tokenization, Zero Shield Cancellation, User Conduct, Grievance Officer SLA) with icons and highlight callouts.
+
+#### Profile Communications & Dead-Letter Queue Recovery (`client/src/pages/ProfilePage.jsx`)
+- **Unified Campaign & Queue Design Tokens**:
+  - Replaced ad-hoc utility classes with standardized design system components (`.campaign-card`, `.campaign-icon-wrap`, `.campaign-badge`, `.campaign-action-btn-row`, `.camp-btn`).
+  - Standardized micro-interaction buttons for WhatsApp preview, HTML Email preview, and queue dispatch.
+  - Refined the Dead-Letter Queue (DLQ) recovery monitor with consistent metric cards (`.q-metric-box`) and structured table layouts.
+
+---
+
 ## [2.0.0] - 2026-09-16
 
 ### Deep Production-Readiness Remediation (10/10 Industry Standard)
