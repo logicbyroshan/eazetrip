@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useBooking } from '../context/BookingContext';
+import { api } from '../services/api';
 import {
   Plane,
   Building2,
@@ -7,6 +8,7 @@ import {
   Train,
   Calendar,
   ShieldAlert,
+  ShieldCheck,
   FileText,
   Download,
   X,
@@ -14,29 +16,141 @@ import {
   Search,
   CheckCircle2,
   Clock,
-  ArrowRight
+  ArrowRight,
+  Zap,
+  CreditCard,
+  Building,
+  Smartphone,
+  ChevronRight,
+  ExternalLink,
+  Printer,
+  Receipt
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function ManageBookingsPage() {
-  const { bookings, openTicketModal, cancelBooking } = useBooking();
+  const { bookings, openTicketModal, requestCancellationRefund } = useBooking();
+  const navigate = useNavigate();
   const [filterType, setFilterType] = useState('all'); // all | flight | hotel | bus | train
   const [filterStatus, setFilterStatus] = useState('all'); // all | Confirmed | Cancelled
   const [searchQuery, setSearchQuery] = useState('');
-  const [cancellingBookingId, setCancellingBookingId] = useState(null);
+
+  // 3-Step Cancellation Modal States
+  const [selectedBookingForCancel, setSelectedBookingForCancel] = useState(null);
+  const [cancelStep, setCancelStep] = useState(1); // 1: Breakdown & Reason | 2: Payout Mode | 3: Confirmation
   const [cancelReason, setCancelReason] = useState('Travel plans changed');
+  const [customRemark, setCustomRemark] = useState('');
+  const [payoutMode, setPayoutMode] = useState('wallet'); // 'wallet' | 'original_mode' | 'bank_transfer' | 'upi'
+  const [bankAccount, setBankAccount] = useState('');
+  const [ifscCode, setIfscCode] = useState('');
+  const [upiId, setUpiId] = useState('');
+  const [selectedPax, setSelectedPax] = useState([]);
+  const [refundCalculation, setRefundCalculation] = useState(null);
+  const [isSubmittingRefund, setIsSubmittingRefund] = useState(false);
+  const [completedRefundResult, setCompletedRefundResult] = useState(null);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        setCancellingBookingId(null);
+      if (e.key === 'Escape' && !isSubmittingRefund) {
+        closeCancelModal();
       }
     };
-    if (cancellingBookingId) {
+    if (selectedBookingForCancel) {
       window.addEventListener('keydown', handleKeyDown);
     }
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [cancellingBookingId]);
+  }, [selectedBookingForCancel, isSubmittingRefund]);
+
+  // When a booking is selected for cancellation, calculate breakdown
+  const handleOpenCancelModal = async (booking) => {
+    setSelectedBookingForCancel(booking);
+    setCancelStep(1);
+    setCancelReason('Travel plans changed');
+    setCustomRemark('');
+    setPayoutMode('wallet');
+    setBankAccount('');
+    setIfscCode('');
+    setUpiId('');
+    setSelectedPax(booking.passengers?.map((p) => p.name) || []);
+    setCompletedRefundResult(null);
+
+    const gross = Number(booking.totalAmount || 3000);
+    const hasShield = Boolean(booking.hasShield || booking.travelAssurance);
+
+    // Call server calculate or compute locally
+    try {
+      const calc = await api.calculateRefund({
+        serviceType: booking.type || 'flight',
+        grossAmount: gross,
+        hoursBeforeDeparture: 48,
+        hasShield
+      });
+      if (calc) {
+        setRefundCalculation(calc);
+        return;
+      }
+    } catch {
+      // Fallback calculation
+    }
+
+    const penalty = hasShield ? 0 : Math.round(gross * 0.25);
+    setRefundCalculation({
+      serviceType: booking.type || 'flight',
+      grossAmount: gross,
+      hasShield,
+      penaltyAmount: penalty,
+      penaltyDescription: hasShield ? 'Zero Cancellation Shield Active' : 'Standard Operator Penalty Slab',
+      serviceFeeWaiver: 250,
+      netRefundAmount: Math.max(0, gross - penalty),
+      bonusWalletCredits: Math.round(gross * 0.05 + 100)
+    });
+  };
+
+  const closeCancelModal = () => {
+    setSelectedBookingForCancel(null);
+    setCancelStep(1);
+    setRefundCalculation(null);
+    setCompletedRefundResult(null);
+  };
+
+  const handleProceedToPayout = () => {
+    setCancelStep(2);
+  };
+
+  const handleConfirmRefundSubmission = async () => {
+    if (!selectedBookingForCancel || !refundCalculation) return;
+
+    setIsSubmittingRefund(true);
+    const refundPayload = {
+      bookingId: selectedBookingForCancel.id,
+      pnr: selectedBookingForCancel.pnr,
+      customerName: selectedBookingForCancel.passengers?.[0]?.name || 'Traveler',
+      customerEmail: selectedBookingForCancel.contactEmail || selectedBookingForCancel.email || 'traveler@eazetrip.com',
+      customerPhone: selectedBookingForCancel.contactPhone || selectedBookingForCancel.phone || '9876543210',
+      serviceType: selectedBookingForCancel.type || 'flight',
+      serviceTitle: selectedBookingForCancel.title || 'Trip Booking',
+      grossAmount: refundCalculation.grossAmount,
+      penaltyAmount: refundCalculation.penaltyAmount,
+      netRefundAmount: refundCalculation.netRefundAmount,
+      reason: `${cancelReason}${customRemark ? ` - ${customRemark}` : ''}`,
+      payoutMode,
+      bankAccount,
+      ifscCode,
+      upiId,
+      hasShield: refundCalculation.hasShield,
+      selectedPassengers: selectedPax
+    };
+
+    try {
+      const result = await requestCancellationRefund(refundPayload);
+      setCompletedRefundResult(result);
+      setCancelStep(3);
+    } catch (err) {
+      console.error('Refund submission failed', err);
+    } finally {
+      setIsSubmittingRefund(false);
+    }
+  };
 
   const filteredBookings = bookings.filter((b) => {
     if (filterType !== 'all' && b.type !== filterType) return false;
@@ -51,13 +165,6 @@ export default function ManageBookingsPage() {
     }
     return true;
   });
-
-  const handleConfirmCancel = () => {
-    if (cancellingBookingId) {
-      cancelBooking(cancellingBookingId, cancelReason);
-      setCancellingBookingId(null);
-    }
-  };
 
   const getTypeIcon = (type) => {
     if (type === 'flight') return <Plane size={20} color="#034ea2" />;
@@ -86,9 +193,12 @@ export default function ManageBookingsPage() {
               <span>ITINERARY & RESERVATIONS HUB</span>
             </div>
             <h1>Manage Your Bookings</h1>
-            <p>Access your confirmed flight tickets, hotel vouchers, train PNRs, and bus reservations in one place.</p>
+            <p>Access your confirmed flight tickets, hotel vouchers, train PNRs, and track instant refund disbursements.</p>
           </div>
           <div className="bookings-banner-right">
+            <Link to="/cancellation-refund" className="secondary-btn me-2">
+              <Receipt size={16} /> Refund Status Hub
+            </Link>
             <Link to="/" className="primary-btn">
               + Plan New Journey
             </Link>
@@ -106,7 +216,7 @@ export default function ManageBookingsPage() {
             <strong>{activeCount}</strong>
           </div>
           <div className="booking-stat-chip cancel-stat">
-            <span>Cancelled:</span>
+            <span>Cancelled & Refunded:</span>
             <strong>{cancelledCount}</strong>
           </div>
         </div>
@@ -223,8 +333,18 @@ export default function ManageBookingsPage() {
 
                       {isCancelled && (
                         <div className="refund-status-callout mt-2">
-                          <ShieldAlert size={14} />
-                          <span>Refund Status: <strong>{booking.refundStatus || 'Processing to original payment mode'}</strong></span>
+                          <ShieldAlert size={14} color="#ea580c" />
+                          <span>
+                            Refund Status: <strong>{booking.refundStatus || 'Processing to original payment mode'}</strong>
+                          </span>
+                          {booking.refundId && (
+                            <Link
+                              to={`/cancellation-refund?ref=${booking.refundId}`}
+                              className="refund-track-link-pill"
+                            >
+                              Track Refund #{booking.refundId} →
+                            </Link>
+                          )}
                         </div>
                       )}
                     </div>
@@ -246,14 +366,21 @@ export default function ManageBookingsPage() {
                           <span>View E-Ticket</span>
                         </button>
 
-                        {!isCancelled && (
+                        {!isCancelled ? (
                           <button
                             type="button"
                             className="cancel-trip-btn"
-                            onClick={() => setCancellingBookingId(booking.id)}
+                            onClick={() => handleOpenCancelModal(booking)}
                           >
-                            Cancel Booking
+                            Cancel & Refund
                           </button>
+                        ) : (
+                          <Link
+                            to={`/cancellation-refund?ref=${booking.refundId || booking.pnr || booking.id}`}
+                            className="track-refund-secondary-btn"
+                          >
+                            Track Live Refund
+                          </Link>
                         )}
                       </div>
                     </div>
@@ -264,18 +391,28 @@ export default function ManageBookingsPage() {
           </div>
         )}
 
-        {/* Cancellation Confirmation Modal */}
-        {cancellingBookingId && (
-          <div className="modal-overlay" onClick={() => setCancellingBookingId(null)}>
-            <div className="modal-container cancel-modal" onClick={(e) => e.stopPropagation()}>
-              <div className="modal-header-custom">
+        {/* 3-Step Cancellation & Refund Experience Modal */}
+        {selectedBookingForCancel && (
+          <div className="modal-overlay" onClick={closeCancelModal}>
+            <div
+              className="modal-container refund-wizard-modal"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Modal Stepper Header */}
+              <div className="refund-modal-header">
                 <div>
-                  <h3>Confirm Booking Cancellation</h3>
-                  <span className="sub-tagline">Booking Reference: {cancellingBookingId}</span>
+                  <div className="refund-modal-tag">
+                    <ShieldCheck size={16} />
+                    <span>TRANSPARENT REFUND GUARANTEE</span>
+                  </div>
+                  <h3>Cancel Booking & Initiate Refund</h3>
+                  <span className="refund-ref-sub">
+                    Booking ID: <strong>{selectedBookingForCancel.id}</strong> • PNR: <strong>{selectedBookingForCancel.pnr || 'N/A'}</strong>
+                  </span>
                 </div>
                 <button
                   className="modal-close-btn"
-                  onClick={() => setCancellingBookingId(null)}
+                  onClick={closeCancelModal}
                   type="button"
                   aria-label="Close modal"
                 >
@@ -283,46 +420,325 @@ export default function ManageBookingsPage() {
                 </button>
               </div>
 
-              <div className="cancel-modal-body p-4">
-                <div className="warning-callout">
-                  <ShieldAlert size={20} color="#dc2626" />
-                  <p>
-                    Are you sure you want to cancel this booking? Refund will be calculated as per operator cancellation rules and credited back to your original payment mode within 3-5 business days.
-                  </p>
+              {/* Step Tracker Indicator */}
+              <div className="refund-stepper-bar">
+                <div className={`refund-step-item ${cancelStep >= 1 ? 'active' : ''} ${cancelStep > 1 ? 'completed' : ''}`}>
+                  <span className="step-num">1</span>
+                  <span className="step-label">Penalty & Breakdown</span>
                 </div>
-
-                <div className="form-group mt-3">
-                  <label htmlFor="cancel-reason-select">Reason for Cancellation</label>
-                  <select
-                    id="cancel-reason-select"
-                    value={cancelReason}
-                    onChange={(e) => setCancelReason(e.target.value)}
-                    className="native-select"
-                  >
-                    <option value="Travel plans changed">Travel plans changed</option>
-                    <option value="Found better fare / dates">Found better fare / dates</option>
-                    <option value="Personal emergency">Personal emergency</option>
-                    <option value="Booked by mistake">Booked by mistake</option>
-                  </select>
+                <div className="step-divider-line"></div>
+                <div className={`refund-step-item ${cancelStep >= 2 ? 'active' : ''} ${cancelStep > 2 ? 'completed' : ''}`}>
+                  <span className="step-num">2</span>
+                  <span className="step-label">Payout Destination</span>
                 </div>
-
-                <div className="checkout-actions-row mt-4">
-                  <button
-                    type="button"
-                    className="secondary-btn"
-                    onClick={() => setCancellingBookingId(null)}
-                  >
-                    Keep Booking
-                  </button>
-                  <button
-                    type="button"
-                    className="danger-btn"
-                    onClick={handleConfirmCancel}
-                  >
-                    Confirm Cancellation & Refund
-                  </button>
+                <div className="step-divider-line"></div>
+                <div className={`refund-step-item ${cancelStep === 3 ? 'active completed' : ''}`}>
+                  <span className="step-num">3</span>
+                  <span className="step-label">Confirmation & Receipt</span>
                 </div>
               </div>
+
+              {/* Step 1: Breakdown & Reason */}
+              {cancelStep === 1 && refundCalculation && (
+                <div className="refund-modal-body">
+                  <div className="refund-summary-breakdown-card">
+                    <div className="breakdown-row">
+                      <span>Gross Booking Fare Paid:</span>
+                      <strong>₹{refundCalculation.grossAmount.toLocaleString('en-IN')}</strong>
+                    </div>
+
+                    <div className="breakdown-row text-muted">
+                      <span>
+                        Operator Cancellation Penalty:
+                        <small className="d-block text-xs text-secondary">{refundCalculation.penaltyDescription}</small>
+                      </span>
+                      <strong className={refundCalculation.penaltyAmount === 0 ? 'text-success' : 'text-danger'}>
+                        {refundCalculation.penaltyAmount === 0 ? '₹0 (Waived)' : `-₹${refundCalculation.penaltyAmount.toLocaleString('en-IN')}`}
+                      </strong>
+                    </div>
+
+                    <div className="breakdown-row text-muted">
+                      <span>EazeTrip Processing & Resolution Fee:</span>
+                      <strong className="text-success">₹0 (Free / Waived)</strong>
+                    </div>
+
+                    <div className="breakdown-divider"></div>
+
+                    <div className="breakdown-row highlight-net">
+                      <div>
+                        <span className="net-refund-title">Estimated Net Refund Amount</span>
+                        <small className="d-block text-xs text-muted">Directly credited with zero deduction surcharge</small>
+                      </div>
+                      <strong className="net-refund-price">₹{refundCalculation.netRefundAmount.toLocaleString('en-IN')}</strong>
+                    </div>
+                  </div>
+
+                  {refundCalculation.hasShield && (
+                    <div className="shield-active-callout mt-3">
+                      <ShieldCheck size={18} color="#10b981" />
+                      <span>
+                        <strong>Zero Cancellation Shield Protected</strong>: 100% of operator penalty waived.
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Reason for Cancellation */}
+                  <div className="form-group mt-3">
+                    <label htmlFor="cancel-reason-input">Reason for Cancellation</label>
+                    <select
+                      id="cancel-reason-input"
+                      value={cancelReason}
+                      onChange={(e) => setCancelReason(e.target.value)}
+                      className="native-select"
+                    >
+                      <option value="Travel plans changed">Travel plans changed</option>
+                      <option value="Found better fare / dates">Found better fare / alternative dates</option>
+                      <option value="Flight / Schedule rescheduled by airline">Flight rescheduled by airline</option>
+                      <option value="Personal emergency / Health reasons">Personal emergency / Health reasons</option>
+                      <option value="Booked duplicate ticket by mistake">Booked duplicate ticket by mistake</option>
+                    </select>
+                  </div>
+
+                  <div className="form-group mt-2">
+                    <label htmlFor="custom-remarks">Additional Notes (Optional)</label>
+                    <input
+                      id="custom-remarks"
+                      type="text"
+                      className="native-input"
+                      placeholder="e.g. Doctor's note available, baggage adjustment..."
+                      value={customRemark}
+                      onChange={(e) => setCustomRemark(e.target.value)}
+                    />
+                  </div>
+
+                  {/* Actions */}
+                  <div className="refund-actions-bar mt-4">
+                    <button type="button" className="secondary-btn" onClick={closeCancelModal}>
+                      Keep Booking
+                    </button>
+                    <button type="button" className="primary-btn" onClick={handleProceedToPayout}>
+                      Select Payout Method <ChevronRight size={16} />
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Step 2: Choose Payout Destination */}
+              {cancelStep === 2 && refundCalculation && (
+                <div className="refund-modal-body">
+                  <h4 className="payout-selection-heading">Where should we disburse your ₹{refundCalculation.netRefundAmount.toLocaleString('en-IN')} refund?</h4>
+                  <p className="payout-selection-sub">Choose your preferred payout destination for instant or standard disbursement.</p>
+
+                  <div className="payout-options-grid mt-3">
+                    {/* Option 1: Instant EazeWallet */}
+                    <div
+                      className={`payout-option-card ${payoutMode === 'wallet' ? 'selected' : ''}`}
+                      onClick={() => setPayoutMode('wallet')}
+                    >
+                      <div className="payout-card-radio">
+                        <input
+                          type="radio"
+                          name="payoutMode"
+                          checked={payoutMode === 'wallet'}
+                          onChange={() => setPayoutMode('wallet')}
+                        />
+                      </div>
+                      <div className="payout-card-icon wallet">
+                        <Zap size={22} />
+                      </div>
+                      <div className="payout-card-content">
+                        <div className="payout-title-row">
+                          <strong>Instant EazeWallet Credit</strong>
+                          <span className="instant-badge">⚡ 0-SECOND CREDIT</span>
+                        </div>
+                        <p>Immediate credit to your EazeTrip wallet balance with <strong>+₹{refundCalculation.bonusWalletCredits} Bonus Booking Voucher</strong>.</p>
+                      </div>
+                    </div>
+
+                    {/* Option 2: Original Mode */}
+                    <div
+                      className={`payout-option-card ${payoutMode === 'original_mode' ? 'selected' : ''}`}
+                      onClick={() => setPayoutMode('original_mode')}
+                    >
+                      <div className="payout-card-radio">
+                        <input
+                          type="radio"
+                          name="payoutMode"
+                          checked={payoutMode === 'original_mode'}
+                          onChange={() => setPayoutMode('original_mode')}
+                        />
+                      </div>
+                      <div className="payout-card-icon card">
+                        <CreditCard size={22} />
+                      </div>
+                      <div className="payout-card-content">
+                        <div className="payout-title-row">
+                          <strong>Original Payment Method</strong>
+                          <span className="standard-badge">24 - 48 HRS</span>
+                        </div>
+                        <p>Credited back to the original UPI ID, Credit/Debit Card, or Net Banking account used during booking.</p>
+                      </div>
+                    </div>
+
+                    {/* Option 3: Instant UPI */}
+                    <div
+                      className={`payout-option-card ${payoutMode === 'upi' ? 'selected' : ''}`}
+                      onClick={() => setPayoutMode('upi')}
+                    >
+                      <div className="payout-card-radio">
+                        <input
+                          type="radio"
+                          name="payoutMode"
+                          checked={payoutMode === 'upi'}
+                          onChange={() => setPayoutMode('upi')}
+                        />
+                      </div>
+                      <div className="payout-card-icon upi">
+                        <Smartphone size={22} />
+                      </div>
+                      <div className="payout-card-content">
+                        <div className="payout-title-row">
+                          <strong>Direct UPI Transfer</strong>
+                          <span className="instant-badge">2 - 6 HRS</span>
+                        </div>
+                        <p>Disbursed directly to your personal UPI Virtual Payment Address (VPA).</p>
+
+                        {payoutMode === 'upi' && (
+                          <div className="mt-2" onClick={(e) => e.stopPropagation()}>
+                            <input
+                              type="text"
+                              className="native-input"
+                              placeholder="Enter your UPI ID (e.g. mobile@okhdfcbank)"
+                              value={upiId}
+                              onChange={(e) => setUpiId(e.target.value)}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Option 4: Bank Transfer NEFT/IMPS */}
+                    <div
+                      className={`payout-option-card ${payoutMode === 'bank_transfer' ? 'selected' : ''}`}
+                      onClick={() => setPayoutMode('bank_transfer')}
+                    >
+                      <div className="payout-card-radio">
+                        <input
+                          type="radio"
+                          name="payoutMode"
+                          checked={payoutMode === 'bank_transfer'}
+                          onChange={() => setPayoutMode('bank_transfer')}
+                        />
+                      </div>
+                      <div className="payout-card-icon bank">
+                        <Building size={22} />
+                      </div>
+                      <div className="payout-card-content">
+                        <div className="payout-title-row">
+                          <strong>Direct Bank Account (NEFT / IMPS)</strong>
+                          <span className="standard-badge">1 - 2 BANKING DAYS</span>
+                        </div>
+                        <p>Direct electronic clearing into your savings or current bank account.</p>
+
+                        {payoutMode === 'bank_transfer' && (
+                          <div className="payout-nested-inputs mt-2" onClick={(e) => e.stopPropagation()}>
+                            <input
+                              type="text"
+                              className="native-input mb-2"
+                              placeholder="Bank Account Number"
+                              value={bankAccount}
+                              onChange={(e) => setBankAccount(e.target.value)}
+                            />
+                            <input
+                              type="text"
+                              className="native-input"
+                              placeholder="Bank IFSC Code (e.g. HDFC0000123)"
+                              value={ifscCode}
+                              onChange={(e) => setIfscCode(e.target.value.toUpperCase())}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="refund-actions-bar mt-4">
+                    <button type="button" className="secondary-btn" onClick={() => setCancelStep(1)}>
+                      Back to Breakdown
+                    </button>
+                    <button
+                      type="button"
+                      className="danger-btn"
+                      onClick={handleConfirmRefundSubmission}
+                      disabled={isSubmittingRefund}
+                    >
+                      {isSubmittingRefund ? 'Processing Cancellation...' : `Confirm Cancellation & Disburse ₹${refundCalculation.netRefundAmount.toLocaleString('en-IN')}`}
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Step 3: Confirmation & Receipt */}
+              {cancelStep === 3 && completedRefundResult && (
+                <div className="refund-modal-body text-center py-4">
+                  <div className="refund-success-icon-circle mx-auto mb-3">
+                    <CheckCircle2 size={48} color="#10b981" />
+                  </div>
+
+                  <h3>Cancellation Confirmed & Refund Disbursed!</h3>
+                  <p className="refund-success-lead">
+                    Your cancellation request has been recorded. Tracking Reference ID: <strong>{completedRefundResult.id}</strong>
+                  </p>
+
+                  <div className="refund-receipt-voucher-card text-start mt-4">
+                    <div className="voucher-header">
+                      <span className="voucher-badge">OFFICIAL REFUND CREDIT NOTE</span>
+                      <span className="voucher-status-pill">{completedRefundResult.status}</span>
+                    </div>
+
+                    <div className="voucher-details-grid mt-3">
+                      <div className="voucher-field">
+                        <span>Refund Tracking ID:</span>
+                        <strong>{completedRefundResult.id}</strong>
+                      </div>
+                      <div className="voucher-field">
+                        <span>Banking ARN / Reference:</span>
+                        <strong>{completedRefundResult.arnNumber || 'ARN-IND9928194821'}</strong>
+                      </div>
+                      <div className="voucher-field">
+                        <span>Booking Reference:</span>
+                        <strong>{completedRefundResult.bookingId} ({completedRefundResult.pnr || 'PNR'})</strong>
+                      </div>
+                      <div className="voucher-field">
+                        <span>Net Refund Disbursed:</span>
+                        <strong className="text-success font-bold">₹{Number(completedRefundResult.netRefundAmount || 0).toLocaleString('en-IN')}</strong>
+                      </div>
+                      <div className="voucher-field full-width">
+                        <span>Disbursement Channel:</span>
+                        <strong>{completedRefundResult.payoutDetails || 'Instant EazeWallet Credit'}</strong>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="refund-confirmation-actions mt-4">
+                    <button
+                      type="button"
+                      className="secondary-btn"
+                      onClick={() => window.print()}
+                    >
+                      <Printer size={16} /> Print Refund Receipt
+                    </button>
+                    <Link
+                      to={`/cancellation-refund?ref=${completedRefundResult.id}`}
+                      className="primary-btn"
+                      onClick={closeCancelModal}
+                    >
+                      Track Live Refund Status →
+                    </Link>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}

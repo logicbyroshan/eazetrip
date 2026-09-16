@@ -3,9 +3,12 @@ import { specialBankOffers, siteOffers } from '../data/siteData';
 import { Copy, ArrowRight, Sparkles, Check } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useBooking } from '../context/BookingContext';
+import { useAuth } from '../context/AuthContext';
 
 export default function OffersPage() {
   const { showToast } = useBooking();
+  const { user } = useAuth();
+  const firstName = user?.name ? user.name.split(' ')[0] : '';
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [copiedCode, setCopiedCode] = useState(null);
 
@@ -69,11 +72,13 @@ export default function OffersPage() {
           <div className="promo-banner-left">
             <div className="promo-badge-glow">
               <Sparkles size={16} />
-              <span>LIMITED TIME FESTIVE SALE</span>
+              <span>{firstName ? `EXCLUSIVE DEALS FOR ${firstName.toUpperCase()}` : 'LIMITED TIME FESTIVE SALE'}</span>
             </div>
-            <h1>Pack Your Journey — UP TO 65% OFF*</h1>
+            <h1>{firstName ? `Special Offers Selected for You, ${firstName}` : 'Pack Your Journey — UP TO 65% OFF*'}</h1>
             <p>
-              Unlock mega flight discounts, luxury hotel cashbacks, and flat bus & train fare cuts with official bank cards & exclusive coupon codes.
+              {firstName
+                ? `Enjoy member-exclusive fares, zero convenience fee booking bonuses, and instant bank card discounts for ${firstName}.`
+                : 'Unlock mega flight discounts, luxury hotel cashbacks, and flat bus & train fare cuts with official bank cards & exclusive coupon codes.'}
             </p>
           </div>
           <div className="promo-banner-right">

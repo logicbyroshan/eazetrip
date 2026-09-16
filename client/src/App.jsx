@@ -16,6 +16,7 @@ import GoogleOneTapPrompt from './components/auth/GoogleOneTapPrompt';
 import TicketModal from './components/checkout/TicketModal';
 import NotificationPreviewModal from './components/common/NotificationPreviewModal';
 import HelpDeskWidget from './components/common/HelpDeskWidget';
+import CookieConsentBanner from './components/common/CookieConsentBanner';
 
 import HomePage from './pages/HomePage';
 import FlightBookingPage from './pages/FlightBookingPage';
@@ -159,6 +160,7 @@ function AppContent() {
         <TicketModal />
         <NotificationPreviewModal />
         <HelpDeskWidget />
+        <CookieConsentBanner />
         <Toast />
       </div>
     </ErrorBoundary>

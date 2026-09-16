@@ -680,4 +680,102 @@ test('45. POST /api/support/direct-mail validates payload and records direct inq
   assert.strictEqual(mailRes.data.data.sentTo, 'support@eazetrip.com');
 });
 
+test('46. POST /api/refunds/calculate computes accurate penalty slabs and net refund amount', async () => {
+  const calcRes = await requestJson('/api/refunds/calculate', {
+    method: 'POST',
+    body: {
+      serviceType: 'flight',
+      grossAmount: 5000,
+      hoursBeforeDeparture: 48,
+      hasShield: false
+    }
+  });
+  assert.strictEqual(calcRes.status, 200);
+  assert.strictEqual(calcRes.data.success, true);
+  assert.strictEqual(calcRes.data.data.grossAmount, 5000);
+  assert.ok(calcRes.data.data.penaltyAmount > 0);
+  assert.strictEqual(calcRes.data.data.netRefundAmount, 5000 - calcRes.data.data.penaltyAmount);
+
+  // Test Zero Cancellation Shield waiver
+  const shieldRes = await requestJson('/api/refunds/calculate', {
+    method: 'POST',
+    body: {
+      serviceType: 'flight',
+      grossAmount: 5000,
+      hoursBeforeDeparture: 48,
+      hasShield: true
+    }
+  });
+  assert.strictEqual(shieldRes.status, 200);
+  assert.strictEqual(shieldRes.data.data.penaltyAmount, 0);
+  assert.strictEqual(shieldRes.data.data.netRefundAmount, 5000);
+});
+
+test('47. POST /api/refunds/request creates refund record with RFND code, ARN, and timeline', async () => {
+  const reqRes = await requestJson('/api/refunds/request', {
+    method: 'POST',
+    body: {
+      bookingId: 'BK-TEST-99',
+      pnr: 'PNR-TEST-99',
+      customerName: 'Priyansh Sharma',
+      customerEmail: 'priyansh.sharma@gmail.com',
+      customerPhone: '+91 98765 43210',
+      serviceType: 'flight',
+      serviceTitle: 'IndiGo 6E-552 • Delhi to Bangalore',
+      grossAmount: 4200,
+      reason: 'Medical emergency',
+      payoutMode: 'original_mode',
+      payoutDetails: 'Original HDFC Credit Card (•••• 9921)'
+    }
+  });
+  assert.strictEqual(reqRes.status, 201);
+  assert.strictEqual(reqRes.data.success, true);
+  assert.ok(reqRes.data.data.id.startsWith('RFND-'));
+  assert.ok(reqRes.data.data.arnNumber.startsWith('ARN-'));
+  assert.strictEqual(reqRes.data.data.status, 'In Progress');
+  assert.strictEqual(reqRes.data.data.timeline.length, 4);
+});
+
+test('48. GET /api/refunds/track/:query tracks refund progress timeline by RFND ID, PNR, or Booking ID', async () => {
+  const trackRes = await requestJson('/api/refunds/track/RFND-10492');
+  assert.strictEqual(trackRes.status, 200);
+  assert.strictEqual(trackRes.data.success, true);
+  assert.strictEqual(trackRes.data.data.id, 'RFND-10492');
+  assert.strictEqual(trackRes.data.data.status, 'Completed');
+  assert.ok(trackRes.data.data.timeline.every(t => t.completed === true));
+
+  // Track via PNR
+  const pnrRes = await requestJson('/api/refunds/track/AI-204928');
+  assert.strictEqual(pnrRes.status, 200);
+  assert.strictEqual(pnrRes.data.data.id, 'RFND-10492');
+});
+
+test('49. POST /api/refunds/request handles instant EazeWallet payout mode with bonus voucher', async () => {
+  const walletRes = await requestJson('/api/refunds/request', {
+    method: 'POST',
+    body: {
+      bookingId: 'BK-WALLET-1',
+      pnr: 'PNR-WAL-1',
+      customerName: 'Priyansh Sharma',
+      customerEmail: 'priyansh.sharma@gmail.com',
+      serviceType: 'hotel',
+      serviceTitle: 'Goa Marriott Resort',
+      grossAmount: 6000,
+      payoutMode: 'wallet'
+    }
+  });
+  assert.strictEqual(walletRes.status, 201);
+  assert.strictEqual(walletRes.data.data.status, 'Completed');
+  assert.strictEqual(walletRes.data.data.statusStep, 4);
+  assert.ok(walletRes.data.data.payoutDetails.includes('Instant EazeWallet'));
+});
+
+test('50. GET /api/refunds/track/:query returns 404 for invalid refund identifier', async () => {
+  const notFoundRes = await requestJson('/api/refunds/track/RFND-NONEXISTENT-99999');
+  assert.strictEqual(notFoundRes.status, 404);
+  assert.strictEqual(notFoundRes.data.success, false);
+  assert.ok(notFoundRes.data.error.includes('No refund record found'));
+});
+
+
 

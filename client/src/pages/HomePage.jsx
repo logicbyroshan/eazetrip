@@ -10,10 +10,13 @@ import TrendingFlightRoutes from '../components/home/TrendingFlightRoutes';
 import TrendingDestinations from '../components/home/TrendingDestinations';
 import TravelCategoriesSection from '../components/home/TravelCategoriesSection';
 import ReviewsSection from '../components/home/ReviewsSection';
+import { useAuth } from '../context/AuthContext';
 import { HERO_BACKDROPS } from '../data/siteData';
 
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState('flights'); // flights | hotels | bus | railway | holidays
+  const { user } = useAuth();
+  const firstName = user?.name ? user.name.split(' ')[0] : '';
 
   const currentHero = HERO_BACKDROPS[activeTab] || HERO_BACKDROPS.flights;
 
@@ -29,10 +32,12 @@ export default function HomePage() {
         <div className="container">
           <div className="hero-content">
             <h1 className="hero-headline">
-              {currentHero.title}
+              {firstName ? `Welcome Back, ${firstName}! ${currentHero.title}` : currentHero.title}
             </h1>
             <p className="hero-subheadline">
-              {currentHero.subtitle}
+              {firstName
+                ? `Exclusive member pricing, personalized flight & hotel recommendations, and instant refunds.`
+                : currentHero.subtitle}
             </p>
 
             {/* Hero Search Box Card - Translucent Glassmorphic Container */}
