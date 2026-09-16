@@ -7,6 +7,7 @@ import HolidayDetailsModal from '../components/holidays/HolidayDetailsModal';
 import { mockHolidayPackages } from '../data/holidayData';
 import { HERO_BACKDROPS } from '../data/siteData';
 import { useBooking } from '../context/BookingContext';
+import { useAuth } from '../context/AuthContext';
 import { Compass } from 'lucide-react';
 
 export default function HolidayBookingPage() {
@@ -14,6 +15,7 @@ export default function HolidayBookingPage() {
   const navigate = useNavigate();
   const searchState = location.state || {};
   const { startCheckout } = useBooking();
+  const { user, firstName } = useAuth();
 
   const [activeModalPackage, setActiveModalPackage] = useState(null);
 
@@ -119,12 +121,16 @@ export default function HolidayBookingPage() {
           <div className="results-header-bar">
             <div>
               <h2>
-                {searchState.destination
-                  ? `Holiday Tour Packages in ${searchState.destination}`
-                  : 'All Curated Holiday Tour Packages'}
+                {firstName
+                  ? `Customized Holiday Packages for ${firstName}`
+                  : (searchState.destination
+                    ? `Holiday Tour Packages in ${searchState.destination}`
+                    : 'All Curated Holiday Tour Packages')}
               </h2>
               <span className="results-count">
-                Showing {filteredPackages.length} verified packages • Flights, Hotels, Sightseeing & Meals Included
+                {firstName
+                  ? `VIP travel concierge & customized itinerary for ${firstName} • Showing ${filteredPackages.length} dream packages`
+                  : `Showing ${filteredPackages.length} verified packages • Flights, Hotels, Sightseeing & Meals Included`}
               </span>
             </div>
           </div>

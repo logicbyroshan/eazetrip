@@ -27,9 +27,11 @@ import {
   Receipt
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 export default function ManageBookingsPage() {
   const { bookings, openTicketModal, requestCancellationRefund } = useBooking();
+  const { user, firstName } = useAuth();
   const navigate = useNavigate();
   const [filterType, setFilterType] = useState('all'); // all | flight | hotel | bus | train
   const [filterStatus, setFilterStatus] = useState('all'); // all | Confirmed | Cancelled
@@ -192,8 +194,8 @@ export default function ManageBookingsPage() {
               <Luggage size={16} />
               <span>ITINERARY & RESERVATIONS HUB</span>
             </div>
-            <h1>Manage Your Bookings</h1>
-            <p>Access your confirmed flight tickets, hotel vouchers, train PNRs, and track instant refund disbursements.</p>
+            <h1>{firstName ? `Manage Your Bookings, ${firstName}` : 'Manage Your Bookings'}</h1>
+            <p>{firstName ? `Welcome back, ${firstName}. Access your confirmed flight tickets, hotel vouchers, train PNRs, and track instant refund disbursements.` : 'Access your confirmed flight tickets, hotel vouchers, train PNRs, and track instant refund disbursements.'}</p>
           </div>
           <div className="bookings-banner-right">
             <Link to="/cancellation-refund" className="secondary-btn me-2">

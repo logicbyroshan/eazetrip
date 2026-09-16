@@ -5,7 +5,7 @@ import { useState, useRef, useEffect } from 'react';
 import NotificationCenter from './NotificationCenter';
 
 export default function TopBar() {
-  const { user, isAuthenticated, logout, openLoginModal } = useAuth();
+  const { user, isAuthenticated, logout, openLoginModal, firstName } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -74,7 +74,7 @@ export default function TopBar() {
                 onClick={() => setDropdownOpen(!dropdownOpen)}
               >
                 <div className="user-avatar-sm">{user.name?.charAt(0) || 'U'}</div>
-                <span className="user-name-text">{user.name?.split(' ')[0]}</span>
+                <span className="user-name-text">Hi, {user.name?.split(' ')[0]}</span>
                 <ChevronDown size={14} />
               </button>
 
@@ -117,6 +117,11 @@ export default function TopBar() {
                 </div>
               )}
             </div>
+          ) : firstName ? (
+            <button className="login-pill-btn remembered-login-btn" onClick={openLoginModal} title={`Welcome back, ${firstName}! Click to log in.`}>
+              <User size={14} />
+              <span>Hi {firstName} (Login)</span>
+            </button>
           ) : (
             <button className="login-pill-btn" onClick={openLoginModal}>
               <User size={14} />

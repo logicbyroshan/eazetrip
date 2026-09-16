@@ -37,7 +37,7 @@ export default function BookingPaymentPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { bookingDraft, createBooking, showToast, openTicketModal } = useBooking();
-  const { user } = useAuth();
+  const { user, firstName } = useAuth();
 
   const draft = location.state?.draft || bookingDraft;
 
@@ -305,7 +305,7 @@ export default function BookingPaymentPage() {
                   <UserCheck size={18} color="#10b981" />
                 </div>
                 <div>
-                  <h4 className="verified-title">Traveller & Contact Details Verified</h4>
+                  <h4 className="verified-title">{firstName ? `${cleanLeadName}'s Traveller & Contact Details Verified` : 'Traveller & Contact Details Verified'}</h4>
                   <span className="verified-sub">Pre-filled & locked for 1-click Razorpay payment — no re-typing required</span>
                 </div>
               </div>

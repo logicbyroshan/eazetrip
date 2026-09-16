@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { trendingDestinations } from '../../data/siteData';
 import { Compass, Sparkles, ArrowRight, Plane, Building2 } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 
 export default function TrendingDestinations() {
   const [activeTab, setActiveTab] = useState('india'); // 'india' | 'international'
   const navigate = useNavigate();
+  const { user, firstName } = useAuth();
 
   const list = trendingDestinations[activeTab] || trendingDestinations.india;
   const heroItems = list.slice(0, 2);
@@ -28,10 +30,10 @@ export default function TrendingDestinations() {
           <div>
             <div className="section-tag-pill">
               <Compass size={14} />
-              <span>POPULAR ESCAPES</span>
+              <span>{firstName ? `CURATED FOR ${firstName.toUpperCase()}` : 'POPULAR ESCAPES'}</span>
             </div>
-            <h2 className="trending-title">Trending destinations</h2>
-            <p className="trending-subtitle">Most popular choices for travelers from India</p>
+            <h2 className="trending-title">{firstName ? `Trending Destinations for ${firstName}` : 'Trending destinations'}</h2>
+            <p className="trending-subtitle">{firstName ? `Handpicked domestic & international escapes curated for ${firstName}` : 'Most popular choices for travelers from India'}</p>
           </div>
 
           {/* India vs International Tabs */}

@@ -40,7 +40,7 @@ import {
 
 export default function CancellationRefundPage() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { user } = useAuth();
+  const { user, firstName } = useAuth();
   const { requestCancellationRefund, showToast } = useBooking();
 
   const initialRef = searchParams.get('ref') || searchParams.get('pnr') || searchParams.get('bookingId') || '';
@@ -251,9 +251,11 @@ export default function CancellationRefundPage() {
               <Plus size={16} /> Submit Direct Refund Claim
             </button>
           </div>
-          <h1>Cancellation & Refund Resolution Hub</h1>
+          <h1>{firstName ? `Cancellation & Refund Resolution Hub for ${firstName}` : 'Cancellation & Refund Resolution Hub'}</h1>
           <p className="refund-hero-sub">
-            Track live refund disbursements, calculate instant fare deductions, and claim zero-surcharge payments in real time.
+            {firstName
+              ? `Hello ${firstName}, track live refund disbursements, calculate instant fare deductions, and claim zero-surcharge payments in real time.`
+              : 'Track live refund disbursements, calculate instant fare deductions, and claim zero-surcharge payments in real time.'}
           </p>
 
           {/* Search / Track Box */}

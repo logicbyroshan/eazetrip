@@ -4,6 +4,43 @@ This file logs meaningful agent tasks, architectural milestones, and fixes chron
 
 ---
 
+### Task: Site-Wide Personalized Traveler Experience & Persistent Memory
+* **Date**: 2026-09-16
+* **Reason**: User requested complete traveler recognition and customized titles across the entire platform (e.g. "Offers Only For You, [Name]", "Welcome Back, [Name]!", personalized flight/hotel/bus/train listings, itinerary badges, and support desk greetings).
+* **Branch / PR**: `feature/comprehensive-personalized-experience` (PR pending merge).
+* **Files Affected**:
+  - `client/src/context/AuthContext.jsx`
+  - `client/src/components/home/SpecialOffersSection.jsx`
+  - `client/src/components/home/TrendingDestinations.jsx`
+  - `client/src/components/common/TopBar.jsx`
+  - `client/src/components/common/HelpDeskWidget.jsx`
+  - `client/src/pages/HomePage.jsx`
+  - `client/src/pages/OffersPage.jsx`
+  - `client/src/pages/FlightBookingPage.jsx`
+  - `client/src/pages/HotelBookingPage.jsx`
+  - `client/src/pages/BusBookingPage.jsx`
+  - `client/src/pages/RailwayBookingPage.jsx`
+  - `client/src/pages/HolidayBookingPage.jsx`
+  - `client/src/pages/ManageBookingsPage.jsx`
+  - `client/src/pages/CancellationRefundPage.jsx`
+  - `client/src/pages/ReviewBookingPage.jsx`
+  - `client/src/pages/BookingPaymentPage.jsx`
+  - `client/src/pages/ContactPage.jsx`
+  - `client/src/App.css`
+  - `CHANGELOG.md`
+  - `.agent-memory/CURRENT_STATE.md`
+  - `.agent-memory/TASK_HISTORY.md`
+* **What Changed**:
+  - Upgraded `AuthContext.jsx` with persistent `eazetrip_remembered_name` storage and dynamic `firstName` / `getPersonalizedTitle` helpers.
+  - Personalized Homepage Hero with `Welcome Back, [Name]!` and glassmorphic `Personalized Experience for [Name]` VIP badge pill.
+  - Implemented exact `Offers Only For You, [Name]` titles in `SpecialOffersSection.jsx` and `OffersPage.jsx`.
+  - Added personalized results headings and member pricing cues across all 5 booking mediums (`FlightBookingPage`, `HotelBookingPage`, `BusBookingPage`, `RailwayBookingPage`, `HolidayBookingPage`).
+  - Added customized greetings to Manage Bookings, Refund Resolution Hub, Review Booking, Payment, and 24/7 Help Desk.
+  - Added remembered traveler indicator in TopBar navigation.
+* **Testing Performed**: Automated test suite (52/52 passing), Vite production build clean (`npm run build`), browser subagent visual verification completed (`personalized_experience_verification`).
+
+---
+
 ### Task: Direct Refund Claim Wizard & Profile Refunds & Claims Resolution Hub
 * **Date**: 2026-09-16
 * **Reason**: User requested an elevated refund experience with a direct claim submission wizard (+ Submit Direct Refund Claim modal) on `/cancellation-refund` and a dedicated "Refunds & Claims" hub in `/profile` with live ARN tracking, stats strip, cancellation triggers, and printable credit notes.

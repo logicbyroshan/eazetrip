@@ -22,7 +22,7 @@ import {
 import { Link } from 'react-router-dom';
 
 export default function ContactPage() {
-  const { user } = useAuth();
+  const { user, firstName } = useAuth();
   const { showToast, bookings } = useBooking();
 
   const [formMode, setFormMode] = useState('problem'); // 'problem' | 'inquiry' | 'callback'
@@ -161,9 +161,11 @@ export default function ContactPage() {
           <div className="contact-info-col">
             <div className="content-card info-card-themed">
               <span className="section-tag">24/7 DEDICATED CONCIERGE</span>
-              <h2>Get in Touch with EazeTrip</h2>
+              <h2>{firstName ? `Hello ${firstName}, We're Here to Help` : 'Get in Touch with EazeTrip'}</h2>
               <p>
-                Facing a booking, payment, date change, reschedule, or flight baggage issue? Connect directly with our priority customer support specialists.
+                {firstName
+                  ? `Facing a booking, payment, cancellation, or schedule issue, ${firstName}? Connect directly with our priority customer support specialists.`
+                  : 'Facing a booking, payment, date change, reschedule, or flight baggage issue? Connect directly with our priority customer support specialists.'}
               </p>
 
               <div className="contact-details-stack mt-4">

@@ -6,6 +6,7 @@ import TrainFilters from '../components/trains/TrainFilters';
 import { mockTrains } from '../data/trainData';
 import { HERO_BACKDROPS } from '../data/siteData';
 import { useBooking } from '../context/BookingContext';
+import { useAuth } from '../context/AuthContext';
 import { Train, CheckCircle2, RotateCcw } from 'lucide-react';
 
 export default function RailwayBookingPage() {
@@ -13,6 +14,7 @@ export default function RailwayBookingPage() {
   const navigate = useNavigate();
   const searchState = location.state || {};
   const { startCheckout } = useBooking();
+  const { user, firstName } = useAuth();
 
   // Filters State
   const [selectedClasses, setSelectedClasses] = useState([]);
@@ -131,9 +133,11 @@ export default function RailwayBookingPage() {
 
           <div className="results-header-bar">
             <div>
-              <h2>Trains between {searchState.from || 'New Delhi'} and {searchState.to || 'Mumbai'}</h2>
+              <h2>{firstName ? `IRCTC Train Schedules for ${firstName}` : `Trains between ${searchState.from || 'New Delhi'} and ${searchState.to || 'Mumbai'}`}</h2>
               <span className="results-count">
-                Showing {filteredTrains.length} direct express & superfast trains with live seat availability
+                {firstName
+                  ? `Instant Tatkal refund protection for ${firstName} • Showing ${filteredTrains.length} direct trains (${searchState.from || 'New Delhi'} ⇄ ${searchState.to || 'Mumbai'})`
+                  : `Showing ${filteredTrains.length} direct express & superfast trains with live seat availability`}
               </span>
             </div>
           </div>

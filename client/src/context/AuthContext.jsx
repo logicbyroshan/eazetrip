@@ -15,15 +15,40 @@ export function AuthProvider({ children }) {
     }
   });
 
+  const [rememberedName, setRememberedName] = useState(() => {
+    try {
+      return localStorage.getItem('eazetrip_remembered_name') || '';
+    } catch {
+      return '';
+    }
+  });
+
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   useEffect(() => {
     if (user) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
+      if (user.name) {
+        const first = user.name.trim().split(' ')[0];
+        localStorage.setItem('eazetrip_remembered_name', first);
+        setRememberedName(first);
+      }
     } else {
       localStorage.removeItem(STORAGE_KEY);
     }
   }, [user]);
+
+  const firstName = user?.name ? user.name.trim().split(' ')[0] : (rememberedName || '');
+
+  const getPersonalizedTitle = (baseTitle, customSuffix = '') => {
+    if (firstName) {
+      if (baseTitle.toLowerCase().includes('for you')) {
+        return `${baseTitle}, ${firstName}${customSuffix ? ` — ${customSuffix}` : ''}`;
+      }
+      return `${baseTitle} for ${firstName}${customSuffix ? ` — ${customSuffix}` : ''}`;
+    }
+    return customSuffix ? `${baseTitle} — ${customSuffix}` : baseTitle;
+  };
 
   const login = async (credentials) => {
     const apiRes = await api.login(credentials);
@@ -58,15 +83,20 @@ export function AuthProvider({ children }) {
     }
 
     setUser(loggedInUser);
+    if (loggedInUser.name) {
+      const first = loggedInUser.name.trim().split(' ')[0];
+      localStorage.setItem('eazetrip_remembered_name', first);
+      setRememberedName(first);
+    }
     setIsLoginModalOpen(false);
     return { success: true, user: loggedInUser };
   };
 
-  const loginWithGoogle = async () => {
+  const loginWithGoogle = async (customName = 'Priyansh Sharma') => {
     const googleUser = {
       id: 'USR-' + Math.floor(100000 + Math.random() * 900000),
-      name: 'Priyansh Sharma',
-      email: 'priyansh.sharma@gmail.com',
+      name: customName,
+      email: `${customName.toLowerCase().replace(/\s+/g, '.')}@gmail.com`,
       phone: '+91 9876543210',
       avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
       memberSince: new Date().getFullYear(),
@@ -74,6 +104,9 @@ export function AuthProvider({ children }) {
       authProvider: 'Google'
     };
     setUser(googleUser);
+    const first = customName.trim().split(' ')[0];
+    localStorage.setItem('eazetrip_remembered_name', first);
+    setRememberedName(first);
     setIsLoginModalOpen(false);
     return { success: true, user: googleUser };
   };
@@ -85,9 +118,10 @@ export function AuthProvider({ children }) {
     if (apiRes.ok && apiRes.data?.data) {
       newUser = apiRes.data.data;
     } else {
+      const resolvedName = userData.name || `${userData.firstName || ''} ${userData.lastName || ''}`.trim() || 'Traveler';
       newUser = {
         id: 'USR-' + Math.floor(100000 + Math.random() * 900000),
-        name: userData.name || `${userData.firstName} ${userData.lastName}`.trim(),
+        name: resolvedName,
         email: userData.email,
         phone: userData.phone || '+91 9876543210',
         memberSince: new Date().getFullYear(),
@@ -96,6 +130,11 @@ export function AuthProvider({ children }) {
     }
 
     setUser(newUser);
+    if (newUser.name) {
+      const first = newUser.name.trim().split(' ')[0];
+      localStorage.setItem('eazetrip_remembered_name', first);
+      setRememberedName(first);
+    }
     return { success: true, user: newUser };
   };
 
@@ -106,6 +145,11 @@ export function AuthProvider({ children }) {
   const updateProfile = async (updatedFields) => {
     setUser((prev) => {
       const merged = prev ? { ...prev, ...updatedFields } : updatedFields;
+      if (merged.name) {
+        const first = merged.name.trim().split(' ')[0];
+        localStorage.setItem('eazetrip_remembered_name', first);
+        setRememberedName(first);
+      }
       // Sync with backend asynchronously
       api.updateProfile(merged).catch((err) => console.warn('Could not sync profile to backend:', err));
       return merged;
@@ -117,6 +161,9 @@ export function AuthProvider({ children }) {
       value={{
         user,
         isAuthenticated: !!user,
+        firstName,
+        rememberedName,
+        getPersonalizedTitle,
         login,
         loginWithGoogle,
         register,
