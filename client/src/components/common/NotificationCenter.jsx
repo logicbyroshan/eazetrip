@@ -80,12 +80,11 @@ export default function NotificationCenter() {
         id="notification-bell-btn"
         className={`notif-bell-btn ${isOpen ? 'active' : ''}`}
         onClick={() => setIsOpen(!isOpen)}
-        aria-label="Notifications"
-        title="Notifications & Updates"
+        aria-label="Notifications & Updates"
       >
-        <Bell className="w-5 h-5 notif-bell-icon" />
+        <Bell className="notif-bell-icon" size={17} />
         {unreadCount > 0 && (
-          <span className="notif-badge-count animate-pulse">
+          <span className="notif-badge-count">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}

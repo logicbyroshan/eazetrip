@@ -11,26 +11,22 @@ export default function GoogleOneTapPrompt() {
   const [isSigningIn, setIsSigningIn] = useState(false);
 
   useEffect(() => {
-    // Do not show if already logged in or dismissed in this browser session
+    // Do not show if user is already logged in
     if (user) {
       setIsVisible(false);
       return;
     }
 
-    const isDismissed = sessionStorage.getItem('eazetrip_onetap_dismissed');
-    if (isDismissed) return;
-
-    // Trigger floating Google prompt after 2.5 seconds on site
+    // Trigger floating Google prompt smoothly after 1.2 seconds
     const timer = setTimeout(() => {
       setIsVisible(true);
-    }, 2500);
+    }, 1200);
 
     return () => clearTimeout(timer);
   }, [user]);
 
   const handleDismiss = () => {
     setIsVisible(false);
-    sessionStorage.setItem('eazetrip_onetap_dismissed', 'true');
   };
 
   const handleContinueAsGoogle = async () => {
