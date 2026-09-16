@@ -20,6 +20,7 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import Breadcrumb from '../components/common/Breadcrumb';
 
 export default function ContactPage() {
   const { user, firstName } = useAuth();
@@ -150,11 +151,7 @@ export default function ContactPage() {
   return (
     <div className="container page-wrap">
       <div className="page-shell">
-        <div className="page-topbar">
-          <Link to="/">Home</Link>
-          <span>/</span>
-          <span>24/7 Concierge Support & Problem Desk</span>
-        </div>
+        <Breadcrumb items={[{ label: 'Home', path: '/' }, { label: '24/7 Concierge Support & Problem Desk' }]} />
 
         <div className="contact-layout-grid">
           {/* Left Contact Information & Quick Connects */}

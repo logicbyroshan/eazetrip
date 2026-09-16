@@ -24,6 +24,7 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { useBooking } from '../context/BookingContext';
 import { api } from '../services/api';
+import Breadcrumb from '../components/common/Breadcrumb';
 
 export default function HelpDeskPage() {
   const { user, isAuthenticated, firstName } = useAuth();
@@ -230,11 +231,7 @@ export default function HelpDeskPage() {
     <div className="container page-wrap">
       <div className="page-shell">
         {/* Breadcrumb */}
-        <div className="page-topbar">
-          <Link to="/">Home</Link>
-          <span>/</span>
-          <span>24/7 Dedicated Help Desk & Concierge</span>
-        </div>
+        <Breadcrumb items={[{ label: 'Home', path: '/' }, { label: '24/7 Dedicated Help Desk & Concierge' }]} />
 
         {/* Hero Section */}
         <div className="helpdesk-hero-banner">

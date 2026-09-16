@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { siteFaqs } from '../data/siteData';
 import { ChevronDown, ChevronUp, HelpCircle, Search, Sparkles, MessageCircle, Phone } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import Breadcrumb from '../components/common/Breadcrumb';
 
 export default function FaqPage() {
   const [openItems, setOpenItems] = useState({ 'Flights-0': true, 'Hotels-0': true });
@@ -32,11 +33,7 @@ export default function FaqPage() {
   return (
     <div className="container page-wrap">
       <div className="page-shell narrow">
-        <div className="page-topbar">
-          <Link to="/">Home</Link>
-          <span>/</span>
-          <span>Help Center & FAQ</span>
-        </div>
+        <Breadcrumb items={[{ label: 'Home', path: '/' }, { label: 'Help Center & FAQ' }]} />
 
         {/* Hero Search Box */}
         <div className="faq-hero-box content-card text-center">

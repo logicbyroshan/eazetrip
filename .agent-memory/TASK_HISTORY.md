@@ -4,6 +4,36 @@ This file logs meaningful agent tasks, architectural milestones, and fixes chron
 
 ---
 
+### Task: Universal Breadcrumb Standardization & Visual Enhancement
+* **Date**: 2026-09-16
+* **Reason**: User observed that breadcrumbs were inconsistent across different pages in the application (different styles, raw slashes, missing Home icons, disparate padding/font sizing) and requested universal standardization and enhanced formatting.
+* **Branch / PR**: `fix/standardize-and-enhance-breadcrumbs-across-pages`.
+* **Files Affected**:
+  - `client/src/components/common/Breadcrumb.jsx` (New universal, accessible breadcrumb component)
+  - `client/src/App.css` (Curated luxury breadcrumb typography, hover states, `:focus-visible` accessibility, and truncation)
+  - `client/src/pages/AboutPage.jsx`
+  - `client/src/pages/ManageBookingsPage.jsx`
+  - `client/src/pages/CancellationRefundPage.jsx`
+  - `client/src/pages/HelpDeskPage.jsx`
+  - `client/src/pages/FaqPage.jsx`
+  - `client/src/pages/ContactPage.jsx`
+  - `client/src/pages/OffersPage.jsx`
+  - `client/src/pages/PartnerPage.jsx`
+  - `client/src/pages/PaymentPage.jsx`
+  - `client/src/pages/ProfilePage.jsx`
+  - `client/src/pages/PrivacyPage.jsx`
+  - `client/src/pages/TermsPage.jsx`
+  - `CHANGELOG.md`
+  - `.agent-memory/CURRENT_STATE.md`
+  - `.agent-memory/TASK_HISTORY.md`
+* **What Changed**:
+  - Built a reusable `<Breadcrumb items={[...]} />` component with automatic `<Home size={13} />` icon detection on root links, `<ChevronRight size={13} />` separators, and semantic `<nav><ol><li>` structure.
+  - Replaced all ad-hoc `.page-topbar` and slash-separated strings across all 12 major pages with `<Breadcrumb />`.
+  - Added subtle hover glow, accessible focus rings, and responsive text clipping.
+* **Testing Performed**: 64 / 64 automated tests passing (`npm test`), 0 Vite build errors (`npm run build`), browser subagent visual validation across 5+ pages.
+
+---
+
 ### Task: Deep Holiday Packages Integration & Cross-Product Flow Overhaul
 * **Date**: 2026-09-16
 * **Reason**: User noted that product was missing holidays options across several sections, and requested deep dive across the entire project to ensure holiday packages are deeply integrated everywhere (reservations, cancellations, calculator, footer, SEO directory, support forms, offers, and booking flow).

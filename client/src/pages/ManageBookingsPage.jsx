@@ -30,6 +30,7 @@ import {
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import Breadcrumb from '../components/common/Breadcrumb';
 
 export default function ManageBookingsPage() {
   const { bookings, openTicketModal, requestCancellationRefund } = useBooking();
@@ -184,11 +185,7 @@ export default function ManageBookingsPage() {
   return (
     <div className="manage-bookings-page container page-wrap">
       <div className="page-shell">
-        <div className="page-topbar">
-          <Link to="/">Home</Link>
-          <span>/</span>
-          <span>My Trips & Bookings</span>
-        </div>
+        <Breadcrumb items={[{ label: 'Home', path: '/' }, { label: 'My Trips & Bookings' }]} />
 
         {/* Top Header Banner */}
         <div className="bookings-hero-banner">

@@ -47,6 +47,7 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import Breadcrumb from '../components/common/Breadcrumb';
 
 export default function ProfilePage() {
   const { user, firstName, updateProfile, openLoginModal, isAuthenticated, logout } = useAuth();
@@ -307,11 +308,7 @@ export default function ProfilePage() {
   return (
     <div className="container profile-page-wrap">
       <div className="page-shell">
-        <div className="page-topbar">
-          <Link to="/">Home</Link>
-          <span>/</span>
-          <span>My Profile & Account</span>
-        </div>
+        <Breadcrumb items={[{ label: 'Home', path: '/' }, { label: 'My Profile & Account' }]} />
 
         {/* Top Hero Account Banner */}
         <div className="profile-hero-banner">

@@ -4,6 +4,7 @@ import { Copy, ArrowRight, Sparkles, Check } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useBooking } from '../context/BookingContext';
 import { useAuth } from '../context/AuthContext';
+import Breadcrumb from '../components/common/Breadcrumb';
 
 export default function OffersPage() {
   const { showToast } = useBooking();
@@ -69,11 +70,7 @@ export default function OffersPage() {
   return (
     <div className="container page-wrap">
       <div className="page-shell">
-        <div className="page-topbar">
-          <Link to="/">Home</Link>
-          <span>/</span>
-          <span>Exclusive Offers & Deals</span>
-        </div>
+        <Breadcrumb items={[{ label: 'Home', path: '/' }, { label: 'Exclusive Offers & Deals' }]} />
 
         {/* Campaign Promo Top Banner */}
         <div className="campaign-promo-banner offers-page-banner">

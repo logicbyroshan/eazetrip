@@ -27,16 +27,13 @@ import {
   ChevronRight
 } from 'lucide-react';
 
+import Breadcrumb from '../components/common/Breadcrumb';
+
 export default function AboutPage() {
   return (
     <div className="container page-wrap">
       <div className="page-shell">
-        {/* Breadcrumb */}
-        <div className="page-topbar">
-          <Link to="/">Home</Link>
-          <span>/</span>
-          <span>About EazeTrip</span>
-        </div>
+        <Breadcrumb items={[{ label: 'Home', path: '/' }, { label: 'About EazeTrip' }]} />
 
         {/* Hero Showcase Section */}
         <div className="about-hero-showcase">

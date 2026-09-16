@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.1.9] - 2026-09-16
+
+### Universal Breadcrumb Standardization & Design Enhancement
+
+#### Reusable Breadcrumb Component (`client/src/components/common/Breadcrumb.jsx`)
+- Created universal, accessible `<Breadcrumb items={[...]} />` component with semantic `<nav><ol><li>` structure, auto-detecting Home item with `<Home size={13} />` icon and `<ChevronRight size={13} />` separators.
+- Supports multi-tier routing (e.g. `Home > Legal & Compliance > Privacy Policy` or `Home > My Trips & Bookings`).
+
+#### Curated Design Tokens & Micro-Interactions (`client/src/App.css`)
+- Added `.eazetrip-breadcrumb`, `.breadcrumb-list`, `.breadcrumb-item`, `.breadcrumb-link`, `.breadcrumb-current`, `.breadcrumb-chevron`, and `.breadcrumb-home-icon`.
+- Included hover elevation (`transform: translateY(-0.5px)`), subtle background pill highlight (`rgba(3, 78, 162, 0.08)`), accessible `:focus-visible` outlines, and text truncation on small mobile viewports.
+
+#### Cross-Page Implementation (`client/src/pages/*`)
+- Standardized breadcrumbs across all 12 major application content, account, support, and legal pages:
+  - `AboutPage.jsx` (`Home > About EazeTrip`)
+  - `ManageBookingsPage.jsx` (`Home > My Trips & Bookings`)
+  - `CancellationRefundPage.jsx` (`Home > Cancellation & Refund Hub`)
+  - `HelpDeskPage.jsx` (`Home > 24/7 Dedicated Help Desk & Concierge`)
+  - `FaqPage.jsx` (`Home > Help Center & FAQ`)
+  - `ContactPage.jsx` (`Home > 24/7 Concierge Support & Problem Desk`)
+  - `OffersPage.jsx` (`Home > Exclusive Offers & Deals`)
+  - `PartnerPage.jsx` (`Home > B2B Partner & Corporate Portal`)
+  - `PaymentPage.jsx` (`Home > Invoice & Quick Payment`)
+  - `ProfilePage.jsx` (`Home > My Profile & Account`)
+  - `PrivacyPage.jsx` (`Home > Legal & Compliance > Privacy Policy`)
+  - `TermsPage.jsx` (`Home > Legal & Compliance > Terms & Conditions / User Agreement`)
+
+---
+
 ## [2.1.8] - 2026-09-16
 
 ### Deep Holiday Packages Integration & Cross-Product Lifecycle
