@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.7.1] - 2026-09-16
+
+### Direct Refund Claim Wizard & Profile Refunds & Claims Resolution Hub
+
+#### Added
+- **Direct Refund Request / Claim Wizard Modal (`CancellationRefundPage.jsx`)**:
+  - Direct "+ Submit Direct Refund Claim" CTA in the Cancellation & Refund hero banner.
+  - Fast-track 3-step interactive claim modal supporting key dispute categories:
+    - *Airline Cancellation / Schedule Delay (>3h)*: Auto-applies 100% Zero Penalty Shield waiver.
+    - *Medical / Compassionate Emergency*: Medical certificate & hospital discharge waiver.
+    - *Payment Debited but Booking Failed*: Duplicate transaction ID auto-reconciliation.
+    - *IRCTC / Railways Waitlist Auto-Refund*: Automated PNR reconciliation.
+    - *Hotel Overbooked / Service Deficiency*: On-spot relocation & compensation claim.
+  - Payout destination selector: **Instant EazeWallet Credit** (0-sec settlement + 5% bonus balance), **Original Payment Source** (24-48 hrs), **Direct UPI ID**, or **Direct Bank Account (NEFT/IMPS)**.
+  - Generates official `#RFND-XXXXX` tracking reference and immediately binds to the interactive 4-step on-page timeline.
+  - Integrated "Copy Tracking Link" and "Print Credit Note" actions.
+- **Dedicated Profile "Refunds & Claims" Hub (`ProfilePage.jsx`)**:
+  - Added 6th tab in `/profile` with real-time active counter badges and status filters (`All`, `Completed`, `In Progress`, `Under Review`).
+  - Metric summary strip displaying: Total Claims Raised, Total Disbursed (₹), In Banking Clearing, and Instant SLA Rate.
+  - High-fidelity refund claim cards detailing Service Name, PNR, Category, Disbursement Destination, NPCI ARN banking tracking code, and Net Refund Amount.
+  - Direct "Cancel & Refund" action on Confirmed bookings in "My Trips" launching an integrated 3-step cancellation modal.
+  - Direct "Track Refund" action on Cancelled bookings jumping straight to the Profile Claims hub.
+- **State Persistence & Context Synchronization (`BookingContext.jsx`)**:
+  - Implemented `initialDemoRefunds` fallback data (`RFND-10492` flight refund and `RFND-20941` hotel refund) persisted in `localStorage` (`eazetrip_refund_claims`).
+- **Automated Test Suite Expansion (`tests/server.test.js`)**:
+  - Added Tests 51 & 52 verifying refund claim listings by user email and direct airline cancellation dispute claim processing with Zero Shield waiver (**52 / 52 automated tests passing with 100% success rate**).
+
+---
+
 ## [1.7.0] - 2026-09-16
 
 ### Refund Resolution Engine, Cookie & Privacy Consent, Personalized Experience & Pre-Payment Auth

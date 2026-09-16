@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { useBooking } from '../context/BookingContext';
 import { api } from '../services/api';
 import {
   RotateCcw,
@@ -27,17 +29,47 @@ import {
   Sparkles,
   ExternalLink,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  ChevronRight,
+  X,
+  Plus,
+  Copy,
+  Check,
+  Award
 } from 'lucide-react';
 
 export default function CancellationRefundPage() {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { user } = useAuth();
+  const { requestCancellationRefund, showToast } = useBooking();
+
   const initialRef = searchParams.get('ref') || searchParams.get('pnr') || searchParams.get('bookingId') || '';
+  const initialOpenClaim = searchParams.get('openClaim') === 'true' || searchParams.get('claim') === 'true';
 
   const [trackQuery, setTrackQuery] = useState(initialRef);
   const [isSearchingRefund, setIsSearchingRefund] = useState(false);
   const [trackedRefund, setTrackedRefund] = useState(null);
   const [trackError, setTrackError] = useState(null);
+  const [copiedLink, setCopiedLink] = useState(false);
+
+  // Direct Refund Claim Modal States
+  const [showClaimModal, setShowClaimModal] = useState(initialOpenClaim);
+  const [claimStep, setClaimStep] = useState(1);
+  const [claimCategory, setClaimCategory] = useState('airline_cancellation');
+  const [claimPnr, setClaimPnr] = useState('');
+  const [claimServiceType, setClaimServiceType] = useState('flight');
+  const [claimServiceTitle, setClaimServiceTitle] = useState('IndiGo (6E-2041) • Mumbai to Delhi');
+  const [claimName, setClaimName] = useState(user?.name || 'Rohit Sharma');
+  const [claimEmail, setClaimEmail] = useState(user?.email || 'rohit@example.com');
+  const [claimPhone, setClaimPhone] = useState(user?.phone || '+91 9876543210');
+  const [claimAmount, setClaimAmount] = useState(4999);
+  const [claimRemarks, setClaimRemarks] = useState('');
+  const [claimPayoutMode, setClaimPayoutMode] = useState('wallet');
+  const [claimUpiId, setClaimUpiId] = useState('');
+  const [claimBankAccount, setClaimBankAccount] = useState('');
+  const [claimIfscCode, setClaimIfscCode] = useState('');
+  const [isSubmittingClaim, setIsSubmittingClaim] = useState(false);
+  const [claimResult, setClaimResult] = useState(null);
 
   // Calculator Widget States
   const [calcService, setCalcService] = useState('flight');
@@ -127,6 +159,71 @@ export default function CancellationRefundPage() {
     }
   };
 
+  const handleCopyLink = () => {
+    if (!trackedRefund) return;
+    const url = `${window.location.origin}/cancellation-refund?ref=${trackedRefund.id}`;
+    navigator.clipboard.writeText(url);
+    setCopiedLink(true);
+    showToast('Direct tracking link copied to clipboard!');
+    setTimeout(() => setCopiedLink(false), 3000);
+  };
+
+  const handleSubmitDirectClaim = async (e) => {
+    if (e) e.preventDefault();
+    if (!claimPnr.trim()) {
+      showToast('Please enter your PNR or Booking Reference Number.', 'error');
+      return;
+    }
+
+    setIsSubmittingClaim(true);
+
+    const categoryNames = {
+      airline_cancellation: 'Flight Cancelled / Rescheduled by Airline (>3h delay)',
+      medical_emergency: 'Medical Emergency / Passenger Health Waiver',
+      duplicate_debit: 'Duplicate Payment / Double Debited Order',
+      train_waitlist: 'IRCTC Charted Waiting List (Auto-Refund Claim)',
+      hotel_issue: 'Hotel Check-in Denied / Property Closed',
+      other: 'Direct Customer Travel Claim'
+    };
+
+    const payload = {
+      bookingId: `BK-${claimPnr.trim()}`,
+      pnr: claimPnr.trim().toUpperCase(),
+      customerName: claimName,
+      customerEmail: claimEmail,
+      customerPhone: claimPhone,
+      serviceType: claimServiceType,
+      serviceTitle: claimServiceTitle,
+      grossAmount: Number(claimAmount) || 3000,
+      reason: `${categoryNames[claimCategory] || 'Direct Claim'}${claimRemarks ? ` - ${claimRemarks}` : ''}`,
+      payoutMode: claimPayoutMode,
+      bankAccount: claimBankAccount,
+      ifscCode: claimIfscCode,
+      upiId: claimUpiId,
+      hasShield: claimCategory === 'airline_cancellation' || claimCategory === 'medical_emergency'
+    };
+
+    try {
+      const result = await requestCancellationRefund(payload);
+      setClaimResult(result);
+      setTrackedRefund(result);
+      setTrackQuery(result.id);
+      setClaimStep(3);
+      showToast(`Direct claim registered! Tracking Ref: #${result.id}`);
+    } catch (err) {
+      console.error('Direct claim submission error', err);
+      showToast('Claim registration error. Please check details.', 'error');
+    } finally {
+      setIsSubmittingClaim(false);
+    }
+  };
+
+  const closeClaimModal = () => {
+    setShowClaimModal(false);
+    setClaimStep(1);
+    setClaimResult(null);
+  };
+
   return (
     <div className="cancellation-refund-page container page-wrap">
       <div className="page-shell">
@@ -138,9 +235,21 @@ export default function CancellationRefundPage() {
 
         {/* Hero Section */}
         <div className="refund-hub-hero">
-          <div className="refund-hero-tag">
-            <ShieldCheck size={18} />
-            <span>100% TRANSPARENT DGCA & IRCTC COMPLIANT REFUNDS</span>
+          <div className="refund-hero-top-row flex-between-center">
+            <div className="refund-hero-tag">
+              <ShieldCheck size={18} />
+              <span>100% TRANSPARENT DGCA & IRCTC COMPLIANT REFUNDS</span>
+            </div>
+            <button
+              type="button"
+              className="primary-btn hero-claim-cta-btn"
+              onClick={() => {
+                setShowClaimModal(true);
+                setClaimStep(1);
+              }}
+            >
+              <Plus size={16} /> Submit Direct Refund Claim
+            </button>
           </div>
           <h1>Cancellation & Refund Resolution Hub</h1>
           <p className="refund-hero-sub">
@@ -213,7 +322,7 @@ export default function CancellationRefundPage() {
         )}
 
         {trackedRefund && (
-          <div className="content-card tracked-refund-display-card mt-4">
+          <div className="content-card tracked-refund-display-card mt-4 animate-fade-in">
             <div className="tracked-card-header">
               <div className="tracked-header-left">
                 <span className="live-pulse-badge">
@@ -226,8 +335,17 @@ export default function CancellationRefundPage() {
               </div>
               <div className="tracked-header-right">
                 <span className={`refund-status-tag ${trackedRefund.status?.toLowerCase().replace(/\s+/g, '-')}`}>
-                  {trackedRefund.status === 'Completed' ? '✓ Refund Disbursed' : '⏳ In Progress'}
+                  {trackedRefund.status === 'Completed' ? '✓ Refund Disbursed' : '⏳ In Progress (Step 3/4)'}
                 </span>
+                <button
+                  type="button"
+                  className="copy-track-link-btn"
+                  onClick={handleCopyLink}
+                  title="Copy direct tracking link"
+                >
+                  {copiedLink ? <Check size={14} color="#10b981" /> : <Copy size={14} />}
+                  <span>{copiedLink ? 'Link Copied!' : 'Copy Link'}</span>
+                </button>
                 <button
                   type="button"
                   className="receipt-download-btn"
@@ -629,6 +747,471 @@ export default function CancellationRefundPage() {
             </a>
           </div>
         </div>
+
+        {/* 3-Step Interactive Direct Refund Claim Modal */}
+        {showClaimModal && (
+          <div className="modal-overlay" onClick={closeClaimModal}>
+            <div
+              className="modal-container refund-wizard-modal direct-claim-modal"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Modal Header */}
+              <div className="refund-modal-header">
+                <div>
+                  <div className="refund-modal-tag">
+                    <ShieldCheck size={16} />
+                    <span>DIRECT DISPUTE & REFUND ESCALATION</span>
+                  </div>
+                  <h3>Submit Direct Refund Claim</h3>
+                  <span className="refund-ref-sub">
+                    Fast-track claims for airline cancellations, medical emergencies, duplicate charges & waitlists
+                  </span>
+                </div>
+                <button
+                  className="modal-close-btn"
+                  onClick={closeClaimModal}
+                  type="button"
+                  aria-label="Close modal"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              {/* Stepper Bar */}
+              <div className="refund-stepper-bar">
+                <div className={`refund-step-item ${claimStep >= 1 ? 'active' : ''} ${claimStep > 1 ? 'completed' : ''}`}>
+                  <span className="step-num">1</span>
+                  <span className="step-label">Claim Reason</span>
+                </div>
+                <div className="step-divider-line"></div>
+                <div className={`refund-step-item ${claimStep >= 2 ? 'active' : ''} ${claimStep > 2 ? 'completed' : ''}`}>
+                  <span className="step-num">2</span>
+                  <span className="step-label">Booking & Passenger</span>
+                </div>
+                <div className="step-divider-line"></div>
+                <div className={`refund-step-item ${claimStep === 3 ? 'active completed' : ''}`}>
+                  <span className="step-num">3</span>
+                  <span className="step-label">Disbursement & Credit</span>
+                </div>
+              </div>
+
+              {/* Step 1: Select Claim Category */}
+              {claimStep === 1 && (
+                <div className="refund-modal-body">
+                  <h4 className="payout-selection-heading">Select the reason for your refund claim:</h4>
+                  <p className="payout-selection-sub">DGCA & IRCTC statutory guidelines apply to full penalty waivers.</p>
+
+                  <div className="claim-categories-grid mt-3">
+                    {[
+                      {
+                        key: 'airline_cancellation',
+                        title: '✈️ Airline Cancelled / Rescheduled (>3 hrs)',
+                        badge: '100% Full Refund Guarantee',
+                        desc: 'Flight cancelled by airline or delayed beyond 3 hours. Zero airline deduction.',
+                        type: 'flight'
+                      },
+                      {
+                        key: 'medical_emergency',
+                        title: '🏥 Medical Emergency / Health Waiver',
+                        badge: 'Waiver Shield Eligible',
+                        desc: 'Hospitalisation or certified passenger illness. Eligible for full penalty waiver.',
+                        type: 'flight'
+                      },
+                      {
+                        key: 'duplicate_debit',
+                        title: '💳 Duplicate Debit / Double Charged',
+                        badge: 'Auto-Reversal',
+                        desc: 'Account was debited multiple times during checkout or payment gateway timeout.',
+                        type: 'flight'
+                      },
+                      {
+                        key: 'train_waitlist',
+                        title: '🚆 IRCTC Waiting List Auto-Cancelled',
+                        badge: 'IRCTC Regulated',
+                        desc: 'Waitlisted train ticket dropped automatically after chart preparation.',
+                        type: 'train'
+                      },
+                      {
+                        key: 'hotel_issue',
+                        title: '🏨 Hotel Check-in Denied / Property Closed',
+                        badge: 'EazeTrip Shield',
+                        desc: 'Hotel room was unavailable or property refused check-in upon arrival.',
+                        type: 'hotel'
+                      },
+                      {
+                        key: 'other',
+                        title: '📝 Other Booking Cancellation Dispute',
+                        badge: 'Standard Claim',
+                        desc: 'Any other customer dispute or special itinerary modification claim.',
+                        type: 'flight'
+                      }
+                    ].map((cat) => (
+                      <div
+                        key={cat.key}
+                        className={`claim-cat-card ${claimCategory === cat.key ? 'selected' : ''}`}
+                        onClick={() => {
+                          setClaimCategory(cat.key);
+                          setClaimServiceType(cat.type);
+                        }}
+                      >
+                        <div className="cat-header-row">
+                          <strong>{cat.title}</strong>
+                          <span className="cat-badge">{cat.badge}</span>
+                        </div>
+                        <p className="cat-desc">{cat.desc}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="refund-actions-bar mt-4">
+                    <button type="button" className="secondary-btn" onClick={closeClaimModal}>
+                      Cancel
+                    </button>
+                    <button type="button" className="primary-btn" onClick={() => setClaimStep(2)}>
+                      Enter Booking Details <ChevronRight size={16} />
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Step 2: Booking Details */}
+              {claimStep === 2 && (
+                <div className="refund-modal-body">
+                  <h4 className="payout-selection-heading">Enter Itinerary & Passenger Information</h4>
+                  <p className="payout-selection-sub">Provide the reference number and passenger details linked to this transaction.</p>
+
+                  <div className="claim-form-grid mt-3">
+                    <div className="form-group">
+                      <label>PNR or Booking Reference *</label>
+                      <input
+                        type="text"
+                        className="native-input font-bold uppercase"
+                        placeholder="e.g. 6EZ9KM or EZ-FL-74892"
+                        value={claimPnr}
+                        onChange={(e) => setClaimPnr(e.target.value.toUpperCase())}
+                        required
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label>Travel Medium *</label>
+                      <select
+                        className="native-select"
+                        value={claimServiceType}
+                        onChange={(e) => setClaimServiceType(e.target.value)}
+                      >
+                        <option value="flight">Flight (Domestic / International)</option>
+                        <option value="hotel">Hotel / Resort Stay</option>
+                        <option value="bus">Intercity Bus</option>
+                        <option value="train">Indian Railways (IRCTC)</option>
+                        <option value="holiday">Holiday Tour Package</option>
+                      </select>
+                    </div>
+
+                    <div className="form-group">
+                      <label>Lead Passenger Full Name *</label>
+                      <input
+                        type="text"
+                        className="native-input"
+                        placeholder="e.g. Rohit Sharma"
+                        value={claimName}
+                        onChange={(e) => setClaimName(e.target.value)}
+                        required
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label>Approx. Gross Ticket Fare Paid (₹) *</label>
+                      <input
+                        type="number"
+                        className="native-input font-bold"
+                        value={claimAmount}
+                        onChange={(e) => setClaimAmount(Number(e.target.value))}
+                        min="100"
+                        step="100"
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label>Contact Email (For Tracking Credit Note) *</label>
+                      <input
+                        type="email"
+                        className="native-input"
+                        value={claimEmail}
+                        onChange={(e) => setClaimEmail(e.target.value)}
+                        required
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label>Contact Mobile (+91) *</label>
+                      <input
+                        type="tel"
+                        className="native-input"
+                        value={claimPhone}
+                        onChange={(e) => setClaimPhone(e.target.value)}
+                        required
+                      />
+                    </div>
+
+                    <div className="form-group full-width">
+                      <label>Route / Hotel Name / Flight Details</label>
+                      <input
+                        type="text"
+                        className="native-input"
+                        placeholder="e.g. IndiGo 6E-2041 BOM-DEL or Taj Palace Goa"
+                        value={claimServiceTitle}
+                        onChange={(e) => setClaimServiceTitle(e.target.value)}
+                      />
+                    </div>
+
+                    <div className="form-group full-width">
+                      <label>Detailed Explanation / Supporting Remarks</label>
+                      <textarea
+                        className="native-textarea"
+                        rows="2"
+                        placeholder="e.g. Flight 6E-2041 was cancelled by IndiGo on 22 Sep. SMS notice received."
+                        value={claimRemarks}
+                        onChange={(e) => setClaimRemarks(e.target.value)}
+                      ></textarea>
+                    </div>
+                  </div>
+
+                  <div className="refund-actions-bar mt-4">
+                    <button type="button" className="secondary-btn" onClick={() => setClaimStep(1)}>
+                      Back
+                    </button>
+                    <button
+                      type="button"
+                      className="primary-btn"
+                      disabled={!claimPnr.trim() || !claimName.trim()}
+                      onClick={() => setClaimStep(3)}
+                    >
+                      Choose Disbursement Mode <ChevronRight size={16} />
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Step 3: Disbursement Preference & Submission */}
+              {claimStep === 3 && !claimResult && (
+                <div className="refund-modal-body">
+                  <h4 className="payout-selection-heading">Choose Your Payout Destination</h4>
+                  <p className="payout-selection-sub">Select how you would like to receive the ₹{Number(claimAmount || 0).toLocaleString('en-IN')} refund credit.</p>
+
+                  <div className="payout-options-grid mt-3">
+                    {/* Option 1: Instant EazeWallet */}
+                    <div
+                      className={`payout-option-card ${claimPayoutMode === 'wallet' ? 'selected' : ''}`}
+                      onClick={() => setClaimPayoutMode('wallet')}
+                    >
+                      <div className="payout-card-radio">
+                        <input
+                          type="radio"
+                          name="claimPayout"
+                          checked={claimPayoutMode === 'wallet'}
+                          onChange={() => setClaimPayoutMode('wallet')}
+                        />
+                      </div>
+                      <div className="payout-card-icon wallet">
+                        <Zap size={22} />
+                      </div>
+                      <div className="payout-card-content">
+                        <div className="payout-title-row">
+                          <strong>Instant EazeWallet Credit</strong>
+                          <span className="instant-badge">⚡ 0-SECOND CREDIT</span>
+                        </div>
+                        <p>Immediate ledger balance update with <strong>+₹{Math.round(Number(claimAmount || 0) * 0.05 + 100)} Bonus Voucher</strong> and 1-year booking validity.</p>
+                      </div>
+                    </div>
+
+                    {/* Option 2: Original Mode */}
+                    <div
+                      className={`payout-option-card ${claimPayoutMode === 'original_mode' ? 'selected' : ''}`}
+                      onClick={() => setClaimPayoutMode('original_mode')}
+                    >
+                      <div className="payout-card-radio">
+                        <input
+                          type="radio"
+                          name="claimPayout"
+                          checked={claimPayoutMode === 'original_mode'}
+                          onChange={() => setClaimPayoutMode('original_mode')}
+                        />
+                      </div>
+                      <div className="payout-card-icon card">
+                        <CreditCard size={22} />
+                      </div>
+                      <div className="payout-card-content">
+                        <div className="payout-title-row">
+                          <strong>Original Payment Method (Source)</strong>
+                          <span className="standard-badge">24 - 48 HRS</span>
+                        </div>
+                        <p>Credited back to the original UPI, Card, or Net Banking account used during ticket checkout.</p>
+                      </div>
+                    </div>
+
+                    {/* Option 3: UPI VPA */}
+                    <div
+                      className={`payout-option-card ${claimPayoutMode === 'upi' ? 'selected' : ''}`}
+                      onClick={() => setClaimPayoutMode('upi')}
+                    >
+                      <div className="payout-card-radio">
+                        <input
+                          type="radio"
+                          name="claimPayout"
+                          checked={claimPayoutMode === 'upi'}
+                          onChange={() => setClaimPayoutMode('upi')}
+                        />
+                      </div>
+                      <div className="payout-card-icon upi">
+                        <Smartphone size={22} />
+                      </div>
+                      <div className="payout-card-content">
+                        <div className="payout-title-row">
+                          <strong>Direct UPI VPA Transfer</strong>
+                          <span className="instant-badge">2 - 6 HRS</span>
+                        </div>
+                        <p>Direct bank account settlement via NPCI UPI clearing engine.</p>
+                        {claimPayoutMode === 'upi' && (
+                          <div className="mt-2" onClick={(e) => e.stopPropagation()}>
+                            <input
+                              type="text"
+                              className="native-input"
+                              placeholder="Enter your UPI ID (e.g. mobile@okaxis)"
+                              value={claimUpiId}
+                              onChange={(e) => setClaimUpiId(e.target.value)}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Option 4: Bank NEFT */}
+                    <div
+                      className={`payout-option-card ${claimPayoutMode === 'bank_transfer' ? 'selected' : ''}`}
+                      onClick={() => setClaimPayoutMode('bank_transfer')}
+                    >
+                      <div className="payout-card-radio">
+                        <input
+                          type="radio"
+                          name="claimPayout"
+                          checked={claimPayoutMode === 'bank_transfer'}
+                          onChange={() => setClaimPayoutMode('bank_transfer')}
+                        />
+                      </div>
+                      <div className="payout-card-icon bank">
+                        <Building size={22} />
+                      </div>
+                      <div className="payout-card-content">
+                        <div className="payout-title-row">
+                          <strong>Direct Bank Account (NEFT / IMPS)</strong>
+                          <span className="standard-badge">1 - 2 BANKING DAYS</span>
+                        </div>
+                        <p>Electronic clearing to any Indian bank account.</p>
+                        {claimPayoutMode === 'bank_transfer' && (
+                          <div className="payout-nested-inputs mt-2" onClick={(e) => e.stopPropagation()}>
+                            <input
+                              type="text"
+                              className="native-input mb-2"
+                              placeholder="Account Number"
+                              value={claimBankAccount}
+                              onChange={(e) => setClaimBankAccount(e.target.value)}
+                            />
+                            <input
+                              type="text"
+                              className="native-input"
+                              placeholder="Bank IFSC Code"
+                              value={claimIfscCode}
+                              onChange={(e) => setClaimIfscCode(e.target.value.toUpperCase())}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="refund-actions-bar mt-4">
+                    <button type="button" className="secondary-btn" onClick={() => setClaimStep(2)}>
+                      Back
+                    </button>
+                    <button
+                      type="button"
+                      className="primary-btn submit-claim-now-btn"
+                      onClick={handleSubmitDirectClaim}
+                      disabled={isSubmittingClaim}
+                    >
+                      {isSubmittingClaim ? 'Registering Claim...' : `Submit Official Claim & Disburse ₹${Number(claimAmount).toLocaleString('en-IN')}`}
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Step 3 Success Voucher */}
+              {claimResult && (
+                <div className="refund-modal-body text-center py-4">
+                  <div className="refund-success-icon-circle mx-auto mb-3">
+                    <CheckCircle2 size={48} color="#10b981" />
+                  </div>
+
+                  <h3>Refund Claim Successfully Registered!</h3>
+                  <p className="refund-success-lead">
+                    Your claim has been logged into the DGCA/IRCTC clearing gateway. Tracking ID: <strong>{claimResult.id}</strong>
+                  </p>
+
+                  <div className="refund-receipt-voucher-card text-start mt-4">
+                    <div className="voucher-header">
+                      <span className="voucher-badge">OFFICIAL REFUND CREDIT NOTE</span>
+                      <span className="voucher-status-pill">{claimResult.status}</span>
+                    </div>
+
+                    <div className="voucher-details-grid mt-3">
+                      <div className="voucher-field">
+                        <span>Refund Tracking ID:</span>
+                        <strong>{claimResult.id}</strong>
+                      </div>
+                      <div className="voucher-field">
+                        <span>Banking Reference (ARN):</span>
+                        <strong>{claimResult.arnNumber}</strong>
+                      </div>
+                      <div className="voucher-field">
+                        <span>PNR / Reference:</span>
+                        <strong>{claimResult.pnr}</strong>
+                      </div>
+                      <div className="voucher-field">
+                        <span>Net Refund Amount:</span>
+                        <strong className="text-success font-bold">₹{Number(claimResult.netRefundAmount || 0).toLocaleString('en-IN')}</strong>
+                      </div>
+                      <div className="voucher-field full-width">
+                        <span>Disbursement Channel:</span>
+                        <strong>{claimResult.payoutDetails}</strong>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="refund-confirmation-actions mt-4">
+                    <button
+                      type="button"
+                      className="secondary-btn"
+                      onClick={() => window.print()}
+                    >
+                      <Printer size={16} /> Print Credit Note
+                    </button>
+                    <button
+                      type="button"
+                      className="primary-btn"
+                      onClick={() => {
+                        closeClaimModal();
+                        handleSearchRefund(claimResult.id);
+                      }}
+                    >
+                      Track Live Progress on Hub →
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

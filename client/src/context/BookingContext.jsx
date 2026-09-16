@@ -61,6 +61,53 @@ const initialDemoBookings = [
   }
 ];
 
+const initialDemoRefunds = [
+  {
+    id: 'RFND-10492',
+    bookingId: 'EZ-FL-74892',
+    pnr: '6EZ9KM',
+    customerName: 'Rohit Sharma',
+    customerEmail: 'rohit@example.com',
+    customerPhone: '+91 9876543210',
+    serviceType: 'flight',
+    serviceTitle: 'IndiGo (6E-2041) • Mumbai (BOM) → New Delhi (DEL)',
+    grossAmount: 4999,
+    penaltyAmount: 1200,
+    serviceFeeWaiver: 300,
+    netRefundAmount: 3799,
+    payoutMode: 'wallet',
+    payoutDetails: 'Instant EazeWallet Credit (+ ₹289 Bonus Voucher)',
+    arnNumber: 'ARN-IND883920194821',
+    status: 'Completed',
+    statusStep: 4,
+    reason: 'Travel schedule changed',
+    createdAt: new Date(Date.now() - 36 * 3600 * 1000).toISOString(),
+    completedAt: new Date(Date.now() - 2 * 3600 * 1000).toISOString()
+  },
+  {
+    id: 'RFND-20941',
+    bookingId: 'EZ-HT-58210',
+    pnr: 'GHP-8902',
+    customerName: 'Rohit Sharma',
+    customerEmail: 'rohit@example.com',
+    customerPhone: '+91 9876543210',
+    serviceType: 'hotel',
+    serviceTitle: 'The Grand Heritage Palace & Spa, Goa (Deluxe Sea View)',
+    grossAmount: 8500,
+    penaltyAmount: 0,
+    serviceFeeWaiver: 500,
+    netRefundAmount: 8500,
+    payoutMode: 'original_mode',
+    payoutDetails: 'Original Payment Source (HDFC Visa Card •••• 4012)',
+    arnNumber: 'ARN-HDFC77281940129',
+    status: 'In Progress',
+    statusStep: 3,
+    reason: 'Free cancellation within 48h check-in window',
+    createdAt: new Date(Date.now() - 14 * 3600 * 1000).toISOString(),
+    completedAt: null
+  }
+];
+
 export function BookingProvider({ children }) {
   const [bookings, setBookings] = useState(() => {
     try {
@@ -92,9 +139,9 @@ export function BookingProvider({ children }) {
   const [refunds, setRefunds] = useState(() => {
     try {
       const saved = localStorage.getItem('eazetrip_refunds');
-      return saved ? JSON.parse(saved) : [];
+      return saved ? JSON.parse(saved) : initialDemoRefunds;
     } catch {
-      return [];
+      return initialDemoRefunds;
     }
   });
 

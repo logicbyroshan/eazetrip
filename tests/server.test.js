@@ -777,5 +777,42 @@ test('50. GET /api/refunds/track/:query returns 404 for invalid refund identifie
   assert.ok(notFoundRes.data.error.includes('No refund record found'));
 });
 
+test('51. GET /api/refunds returns user refund claims list and supports email filtering', async () => {
+  const allRefundsRes = await requestJson('/api/refunds');
+  assert.strictEqual(allRefundsRes.status, 200);
+  assert.strictEqual(allRefundsRes.data.success, true);
+  assert.ok(Array.isArray(allRefundsRes.data.data));
+  assert.ok(allRefundsRes.data.count >= 2);
 
+  // Filter by user email
+  const userRefundsRes = await requestJson('/api/refunds?email=priyansh.sharma@gmail.com');
+  assert.strictEqual(userRefundsRes.status, 200);
+  assert.strictEqual(userRefundsRes.data.success, true);
+  assert.ok(userRefundsRes.data.data.some(r => r.customerEmail === 'priyansh.sharma@gmail.com'));
+});
 
+test('52. POST /api/refunds/request handles direct airline cancellation dispute claim with Zero Shield waiver', async () => {
+  const claimRes = await requestJson('/api/refunds/request', {
+    method: 'POST',
+    body: {
+      bookingId: 'BK-DISPUTE-01',
+      pnr: 'AI-CANCEL-99',
+      customerName: 'Rohit Sharma',
+      customerEmail: 'rohit@example.com',
+      customerPhone: '+91 9876543210',
+      serviceType: 'flight',
+      serviceTitle: 'IndiGo 6E-2041 BOM-DEL',
+      grossAmount: 4999,
+      reason: 'Flight Cancelled / Rescheduled by Airline (>3h delay)',
+      payoutMode: 'wallet',
+      hasShield: true
+    }
+  });
+  assert.strictEqual(claimRes.status, 201);
+  assert.strictEqual(claimRes.data.success, true);
+  assert.strictEqual(claimRes.data.data.status, 'Completed');
+  assert.strictEqual(claimRes.data.data.penaltyAmount, 0); // 100% full waiver
+  assert.strictEqual(claimRes.data.data.netRefundAmount, 4999);
+  assert.ok(claimRes.data.data.id.startsWith('RFND-'));
+  assert.ok(claimRes.data.data.arnNumber.startsWith('ARN-'));
+});
