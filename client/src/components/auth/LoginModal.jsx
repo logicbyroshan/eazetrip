@@ -6,7 +6,7 @@ import { X, Phone, Mail, Lock, Eye, EyeOff, RefreshCw, CheckCircle } from 'lucid
 
 export default function LoginModal() {
   const navigate = useNavigate();
-  const { isLoginModalOpen, closeLoginModal, login, loginWithGoogle, firstName } = useAuth();
+  const { isLoginModalOpen, closeLoginModal, login, loginWithGoogle, firstName, googleConfig } = useAuth();
   const { showToast } = useBooking();
 
   const [activeTab, setActiveTab] = useState('phone'); // 'phone' | 'email'
@@ -102,8 +102,21 @@ export default function LoginModal() {
   const handleGoogleSignIn = async () => {
     setIsSubmitting(true);
     try {
-      await loginWithGoogle();
-      showToast('Signed in with Google successfully!');
+      if (window.google?.accounts?.id && googleConfig?.configured) {
+        window.google.accounts.id.prompt((notification) => {
+          if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+            loginWithGoogle().then(() => {
+              showToast('Signed in with Google successfully!');
+              setIsSubmitting(false);
+            }).catch(() => {
+              setIsSubmitting(false);
+            });
+          }
+        });
+      } else {
+        await loginWithGoogle();
+        showToast('Signed in with Google successfully!');
+      }
     } catch (err) {
       showToast('Google sign-in could not be completed.', 'error');
     } finally {

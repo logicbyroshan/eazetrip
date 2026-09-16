@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.8.0] - 2026-09-16
+
+### Production Google OAuth 2.0 & Identity Services Integration
+
+#### Added
+- **Google OAuth 2.0 Backend Verification Engine (`server/services/googleAuthService.js`)**:
+  - Validates Google ID tokens (GIS) via Google's official `https://oauth2.googleapis.com/tokeninfo` endpoint with cryptographic claim verification (`iss`, `aud`, `sub`, `email_verified`).
+  - Supports OAuth 2.0 authorization code exchange via `https://oauth2.googleapis.com/token` with `GOOGLE_CLIENT_SECRET`.
+  - Smart Sandbox simulation fallback for test suites and offline environments when client keys are not yet configured.
+- **REST Endpoints (`server/index.js`)**:
+  - `GET /api/auth/google-client-id`: Exposes public Google Client ID configuration to the frontend SPA.
+  - `POST /api/auth/google`: Authenticates Google JWT credentials, synchronizes user profile in `mockStore`, and issues 256-bit session tokens.
+- **Google Identity Services (GIS) Client (`client/`)**:
+  - Integrated `https://accounts.google.com/gsi/client` SDK in `client/index.html`.
+  - Configured `envDir: '../'` in `client/vite.config.js` for automatic `.env` variable loading.
+  - Updated `AuthContext.jsx` with Google Identity Services initialization and token exchange.
+  - Updated `LoginModal.jsx`, `AuthPage.jsx`, and `GoogleOneTapPrompt.jsx` to seamlessly launch Google One-Tap and Google Sign-in.
+- **Environment Configuration (`.env`, `.env.example`)**:
+  - Added dedicated copy-paste variables `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, and `VITE_GOOGLE_CLIENT_ID` with step-by-step Google Cloud Console instructions.
+- **Automated Tests (`tests/server.test.js`)**:
+  - Added Tests 53, 54, and 55 for Google OAuth config, token validation, and bad payload rejection (55/55 tests passing).
+
+---
+
 ## [1.7.3] - 2026-09-16
 
 ### Deepened Traveler Recognition in Profile & Booking Review Flows

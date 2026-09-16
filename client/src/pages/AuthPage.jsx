@@ -21,7 +21,7 @@ import {
 
 export default function AuthPage({ mode = 'register' }) {
   const navigate = useNavigate();
-  const { register, login, loginWithGoogle, firstName } = useAuth();
+  const { register, login, loginWithGoogle, firstName, googleConfig } = useAuth();
   const { showToast } = useBooking();
 
   const [currentMode, setCurrentMode] = useState(mode);
@@ -87,9 +87,23 @@ export default function AuthPage({ mode = 'register' }) {
   const handleGoogleSignIn = async () => {
     setIsSubmitting(true);
     try {
-      await loginWithGoogle();
-      showToast('Signed in with Google successfully!');
-      navigate('/');
+      if (window.google?.accounts?.id && googleConfig?.configured) {
+        window.google.accounts.id.prompt((notification) => {
+          if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+            loginWithGoogle().then(() => {
+              showToast('Signed in with Google successfully!');
+              navigate('/');
+              setIsSubmitting(false);
+            }).catch(() => {
+              setIsSubmitting(false);
+            });
+          }
+        });
+      } else {
+        await loginWithGoogle();
+        showToast('Signed in with Google successfully!');
+        navigate('/');
+      }
     } catch (err) {
       setErrorMsg('Google sign-in could not be completed.');
       showToast('Google sign-in failed.', 'error');
