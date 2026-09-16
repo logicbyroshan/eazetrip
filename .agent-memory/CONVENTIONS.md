@@ -43,3 +43,19 @@
 * Use native Node.js test runner (`node --test tests/server.test.js`).
 * Tests spin up an ephemeral HTTP server on random port `0`.
 * Every endpoint must test both the success path and invalid/missing parameter failure paths (e.g., 400 Bad Request, 404 Not Found, 409 Conflict).
+
+---
+
+## 5. Git Branching & GitHub PR Workflow Conventions
+
+1. **Branch Naming**:
+   - `feature/{domain}-{short-description}` (e.g., `feature/holiday-booking`, `feature/razorpay-live`)
+   - `fix/{domain}-{issue}` (e.g., `fix/sticky-sidebar`, `fix/header-alignment`)
+   - `refactor/{component}` (e.g., `refactor/review-page`)
+2. **Pull Request Lifecycle**:
+   - Create branch from `main`: `git checkout -b <branch-name>`
+   - Verify: `npm test` & `npm run build`
+   - Commit & push: `git push -u origin <branch-name>`
+   - Create PR: `gh pr create --base main --head <branch-name> --title "..." --body "..."`
+   - Merge PR: `gh pr merge <branch-name> --merge --auto` (or `--admin` when required)
+   - Sync main: `git checkout main ; git pull origin main`

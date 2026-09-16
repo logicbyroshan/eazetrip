@@ -128,8 +128,45 @@ To maintain speed and avoid context window exhaustion:
 
 ---
 
-## 7. Things an Agent MUST DO
+---
 
+## 7. Git Branching & GitHub PR Workflow Rule (Mandatory)
+
+Every new modification, feature, bugfix, or refactoring task **MUST** follow this structured branch-and-PR lifecycle:
+
+1. **Create a Dedicated Branch**: Never push unreviewed direct commits to `main`. Create a descriptive branch from `main`:
+   - Feature: `git checkout -b feature/short-description`
+   - Bugfix: `git checkout -b fix/short-description` or `git checkout -b bug/short-description`
+   - Refactor: `git checkout -b refactor/short-description`
+2. **Verify Locally First**:
+   - Run `npm test` (verify all 35 tests pass).
+   - Run `npm run build` in `client/` (verify 0 build errors).
+3. **Commit & Push to Remote**:
+   ```powershell
+   git add .
+   git commit -m "feat(domain): descriptive commit message"
+   git push -u origin <branch-name>
+   ```
+4. **Create & Merge Pull Request via `gh` CLI**:
+   - Create PR:
+     ```powershell
+     gh pr create --base main --head <branch-name> --title "feat(domain): descriptive title" --body "Summary of verified changes..."
+     ```
+   - Merge PR into `main` safely:
+     ```powershell
+     gh pr merge <pr-number-or-branch> --merge --auto
+     ```
+     *(or `gh pr merge --admin --merge` if branch protection auto-checks require administrative bypass)*
+   - Return to `main` and pull latest:
+     ```powershell
+     git checkout main ; git pull origin main
+     ```
+
+---
+
+## 8. Things an Agent MUST DO
+
+* ✅ Use a dedicated branch (`feature/...`, `fix/...`, `bug/...`) and merge via `gh` CLI PR for every change.
 * ✅ Verify that both Vite build (`npm run build`) and test suite (`npm test`) pass before finishing.
 * ✅ Maintain support for all 5 booking mediums (Flights, Hotels, Buses, Trains, Holidays).
 * ✅ Keep both Razorpay live/test SDK integration and Smart Simulation fallback mode intact.
@@ -138,8 +175,9 @@ To maintain speed and avoid context window exhaustion:
 
 ---
 
-## 8. Things an Agent MUST NOT DO
+## 9. Things an Agent MUST NOT DO
 
+* ❌ **DO NOT** make direct unverified commits to `main` without creating a PR branch.
 * ❌ **DO NOT** rewrite working systems from scratch or change library architecture without explicit instruction.
 * ❌ **DO NOT** delete, rename, or break existing API endpoints or booking state schemas.
 * ❌ **DO NOT** commit live credentials or mock data with real personal info.
