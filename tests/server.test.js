@@ -851,3 +851,85 @@ test('55. POST /api/auth/google rejects empty payload with 400 Bad Request', asy
   assert.ok(badRes.data.error.includes('required'));
 });
 
+test('56. GET /api/health returns operational diagnostics, memory metrics, and store counts', async () => {
+  const healthRes = await requestJson('/api/health');
+  assert.strictEqual(healthRes.status, 200);
+  assert.strictEqual(healthRes.data.status, 'healthy');
+  assert.ok(typeof healthRes.data.uptime === 'number');
+  assert.ok(healthRes.data.nodeVersion.startsWith('v'));
+  assert.ok(typeof healthRes.data.memory.rssMb === 'number');
+  assert.ok(typeof healthRes.data.memory.heapUsedMb === 'number');
+  assert.ok(healthRes.data.services.notificationEngine === 'operational');
+  assert.ok(healthRes.data.storeMetrics.flights >= 1);
+  assert.ok(healthRes.data.storeMetrics.hotels >= 1);
+  assert.ok(healthRes.data.storeMetrics.buses >= 1);
+  assert.ok(healthRes.data.storeMetrics.railways >= 1);
+  assert.ok(healthRes.data.storeMetrics.holidays >= 1);
+});
+
+test('57. GET /api/flights supports pagination with page and limit parameters', async () => {
+  const pageRes = await requestJson('/api/flights?page=1&limit=2');
+  assert.strictEqual(pageRes.status, 200);
+  assert.strictEqual(pageRes.data.success, true);
+  assert.strictEqual(pageRes.data.count, 2);
+  assert.strictEqual(pageRes.data.limit, 2);
+  assert.strictEqual(pageRes.data.page, 1);
+  assert.ok(pageRes.data.total >= 2);
+  assert.ok(pageRes.data.totalPages >= 1);
+  assert.strictEqual(pageRes.data.data.length, 2);
+});
+
+test('58. GET /api/hotels supports sorting by price ascending and descending', async () => {
+  const ascRes = await requestJson('/api/hotels?sortBy=price_asc');
+  assert.strictEqual(ascRes.status, 200);
+  assert.ok(ascRes.data.data.length >= 2);
+  const firstAsc = ascRes.data.data[0].pricePerNight;
+  const secondAsc = ascRes.data.data[1].pricePerNight;
+  assert.ok(firstAsc <= secondAsc);
+
+  const descRes = await requestJson('/api/hotels?sortBy=price_desc');
+  assert.strictEqual(descRes.status, 200);
+  assert.ok(descRes.data.data.length >= 2);
+  const firstDesc = descRes.data.data[0].pricePerNight;
+  const secondDesc = descRes.data.data[1].pricePerNight;
+  assert.ok(firstDesc >= secondDesc);
+});
+
+test('59. GET /api/buses supports sorting by rating descending', async () => {
+  const busRes = await requestJson('/api/buses?sortBy=rating_desc');
+  assert.strictEqual(busRes.status, 200);
+  assert.strictEqual(busRes.data.success, true);
+  assert.ok(busRes.data.data.length >= 2);
+  assert.ok((busRes.data.data[0].rating || 0) >= (busRes.data.data[1].rating || 0));
+});
+
+test('60. GET /api/railways supports pagination with limit=2', async () => {
+  const trainRes = await requestJson('/api/railways?page=1&limit=2');
+  assert.strictEqual(trainRes.status, 200);
+  assert.strictEqual(trainRes.data.success, true);
+  assert.strictEqual(trainRes.data.count, 2);
+  assert.strictEqual(trainRes.data.page, 1);
+  assert.strictEqual(trainRes.data.limit, 2);
+  assert.ok(trainRes.data.total >= 2);
+});
+
+test('61. GET /api/holidays supports combined category filtering, sorting by price, and pagination', async () => {
+  const holRes = await requestJson('/api/holidays?category=Honeymoon&sortBy=price_asc&limit=5');
+  assert.strictEqual(holRes.status, 200);
+  assert.strictEqual(holRes.data.success, true);
+  assert.ok(Array.isArray(holRes.data.data));
+  if (holRes.data.data.length >= 2) {
+    assert.ok(holRes.data.data[0].price <= holRes.data.data[1].price);
+  }
+});
+
+test('62. API defensively sanitizes negative and malformed pagination bounds', async () => {
+  const boundsRes = await requestJson('/api/flights?page=-5&limit=999');
+  assert.strictEqual(boundsRes.status, 200);
+  assert.strictEqual(boundsRes.data.success, true);
+  // Page should clamp to 1 and limit should cap at 100 max
+  assert.strictEqual(boundsRes.data.page, 1);
+  assert.strictEqual(boundsRes.data.limit, 100);
+  assert.ok(boundsRes.data.count <= 100);
+});
+

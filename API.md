@@ -9,7 +9,7 @@ Base URL: `http://localhost:5001/api`
 ## 1. System & Health
 
 ### `GET /api/health`
-Checks server health, uptime, and current runtime environment.
+Checks server health, memory diagnostics, connected service modes, and store metrics.
 
 - **Auth Required:** No
 - **Rate Limit:** 120 req/min
@@ -17,9 +17,31 @@ Checks server health, uptime, and current runtime environment.
   ```json
   {
     "status": "healthy",
-    "uptime": 128.45,
-    "timestamp": "2026-09-15T10:55:00.000Z",
-    "environment": "development"
+    "uptime": 128,
+    "timestamp": "2026-09-16T15:25:00.000Z",
+    "environment": "development",
+    "nodeVersion": "v24.0.0",
+    "memory": {
+      "rssMb": 68,
+      "heapTotalMb": 42,
+      "heapUsedMb": 28,
+      "externalMb": 5
+    },
+    "services": {
+      "razorpay": "live_test_merchant",
+      "googleAuth": "configured",
+      "notificationEngine": "operational",
+      "supportHelpDesk": "operational",
+      "refundEngine": "operational"
+    },
+    "storeMetrics": {
+      "flights": 12,
+      "hotels": 10,
+      "buses": 8,
+      "railways": 8,
+      "holidays": 10,
+      "activeBookings": 6
+    }
   }
   ```
 

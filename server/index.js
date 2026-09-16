@@ -114,13 +114,81 @@ let users = [];
 // API ROUTES
 // ==========================================
 
-// Health Check Endpoint
+// Helper to apply sorting and pagination across all mock catalogs safely
+function applyListFiltersAndPagination(items, query) {
+  let list = [...items];
+  const sortBy = toStr(query.sortBy);
+  const rawPage = parseInt(toStr(query.page), 10);
+  const rawLimit = parseInt(toStr(query.limit), 10);
+  const hasPagination = !isNaN(rawLimit) && rawLimit > 0;
+  const page = Math.max(1, !isNaN(rawPage) && rawPage > 0 ? rawPage : 1);
+  const limit = Math.max(1, Math.min(100, rawLimit || 20));
+
+  if (sortBy) {
+    if (sortBy === 'price_asc' || sortBy === 'price_low') {
+      list.sort((a, b) => (Number(a.price || a.pricePerNight || a.startingPrice || 0)) - (Number(b.price || b.pricePerNight || b.startingPrice || 0)));
+    } else if (sortBy === 'price_desc' || sortBy === 'price_high') {
+      list.sort((a, b) => (Number(b.price || b.pricePerNight || b.startingPrice || 0)) - (Number(a.price || a.pricePerNight || a.startingPrice || 0)));
+    } else if (sortBy === 'rating' || sortBy === 'rating_desc') {
+      list.sort((a, b) => (Number(b.rating || b.starRating || 0)) - (Number(a.rating || a.starRating || 0)));
+    } else if (sortBy === 'name_asc') {
+      list.sort((a, b) => String(a.name || a.airline || a.operator || a.trainName || a.title || '').localeCompare(String(b.name || b.airline || b.operator || b.trainName || b.title || '')));
+    }
+  }
+
+  const total = list.length;
+  if (hasPagination) {
+    const startIndex = (page - 1) * limit;
+    const paginated = list.slice(startIndex, startIndex + limit);
+    return {
+      success: true,
+      count: paginated.length,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+      data: paginated
+    };
+  }
+
+  return {
+    success: true,
+    count: total,
+    total,
+    data: list
+  };
+}
+
+// Health Check Endpoint with Extended System Diagnostics
 app.get('/api/health', (req, res) => {
+  const mem = process.memoryUsage();
   res.json({
     status: 'healthy',
-    uptime: process.uptime(),
+    uptime: Math.round(process.uptime()),
     timestamp: new Date().toISOString(),
-    environment: NODE_ENV
+    environment: NODE_ENV,
+    nodeVersion: process.version,
+    memory: {
+      rssMb: Math.round(mem.rss / 1024 / 1024),
+      heapTotalMb: Math.round(mem.heapTotal / 1024 / 1024),
+      heapUsedMb: Math.round(mem.heapUsed / 1024 / 1024),
+      externalMb: Math.round(mem.external / 1024 / 1024)
+    },
+    services: {
+      razorpay: isRazorpayConfigured ? 'live_test_merchant' : 'smart_simulation',
+      googleAuth: Boolean(process.env.GOOGLE_CLIENT_ID) ? 'configured' : 'smart_simulation',
+      notificationEngine: 'operational',
+      supportHelpDesk: 'operational',
+      refundEngine: 'operational'
+    },
+    storeMetrics: {
+      flights: mockStore.flights ? mockStore.flights.length : 0,
+      hotels: mockStore.hotels ? mockStore.hotels.length : 0,
+      buses: mockStore.buses ? mockStore.buses.length : 0,
+      railways: mockStore.railways ? mockStore.railways.length : 0,
+      holidays: mockStore.holidays ? mockStore.holidays.length : 0,
+      activeBookings: bookings.length
+    }
   });
 });
 
@@ -153,7 +221,7 @@ app.get('/api/flights', (req, res) => {
     results = results.filter((f) => f.price <= Number(maxPrice));
   }
 
-  res.json({ success: true, count: results.length, data: results });
+  res.json(applyListFiltersAndPagination(results, req.query));
 });
 
 app.get('/api/flights/:id', (req, res) => {
@@ -181,7 +249,7 @@ app.get('/api/hotels', (req, res) => {
     results = results.filter((h) => h.pricePerNight <= Number(maxPrice));
   }
 
-  res.json({ success: true, count: results.length, data: results });
+  res.json(applyListFiltersAndPagination(results, req.query));
 });
 
 app.get('/api/hotels/:id', (req, res) => {
@@ -209,7 +277,7 @@ app.get('/api/buses', (req, res) => {
     results = results.filter((b) => b.operator.toLowerCase().includes(operator.toLowerCase()));
   }
 
-  res.json({ success: true, count: results.length, data: results });
+  res.json(applyListFiltersAndPagination(results, req.query));
 });
 
 app.get('/api/buses/:id', (req, res) => {
@@ -233,7 +301,7 @@ app.get('/api/railways', (req, res) => {
     results = results.filter((r) => r.to.toLowerCase() === to.toLowerCase());
   }
 
-  res.json({ success: true, count: results.length, data: results });
+  res.json(applyListFiltersAndPagination(results, req.query));
 });
 
 app.get('/api/railways/:id', (req, res) => {
@@ -268,7 +336,7 @@ app.get('/api/holidays', (req, res) => {
     results = results.filter((h) => h.price <= Number(maxPrice));
   }
 
-  res.json({ success: true, count: results.length, data: results });
+  res.json(applyListFiltersAndPagination(results, req.query));
 });
 
 app.get('/api/holidays/:id', (req, res) => {
@@ -1236,6 +1304,14 @@ if (require.main === module) {
 
   process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
   process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+
+  process.on('unhandledRejection', (reason, promise) => {
+    console.error('[ExploreEase Server] Unhandled Promise Rejection at:', promise, 'reason:', reason);
+  });
+
+  process.on('uncaughtException', (err) => {
+    console.error('[ExploreEase Server] Uncaught Exception thrown:', err);
+  });
 }
 
 module.exports = app;
