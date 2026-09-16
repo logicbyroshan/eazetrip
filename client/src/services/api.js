@@ -322,5 +322,35 @@ export const api = {
       body: JSON.stringify(mailPayload)
     });
     return res;
+  },
+
+  // Cancellation & Refund Engine
+  calculateRefund: async (calcPayload) => {
+    const res = await request('/api/refunds/calculate', {
+      method: 'POST',
+      body: JSON.stringify(calcPayload)
+    });
+    if (res.ok && res.data?.data) return res.data.data;
+    return null;
+  },
+
+  requestRefund: async (refundPayload) => {
+    const res = await request('/api/refunds/request', {
+      method: 'POST',
+      body: JSON.stringify(refundPayload)
+    });
+    return res;
+  },
+
+  trackRefund: async (query) => {
+    const res = await request(`/api/refunds/track/${encodeURIComponent(query)}`);
+    if (res.ok && res.data?.data) return res.data.data;
+    return null;
+  },
+
+  getRefunds: async (userQuery = '') => {
+    const res = await request(`/api/refunds${userQuery ? `?user=${encodeURIComponent(userQuery)}` : ''}`);
+    if (res.ok && res.data?.data) return res.data.data;
+    return [];
   }
 };

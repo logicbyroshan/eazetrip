@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.7.0] - 2026-09-16
+
+### Refund Resolution Engine, Cookie & Privacy Consent, Personalized Experience & Pre-Payment Auth
+
+#### Added
+- **3-Step Cancellation & Refund Experience (`ManageBookingsPage.jsx`)**:
+  - Step 1: Automated breakdown calculation comparing Gross Fare, Operator Penalty, EazeTrip Fee Waiver (₹0), and Net Refund Amount (with Zero Cancellation Shield support).
+  - Step 2: Multi-mode payout destination selection (**Instant EazeWallet Credit** with 0-sec transfer + 5% bonus credit, **Original Payment Source** 24-48 hrs, **Direct UPI ID**, and **Direct Bank Account NEFT/IMPS**).
+  - Step 3: Instant confirmation and official EazeTrip Refund Credit Note voucher with Tracking Reference (`#RFND-XXXXX`) and banking ARN code.
+- **Cancellation & Refund Resolution Hub (`CancellationRefundPage.jsx`)**:
+  - Live Refund Status Tracker with real-time 4-step progress stepper (Request Registered -> Fare Rule Verification -> Banking Disbursement -> Credit to Account).
+  - Interactive Instant Refund Estimator & Calculator supporting Flights, Hotels, Buses, and Railways with notice window adjustments.
+  - DGCA & IRCTC statutory cancellation policy accordion grids with time slabs and deduction rates.
+  - Official Refund Credit Note printable invoice view.
+- **DPDP & GDPR Cookie Consent & User Agreement Banner (`CookieConsentBanner.jsx`)**:
+  - Glassmorphic floating consent banner with "Accept All", "Essential Only", and "Preferences" modal.
+  - Granular privacy toggles for Strictly Necessary, Personalization & Travel Memory, Analytics, and Tailored Offers.
+- **Site-Wide Personalized Greetings & Dynamic Headlines**:
+  - Remembers logged-in traveler name persistently across sessions.
+  - Personalizes Homepage Hero, Special Offers Section, Offers Page, and Booking Review with custom greetings (e.g. *"Special Offers For You, Priyansh"*).
+- **Mandatory Authentication Before Payment**:
+  - Automatically verifies authentication state before launching payment gateway on `/review-booking`.
+  - Prompts login modal while safely preserving the active booking draft in session memory.
+  - Added authenticated traveler welcome badge and unauthenticated fare lock banner.
+- **Backend Refund Engine & REST API (`refundService.js`, `server/index.js`)**:
+  - `POST /api/refunds/calculate`
+  - `POST /api/refunds/request`
+  - `GET /api/refunds/track/:query`
+  - `GET /api/refunds`
+- **Automated Test Suite Expansion**: Added Tests 46–50 in `tests/server.test.js` (**50 / 50 tests passing with 100% success rate**).
+
+---
+
 ## [1.6.0] - 2026-09-16
 
 ### 24/7 Concierge Help Desk, Problem Escalation & Multi-Channel Connect Hub

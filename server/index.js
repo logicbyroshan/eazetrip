@@ -14,6 +14,7 @@ try {
 const mockStore = require('./data/mockStore');
 const notificationService = require('./services/notificationService');
 const supportService = require('./services/supportService');
+const refundService = require('./services/refundService');
 const { securityHeaders, rateLimit, sanitizeInput } = require('./middleware/security');
 const {
   validateLogin,
@@ -1018,6 +1019,103 @@ app.post('/api/support/direct-mail', (req, res) => {
     success: true,
     message: 'Direct email dispatched to support@eazetrip.com. Response will be delivered to your inbox.',
     data: mailRecord
+  });
+});
+
+// ==========================================
+// 6. REFUNDS & CANCELLATION ENGINE ROUTES
+// ==========================================
+
+// Calculate dynamic refund penalty & net amount breakdown
+app.post('/api/refunds/calculate', (req, res) => {
+  const { serviceType, grossAmount, hoursBeforeDeparture, hasShield } = req.body || {};
+  const calculation = refundService.calculateRefund({
+    serviceType,
+    grossAmount,
+    hoursBeforeDeparture,
+    hasShield
+  });
+  res.status(200).json({
+    success: true,
+    data: calculation
+  });
+});
+
+// Create and register a cancellation & refund request
+app.post('/api/refunds/request', (req, res) => {
+  const {
+    bookingId,
+    pnr,
+    customerName,
+    customerEmail,
+    customerPhone,
+    serviceType,
+    serviceTitle,
+    grossAmount,
+    reason,
+    payoutMode,
+    payoutDetails,
+    bankAccount,
+    ifscCode,
+    upiId,
+    hasShield,
+    selectedPassengers
+  } = req.body || {};
+
+  if (!bookingId && !pnr) {
+    return res.status(400).json({ success: false, error: 'Booking ID or PNR is required for refund request' });
+  }
+
+  const refundRecord = refundService.createRefundRequest({
+    bookingId,
+    pnr,
+    customerName,
+    customerEmail,
+    customerPhone,
+    serviceType,
+    serviceTitle,
+    grossAmount,
+    reason,
+    payoutMode,
+    payoutDetails,
+    bankAccount,
+    ifscCode,
+    upiId,
+    hasShield,
+    selectedPassengers
+  });
+
+  res.status(201).json({
+    success: true,
+    message: `Cancellation confirmed. Refund ${refundRecord.id} generated with ARN ${refundRecord.arnNumber}.`,
+    data: refundRecord
+  });
+});
+
+// Track refund status and 4-step progress timeline
+app.get('/api/refunds/track/:query', (req, res) => {
+  const query = req.params.query;
+  const refund = refundService.getRefundByQuery(query);
+  if (!refund) {
+    return res.status(404).json({
+      success: false,
+      error: `No refund record found matching "${query}". Please check your Refund ID, PNR, or Booking ID.`
+    });
+  }
+  res.status(200).json({
+    success: true,
+    data: refund
+  });
+});
+
+// Get user refunds history
+app.get('/api/refunds', (req, res) => {
+  const userQuery = req.query.user || req.query.email || '';
+  const refunds = refundService.getAllRefunds(userQuery);
+  res.status(200).json({
+    success: true,
+    count: refunds.length,
+    data: refunds
   });
 });
 

@@ -39,7 +39,7 @@ export default function ReviewBookingPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { activeCheckoutItem, saveBookingDraft, createBooking, showToast } = useBooking();
-  const { user } = useAuth();
+  const { user, isAuthenticated, openLoginModal } = useAuth();
 
   // Retrieve item from context or location state or fallback
   const bookingItem = activeCheckoutItem || location.state?.item || null;
@@ -56,11 +56,27 @@ export default function ReviewBookingPage() {
   // Primary Passenger / Contact State
   const [title, setTitle] = useState('Mr');
   const [firstName, setFirstName] = useState(user?.name?.split(' ')[0] || '');
-  const [lastName, setLastName] = useState(user?.name?.split(' ')[1] || 'Traveler');
+  const [lastName, setLastName] = useState(user?.name?.split(' ').slice(1).join(' ') || 'Traveler');
   const [gender, setGender] = useState('Male');
   const [dob, setDob] = useState('1994-05-15');
   const [contactEmail, setContactEmail] = useState(user?.email || 'traveler@eazetrip.com');
   const [contactPhone, setContactPhone] = useState(user?.phone || '9876543210');
+
+  // Sync profile data when user logs in
+  useEffect(() => {
+    if (user) {
+      if (!firstName && user.name) {
+        setFirstName(user.name.split(' ')[0] || '');
+        setLastName(user.name.split(' ').slice(1).join(' ') || 'Traveler');
+      }
+      if (user.email && (contactEmail === 'traveler@eazetrip.com' || !contactEmail)) {
+        setContactEmail(user.email);
+      }
+      if (user.phone && (contactPhone === '9876543210' || !contactPhone)) {
+        setContactPhone(user.phone);
+      }
+    }
+  }, [user]);
 
   // Medium Specific Customizations
   const [irctcUsername, setIrctcUsername] = useState('');
@@ -210,6 +226,34 @@ export default function ReviewBookingPage() {
     if (type === 'train' && !irctcUsername.trim()) {
       showToast('Please enter your IRCTC Username to book Indian Railways tickets', 'error');
       setCurrentStep(2);
+      return;
+    }
+
+    // Enforce Login Before Payment
+    if (!isAuthenticated) {
+      saveBookingDraft({
+        bookingItem,
+        type,
+        title,
+        firstName,
+        lastName,
+        gender,
+        dob,
+        contactEmail,
+        contactPhone,
+        additionalTravelers,
+        appliedDiscount,
+        appliedCoupon,
+        addInsurance,
+        zeroCancel,
+        irctcUsername,
+        berthPreference,
+        mealPreference,
+        roomPreference,
+        specialNotes
+      });
+      showToast('Please sign in or create an account to secure this booking and continue to payment', 'info');
+      openLoginModal();
       return;
     }
 
@@ -744,6 +788,33 @@ export default function ReviewBookingPage() {
                 return null;
               })()}
             </div>
+
+            {/* Authentication Status Banner */}
+            {!isAuthenticated ? (
+              <div className="guest-login-reminder-card mx-4 mt-3 mb-1">
+                <div className="reminder-left">
+                  <div className="reminder-icon-circle">
+                    <Lock size={18} color="#034ea2" />
+                  </div>
+                  <div>
+                    <strong>Sign In Required Before Payment</strong>
+                    <p>Sign in to lock in your fare price, link this booking to your account, and track instant refunds.</p>
+                  </div>
+                </div>
+                <button type="button" className="login-quick-pill-btn" onClick={openLoginModal}>
+                  Sign In / Register
+                </button>
+              </div>
+            ) : (
+              <div className="authenticated-traveler-welcome-card mx-4 mt-3 mb-1">
+                <div className="auth-welcome-left">
+                  <ShieldCheck size={18} color="#10b981" />
+                  <span>
+                    Booking as <strong>{user?.name || 'Valued Member'}</strong> ({user?.email || user?.phone}) • <span className="member-tier-pill">{user?.tier || 'Gold Member'}</span>
+                  </span>
+                </div>
+              </div>
+            )}
 
             <div className="traveler-form-wrap">
               {/* Primary Traveler (Adult 1) */}

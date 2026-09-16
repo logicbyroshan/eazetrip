@@ -4,6 +4,41 @@ This file logs meaningful agent tasks, architectural milestones, and fixes chron
 
 ---
 
+### Task: Refund Resolution Engine, Cookie Consent, Personalized UX & Pre-Payment Auth
+* **Date**: 2026-09-16
+* **Reason**: User requested complete refund request & calculation flow with payout options, live refund tracking hub on `/cancellation-refund`, DPDP/GDPR compliant user agreement & cookie consent banner, site-wide personalized titles remembering logged-in travelers, and mandatory authentication enforcement before payment.
+* **Branch / PR**: `feature/refund-request-flow-and-status-tracker` (PR pending merge).
+* **Files Affected**:
+  - `server/services/refundService.js`
+  - `server/index.js`
+  - `tests/server.test.js`
+  - `client/src/services/api.js`
+  - `client/src/context/BookingContext.jsx`
+  - `client/src/components/common/CookieConsentBanner.jsx`
+  - `client/src/components/home/SpecialOffersSection.jsx`
+  - `client/src/pages/HomePage.jsx`
+  - `client/src/pages/OffersPage.jsx`
+  - `client/src/pages/ReviewBookingPage.jsx`
+  - `client/src/pages/ManageBookingsPage.jsx`
+  - `client/src/pages/CancellationRefundPage.jsx`
+  - `client/src/App.jsx`
+  - `client/src/App.css`
+  - `CHANGELOG.md`
+  - `.agent-memory/CURRENT_STATE.md`
+  - `.agent-memory/TASK_HISTORY.md`
+* **What Changed**:
+  - Built backend `refundService.js` with dynamic DGCA/IRCTC penalty calculation, 4-step progress timeline generation, ARN tracking codes, and instant multi-channel notifications (WhatsApp & Email).
+  - Added REST API routes `/api/refunds/calculate`, `/api/refunds/request`, `/api/refunds/track/:query`, and `/api/refunds`.
+  - Built 3-step cancellation modal in `ManageBookingsPage.jsx` (Breakdown -> Payout Mode with Instant EazeWallet +5% bonus, Original Mode, Bank NEFT, or UPI -> Printable Credit Note Voucher).
+  - Revamped `/cancellation-refund` into full Refund Hub with live tracker, interactive estimator widget, and SLA channel matrices.
+  - Built `CookieConsentBanner.jsx` with DPDP/GDPR compliant granular preferences modal.
+  - Added site-wide personalized greetings (e.g. *"Special Offers For You, Priyansh"*).
+  - Enforced mandatory authentication before payment on `/review-booking` with draft preservation.
+  - Added 5 new automated tests to `tests/server.test.js` (50 / 50 passing).
+* **Testing Performed**: Verified 50 automated tests (100% pass), clean Vite production build (`npm run build`).
+
+---
+
 ### Task: 24/7 Concierge Help Desk, Problem Escalation & Multi-Channel Connect Hub
 * **Date**: 2026-09-16
 * **Reason**: User requested a comprehensive 24/7 help desk messaging system where travelers can directly report their problem, connect via official WhatsApp with pre-filled details, send direct support emails, request a 5-minute priority call-back, and track support ticket conversations in real time.

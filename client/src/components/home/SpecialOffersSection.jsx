@@ -3,12 +3,15 @@ import { Link } from 'react-router-dom';
 import { specialBankOffers } from '../../data/siteData';
 import { ChevronLeft, ChevronRight, Copy, Check, ArrowRight, Tag, Sparkles } from 'lucide-react';
 import { useBooking } from '../../context/BookingContext';
+import { useAuth } from '../../context/AuthContext';
 
 export default function SpecialOffersSection() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [copiedCode, setCopiedCode] = useState(null);
   const carouselRef = useRef(null);
   const { showToast } = useBooking();
+  const { user } = useAuth();
+  const firstName = user?.name ? user.name.split(' ')[0] : '';
 
   const categories = ['All', 'Flights', 'Hotels', 'Buses', 'Railway'];
 
@@ -84,8 +87,12 @@ export default function SpecialOffersSection() {
           {/* Header & Carousel Arrows */}
           <div className="special-offers-header">
             <div className="offers-title-group">
-              <h2>Special Offers</h2>
-              <p className="offers-sub-text">Exclusive bank discounts, card savings and instant cashback</p>
+              <h2>{firstName ? `Special Offers For You, ${firstName}` : 'Special Offers'}</h2>
+              <p className="offers-sub-text">
+                {firstName
+                  ? `Handpicked bank discounts, card savings, and exclusive member vouchers curated for ${firstName}`
+                  : 'Exclusive bank discounts, card savings and instant cashback'}
+              </p>
             </div>
 
             <div className="offers-controls">
