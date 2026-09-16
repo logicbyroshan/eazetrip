@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.1.2] - 2026-09-16
+
+### Profile Header Streamlining & Action Button Contrast Pass
+
+#### Profile Trips Header (`client/src/pages/ProfilePage.jsx`, `client/src/App.css`)
+- **De-Cluttered Section Header (`.tab-section-header`)**:
+  - Replaced redundant inline secondary buttons with a clean, modern title and a single right-aligned `Manage All Bookings →` action link.
+  - Rebuilt the filter pill bar (`.trip-filter-pill-bar`, `.trip-pill-btn`) with active royal blue elevation and smooth hover states.
+- **Trip Card Buttons Contrast Fix (`.view-ticket-btn`, `.profile-cancel-btn`)**:
+  - Removed conflicting duplicate CSS override that caused white text on light blue backgrounds.
+  - Standardized `.view-ticket-btn` to high-contrast solid Royal Blue with drop shadow and crisp typography.
+  - Standardized `.profile-cancel-btn` to clean outlined red and `.profile-track-refund-btn` to amber pill styles.
+
+---
+
 ## [2.1.1] - 2026-09-16
 
 ### Master Universal Spacing Tokens & Segmented Tab Navigation Pass

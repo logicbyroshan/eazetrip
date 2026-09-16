@@ -457,31 +457,34 @@ export default function ProfilePage() {
         {/* Tab 0: Trips & Bookings */}
         {activeTab === 'trips' && (
           <div className="content-card form-card mt-3">
-            <div className="section-title-wrap flex-between-center mb-3">
+            <div className="tab-section-header flex-between-center mb-4">
               <div>
-                <h2>Recent Trips & Active Reservations</h2>
-                <p>Track your confirmed flights, hotels, trains, and bus tickets</p>
+                <h2 className="tab-section-title">My Trips & Bookings</h2>
+                <p className="tab-section-sub">View and manage your upcoming and completed reservations</p>
               </div>
-              <div className="flex-align-center gap-2">
-                <Link to="/cancellation-refund" className="secondary-btn small flex-align-center gap-1">
-                  <RotateCcw size={14} /> Refund Hub
-                </Link>
-                <Link to="/manage-bookings" className="secondary-btn small flex-align-center gap-1">
-                  Full Management Hub <ArrowRight size={14} />
-                </Link>
-              </div>
+              <Link to="/manage-bookings" className="manage-all-link">
+                <span>Manage All Bookings</span>
+                <ArrowRight size={15} />
+              </Link>
             </div>
 
             {/* Filter Pills */}
-            <div className="profile-trip-filter-row mb-3">
-              {['all', 'flight', 'hotel', 'bus', 'train', 'holiday'].map((cat) => (
+            <div className="trip-filter-pill-bar mb-4">
+              {[
+                { id: 'all', label: 'All Bookings' },
+                { id: 'flight', label: 'Flights' },
+                { id: 'hotel', label: 'Hotels' },
+                { id: 'bus', label: 'Buses' },
+                { id: 'train', label: 'Trains' },
+                { id: 'holiday', label: 'Holidays' }
+              ].map((cat) => (
                 <button
-                  key={cat}
+                  key={cat.id}
                   type="button"
-                  className={`trip-cat-chip ${tripFilter === cat ? 'active' : ''}`}
-                  onClick={() => setTripFilter(cat)}
+                  className={`trip-pill-btn ${tripFilter === cat.id ? 'active' : ''}`}
+                  onClick={() => setTripFilter(cat.id)}
                 >
-                  {cat.toUpperCase()}
+                  {cat.label}
                 </button>
               ))}
             </div>
@@ -539,25 +542,28 @@ export default function ProfilePage() {
                         <div className="profile-card-action-btns">
                           <button
                             type="button"
-                            className="view-ticket-btn flex-align-center gap-1"
+                            className="view-ticket-btn"
                             onClick={() => openTicketModal(b)}
                           >
-                            <FileText size={14} /> E-Ticket
+                            <FileText size={15} />
+                            <span>View E-Ticket</span>
                           </button>
                           {!isCancelled ? (
                             <button
                               type="button"
-                              className="profile-cancel-btn flex-align-center gap-1"
+                              className="profile-cancel-btn"
                               onClick={() => handleOpenCancelModal(b)}
                             >
-                              <RotateCcw size={13} /> Cancel & Refund
+                              <RotateCcw size={13} />
+                              <span>Cancel & Refund</span>
                             </button>
                           ) : (
                             <Link
                               to={`/cancellation-refund?ref=${b.refundId || b.pnr || b.id}`}
-                              className="profile-track-refund-btn flex-align-center gap-1"
+                              className="profile-track-refund-btn"
                             >
-                              <Zap size={13} /> Track Refund
+                              <Zap size={13} />
+                              <span>Track Refund</span>
                             </Link>
                           )}
                         </div>

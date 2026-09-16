@@ -4,6 +4,24 @@ This file logs meaningful agent tasks, architectural milestones, and fixes chron
 
 ---
 
+### Task: Profile Header Streamlining & Action Button Contrast Pass
+* **Date**: 2026-09-16
+* **Reason**: User reported that the section title was overly complex and cluttered with redundant buttons, and that the E-Ticket action button had low contrast (white text on light background).
+* **Branch / PR**: `fix/profile-header-and-button-contrast-polish` (PR merged into `main`).
+* **Files Affected**:
+  - `client/src/pages/ProfilePage.jsx`
+  - `client/src/App.css`
+  - `CHANGELOG.md`
+  - `.agent-memory/CURRENT_STATE.md`
+  - `.agent-memory/TASK_HISTORY.md`
+* **What Changed**:
+  - Streamlined `ProfilePage.jsx` Tab 0 header (`.tab-section-header`) removing redundant inline buttons in favor of a clean title and right-aligned `Manage All Bookings →` link.
+  - Rebuilt the filter pill bar (`.trip-filter-pill-bar`, `.trip-pill-btn`) with active royal blue elevation.
+  - Removed duplicate CSS rule at line 12192 in `App.css` and reinforced high-contrast solid Royal Blue `.view-ticket-btn` and clean `.profile-cancel-btn` borders.
+* **Testing Performed**: Automated test suite (62/62 passing), Vite production build clean (`npm run build`).
+
+---
+
 ### Task: Master Universal Spacing Tokens & Segmented Tab Navigation Pass
 * **Date**: 2026-09-16
 * **Reason**: User reported elements clinging/sticking directly to each other across Profile and Manage Bookings pages due to missing margin/padding utility definitions and unstyled tabs.
