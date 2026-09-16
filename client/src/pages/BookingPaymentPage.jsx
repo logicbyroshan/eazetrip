@@ -696,17 +696,17 @@ export default function BookingPaymentPage() {
               )}
             </button>
 
-            <div className="security-assurances-card">
-              <div className="assurance-item">
-                <ShieldCheck size={16} color="#10b981" />
+            <div className="sidebar-trust-box">
+              <div className="trust-point-item">
+                <ShieldCheck size={15} color="#10b981" />
                 <span>Instant E-Ticket & PNR Confirmation</span>
               </div>
-              <div className="assurance-item">
-                <CheckCircle2 size={16} color="#034ea2" />
+              <div className="trust-point-item">
+                <CheckCircle2 size={15} color="#034ea2" />
                 <span>Zero Hidden Fees • 100% Secure Checkout</span>
               </div>
-              <div className="assurance-item">
-                <Lock size={16} color="#64748b" />
+              <div className="trust-point-item">
+                <Lock size={15} color="#64748b" />
                 <span>Direct Official Razorpay Bank Gateway</span>
               </div>
             </div>

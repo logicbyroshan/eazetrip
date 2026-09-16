@@ -1097,17 +1097,17 @@ export default function ReviewBookingPage() {
               PROCEED TO PAYMENT <ArrowRight size={18} />
             </button>
 
-            <div className="security-assurances-card mt-3">
-              <div className="assurance-item">
-                <CheckCircle2 size={16} color="#16a34a" />
+            <div className="sidebar-trust-box">
+              <div className="trust-point-item">
+                <CheckCircle2 size={15} color="#16a34a" />
                 <span>Instant Ticket & PNR on Screen</span>
               </div>
-              <div className="assurance-item">
-                <Lock size={16} color="#034ea2" />
+              <div className="trust-point-item">
+                <Lock size={15} color="#034ea2" />
                 <span>256-Bit Bank-Grade Payment Security</span>
               </div>
-              <div className="assurance-item">
-                <Percent size={16} color="#ea580c" />
+              <div className="trust-point-item">
+                <Percent size={15} color="#ea580c" />
                 <span>No Hidden Booking Charges</span>
               </div>
             </div>
