@@ -11226,4 +11226,193 @@ input[type="radio"]:focus-visible {
   }
 }
 
+/* ==========================================================================
+   GOOGLE ONE-TAP FLOATING PROMPT CARD
+   ========================================================================== */
+.google-onetap-container {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 99999;
+  width: 375px;
+  max-width: calc(100vw - 32px);
+  animation: googleOneTapSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes googleOneTapSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-14px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.google-onetap-card {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.06);
+  padding: 16px 18px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #3c4043;
+}
+
+.google-onetap-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.google-brand-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.google-g-svg {
+  flex-shrink: 0;
+}
+
+.google-onetap-title-text h4 {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #202124;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.google-onetap-title-text p {
+  font-size: 0.78rem;
+  color: #5f6368;
+  margin: 0;
+}
+
+.google-onetap-close-btn {
+  background: transparent;
+  border: none;
+  color: #5f6368;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.google-onetap-close-btn:hover {
+  background: #f1f3f4;
+  color: #202124;
+}
+
+.google-onetap-account-tile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #f1f3f4;
+  background: #fafafa;
+  cursor: pointer;
+  margin-bottom: 14px;
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+
+.google-onetap-account-tile:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.google-onetap-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.google-onetap-user-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.google-onetap-user-meta .user-name {
+  display: block;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #202124;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.google-onetap-user-meta .user-email {
+  display: block;
+  font-size: 0.78rem;
+  color: #5f6368;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.google-onetap-actions {
+  margin-bottom: 12px;
+}
+
+.google-onetap-continue-btn {
+  width: 100%;
+  background: #1a73e8;
+  color: #ffffff;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 18px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 1px 3px rgba(66, 133, 244, 0.3);
+}
+
+.google-onetap-continue-btn:hover {
+  background: #1765cc;
+  box-shadow: 0 2px 6px rgba(66, 133, 244, 0.4);
+}
+
+.google-onetap-continue-btn:active {
+  background: #1558b0;
+}
+
+.google-onetap-footer p {
+  font-size: 0.72rem;
+  line-height: 1.45;
+  color: #70757a;
+  margin: 0;
+}
+
+.google-onetap-footer a {
+  color: #1a73e8;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.google-onetap-footer a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .google-onetap-container {
+    top: auto;
+    bottom: 16px;
+    right: 16px;
+    left: 16px;
+    width: auto;
+  }
+}
+
+
 
