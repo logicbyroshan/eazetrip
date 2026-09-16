@@ -4,6 +4,23 @@ This file logs meaningful agent tasks, architectural milestones, and fixes chron
 
 ---
 
+### Task: Google One-Tap Floating Prompt & Authentication Suite Verification
+* **Date**: 2026-09-16
+* **Reason**: User requested verification of full authentication suite and implementation of Google One-Tap landing prompt card in top-right corner.
+* **Branch / PR**: `feature/google-one-tap-and-auth-suite` (PR #12 merged).
+* **Files Affected**:
+  - `client/src/components/auth/GoogleOneTapPrompt.jsx`
+  - `client/src/App.jsx`
+  - `client/src/App.css`
+  - `CHANGELOG.md`
+* **What Changed**:
+  - Built `GoogleOneTapPrompt.jsx` displaying official Google G branding, profile preview, and 1-click **Continue as Priyansh** button.
+  - Added slide-down animation and session dismissal handling.
+  - Verified full authentication suite (Registration, Email Login, Phone OTP, Google 1-Tap, Profile Management).
+* **Testing Performed**: Browser subagent end-to-end verified with screenshot captures, all 35 automated tests passing, Vite production build clean.
+
+---
+
 ### Task: Razorpay Prefill & Input Field Constraint Optimization
 * **Date**: 2026-09-16
 * **Reason**: User requested investigation into Razorpay checkout contact prompt behavior and standard modal vs full-page integration model.
