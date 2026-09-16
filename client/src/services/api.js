@@ -196,5 +196,85 @@ export const api = {
       body: JSON.stringify(contactData)
     });
     return res;
+  },
+
+  // Notifications & Resilient Queue System
+  getNotifications: async (params = {}) => {
+    const query = new URLSearchParams(params).toString();
+    const res = await request(`/api/notifications${query ? `?${query}` : ''}`);
+    if (res.ok && res.data) return res.data;
+    return { success: true, count: 0, unreadCount: 0, data: [] };
+  },
+
+  markNotificationRead: async (id) => {
+    const res = await request(`/api/notifications/${id}/read`, { method: 'PATCH' });
+    return res;
+  },
+
+  markAllNotificationsRead: async (userId = 'USR-1') => {
+    const res = await request('/api/notifications/mark-all-read', {
+      method: 'POST',
+      body: JSON.stringify({ userId })
+    });
+    return res;
+  },
+
+  sendNotification: async (payload) => {
+    const res = await request('/api/notifications/send', {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+    return res;
+  },
+
+  triggerCampaign: async (campaignPayload) => {
+    const res = await request('/api/notifications/trigger-campaign', {
+      method: 'POST',
+      body: JSON.stringify(campaignPayload)
+    });
+    return res;
+  },
+
+  getQueueStatus: async () => {
+    const res = await request('/api/notifications/queue-status');
+    if (res.ok && res.data) return res.data;
+    return null;
+  },
+
+  retryFailedNotifications: async (id = 'all') => {
+    const res = await request('/api/notifications/retry-failed', {
+      method: 'POST',
+      body: JSON.stringify({ id })
+    });
+    return res;
+  },
+
+  getNotificationTemplates: async (params = {}) => {
+    const query = new URLSearchParams(params).toString();
+    const res = await request(`/api/notifications/templates${query ? `?${query}` : ''}`);
+    if (res.ok && res.data) return res.data;
+    return null;
+  },
+
+  getNotificationPreferences: async (userId = 'USR-1') => {
+    const res = await request(`/api/notifications/preferences?userId=${userId}`);
+    if (res.ok && res.data?.data) return res.data.data;
+    return {
+      email: true,
+      whatsapp: true,
+      sms: false,
+      push: true,
+      tripUpdates: true,
+      promotionalOffers: true,
+      priceDropAlerts: true
+    };
+  },
+
+  updateNotificationPreferences: async (userId, preferences) => {
+    const res = await request('/api/notifications/preferences', {
+      method: 'PUT',
+      body: JSON.stringify({ userId, preferences })
+    });
+    return res;
   }
 };

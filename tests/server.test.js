@@ -511,3 +511,90 @@ test('35. POST /api/bookings supports holiday package bookings', async () => {
   assert.ok(bookRes.data.data.id.startsWith('EZ-'));
   assert.ok(bookRes.data.data.pnr);
 });
+
+test('36. GET /api/notifications returns user in-app notifications and unread count', async () => {
+  const notifRes = await requestJson('/api/notifications?userId=USR-1');
+  assert.strictEqual(notifRes.status, 200);
+  assert.strictEqual(notifRes.data.success, true);
+  assert.ok(Array.isArray(notifRes.data.data));
+  assert.strictEqual(typeof notifRes.data.unreadCount, 'number');
+});
+
+test('37. POST /api/notifications/send enqueues multi-channel messages (Email, WhatsApp, In-App)', async () => {
+  const sendRes = await requestJson('/api/notifications/send', {
+    method: 'POST',
+    body: {
+      userId: 'USR-1',
+      channels: ['in_app', 'email', 'whatsapp'],
+      template: 'booking_confirmation',
+      data: {
+        name: 'Priyansh Sharma',
+        email: 'priyansh.sharma@gmail.com',
+        phone: '+91 98765 43210',
+        pnr: 'TEST99',
+        serviceType: 'Flight',
+        route: 'DEL → BOM',
+        travelDate: '28 Sep 2026',
+        amount: 5499
+      }
+    }
+  });
+  assert.strictEqual(sendRes.status, 201);
+  assert.strictEqual(sendRes.data.success, true);
+  assert.ok(sendRes.data.data.notificationId);
+  assert.strictEqual(sendRes.data.data.inAppCreated, true);
+});
+
+test('38. POST /api/notifications/trigger-campaign personalizes inactivity holiday campaign with voucher', async () => {
+  const campRes = await requestJson('/api/notifications/trigger-campaign', {
+    method: 'POST',
+    body: {
+      campaignType: 'reengagement_inactivity',
+      user: { id: 'USR-1', name: 'Priyansh Sharma', email: 'priyansh.sharma@gmail.com' },
+      customData: { monthsInactive: 4, promoCode: 'HOLIDAY25' }
+    }
+  });
+  assert.strictEqual(campRes.status, 201);
+  assert.strictEqual(campRes.data.success, true);
+  assert.strictEqual(campRes.data.campaign, 'reengagement_inactivity');
+});
+
+test('39. GET /api/notifications/queue-status and DLQ routing on simulated failure', async () => {
+  // Trigger a simulated delivery failure that exhausts retries to populate Dead-Letter Queue
+  await requestJson('/api/notifications/send', {
+    method: 'POST',
+    body: {
+      userId: 'USR-1',
+      channels: ['email'],
+      template: 'custom',
+      data: { name: 'Retry Tester', message: 'Test message for DLQ' },
+      simulateFailure: true
+    }
+  });
+
+  const queueRes = await requestJson('/api/notifications/queue-status');
+  assert.strictEqual(queueRes.status, 200);
+  assert.strictEqual(queueRes.data.success, true);
+  assert.ok(queueRes.data.metrics);
+  assert.ok(typeof queueRes.data.metrics.totalDelivered === 'number');
+  assert.ok(Array.isArray(queueRes.data.deadLetterQueue));
+});
+
+test('40. POST /api/notifications/retry-failed re-enqueues DLQ items and marks notifications read', async () => {
+  // Retry all failed messages in DLQ
+  const retryRes = await requestJson('/api/notifications/retry-failed', {
+    method: 'POST',
+    body: { id: 'all' }
+  });
+  assert.strictEqual(retryRes.status, 200);
+  assert.strictEqual(retryRes.data.success, true);
+
+  // Mark all notifications read
+  const markRes = await requestJson('/api/notifications/mark-all-read', {
+    method: 'POST',
+    body: { userId: 'USR-1' }
+  });
+  assert.strictEqual(markRes.status, 200);
+  assert.strictEqual(markRes.data.success, true);
+});
+
