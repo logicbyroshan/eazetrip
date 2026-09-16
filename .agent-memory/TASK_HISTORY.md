@@ -4,6 +4,27 @@ This file logs meaningful agent tasks, architectural milestones, and fixes chron
 
 ---
 
+### Task: Legal & Compliance Hub Overhaul & Profile Communications UI Consolidation
+* **Date**: 2026-09-16
+* **Reason**: User reported inconsistent, poorly formatted, narrow legal pages with missing regulatory clauses, and misaligned buttons/cards in the Profile Communications & Queue recovery view.
+* **Branch / PR**: `fix/legal-terms-profile-queue-ui-polish` (PR merged into `main`).
+* **Files Affected**:
+  - `client/src/pages/TermsPage.jsx`
+  - `client/src/pages/PrivacyPage.jsx`
+  - `client/src/pages/ProfilePage.jsx`
+  - `client/src/App.css`
+  - `CHANGELOG.md`
+  - `.agent-memory/CURRENT_STATE.md`
+  - `.agent-memory/TASK_HISTORY.md`
+* **What Changed**:
+  - Rebuilt Terms & Conditions (`/terms`), User Agreement (`/user-agreement`), and Privacy Policy (`/privacy`) into an enterprise-grade 2-column layout (`280px` sticky Table of Contents sidebar + 8 structured statutory clauses with icons, badges, highlight callouts, live search query filter, and Print Agreement CTA).
+  - DPDP Act & RBI Tokenization compliance sections added with zero raw card storage guarantees.
+  - Standardized `.campaign-card`, `.campaign-icon-wrap`, `.campaign-action-btn-row`, and `.camp-btn` micro-interaction buttons in the Profile Communications tab.
+  - Upgraded Dead-Letter Queue (DLQ) health strip and recovery monitoring layout.
+* **Testing Performed**: Automated test suite (62/62 passing), Vite production build clean (`npm run build`).
+
+---
+
 ### Task: Site-Wide Personalized Traveler Experience & Persistent Memory
 * **Date**: 2026-09-16
 * **Reason**: User requested complete traveler recognition and customized titles across the entire platform (e.g. "Offers Only For You, [Name]", "Welcome Back, [Name]!", personalized flight/hotel/bus/train listings, itinerary badges, and support desk greetings).
