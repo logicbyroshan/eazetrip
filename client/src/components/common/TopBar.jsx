@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { Phone, Home, User, LogOut, ShieldCheck, CreditCard, ChevronDown } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
+import NotificationCenter from './NotificationCenter';
 
 export default function TopBar() {
   const { user, isAuthenticated, logout, openLoginModal } = useAuth();
@@ -63,6 +64,8 @@ export default function TopBar() {
             <Link to="/manage-bookings" className="topbar-sublink">Manage Bookings</Link>
             <Link to="/payment" className="topbar-sublink">Make Payment</Link>
           </div>
+
+          <NotificationCenter />
 
           {isAuthenticated ? (
             <div className="user-menu-wrap" ref={dropdownRef}>

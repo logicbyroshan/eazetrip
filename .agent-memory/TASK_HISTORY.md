@@ -4,6 +4,35 @@ This file logs meaningful agent tasks, architectural milestones, and fixes chron
 
 ---
 
+### Task: Smart Multi-Channel Notification Engine & Resilient Queue / DLQ Architecture
+* **Date**: 2026-09-16
+* **Reason**: User requested deep audit & implementation of notification system across Email and WhatsApp with personalized campaigns (e.g. 3-month inactivity holiday offer), exponential backoff retries, and Dead-Letter Queue (DLQ) recovery.
+* **Branch / PR**: `feature/smart-notification-system-and-queue` (PR pending merge).
+* **Files Affected**:
+  - `server/services/notificationService.js`
+  - `server/index.js`
+  - `tests/server.test.js`
+  - `client/src/services/api.js`
+  - `client/src/context/NotificationContext.jsx`
+  - `client/src/components/common/NotificationCenter.jsx`
+  - `client/src/components/common/NotificationPreviewModal.jsx`
+  - `client/src/components/common/TopBar.jsx`
+  - `client/src/App.jsx`
+  - `client/src/pages/ProfilePage.jsx`
+  - `client/src/App.css`
+  - `CHANGELOG.md`
+  - `.agent-memory/CURRENT_STATE.md`
+  - `.agent-memory/TASK_HISTORY.md`
+* **What Changed**:
+  - Built multi-channel notification engine (HTML Email, authentic WhatsApp format, In-App).
+  - Built personalized campaign generator for 3-month inactivity (`HOLIDAY25`), booking confirmation E-Ticket delivery, 24h departure check-in reminder, and price drops.
+  - Implemented fault-tolerant delivery queue with exponential backoff and Dead-Letter Queue (DLQ) with 1-click retry recovery.
+  - Built Notification Center dropdown bell in navbar and full Communications & Queue Dashboard in `/profile`.
+  - Added WhatsApp & Email interactive preview modal.
+* **Testing Performed**: Automated test suite expanded to 40 tests (40/40 passing), end-to-end API/DOM verification script executed, Vite production build clean.
+
+---
+
 ### Task: User Profile & Trip Management Dashboard Enhancement
 * **Date**: 2026-09-16
 * **Reason**: User requested deep verification and audit of post-login / account creation user profile management, past trips, and user data management.

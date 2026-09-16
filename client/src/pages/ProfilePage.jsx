@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useBooking } from '../context/BookingContext';
+import { useNotification } from '../context/NotificationContext';
 import {
   User,
   Mail,
@@ -22,16 +23,38 @@ import {
   FileText,
   Calendar,
   Clock,
-  ArrowRight
+  ArrowRight,
+  Bell,
+  MessageSquare,
+  RefreshCw,
+  Send,
+  AlertOctagon,
+  RotateCw,
+  ExternalLink,
+  ShieldCheck,
+  Zap
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function ProfilePage() {
   const { user, updateProfile, openLoginModal, isAuthenticated, logout } = useAuth();
   const { bookings, openTicketModal, showToast } = useBooking();
+  const {
+    queueStatus,
+    preferences: notifPrefs,
+    updatePreferences: updateNotifPrefs,
+    triggerCampaign,
+    retryFailed,
+    refreshQueueStatus,
+    openPreview,
+    unreadCount,
+    loading: notifLoading
+  } = useNotification();
 
-  const [activeTab, setActiveTab] = useState('trips'); // 'trips' | 'personal' | 'travellers' | 'preferences'
+  const [activeTab, setActiveTab] = useState('trips'); // 'trips' | 'personal' | 'travellers' | 'preferences' | 'notifications'
   const [tripFilter, setTripFilter] = useState('all'); // 'all' | 'flight' | 'hotel' | 'bus' | 'train' | 'holiday'
+  const [simulatingFail, setSimulatingFail] = useState(false);
+  const [campaignSuccessToast, setCampaignSuccessToast] = useState('');
 
   const [name, setName] = useState(user?.name || 'Traveler');
   const [email, setEmail] = useState(user?.email || 'traveler@eazetrip.com');
@@ -274,6 +297,18 @@ export default function ProfilePage() {
           >
             <Heart size={16} />
             <span>Travel Preferences</span>
+          </button>
+          <button
+            type="button"
+            className={`profile-nav-tab ${activeTab === 'notifications' ? 'active' : ''}`}
+            onClick={() => {
+              setActiveTab('notifications');
+              refreshQueueStatus();
+            }}
+          >
+            <Bell size={16} />
+            <span>Communications & Queue</span>
+            {unreadCount > 0 && <span className="tab-badge-pill">{unreadCount}</span>}
           </button>
         </div>
 
@@ -573,6 +608,461 @@ export default function ProfilePage() {
                 </button>
               </div>
             </form>
+          </div>
+        )}
+
+        {/* Tab 4: Communications, Notifications & Live Queue Engine */}
+        {activeTab === 'notifications' && (
+          <div className="content-card form-card mt-3 animate-fade-in">
+            {/* Header */}
+            <div className="section-title-wrap flex-between-center mb-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <div className="p-2 bg-blue-100 text-blue-800 rounded-lg">
+                    <Bell size={20} />
+                  </div>
+                  <div>
+                    <h2 className="mb-0">Multi-Channel Communications & Delivery Queue</h2>
+                    <p className="text-sm text-slate-500 mb-0">
+                      Configure WhatsApp & Email channels, simulate customer re-engagement campaigns, and monitor resilient Dead-Letter Queue (DLQ) recoveries.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  className="secondary-btn small flex-align-center gap-1"
+                  onClick={refreshQueueStatus}
+                  title="Refresh Queue Metrics"
+                >
+                  <RefreshCw size={14} className={notifLoading ? 'animate-spin' : ''} />
+                  <span>Refresh Queue</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Sub-Section 1: Channel Preferences */}
+            <div className="notif-pref-section mb-5">
+              <h3 className="text-base font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                <ShieldCheck size={18} className="text-emerald-600" />
+                Notification Channel Subscriptions
+              </h3>
+              <div className="notif-pref-grid">
+                {[
+                  { key: 'whatsapp', label: 'WhatsApp Instant Updates', desc: 'Real-time PNR vouchers, web check-in links, and exclusive deals', icon: MessageSquare, color: 'emerald' },
+                  { key: 'email', label: 'Email Itineraries & Tax Invoices', desc: 'HTML booking summaries, e-ticket PDFs, and billing receipts', icon: Mail, color: 'blue' },
+                  { key: 'push', label: 'In-App & Browser Alerts', desc: 'Price drop notifications, gate change updates, and promo alerts', icon: Bell, color: 'amber' },
+                  { key: 'sms', label: 'SMS Flight Status', desc: 'Emergency delay alerts and gate assignment alerts', icon: Phone, color: 'purple' }
+                ].map((channel) => {
+                  const Icon = channel.icon;
+                  const isChecked = Boolean(notifPrefs[channel.key]);
+                  return (
+                    <div key={channel.key} className={`pref-card ${isChecked ? 'active' : ''}`}>
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-center gap-2.5">
+                          <div className={`pref-icon-box ${channel.color}`}>
+                            <Icon size={18} />
+                          </div>
+                          <div>
+                            <h4 className="font-semibold text-sm text-slate-800">{channel.label}</h4>
+                            <p className="text-xs text-slate-500 mb-0">{channel.desc}</p>
+                          </div>
+                        </div>
+                        <label className="toggle-switch">
+                          <input
+                            type="checkbox"
+                            checked={isChecked}
+                            onChange={(e) =>
+                              updateNotifPrefs({
+                                ...notifPrefs,
+                                [channel.key]: e.target.checked
+                              })
+                            }
+                          />
+                          <span className="slider round"></span>
+                        </label>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Sub-Section 2: Personalized Re-Engagement Campaign Simulator */}
+            <div className="campaign-simulator-section mb-5">
+              <div className="flex-between-center mb-3">
+                <h3 className="text-base font-semibold text-slate-800 mb-0 flex items-center gap-2">
+                  <Sparkles size={18} className="text-amber-500" />
+                  Personalized Customer Re-Engagement & Campaign Simulator
+                </h3>
+                <span className="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded">
+                  Dynamic Multi-Channel Trigger
+                </span>
+              </div>
+              <p className="text-xs text-slate-600 mb-3">
+                Test how EazeTrip automatically crafts customized offers for customers based on travel history, inactivity, and booking lifecycles.
+              </p>
+
+              <div className="campaign-cards-grid">
+                {/* Campaign 1: 3-Month Inactivity Holiday Offer */}
+                <div className="campaign-card featured-campaign">
+                  <div className="campaign-badge">Recommended</div>
+                  <div className="flex items-start gap-3 mb-3">
+                    <div className="campaign-icon-wrap bg-amber-100 text-amber-800">
+                      <Palmtree size={22} />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-sm text-slate-900 mb-1">
+                        🌴 3-Month Inactivity Holiday Offer Campaign
+                      </h4>
+                      <p className="text-xs text-slate-600 mb-0">
+                        Sends a tailored vacation voucher (<strong>HOLIDAY25</strong> - 25% OFF) to customers who haven't taken a trip in over 90 days.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="campaign-action-btn-row">
+                    <button
+                      type="button"
+                      className="camp-btn preview-wa"
+                      onClick={() =>
+                        openPreview('reengagement_inactivity', 'whatsapp', {
+                          monthsInactive: 3,
+                          promoCode: 'HOLIDAY25'
+                        })
+                      }
+                    >
+                      <MessageSquare size={13} /> WhatsApp Preview
+                    </button>
+                    <button
+                      type="button"
+                      className="camp-btn preview-email"
+                      onClick={() =>
+                        openPreview('reengagement_inactivity', 'email', {
+                          monthsInactive: 3,
+                          promoCode: 'HOLIDAY25'
+                        })
+                      }
+                    >
+                      <Mail size={13} /> HTML Email Preview
+                    </button>
+                    <button
+                      type="button"
+                      className="camp-btn trigger-send"
+                      disabled={notifLoading}
+                      onClick={async () => {
+                        try {
+                          await triggerCampaign('reengagement_inactivity', {
+                            monthsInactive: 3,
+                            promoCode: 'HOLIDAY25'
+                          });
+                          showToast('🌴 3-Month Inactivity Holiday Offer dispatched to Email, WhatsApp & In-App!');
+                        } catch {
+                          showToast('Failed to dispatch campaign.');
+                        }
+                      }}
+                    >
+                      <Send size={13} /> Dispatch to Queue
+                    </button>
+                  </div>
+                </div>
+
+                {/* Campaign 2: Instant Booking E-Ticket Delivery */}
+                <div className="campaign-card">
+                  <div className="flex items-start gap-3 mb-3">
+                    <div className="campaign-icon-wrap bg-blue-100 text-blue-800">
+                      <Plane size={22} />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-sm text-slate-900 mb-1">
+                        🎟️ Booking Confirmation & E-Ticket Delivery
+                      </h4>
+                      <p className="text-xs text-slate-600 mb-0">
+                        Dispatches PNR (<strong>FL2775</strong>), flight itinerary, passenger details, and PDF download link.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="campaign-action-btn-row">
+                    <button
+                      type="button"
+                      className="camp-btn preview-wa"
+                      onClick={() =>
+                        openPreview('booking_confirmation', 'whatsapp', {
+                          pnr: 'FL2775',
+                          serviceType: 'Flight',
+                          carrier: 'IndiGo 6E-2041',
+                          route: 'Mumbai (BOM) → New Delhi (DEL)',
+                          travelDate: '24 Sep 2026, 06:00 AM',
+                          amount: 4999
+                        })
+                      }
+                    >
+                      <MessageSquare size={13} /> WhatsApp Preview
+                    </button>
+                    <button
+                      type="button"
+                      className="camp-btn preview-email"
+                      onClick={() =>
+                        openPreview('booking_confirmation', 'email', {
+                          pnr: 'FL2775',
+                          serviceType: 'Flight',
+                          carrier: 'IndiGo 6E-2041',
+                          route: 'Mumbai (BOM) → New Delhi (DEL)',
+                          travelDate: '24 Sep 2026, 06:00 AM',
+                          amount: 4999
+                        })
+                      }
+                    >
+                      <Mail size={13} /> HTML Email Preview
+                    </button>
+                    <button
+                      type="button"
+                      className="camp-btn trigger-send"
+                      disabled={notifLoading}
+                      onClick={async () => {
+                        try {
+                          await triggerCampaign('booking_confirmation', {
+                            pnr: 'FL2775',
+                            serviceType: 'Flight',
+                            carrier: 'IndiGo 6E-2041',
+                            route: 'Mumbai (BOM) → New Delhi (DEL)',
+                            travelDate: '24 Sep 2026, 06:00 AM',
+                            amount: 4999
+                          });
+                          showToast('🎟️ Booking Confirmation dispatched across all subscribed channels!');
+                        } catch {
+                          showToast('Failed to dispatch booking confirmation.');
+                        }
+                      }}
+                    >
+                      <Send size={13} /> Dispatch to Queue
+                    </button>
+                  </div>
+                </div>
+
+                {/* Campaign 3: 24h Web Check-in Reminder */}
+                <div className="campaign-card">
+                  <div className="flex items-start gap-3 mb-3">
+                    <div className="campaign-icon-wrap bg-purple-100 text-purple-800">
+                      <Clock size={22} />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-sm text-slate-900 mb-1">
+                        ⏰ 24h Web Check-in & Departure Alert
+                      </h4>
+                      <p className="text-xs text-slate-600 mb-0">
+                        Reminds passenger of upcoming departure tomorrow morning with 1-click web check-in link.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="campaign-action-btn-row">
+                    <button
+                      type="button"
+                      className="camp-btn preview-wa"
+                      onClick={() => openPreview('trip_reminder', 'whatsapp')}
+                    >
+                      <MessageSquare size={13} /> WhatsApp Preview
+                    </button>
+                    <button
+                      type="button"
+                      className="camp-btn trigger-send"
+                      disabled={notifLoading}
+                      onClick={async () => {
+                        try {
+                          await triggerCampaign('trip_reminder');
+                          showToast('⏰ Web Check-in reminder dispatched!');
+                        } catch {
+                          showToast('Failed to dispatch reminder.');
+                        }
+                      }}
+                    >
+                      <Send size={13} /> Dispatch to Queue
+                    </button>
+                  </div>
+                </div>
+
+                {/* Campaign 4: Smart Price Drop Alert */}
+                <div className="campaign-card">
+                  <div className="flex items-start gap-3 mb-3">
+                    <div className="campaign-icon-wrap bg-emerald-100 text-emerald-800">
+                      <Zap size={22} />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-sm text-slate-900 mb-1">
+                        📉 20% Price Drop Alert on Saved Route
+                      </h4>
+                      <p className="text-xs text-slate-600 mb-0">
+                        Alerts user when fares on watched route Mumbai → Goa drop from ₹4,500 to ₹3,599.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="campaign-action-btn-row">
+                    <button
+                      type="button"
+                      className="camp-btn preview-wa"
+                      onClick={() => openPreview('price_drop_alert', 'whatsapp')}
+                    >
+                      <MessageSquare size={13} /> WhatsApp Preview
+                    </button>
+                    <button
+                      type="button"
+                      className="camp-btn trigger-send"
+                      disabled={notifLoading}
+                      onClick={async () => {
+                        try {
+                          await triggerCampaign('price_drop_alert');
+                          showToast('📉 Price drop alert dispatched!');
+                        } catch {
+                          showToast('Failed to dispatch alert.');
+                        }
+                      }}
+                    >
+                      <Send size={13} /> Dispatch to Queue
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Sub-Section 3: Resilient Delivery Queue & Dead-Letter Queue (DLQ) */}
+            <div className="queue-monitor-section">
+              <div className="flex-between-center mb-3">
+                <div>
+                  <h3 className="text-base font-semibold text-slate-800 mb-1 flex items-center gap-2">
+                    <RotateCw size={18} className="text-blue-600" />
+                    Fault-Tolerant Delivery Queue & Dead-Letter Recovery (DLQ)
+                  </h3>
+                  <p className="text-xs text-slate-500 mb-0">
+                    Never-Fail Architecture: Automatic exponential backoff retries & safe quarantine in DLQ with zero data loss.
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    className="secondary-btn small text-amber-700 border-amber-300 bg-amber-50"
+                    disabled={simulatingFail}
+                    onClick={async () => {
+                      setSimulatingFail(true);
+                      try {
+                        await triggerCampaign('reengagement_inactivity', {
+                          channels: ['email', 'whatsapp'],
+                          simulateFailure: true
+                        });
+                        showToast('Simulated transient failure enqueued. Retry engine will execute backoff & route to DLQ.');
+                      } finally {
+                        setSimulatingFail(false);
+                      }
+                    }}
+                    title="Simulate transient provider failure to test retry engine"
+                  >
+                    <AlertOctagon size={13} /> Simulate Provider Glitch
+                  </button>
+
+                  <button
+                    type="button"
+                    className="primary-btn small flex items-center gap-1"
+                    disabled={notifLoading || (queueStatus?.metrics?.deadLetterQueueCount || 0) === 0}
+                    onClick={async () => {
+                      try {
+                        const res = await retryFailed('all');
+                        showToast(res.message || 'All failed messages re-enqueued successfully!');
+                      } catch {
+                        showToast('Failed to retry messages.');
+                      }
+                    }}
+                  >
+                    <RefreshCw size={13} /> Retry All Failed ({queueStatus?.metrics?.deadLetterQueueCount || 0})
+                  </button>
+                </div>
+              </div>
+
+              {/* Live Queue Health Strip */}
+              <div className="queue-stats-strip mb-4">
+                <div className="q-metric-box">
+                  <span className="q-metric-val">{queueStatus?.metrics?.totalHandled || 0}</span>
+                  <span className="q-metric-label">Total Handled</span>
+                </div>
+                <div className="q-metric-box text-emerald-600">
+                  <span className="q-metric-val">{queueStatus?.metrics?.totalDelivered || 0}</span>
+                  <span className="q-metric-label">Delivered Successfully</span>
+                </div>
+                <div className="q-metric-box text-blue-600">
+                  <span className="q-metric-val">{queueStatus?.metrics?.activePending || 0}</span>
+                  <span className="q-metric-label">In Active Queue</span>
+                </div>
+                <div className="q-metric-box text-red-600">
+                  <span className="q-metric-val">{queueStatus?.metrics?.deadLetterQueueCount || 0}</span>
+                  <span className="q-metric-label">Dead-Letter Queue (DLQ)</span>
+                </div>
+                <div className="q-metric-box text-slate-800">
+                  <span className="q-metric-val">{queueStatus?.metrics?.successRatePercent || 100}%</span>
+                  <span className="q-metric-label">Delivery Success Rate</span>
+                </div>
+              </div>
+
+              {/* Dead-Letter Queue Table */}
+              <div className="dlq-table-wrapper">
+                <div className="dlq-table-header flex-between-center">
+                  <div className="flex items-center gap-2">
+                    <AlertOctagon size={16} className="text-red-600" />
+                    <span className="font-semibold text-sm text-slate-800">
+                      Dead-Letter Queue (Failed Messages Quarantined)
+                    </span>
+                  </div>
+                  <span className="text-xs text-slate-500">
+                    {queueStatus?.deadLetterQueue?.length || 0} items quarantined
+                  </span>
+                </div>
+
+                {(!queueStatus?.deadLetterQueue || queueStatus.deadLetterQueue.length === 0) ? (
+                  <div className="dlq-empty-state">
+                    <CheckCircle2 size={32} className="text-emerald-500 mb-2 mx-auto" />
+                    <p className="font-semibold text-slate-700 text-sm mb-0">Dead-Letter Queue is Clean</p>
+                    <p className="text-xs text-slate-400 mb-0">Zero failed messages. All outbound notifications delivered smoothly.</p>
+                  </div>
+                ) : (
+                  <div className="dlq-items-list">
+                    {queueStatus.deadLetterQueue.map((item) => (
+                      <div key={item.id} className="dlq-item-row">
+                        <div className="dlq-col-id">
+                          <span className="dlq-id-pill">{item.id}</span>
+                          <span className={`dlq-channel-tag ${item.channel}`}>{item.channel.toUpperCase()}</span>
+                        </div>
+                        <div className="dlq-col-details">
+                          <span className="dlq-recipient font-mono text-xs">{item.recipient}</span>
+                          <span className="dlq-error-text">{item.dlqReason || 'Handshake timeout after 3 retries'}</span>
+                        </div>
+                        <div className="dlq-col-attempts">
+                          <span className="attempts-pill">Retries: {item.attempts}/{item.maxRetries}</span>
+                        </div>
+                        <div className="dlq-col-actions">
+                          <button
+                            type="button"
+                            className="dlq-retry-btn"
+                            onClick={async () => {
+                              try {
+                                await retryFailed(item.id);
+                                showToast(`Re-enqueued item ${item.id} for delivery!`);
+                              } catch {
+                                showToast('Failed to retry item.');
+                              }
+                            }}
+                          >
+                            <RefreshCw size={12} /> Retry Now
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         )}
       </div>

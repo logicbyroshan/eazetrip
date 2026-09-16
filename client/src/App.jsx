@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Lenis from 'lenis';
 import { AuthProvider } from './context/AuthContext';
 import { BookingProvider } from './context/BookingContext';
+import { NotificationProvider } from './context/NotificationContext';
 
 import TopBar from './components/common/TopBar';
 import Header from './components/common/Header';
@@ -13,6 +14,7 @@ import ErrorBoundary from './components/common/ErrorBoundary';
 import LoginModal from './components/auth/LoginModal';
 import GoogleOneTapPrompt from './components/auth/GoogleOneTapPrompt';
 import TicketModal from './components/checkout/TicketModal';
+import NotificationPreviewModal from './components/common/NotificationPreviewModal';
 
 import HomePage from './pages/HomePage';
 import FlightBookingPage from './pages/FlightBookingPage';
@@ -154,6 +156,7 @@ function AppContent() {
         <LoginModal />
         <GoogleOneTapPrompt />
         <TicketModal />
+        <NotificationPreviewModal />
         <Toast />
       </div>
     </ErrorBoundary>
@@ -164,10 +167,12 @@ export default function App() {
   return (
     <AuthProvider>
       <BookingProvider>
-        <BrowserRouter>
-          <ScrollHandler />
-          <AppContent />
-        </BrowserRouter>
+        <NotificationProvider>
+          <BrowserRouter>
+            <ScrollHandler />
+            <AppContent />
+          </BrowserRouter>
+        </NotificationProvider>
       </BookingProvider>
     </AuthProvider>
   );

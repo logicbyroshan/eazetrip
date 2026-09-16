@@ -11623,6 +11623,922 @@ input[type="radio"]:focus-visible {
   }
 }
 
+/* =========================================================
+   EAZE TRIP NOTIFICATION CENTER & QUEUE ENGINE STYLES
+   ========================================================= */
+
+/* Notification Center Trigger & Bell */
+.notif-center-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.notif-bell-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.notif-bell-btn:hover,
+.notif-bell-btn.active {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+.notif-badge-count {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #ef4444;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  border: 2px solid #034ea2;
+  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.4);
+}
+
+/* Slide-out Flyout Panel */
+.notif-flyout-panel {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  width: 380px;
+  max-width: calc(100vw - 32px);
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 16px 36px rgba(10, 25, 47, 0.18);
+  z-index: 1200;
+  overflow: hidden;
+  animation: notifPop 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes notifPop {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.notif-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.notif-header-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.notif-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+  font-family: 'Outfit', sans-serif;
+}
+
+.notif-unread-pill {
+  background: #e0f2fe;
+  color: #0369a1;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.notif-mark-read-all-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  color: #034ea2;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 6px;
+  transition: background 0.15s ease;
+}
+
+.notif-mark-read-all-btn:hover {
+  background: #e0f2fe;
+}
+
+.notif-close-btn {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s ease;
+}
+
+.notif-close-btn:hover {
+  color: #0f172a;
+}
+
+/* Filter Chips in Flyout */
+.notif-filters-row {
+  display: flex;
+  gap: 6px;
+  padding: 10px 14px;
+  background: #ffffff;
+  border-bottom: 1px solid #f1f5f9;
+  overflow-x: auto;
+}
+
+.notif-filter-tab {
+  background: #f1f5f9;
+  border: 1px solid transparent;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.notif-filter-tab:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.notif-filter-tab.active {
+  background: #034ea2;
+  color: #ffffff;
+}
+
+.tab-count {
+  font-size: 10px;
+  opacity: 0.85;
+  margin-left: 2px;
+}
+
+/* Feed List */
+.notif-feed-list {
+  max-height: 380px;
+  overflow-y: auto;
+}
+
+.notif-empty-state {
+  padding: 36px 16px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.notif-item-card {
+  padding: 14px 16px;
+  border-bottom: 1px solid #f1f5f9;
+  background: #ffffff;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  position: relative;
+}
+
+.notif-item-card:hover {
+  background: #f8fafc;
+}
+
+.notif-item-card.unread {
+  background: #f0f9ff;
+  border-left: 3px solid #034ea2;
+}
+
+.notif-item-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.notif-cat-icon-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: #f1f5f9;
+  flex-shrink: 0;
+}
+
+.notif-item-title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: #1e293b;
+  line-height: 1.35;
+}
+
+.notif-unread-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #034ea2;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.notif-item-desc {
+  margin: 0 0 8px 0;
+  font-size: 12px;
+  color: #64748b;
+  line-height: 1.45;
+}
+
+.notif-channels-bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.channel-chip {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.channel-chip:hover {
+  opacity: 0.8;
+}
+
+.channel-chip.email {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.channel-chip.whatsapp {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.notif-action-row {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.notif-action-btn {
+  display: inline-flex;
+  align-items: center;
+  background: #034ea2;
+  color: #ffffff;
+  border: none;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.notif-action-btn:hover {
+  background: #023875;
+}
+
+.notif-footer-bar {
+  padding: 10px 16px;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  text-align: center;
+}
+
+.notif-manage-hub-link {
+  background: none;
+  border: none;
+  color: #034ea2;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+}
+
+.notif-manage-hub-link:hover {
+  text-decoration: underline;
+}
+
+/* =========================================================
+   NOTIFICATION PREVIEW MODAL (WHATSAPP & HTML EMAIL)
+   ========================================================= */
+
+.notif-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 25, 47, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  padding: 16px;
+}
+
+.notif-modal-container {
+  background: #ffffff;
+  border-radius: 20px;
+  width: 720px;
+  max-width: 100%;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+}
+
+.notif-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  border-bottom: 1px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+.notif-modal-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+  font-family: 'Outfit', sans-serif;
+}
+
+.notif-modal-subtitle {
+  margin: 2px 0 0 0;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.notif-modal-close-btn {
+  background: none;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+}
+
+.notif-modal-close-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.notif-modal-body {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+  background: #f1f5f9;
+}
+
+/* WhatsApp Phone Shell */
+.whatsapp-preview-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.whatsapp-phone-shell {
+  width: 440px;
+  max-width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border: 1px solid #cbd5e1;
+}
+
+.whatsapp-chat-header {
+  background: #075e54;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #ffffff;
+}
+
+.whatsapp-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #128c7e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.whatsapp-chat-canvas {
+  background: #efeae2;
+  background-image: radial-gradient(#d1d7db 1px, transparent 1px);
+  background-size: 20px 20px;
+  padding: 20px 16px;
+  min-height: 280px;
+}
+
+.whatsapp-date-pill {
+  margin: 0 auto 16px auto;
+  background: #ffffff;
+  color: #54656f;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+  width: fit-content;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.whatsapp-bubble {
+  background: #ffffff;
+  border-radius: 0 12px 12px 12px;
+  padding: 12px 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  position: relative;
+  max-width: 90%;
+}
+
+.whatsapp-bubble-content {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #111b21;
+}
+
+.whatsapp-bubble-meta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  margin-top: 6px;
+  font-size: 10px;
+  color: #667781;
+}
+
+.whatsapp-double-tick {
+  color: #53bdeb;
+  font-weight: 700;
+}
+
+/* HTML Email Preview */
+.email-preview-wrapper {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #cbd5e1;
+  overflow: hidden;
+}
+
+.email-client-header {
+  background: #f8fafc;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.email-meta-row {
+  display: flex;
+  gap: 8px;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.email-meta-label {
+  color: #64748b;
+  width: 55px;
+  flex-shrink: 0;
+}
+
+.email-meta-val {
+  color: #334155;
+}
+
+.email-html-viewport {
+  height: 380px;
+  width: 100%;
+}
+
+.email-iframe-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.notif-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 24px;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+}
+
+.notif-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.notif-btn-secondary:hover {
+  background: #f1f5f9;
+}
+
+.notif-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #034ea2;
+  border: 1px solid #034ea2;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.notif-btn-primary:hover {
+  background: #023875;
+}
+
+/* =========================================================
+   COMMUNICATIONS & LIVE QUEUE DASHBOARD IN PROFILE
+   ========================================================= */
+
+.notif-pref-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.pref-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 14px 16px;
+  transition: all 0.2s ease;
+}
+
+.pref-card.active {
+  border-color: #93c5fd;
+  background: #f0f9ff;
+}
+
+.pref-icon-box {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.pref-icon-box.emerald { background: #d1fae5; color: #065f46; }
+.pref-icon-box.blue { background: #dbeafe; color: #1e40af; }
+.pref-icon-box.amber { background: #fef3c7; color: #92400e; }
+.pref-icon-box.purple { background: #ede9fe; color: #5b21b6; }
+
+/* Toggle Switch */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #cbd5e1;
+  transition: 0.3s;
+  border-radius: 24px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #10b981;
+}
+
+input:checked + .slider:before {
+  transform: translateX(20px);
+}
+
+/* Campaign Cards */
+.campaign-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.campaign-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 16px;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.campaign-card.featured-campaign {
+  border-color: #fcd34d;
+  background: #fffdf5;
+}
+
+.campaign-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #f59e0b;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  text-transform: uppercase;
+}
+
+.campaign-icon-wrap {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.campaign-action-btn-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 12px;
+}
+
+.camp-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: 1px solid transparent;
+}
+
+.camp-btn.preview-wa {
+  background: #ecfdf5;
+  color: #065f46;
+  border-color: #a7f3d0;
+}
+
+.camp-btn.preview-wa:hover {
+  background: #d1fae5;
+}
+
+.camp-btn.preview-email {
+  background: #eff6ff;
+  color: #1e40af;
+  border-color: #bfdbfe;
+}
+
+.camp-btn.preview-email:hover {
+  background: #dbeafe;
+}
+
+.camp-btn.trigger-send {
+  background: #034ea2;
+  color: #ffffff;
+}
+
+.camp-btn.trigger-send:hover {
+  background: #023875;
+}
+
+/* Queue Health Strip */
+.queue-stats-strip {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  background: #f8fafc;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.q-metric-box {
+  text-align: center;
+}
+
+.q-metric-val {
+  display: block;
+  font-size: 20px;
+  font-weight: 800;
+  font-family: 'Outfit', sans-serif;
+}
+
+.q-metric-label {
+  display: block;
+  font-size: 11px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* Dead Letter Queue Table */
+.dlq-table-wrapper {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.dlq-table-header {
+  padding: 12px 16px;
+  background: #fef2f2;
+  border-bottom: 1px solid #fee2e2;
+}
+
+.dlq-empty-state {
+  padding: 28px 16px;
+  text-align: center;
+}
+
+.dlq-items-list {
+  divide-y: 1px solid #f1f5f9;
+}
+
+.dlq-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 12px;
+}
+
+.dlq-item-row:last-child {
+  border-bottom: none;
+}
+
+.dlq-col-id {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 190px;
+}
+
+.dlq-id-pill {
+  font-family: monospace;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.dlq-channel-tag {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.dlq-channel-tag.email { background: #dbeafe; color: #1e40af; }
+.dlq-channel-tag.whatsapp { background: #d1fae5; color: #065f46; }
+
+.dlq-col-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0 12px;
+}
+
+.dlq-error-text {
+  color: #dc2626;
+  font-size: 11px;
+}
+
+.attempts-pill {
+  background: #fee2e2;
+  color: #991b1b;
+  font-weight: 600;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.dlq-retry-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.dlq-retry-btn:hover {
+  background: #fecaca;
+}
+
+.tab-badge-pill {
+  background: #ef4444;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 999px;
+  margin-left: 4px;
+}
+
+@media (max-width: 900px) {
+  .notif-pref-grid,
+  .campaign-cards-grid {
+    grid-template-columns: 1fr;
+  }
+  .queue-stats-strip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .dlq-item-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
+
+
 
 
 

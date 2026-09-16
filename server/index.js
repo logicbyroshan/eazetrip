@@ -12,6 +12,7 @@ try {
 }
 
 const mockStore = require('./data/mockStore');
+const notificationService = require('./services/notificationService');
 const { securityHeaders, rateLimit, sanitizeInput } = require('./middleware/security');
 const {
   validateLogin,
@@ -336,6 +337,29 @@ app.post('/api/bookings', validateBooking, (req, res) => {
   };
 
   bookings.unshift(newBooking);
+
+  // Automated Multi-Channel Booking Confirmation (Email, WhatsApp, In-App)
+  try {
+    notificationService.enqueueNotification({
+      userId: newBooking.userId,
+      channels: ['in_app', 'email', 'whatsapp'],
+      template: 'booking_confirmation',
+      data: {
+        name: newBooking.passengers?.[0]?.name || newBooking.leadPassenger || 'Valued Traveler',
+        email: newBooking.email,
+        phone: newBooking.phone || newBooking.passengers?.[0]?.phone || '+91 98765 43210',
+        pnr: newBooking.pnr,
+        serviceType: newBooking.type || 'Flight',
+        carrier: newBooking.airline || newBooking.hotelName || newBooking.operator || newBooking.trainName || newBooking.title || 'IndiGo 6E-2041',
+        route: `${newBooking.from || newBooking.city || 'Origin'} → ${newBooking.to || newBooking.destination || 'Destination'}`,
+        travelDate: newBooking.departureDate || newBooking.checkIn || newBooking.date || 'Upcoming Date',
+        amount: newBooking.price || newBooking.totalAmount || 4999
+      }
+    });
+  } catch (e) {
+    console.warn('[Notification Notice]:', e.message);
+  }
+
   res.status(201).json({
     success: true,
     message: 'Booking created successfully',
@@ -665,6 +689,198 @@ app.post('/api/contact', sensitiveLimiter, validateContact, (req, res) => {
     success: true,
     message: 'Inquiry received. Customer care will respond within 30 minutes.',
     data: inquiry
+  });
+});
+
+// ==========================================
+// NOTIFICATIONS & RESILIENT QUEUE API
+// ==========================================
+
+// Get user notifications & unread count
+app.get('/api/notifications', (req, res) => {
+  const userId = toStr(req.query.userId) || 'USR-1';
+  const category = toStr(req.query.category);
+  const read = toStr(req.query.read);
+
+  let results = notificationService.inAppNotifications.filter((n) => !userId || n.userId === userId);
+
+  if (category && category !== 'all') {
+    results = results.filter((n) => n.category?.toLowerCase() === category.toLowerCase());
+  }
+  if (read === 'true') {
+    results = results.filter((n) => n.read === true);
+  } else if (read === 'false') {
+    results = results.filter((n) => n.read === false);
+  }
+
+  const unreadCount = notificationService.inAppNotifications.filter((n) => n.userId === userId && !n.read).length;
+
+  res.json({
+    success: true,
+    count: results.length,
+    unreadCount,
+    data: results
+  });
+});
+
+// Mark single notification as read
+app.patch('/api/notifications/:id/read', (req, res) => {
+  const { id } = req.params;
+  const notif = notificationService.inAppNotifications.find((n) => n.id === id);
+
+  if (!notif) {
+    return res.status(404).json({ success: false, error: 'Notification not found' });
+  }
+
+  notif.read = true;
+  notif.readAt = new Date().toISOString();
+
+  res.json({
+    success: true,
+    message: 'Notification marked as read',
+    data: notif
+  });
+});
+
+// Mark all notifications as read for user
+app.post('/api/notifications/mark-all-read', (req, res) => {
+  const { userId = 'USR-1' } = req.body || {};
+  let updatedCount = 0;
+
+  notificationService.inAppNotifications.forEach((n) => {
+    if (n.userId === userId && !n.read) {
+      n.read = true;
+      n.readAt = new Date().toISOString();
+      updatedCount += 1;
+    }
+  });
+
+  res.json({
+    success: true,
+    message: `Marked ${updatedCount} notifications as read`,
+    updatedCount
+  });
+});
+
+// Dispatch transactional notification across multi-channels
+app.post('/api/notifications/send', (req, res) => {
+  const {
+    userId = 'USR-1',
+    channels = ['in_app', 'email', 'whatsapp'],
+    template = 'custom',
+    data = {},
+    priority = 'high',
+    simulateFailure = false
+  } = req.body || {};
+
+  const result = notificationService.enqueueNotification({
+    userId,
+    channels,
+    template,
+    data,
+    priority,
+    simulateFailure
+  });
+
+  res.status(201).json({
+    success: true,
+    message: `Notification enqueued across channels: [${channels.join(', ')}]`,
+    data: result
+  });
+});
+
+// Trigger personalized customer re-engagement campaign
+app.post('/api/notifications/trigger-campaign', (req, res) => {
+  const {
+    campaignType = 'reengagement_inactivity',
+    user = { id: 'USR-1', name: 'Priyansh Sharma', email: 'priyansh.sharma@gmail.com', phone: '+91 98765 43210' },
+    customData = {}
+  } = req.body || {};
+
+  const result = notificationService.triggerCampaign(campaignType, user, customData);
+
+  res.status(201).json({
+    success: true,
+    campaign: campaignType,
+    message: `Campaign '${campaignType}' successfully generated and dispatched!`,
+    data: result
+  });
+});
+
+// Inspect live Delivery Queue & Dead-Letter Queue (DLQ) health
+app.get('/api/notifications/queue-status', (req, res) => {
+  const metrics = notificationService.getQueueMetrics();
+  res.json(metrics);
+});
+
+// Retry single failed DLQ item or bulk retry all failed notifications
+app.post('/api/notifications/retry-failed', (req, res) => {
+  const { id = 'all' } = req.body || {};
+  const result = notificationService.retryDlqItem(id);
+
+  if (!result.success) {
+    return res.status(404).json(result);
+  }
+
+  res.json(result);
+});
+
+// Preview HTML Email & WhatsApp template renderers
+app.get('/api/notifications/templates', (req, res) => {
+  const type = toStr(req.query.type) || 'reengagement_inactivity';
+  const name = toStr(req.query.name) || 'Priyansh Sharma';
+  const promoCode = toStr(req.query.promoCode) || 'HOLIDAY25';
+  const monthsInactive = Number(toStr(req.query.monthsInactive)) || 3;
+
+  const sampleData = {
+    name,
+    promoCode,
+    monthsInactive,
+    pnr: 'FL2775',
+    serviceType: 'Flight',
+    carrier: 'IndiGo 6E-2041',
+    route: 'Mumbai (BOM) → New Delhi (DEL)',
+    travelDate: '24 Sep 2026, 06:00 AM',
+    amount: 4999
+  };
+
+  const htmlEmail = notificationService.renderHtmlEmail(type, sampleData);
+  const whatsappMessage = notificationService.renderWhatsAppMessage(type, sampleData);
+
+  res.json({
+    success: true,
+    type,
+    email: htmlEmail,
+    whatsapp: whatsappMessage
+  });
+});
+
+// User notification preferences
+app.get('/api/notifications/preferences', (req, res) => {
+  const userId = toStr(req.query.userId) || 'USR-1';
+  const prefs = notificationService.userPreferences[userId] || {
+    email: true,
+    whatsapp: true,
+    sms: false,
+    push: true,
+    tripUpdates: true,
+    promotionalOffers: true,
+    priceDropAlerts: true
+  };
+  res.json({ success: true, userId, data: prefs });
+});
+
+app.put('/api/notifications/preferences', (req, res) => {
+  const { userId = 'USR-1', preferences = {} } = req.body || {};
+  notificationService.userPreferences[userId] = {
+    ...(notificationService.userPreferences[userId] || {}),
+    ...preferences
+  };
+
+  res.json({
+    success: true,
+    message: 'Notification channel preferences saved successfully',
+    data: notificationService.userPreferences[userId]
   });
 });
 
