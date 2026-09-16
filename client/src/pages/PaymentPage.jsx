@@ -47,6 +47,7 @@ export default function PaymentPage() {
 
   // Preferred payment method tab
   const [activeMethodTab, setActiveMethodTab] = useState('all'); // all | upi | card | netbanking | wallet
+  const [showApiGuide, setShowApiGuide] = useState(false);
 
   useEffect(() => {
     async function loadConfig() {
@@ -500,26 +501,39 @@ export default function PaymentPage() {
                   </div>
                 </form>
 
-                {/* Developer Credentials Drop-in Helper Card */}
-                <div className="credentials-helper-card mt-4">
-                  <div className="helper-card-head">
-                    <Info size={18} color="#0097a7" />
-                    <strong>Razorpay Credentials Drop-in Guide</strong>
-                  </div>
-                  <p>
-                    Razorpay integration is <strong>100% complete</strong> across backend order creation, frontend checkout SDK, and signature verification.
-                  </p>
-                  <div className="helper-env-box">
-                    <code>
-                      # In your project root .env file:<br />
-                      RAZORPAY_KEY_ID=rzp_test_your_key_id_here<br />
-                      RAZORPAY_KEY_SECRET=your_key_secret_here<br />
-                      VITE_RAZORPAY_KEY_ID=rzp_test_your_key_id_here
-                    </code>
-                  </div>
-                  <small className="helper-footer-text">
-                    💡 Get your free API keys directly from the <a href="https://dashboard.razorpay.com/app/keys" target="_blank" rel="noreferrer">Razorpay Merchant Dashboard <ExternalLink size={12} className="inline" /></a>.
-                  </small>
+                {/* Developer Credentials Drop-in Helper Accordion */}
+                <div className="credentials-accordion-wrap mt-4 text-center">
+                  <button
+                    type="button"
+                    className="text-xs text-slate-500 font-semibold flex items-center justify-center gap-1 mx-auto hover:text-primary transition-colors"
+                    onClick={() => setShowApiGuide(!showApiGuide)}
+                  >
+                    <Info size={14} />
+                    <span>{showApiGuide ? 'Hide Developer API Info ▲' : 'Developer & Merchant Integration Details ▼'}</span>
+                  </button>
+
+                  {showApiGuide && (
+                    <div className="credentials-helper-card mt-3 text-left animate-fade-in">
+                      <div className="helper-card-head">
+                        <Info size={18} color="#0097a7" />
+                        <strong>Razorpay Credentials Drop-in Guide</strong>
+                      </div>
+                      <p>
+                        Razorpay integration is <strong>100% complete</strong> across backend order creation, frontend checkout SDK, and signature verification.
+                      </p>
+                      <div className="helper-env-box">
+                        <code>
+                          # In your project root .env file:<br />
+                          RAZORPAY_KEY_ID=rzp_test_your_key_id_here<br />
+                          RAZORPAY_KEY_SECRET=your_key_secret_here<br />
+                          VITE_RAZORPAY_KEY_ID=rzp_test_your_key_id_here
+                        </code>
+                      </div>
+                      <small className="helper-footer-text">
+                        💡 Get your free API keys directly from the <a href="https://dashboard.razorpay.com/app/keys" target="_blank" rel="noreferrer">Razorpay Merchant Dashboard <ExternalLink size={12} className="inline" /></a>.
+                      </small>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

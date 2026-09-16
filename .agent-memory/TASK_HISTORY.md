@@ -4,6 +4,26 @@ This file logs meaningful agent tasks, architectural milestones, and fixes chron
 
 ---
 
+### Task: Visual Polish & Experience Redesign (FAQ, About Us, Contact Desk & Payment Portal)
+* **Date**: 2026-09-16
+* **Reason**: User noted unstyled text and clumping on FAQ category pills/accordions, lack of rich visuals on About Us stats, stacked layout on Contact page, and intrusive raw .env debug box on Payment page.
+* **Branch / PR**: `fix/overhaul-contact-about-payment-faq-pages` (PR merged into `main`).
+* **Files Affected**:
+  - `client/src/App.css`
+  - `client/src/pages/AboutPage.jsx`
+  - `client/src/pages/PaymentPage.jsx`
+  - `CHANGELOG.md`
+  - `.agent-memory/CURRENT_STATE.md`
+  - `.agent-memory/TASK_HISTORY.md`
+* **What Changed**:
+  - Implemented complete FAQ design system with gradient hero search, elevated category pill bar, and interactive chevron accordions.
+  - Upgraded About Us page with 4 luxury stat cards (`.about-stats-grid`, `.stat-card-luxury`), icons, and clean corporate headquarters grid.
+  - Converted Contact & Concierge page into a desktop 2-column split grid (`.contact-layout-grid`) with custom-colored icon cards.
+  - Made developer integration box on Payment page collapsible (`.credentials-accordion-wrap`) to maintain consumer luxury checkout aesthetic.
+* **Testing Performed**: Automated test suite (62/62 passing), Vite production build clean (`npm run build`).
+
+---
+
 ### Task: Site-Wide Tab Section Header Architecture & Flex Utility Alignment
 * **Date**: 2026-09-16
 * **Reason**: User pointed out that action buttons across all other profile tabs (Refunds, Saved Travellers, Communications & Queue) were improperly stacked and dropped below titles instead of aligned neatly on the top-right.

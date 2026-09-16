@@ -7,6 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.1.5] - 2026-09-16
+
+### Visual Polish & Experience Redesign (FAQ, About Us, Contact Desk & Payment Portal)
+
+#### Help Center & FAQ Overhaul (`client/src/pages/FaqPage.jsx`, `client/src/App.css`)
+- **Luxury FAQ Design System**:
+  - Rebuilt the FAQ search hero (`.faq-hero-box`, `.faq-search-input-wrap`) with gradient styling, ambient glow, and high-contrast keyword search bar.
+  - Standardized category filter pills (`.category-filter-strip`, `.cat-pill-btn`) into an elevated pill bar with active royal blue elevation and distinct pill items (`All`, `Flights`, `Hotels`, `Buses & Trains`, `Payments & Refunds`).
+  - Implemented interactive accordion cards (`.faq-accordion-item`, `.faq-question-btn`, `.faq-answer-content`) with chevron indicators and readable typography.
+  - Added 24/7 Concierge CTA box (`.contact-cta-card`) with direct links to call and chat.
+
+#### About Us Experience Elevation (`client/src/pages/AboutPage.jsx`, `client/src/App.css`)
+- **4-Grid Key Statistics Cards (`.about-stats-grid`, `.stat-card-luxury`)**:
+  - Replaced sparse text list with 4 elevated glassmorphism cards featuring icons, gradient metrics (1.2M+ Travelers, 450+ Partners, 15,000+ Hotel Stays, 24/7 Live Support).
+  - Enhanced Core Values grid (`.about-values-grid`, `.value-box`) and corporate headquarters contact card.
+
+#### 24/7 Concierge & Contact Desk Split Grid (`client/src/pages/ContactPage.jsx`, `client/src/App.css`)
+- **Desktop 2-Column Responsive Split (`.contact-layout-grid`)**:
+  - Implemented side-by-side grid (`1fr 1.35fr`) with dedicated Concierge Info column on the left and Interactive Support Desk on the right.
+  - Added custom-colored icon circles for helpline, email, headquarters, and SLA guarantee.
+
+#### Payment Gateway & Custom Checkout Cleanup (`client/src/pages/PaymentPage.jsx`)
+- **Collapsible Developer Integration Drawer (`.credentials-accordion-wrap`)**:
+  - Replaced intrusive inline debug `.env` code block with a clean, collapsible toggle so checkout remains 100% focused on consumer-grade payment flow.
+
+---
+
 ## [2.1.4] - 2026-09-16
 
 ### Site-Wide Tab Section Header Architecture & Flex Utility Alignment
