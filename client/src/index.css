@@ -232,7 +232,12 @@ button:disabled, input:disabled, select:disabled, textarea:disabled {
    ========================================================================== */
 
 /* 1. MASTER BUTTON HIERARCHY */
-.btn, .primary-btn, .secondary-btn, .outline-btn, .ghost-btn, .danger-btn {
+.btn, .primary-btn, .secondary-btn, .outline-btn, .ghost-btn, .danger-btn,
+.view-ticket-btn, .profile-cancel-btn, .cancel-trip-btn, .profile-track-refund-btn,
+.track-refund-secondary-btn, .camp-btn, .trip-pill-btn, .filter-pill-btn,
+.lookup-pill-btn, .copy-track-link-btn, .receipt-download-btn, .flight-book-btn,
+.luxury-hotel-book-btn, .luxury-bus-select-btn, .book-train-action-btn,
+.holiday-book-btn, .holiday-view-btn, .legal-action-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -241,10 +246,7 @@ button:disabled, input:disabled, select:disabled, textarea:disabled {
   font-weight: 600;
   border-radius: var(--radius-sm);
   transition: all var(--transition-fast);
-  white-space: nowrap;
-  min-height: 42px;
-  padding: 0 18px;
-  font-size: var(--text-sm);
+  white-space: nowrap !important;
   line-height: 1;
 }
 

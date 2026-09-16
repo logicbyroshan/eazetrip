@@ -4,6 +4,26 @@ This file logs meaningful agent tasks, architectural milestones, and fixes chron
 
 ---
 
+### Task: Button Text Wrapping Elimination & Comprehensive Action Row Standardization
+* **Date**: 2026-09-16
+* **Reason**: User reported that the "Cancel & Refund" button on trip cards wrapped text onto two lines ("Cancel &" / "Refund") looking unpolished, and requested deeply fixing similar issues across the site.
+* **Branch / PR**: `fix/button-wrapping-and-comprehensive-ui-polish` (PR merged into `main`).
+* **Files Affected**:
+  - `client/src/App.css`
+  - `client/src/index.css`
+  - `client/src/pages/ManageBookingsPage.jsx`
+  - `CHANGELOG.md`
+  - `.agent-memory/CURRENT_STATE.md`
+  - `.agent-memory/TASK_HISTORY.md`
+* **What Changed**:
+  - Identified and removed duplicate CSS override at line 16167 in `App.css` that constrained action columns to 140px width.
+  - Standardized `.profile-card-action-btns` and `.action-buttons-stack` to `width: 180px; min-width: 180px;` across `ProfilePage` and `ManageBookingsPage`.
+  - Added icons (`<RotateCcw size={13} />`, `<Zap size={13} />`) and unified 10px rounded borders and high-contrast solid/outline states.
+  - Extended master button definition in `client/src/index.css` with `white-space: nowrap !important;` across all master and component button classes.
+* **Testing Performed**: Automated test suite (62/62 passing), Vite production build clean (`npm run build`).
+
+---
+
 ### Task: Profile Header Streamlining & Action Button Contrast Pass
 * **Date**: 2026-09-16
 * **Reason**: User reported that the section title was overly complex and cluttered with redundant buttons, and that the E-Ticket action button had low contrast (white text on light background).
