@@ -131,8 +131,8 @@ export default function FaqPage() {
           <h3>Still Need Assistance with Your Booking?</h3>
           <p>Our dedicated travel support specialists are available round-the-clock to assist you.</p>
           <div className="cta-actions-row mt-3">
-            <Link to="/contact" className="primary-btn">
-              Contact 24/7 Helpdesk
+            <Link to="/helpdesk" className="primary-btn">
+              Visit 24/7 Help Desk & Concierge
             </Link>
             <a href="tel:+918269054018" className="secondary-btn">
               <Phone size={15} /> Call +91 8269054018

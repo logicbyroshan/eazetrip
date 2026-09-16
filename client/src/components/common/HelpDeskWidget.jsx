@@ -21,6 +21,7 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import { useBooking } from '../../context/BookingContext';
 import { api } from '../../services/api';
+import { Link } from 'react-router-dom';
 
 export default function HelpDeskWidget() {
   const { user, isAuthenticated, firstName } = useAuth();
@@ -247,13 +248,24 @@ export default function HelpDeskWidget() {
                 </div>
               </div>
 
-              <button
-                className="helpdesk-close-btn"
-                onClick={() => setIsOpen(false)}
-                aria-label="Close Help Desk"
-              >
-                <X className="w-5 h-5" />
-              </button>
+              <div className="flex items-center gap-2">
+                <Link
+                  to="/helpdesk"
+                  className="helpdesk-open-fullpage-link"
+                  onClick={() => setIsOpen(false)}
+                  title="Open Dedicated Full Page Help Desk"
+                >
+                  <span>Full Page</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </Link>
+                <button
+                  className="helpdesk-close-btn"
+                  onClick={() => setIsOpen(false)}
+                  aria-label="Close Help Desk"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
             </div>
 
             {/* Navigation Tabs */}
@@ -359,7 +371,7 @@ export default function HelpDeskWidget() {
                       </div>
 
                       {/* Category & Urgency */}
-                      <div className="grid grid-cols-2 gap-3 mb-3">
+                      <div className="form-grid two-col mb-2">
                         <div className="form-group mb-0">
                           <label className="text-xs font-semibold text-slate-700">Problem Category *</label>
                           <select
@@ -393,8 +405,8 @@ export default function HelpDeskWidget() {
                       </div>
 
                       {/* PNR Input */}
-                      <div className="form-group mb-3">
-                        <div className="flex-between-center mb-1">
+                      <div className="form-group mb-2">
+                        <div className="flex-between-center mb-0.5">
                           <label className="text-xs font-semibold text-slate-700">PNR / Booking ID (Optional)</label>
                           {bookings?.length > 0 && (
                             <button
@@ -416,12 +428,12 @@ export default function HelpDeskWidget() {
                       </div>
 
                       {/* Problem Details */}
-                      <div className="form-group mb-3">
+                      <div className="form-group mb-2">
                         <label className="text-xs font-semibold text-slate-700">
                           Describe the Problem in Detail *
                         </label>
                         <textarea
-                          rows={4}
+                          rows={2}
                           placeholder="Please explain what happened (e.g. payment deducted but ticket not generated, need date change, baggage excess, etc.)..."
                           value={problemDescription}
                           onChange={(e) => setProblemDescription(e.target.value)}
@@ -431,7 +443,7 @@ export default function HelpDeskWidget() {
                       </div>
 
                       {/* Contact Prefills */}
-                      <div className="grid grid-cols-3 gap-2 mb-4">
+                      <div className="form-grid three-col mb-3">
                         <div className="form-group mb-0">
                           <label className="text-[11px] font-semibold text-slate-600">Your Name</label>
                           <input

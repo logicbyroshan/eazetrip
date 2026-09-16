@@ -49,6 +49,7 @@ export default function Footer() {
           <div className="footer-col">
             <h4>Quick Links</h4>
             <Link to="/about">About Us</Link>
+            <Link to="/helpdesk">24/7 Help Desk & Concierge</Link>
             <Link to="/contact">Contact Support</Link>
             <Link to="/manage-bookings">Manage Bookings</Link>
             <Link to="/profile">My Account</Link>

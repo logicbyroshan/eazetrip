@@ -34,6 +34,7 @@ const PartnerPage = lazy(() => import('./pages/PartnerPage'));
 const OffersPage = lazy(() => import('./pages/OffersPage'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
 const ContactPage = lazy(() => import('./pages/ContactPage'));
+const HelpDeskPage = lazy(() => import('./pages/HelpDeskPage'));
 const FaqPage = lazy(() => import('./pages/FaqPage'));
 const TermsPage = lazy(() => import('./pages/TermsPage'));
 const PrivacyPage = lazy(() => import('./pages/PrivacyPage'));
@@ -166,6 +167,10 @@ function AppContent() {
               <Route path="/about" element={<AboutPage />} />
               <Route path="/about-us" element={<AboutPage />} />
               <Route path="/contact" element={<ContactPage />} />
+              <Route path="/helpdesk" element={<HelpDeskPage />} />
+              <Route path="/help-desk" element={<HelpDeskPage />} />
+              <Route path="/support" element={<HelpDeskPage />} />
+              <Route path="/help" element={<HelpDeskPage />} />
               <Route path="/faq" element={<FaqPage />} />
               <Route path="/terms" element={<TermsPage />} />
               <Route path="/user-agreement" element={<TermsPage title="User Agreement" />} />

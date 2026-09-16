@@ -4,6 +4,28 @@ This file logs meaningful agent tasks, architectural milestones, and fixes chron
 
 ---
 
+### Task: Dedicated 24/7 Help Desk Page & Floating Modal Formatting Overhaul
+* **Date**: 2026-09-16
+* **Reason**: User requested that the helpdesk should be a properly formatted dedicated page (`/helpdesk`, `/help-desk`, `/support`, `/help`), and provided a screenshot of the floating modal overflowing viewport height with clipping on the submit button.
+* **Branch / PR**: `fix/helpdesk-dedicated-page-and-modal-formatting`.
+* **Files Affected**:
+  - `client/src/pages/HelpDeskPage.jsx` (New luxury full page)
+  - `client/src/App.jsx` (Routes `/helpdesk`, `/help-desk`, `/support`, `/help`)
+  - `client/src/components/common/HelpDeskWidget.jsx` (Added "Full Page ↗" header link, 2-col/3-col form grid)
+  - `client/src/pages/FaqPage.jsx` (Updated CTA to link to `/helpdesk`)
+  - `client/src/components/common/Footer.jsx` (Added `/helpdesk` to Quick Links)
+  - `client/src/App.css` (Full CSS design system for HelpDeskPage and modal)
+  - `CHANGELOG.md`
+  - `.agent-memory/CURRENT_STATE.md`
+  - `.agent-memory/TASK_HISTORY.md`
+* **What Changed**:
+  - Built dedicated `HelpDeskPage.jsx` with luxury gradient hero banner, 4 SLA guarantee stat badges, and interactive 5-mode support hub (Report Problem, WhatsApp Concierge, Direct Email, 5-Min Callback, Track My Tickets).
+  - Added 4 bottom resolution cards for common travel tasks (Flight Reschedule, Zero Shield Refund, Hotel Check-in, Baggage Emergency) and sidebar contact channels.
+  - Optimized floating modal widget with native `.form-grid.two-col` and `.form-grid.three-col` CSS classes, added "Full Page ↗" header link, and adjusted modal height constraints so the submit button never gets pushed off screen.
+* **Testing Performed**: 62 / 62 automated tests passing (`npm test`), Vite production build clean (`npm run build`), browser subagent visual verification on both full page and modal window.
+
+---
+
 ### Task: Visual Polish & Experience Redesign (FAQ, About Us, Contact Desk & Payment Portal)
 * **Date**: 2026-09-16
 * **Reason**: User noted unstyled text and clumping on FAQ category pills/accordions, lack of rich visuals on About Us stats, stacked layout on Contact page, and intrusive raw .env debug box on Payment page.
