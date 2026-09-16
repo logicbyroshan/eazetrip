@@ -16094,6 +16094,280 @@ input:checked + .slider:before {
   font-weight: 600;
 }
 
+/* ==========================================================================
+   MASTER UNIFIED UI/UX DESIGN SYSTEM REBUILD (10/10 REFINEMENT)
+   ========================================================================== */
+
+/* Unified Section Containers & Rhythm */
+.section-block {
+  padding: 56px 0;
+}
+
+.section-header {
+  margin-bottom: 32px;
+}
+
+.section-header.center {
+  text-align: center;
+}
+
+.section-tag {
+  display: inline-block;
+  font-size: var(--text-xs);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--primary);
+  background: var(--primary-light);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  margin-bottom: 10px;
+}
+
+/* Unified Breadcrumb Topbar */
+.page-topbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin-bottom: 20px;
+  padding: 8px 0;
+}
+
+.page-topbar a {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.page-topbar a:hover {
+  text-decoration: underline;
+}
+
+/* Unified Listing Page 2-Column Responsive Layout */
+.listing-page-wrapper {
+  min-height: 100vh;
+  background: var(--bg);
+  padding-bottom: 64px;
+}
+
+.listing-content-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 28px;
+  align-items: start;
+  margin-top: 24px;
+}
+
+.listing-sidebar {
+  position: sticky;
+  top: 90px;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  max-height: calc(100vh - 110px);
+  overflow-y: auto;
+}
+
+/* Unified Results Header */
+.results-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-xs);
+}
+
+.results-count {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  font-weight: 500;
+  display: block;
+  margin-top: 4px;
+}
+
+/* Multi-Step Checkout 2-Column Layout */
+.checkout-layout-grid {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 28px;
+  align-items: start;
+  margin-top: 24px;
+}
+
+.checkout-sticky-sidebar {
+  position: sticky;
+  top: 90px;
+  height: fit-content;
+  align-self: start;
+}
+
+/* Unified Micro-Components & Interactive Feedback */
+.btn:focus-visible, button:focus-visible, a:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Accessibility: Respect Reduced Motion Preferences */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ==========================================================================
+   MASTER RESPONSIVE BREAKPOINTS (ALL SCREEN SIZES)
+   ========================================================================== */
+
+/* Tablet & Medium Screen (max-width: 1024px) */
+@media screen and (max-width: 1024px) {
+  .listing-content-layout {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .listing-sidebar {
+    position: static;
+    max-height: none;
+    margin-bottom: 16px;
+  }
+
+  .checkout-layout-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .checkout-sticky-sidebar {
+    position: static;
+  }
+
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .offers-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Mobile Standard (max-width: 768px) */
+@media screen and (max-width: 768px) {
+  .section-block {
+    padding: 36px 0;
+  }
+
+  .container {
+    width: calc(100% - 24px);
+  }
+
+  .topbar-links, .topbar-phone {
+    display: none;
+  }
+
+  .hero-search-tabs {
+    overflow-x: auto;
+    justify-content: flex-start;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .hero-tab-btn {
+    flex-shrink: 0;
+    min-width: 80px;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .offers-cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .results-header-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .modal-container {
+    width: 100%;
+    max-height: 92vh;
+    border-radius: var(--radius-lg);
+    margin: 8px;
+  }
+
+  .profile-tabs-strip {
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+  }
+
+  .profile-nav-tab {
+    flex-shrink: 0;
+  }
+}
+
+/* Mobile Small (max-width: 480px) */
+@media screen and (max-width: 480px) {
+  .container {
+    width: calc(100% - 16px);
+  }
+
+  .btn, .primary-btn, .secondary-btn {
+    min-height: 44px; /* Ensure 44px touch target on mobile */
+  }
+
+  .form-input, .form-select {
+    min-height: 44px;
+    font-size: 16px; /* Prevents iOS auto-zoom on input focus */
+  }
+
+  .eaze-card, .content-card {
+    padding: 16px;
+    border-radius: var(--radius-md);
+  }
+
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .table-wrapper {
+    margin: 0 -8px;
+    width: calc(100% + 16px);
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+}
+
+/* Mobile Extra Small (max-width: 360px) */
+@media screen and (max-width: 360px) {
+  .topbar-inner {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .hero-headline {
+    font-size: 1.5rem;
+  }
+}
+
+
 
 
 
