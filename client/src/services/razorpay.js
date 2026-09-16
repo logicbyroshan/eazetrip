@@ -81,11 +81,6 @@ export const initiateRazorpayCheckout = async ({
           }
         },
         prefill: prefillObj,
-        readonly: {
-          name: true,
-          email: true,
-          contact: true
-        },
         notes: {
           platform: 'EazeTrip',
           itinerary: description,
