@@ -4,6 +4,23 @@ This file logs meaningful agent tasks, architectural milestones, and fixes chron
 
 ---
 
+### Task: Seamless 2-Step Booking to Payment Page Flow
+* **Date**: 2026-09-16
+* **Reason**: User requested that `/review-booking` directly transition to `/booking-payment` with all passenger details, itinerary, and pricing seamlessly passed, and Razorpay automatically pre-filled without re-asking contact details.
+* **Branch / PR**: `feature/direct-booking-to-payment-page-flow` (PR #8 merged).
+* **Files Affected**:
+  - `client/src/pages/ReviewBookingPage.jsx`
+  - `client/src/pages/BookingPaymentPage.jsx`
+  - `client/src/services/razorpay.js`
+  - `CHANGELOG.md`
+* **What Changed**:
+  - Cleanly decoupled booking review and payment steps: `/review-booking` -> `/booking-payment`.
+  - Configured lead passenger and contact verification data persistence across React Router state and `BookingContext`.
+  - Ensured Razorpay prefill uses `+91${phone10}` with readonly fields enabled.
+* **Testing Performed**: All 35 automated tests passing; Vite production build clean.
+
+---
+
 ### Task: Multi-Step Dedicated Booking & Payment Hub
 * **Date**: 2026-09-15
 * **Reason**: User requested complete step-by-step dedicated booking review and payment pages instead of cramped modals.
