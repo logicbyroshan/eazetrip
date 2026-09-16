@@ -6,7 +6,7 @@ import { X, Phone, Mail, Lock, Eye, EyeOff, RefreshCw, CheckCircle } from 'lucid
 
 export default function LoginModal() {
   const navigate = useNavigate();
-  const { isLoginModalOpen, closeLoginModal, login, loginWithGoogle } = useAuth();
+  const { isLoginModalOpen, closeLoginModal, login, loginWithGoogle, firstName } = useAuth();
   const { showToast } = useBooking();
 
   const [activeTab, setActiveTab] = useState('phone'); // 'phone' | 'email'
@@ -139,8 +139,8 @@ export default function LoginModal() {
           <div className="auth-brand-centered">
             <img src="/logo.png" alt="EazeTrip" className="modal-brand-logo-img" />
           </div>
-          <h2 id="login-modal-title">Welcome to EazeTrip</h2>
-          <p>Login to manage your bookings, special fares & fast checkout</p>
+          <h2 id="login-modal-title">{firstName ? `Welcome Back, ${firstName}!` : 'Welcome to EazeTrip'}</h2>
+          <p>{firstName ? `Login to access your bookings, rewards, and exclusive member fares for ${firstName}.` : 'Login to manage your bookings, special fares & fast checkout'}</p>
         </div>
 
         {/* Google Sign In Option */}

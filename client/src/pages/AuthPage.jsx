@@ -21,7 +21,7 @@ import {
 
 export default function AuthPage({ mode = 'register' }) {
   const navigate = useNavigate();
-  const { register, login, loginWithGoogle } = useAuth();
+  const { register, login, loginWithGoogle, firstName } = useAuth();
   const { showToast } = useBooking();
 
   const [currentMode, setCurrentMode] = useState(mode);
@@ -206,11 +206,11 @@ export default function AuthPage({ mode = 'register' }) {
                     {isRegister ? 'New Traveler Registration' : 'Member Sign In'}
                   </span>
                 </div>
-                <h2>{isRegister ? 'Create an Account' : 'Welcome Back'}</h2>
+                <h2>{isRegister ? 'Create an Account' : (firstName ? `Welcome Back, ${firstName}!` : 'Welcome Back')}</h2>
                 <p>
                   {isRegister
                     ? 'Fill in your details below to unlock member discounts.'
-                    : 'Log in to access your bookings and faster checkout.'}
+                    : (firstName ? `Sign in to access your bookings, rewards, and exclusive member fares for ${firstName}.` : 'Log in to access your bookings and faster checkout.')}
                 </p>
               </div>
 
