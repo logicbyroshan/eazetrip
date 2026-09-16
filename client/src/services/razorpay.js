@@ -45,7 +45,9 @@ export const initiateRazorpayCheckout = async ({
   const isLoaded = await loadRazorpayScript();
 
   // Sanitize prefill values so Razorpay validates them cleanly without re-asking
-  const cleanPhone = (prefill.contact || '9876543210').toString().replace(/\D/g, '').slice(-10);
+  const rawDigits = (prefill.contact || prefill.phone || '9876543210').toString().replace(/\D/g, '');
+  const cleanPhone10 = rawDigits.slice(-10) || '9876543210';
+  const cleanPhoneWithPlus = `+91${cleanPhone10}`;
   const cleanEmail = (prefill.email || 'traveler@eazetrip.com').toString().trim().toLowerCase();
   const cleanName = (prefill.name || 'Traveler').toString().trim();
 
@@ -55,7 +57,7 @@ export const initiateRazorpayCheckout = async ({
       const prefillObj = {
         name: cleanName,
         email: cleanEmail,
-        contact: cleanPhone
+        contact: cleanPhoneWithPlus
       };
 
       if (method) {

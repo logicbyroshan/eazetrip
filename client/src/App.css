@@ -10515,6 +10515,29 @@ input[type="radio"]:focus-visible {
   box-shadow: 0 8px 24px rgba(3, 78, 162, 0.4);
 }
 
+.secondary-payment-link-btn {
+  width: 100%;
+  background: transparent;
+  color: #034ea2;
+  border: 1px solid #cbd5e1;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: center;
+  margin-bottom: 14px;
+  transition: all 0.2s ease;
+  display: block;
+}
+
+.secondary-payment-link-btn:hover {
+  background: #eff6ff;
+  border-color: #93c5fd;
+  color: #023875;
+}
+
 .sidebar-trust-box {
   display: flex !important;
   flex-direction: column !important;

@@ -115,5 +115,25 @@ This file logs meaningful agent tasks, architectural milestones, and fixes chron
 * **What Changed**: Eliminated CSS collision on `.assurance-item` from homepage strip, created dedicated `.sidebar-trust-box` and `.trust-point-item` styles with 7px item gaps, clean padding (10px 14px), and border cleanup.
 * **Testing Performed**: Verified clean Vite production build (`npm run build`), all 35 automated tests passing (`npm test`), and git tree clean.
 
+---
+
+### Task: Streamlined Direct Razorpay Checkout & Country Code Prefill
+* **Date**: 2026-09-16
+* **Reason**: User requested clicking the pay button on the booking review page to open Razorpay checkout directly without intermediate pages, and requested fixing duplicate contact info prompts by properly passing `+91` mobile format.
+* **Files Affected**:
+  - `client/src/services/razorpay.js`
+  - `client/src/pages/ReviewBookingPage.jsx`
+  - `client/src/pages/BookingPaymentPage.jsx`
+  - `client/src/App.css`
+  - `CHANGELOG.md`
+  - `.agent-memory/TASK_HISTORY.md`
+  - `.agent-memory/CURRENT_STATE.md`
+* **What Changed**:
+  - Formatted `prefill.contact` with `+91${cleanPhone10}` so Razorpay auto-populates the country dropdown and mobile number without prompt.
+  - Added direct Razorpay execution on `/review-booking`, allowing instant 1-click checkout.
+  - Added real-time processing overlay, signature verification, and immediate confirmed E-Ticket view upon successful payment.
+* **Testing Performed**: Verified clean Vite production build (`npm run build`), all 35 automated tests passing (`npm test`), and git tree clean.
+
+
 
 
