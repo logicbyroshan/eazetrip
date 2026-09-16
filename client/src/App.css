@@ -7658,6 +7658,89 @@ input[type="radio"]:focus-visible {
   box-shadow: 0 2px 8px rgba(3, 78, 162, 0.25);
 }
 
+/* Tab Section Header */
+.tab-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-bottom: 18px;
+  border-bottom: 1.5px solid #f1f5f9;
+}
+
+.tab-section-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 4px 0;
+  line-height: 1.2;
+}
+
+.tab-section-sub {
+  font-size: 0.88rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.manage-all-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #034ea2;
+  padding: 8px 16px;
+  border-radius: 10px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.manage-all-link:hover {
+  background: #034ea2;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(3, 78, 162, 0.2);
+}
+
+/* Trip Filter Pill Bar */
+.trip-filter-pill-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.trip-pill-btn {
+  padding: 8px 18px;
+  border-radius: 9999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #475569;
+  background: #f1f5f9;
+  border: 1.5px solid #e2e8f0;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+}
+
+.trip-pill-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.trip-pill-btn.active {
+  background: #034ea2 !important;
+  color: #ffffff !important;
+  border-color: #034ea2 !important;
+  box-shadow: 0 3px 10px rgba(3, 78, 162, 0.28);
+}
+
 /* Profile Trips Bookings List */
 .profile-bookings-list {
   display: flex;
@@ -7813,66 +7896,70 @@ input[type="radio"]:focus-visible {
 .profile-card-action-btns {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  min-width: 140px;
+  gap: 10px;
+  min-width: 150px;
 }
 
 .view-ticket-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  background: #034ea2;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  background: #034ea2 !important;
   color: #ffffff !important;
-  padding: 8px 16px;
-  border-radius: 10px;
-  font-size: 13px;
-  font-weight: 700;
-  border: 1px solid #034ea2;
-  box-shadow: 0 2px 6px rgba(3, 78, 162, 0.2);
-  transition: all 0.2s ease;
-  cursor: pointer;
+  padding: 10px 18px !important;
+  border-radius: 10px !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  border: 1.5px solid #034ea2 !important;
+  box-shadow: 0 2px 8px rgba(3, 78, 162, 0.25) !important;
+  transition: all 0.2s ease !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
 }
 
 .view-ticket-btn:hover {
-  background: #023875;
-  transform: translateY(-1px);
+  background: #023875 !important;
+  border-color: #023875 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 14px rgba(3, 78, 162, 0.35) !important;
 }
 
 .profile-cancel-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  background: #ffffff;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  background: #ffffff !important;
   color: #dc2626 !important;
-  padding: 7px 14px;
-  border-radius: 10px;
-  font-size: 12px;
-  font-weight: 700;
-  border: 1px solid #fecaca;
-  transition: all 0.2s ease;
-  cursor: pointer;
+  padding: 8px 16px !important;
+  border-radius: 10px !important;
+  font-size: 12.5px !important;
+  font-weight: 700 !important;
+  border: 1.5px solid #fecaca !important;
+  transition: all 0.2s ease !important;
+  cursor: pointer !important;
 }
 
 .profile-cancel-btn:hover {
-  background: #fef2f2;
-  border-color: #ef4444;
+  background: #fef2f2 !important;
+  border-color: #ef4444 !important;
+  transform: translateY(-1px) !important;
 }
 
 .profile-track-refund-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  background: #fff7ed;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  background: #fff7ed !important;
   color: #c2410c !important;
-  padding: 7px 14px;
-  border-radius: 10px;
-  font-size: 12px;
-  font-weight: 700;
-  border: 1px solid #fed7aa;
-  text-decoration: none;
+  padding: 8px 16px !important;
+  border-radius: 10px !important;
+  font-size: 12.5px !important;
+  font-weight: 700 !important;
+  border: 1.5px solid #fed7aa !important;
+  text-decoration: none !important;
 }
 
 /* Tab 2: Refunds & Claims Hub */
@@ -12148,80 +12235,7 @@ input[type="radio"]:focus-visible {
   border: 1px solid #fecaca;
 }
 
-.booking-meta-chips {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  flex-wrap: wrap;
-  font-size: 0.82rem;
-  color: #64748b;
-}
-
-.booking-meta-chips span {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.booking-item-right {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  flex-shrink: 0;
-}
-
-.booking-amount-box {
-  text-align: right;
-}
-
-.booking-amount-box small {
-  display: block;
-  font-size: 0.72rem;
-  color: #64748b;
-  text-transform: uppercase;
-  font-weight: 600;
-}
-
-.booking-amount-box strong {
-  font-size: 1.15rem;
-  font-weight: 800;
-  color: #034ea2;
-  font-family: 'Outfit', sans-serif;
-}
-
-.view-ticket-btn {
-  background: #eff6ff;
-  color: #034ea2;
-  border: 1px solid #bfdbfe;
-  font-size: 0.84rem;
-  font-weight: 700;
-  padding: 8px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-family: 'Outfit', sans-serif;
-}
-
-.view-ticket-btn:hover {
-  background: #034ea2;
-  color: #ffffff;
-  border-color: #034ea2;
-  box-shadow: 0 4px 12px rgba(3, 78, 162, 0.2);
-}
-
-@media (max-width: 768px) {
-  .profile-booking-item-card {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .booking-item-right {
-    width: 100%;
-    justify-content: space-between;
-    border-top: 1px dashed #e2e8f0;
-    padding-top: 12px;
-  }
-}
+/* Cleaned up duplicate profile-booking-item-card styles */
 
 /* =========================================================
    EAZE TRIP NOTIFICATION CENTER & QUEUE ENGINE STYLES
