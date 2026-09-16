@@ -7660,9 +7660,9 @@ input[type="radio"]:focus-visible {
 
 /* Tab Section Header */
 .tab-section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
   margin-bottom: 24px;
   flex-wrap: wrap;
   gap: 16px;
@@ -7670,41 +7670,65 @@ input[type="radio"]:focus-visible {
   border-bottom: 1.5px solid #f1f5f9;
 }
 
+.tab-section-title-wrap {
+  flex: 1;
+  min-width: 260px;
+}
+
 .tab-section-title {
   font-family: 'Outfit', sans-serif;
-  font-size: 1.5rem;
+  font-size: 1.45rem;
   font-weight: 800;
-  color: #0f172a;
+  color: #0a192f;
   margin: 0 0 4px 0;
-  line-height: 1.2;
+  line-height: 1.25;
 }
 
 .tab-section-sub {
   font-size: 0.88rem;
   color: #64748b;
   margin: 0;
+  line-height: 1.4;
 }
 
 .manage-all-link {
-  display: inline-flex;
-  align-items: center;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   gap: 6px;
   font-size: 0.85rem;
   font-weight: 700;
-  color: #034ea2;
+  color: #034ea2 !important;
   padding: 8px 16px;
   border-radius: 10px;
-  background: #eff6ff;
-  border: 1px solid #bfdbfe;
-  text-decoration: none;
+  background: #eff6ff !important;
+  border: 1.5px solid #bfdbfe !important;
+  text-decoration: none !important;
+  white-space: nowrap !important;
+  cursor: pointer !important;
   transition: all 0.2s ease;
 }
 
 .manage-all-link:hover {
-  background: #034ea2;
-  color: #ffffff;
+  background: #034ea2 !important;
+  border-color: #034ea2 !important;
+  color: #ffffff !important;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(3, 78, 162, 0.2);
+}
+
+.manage-all-link.primary-cta {
+  background: #034ea2 !important;
+  border-color: #034ea2 !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(3, 78, 162, 0.25);
+}
+
+.manage-all-link.primary-cta:hover {
+  background: #023875 !important;
+  border-color: #023875 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(3, 78, 162, 0.35);
 }
 
 /* Trip Filter Pill Bar */

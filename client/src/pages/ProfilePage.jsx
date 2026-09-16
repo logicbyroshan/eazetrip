@@ -457,9 +457,10 @@ export default function ProfilePage() {
         {/* Tab 0: Trips & Bookings */}
         {activeTab === 'trips' && (
           <div className="content-card form-card mt-3">
-            <div className="tab-section-header flex-between-center mb-4">
-              <div>
-                <h2 className="tab-section-title">My Trips & Bookings</h2>
+            {/* Header */}
+            <div className="tab-section-header">
+              <div className="tab-section-title-wrap">
+                <h3 className="tab-section-title">My Trips & Bookings</h3>
                 <p className="tab-section-sub">View and manage your upcoming and completed reservations</p>
               </div>
               <Link to="/manage-bookings" className="manage-all-link">
@@ -580,29 +581,20 @@ export default function ProfilePage() {
         {activeTab === 'refunds' && (
           <div className="content-card form-card mt-3 animate-fade-in">
             {/* Header */}
-            <div className="section-title-wrap flex-between-center mb-4">
-              <div>
-                <div className="flex items-center gap-2">
-                  <div className="p-2 bg-amber-100 text-amber-800 rounded-lg">
-                    <RotateCcw size={20} />
-                  </div>
-                  <div>
-                    <h2 className="mb-0">Refunds & Claims Resolution Hub</h2>
-                    <p className="text-sm text-slate-500 mb-0">
-                      Track live refund disbursements, banking ARN reference codes, and DGCA/IRCTC claim status.
-                    </p>
-                  </div>
-                </div>
+            <div className="tab-section-header">
+              <div className="tab-section-title-wrap">
+                <h3 className="tab-section-title">Refunds & Claims Resolution Hub</h3>
+                <p className="tab-section-sub">
+                  Track live refund disbursements, banking ARN reference codes, and DGCA/IRCTC claim status.
+                </p>
               </div>
-
-              <div className="flex items-center gap-2">
-                <Link
-                  to="/cancellation-refund?openClaim=true"
-                  className="primary-btn small flex-align-center gap-1"
-                >
-                  <Plus size={14} /> Submit Direct Claim
-                </Link>
-              </div>
+              <Link
+                to="/cancellation-refund?openClaim=true"
+                className="manage-all-link primary-cta"
+              >
+                <Plus size={15} />
+                <span>Submit Direct Claim</span>
+              </Link>
             </div>
 
             {/* Refund Metric Stat Chips */}
@@ -758,9 +750,11 @@ export default function ProfilePage() {
         )}
         {activeTab === 'personal' && (
           <div className="content-card form-card mt-3">
-            <div className="section-title-wrap mb-3">
-              <h2>Personal & Contact Information</h2>
-              <p>Manage your account details and contact preferences for e-ticket delivery</p>
+            <div className="tab-section-header">
+              <div className="tab-section-title-wrap">
+                <h3 className="tab-section-title">Personal & Contact Information</h3>
+                <p className="tab-section-sub">Manage your account details and contact preferences for e-ticket delivery</p>
+              </div>
             </div>
 
             <form onSubmit={handleSaveProfile} className="profile-form-grid">
@@ -836,17 +830,18 @@ export default function ProfilePage() {
         {/* Tab 2: Saved Travellers */}
         {activeTab === 'travellers' && (
           <div className="content-card mt-3">
-            <div className="section-header-row">
-              <div>
-                <h2>Saved Co-Travellers (Fast Checkout)</h2>
-                <p>Pre-save family and colleagues to autofill passenger details during flight, hotel, and train booking.</p>
+            <div className="tab-section-header">
+              <div className="tab-section-title-wrap">
+                <h3 className="tab-section-title">Saved Co-Travellers (Fast Checkout)</h3>
+                <p className="tab-section-sub">Pre-save family and colleagues to autofill passenger details during flight, hotel, and train booking.</p>
               </div>
               <button
                 type="button"
-                className="primary-btn small"
+                className="manage-all-link primary-cta"
                 onClick={() => setShowAddTraveller(!showAddTraveller)}
               >
-                <Plus size={15} /> {showAddTraveller ? 'Cancel' : 'Add New Traveller'}
+                <Plus size={15} />
+                <span>{showAddTraveller ? 'Cancel' : 'Add New Traveller'}</span>
               </button>
             </div>
 
@@ -925,9 +920,11 @@ export default function ProfilePage() {
         {/* Tab 3: Travel Preferences */}
         {activeTab === 'preferences' && (
           <div className="content-card form-card mt-3">
-            <div className="section-title-wrap mb-3">
-              <h2>Travel Preferences & Loyalty</h2>
-              <p>Customise your preferred seat selection, meal plans, and airline frequent flyer numbers.</p>
+            <div className="tab-section-header">
+              <div className="tab-section-title-wrap">
+                <h3 className="tab-section-title">Travel Preferences & Loyalty</h3>
+                <p className="tab-section-sub">Customise your preferred seat selection, meal plans, and airline frequent flyer numbers.</p>
+              </div>
             </div>
 
             <form onSubmit={handleSavePreferences} className="profile-form-grid">
@@ -983,32 +980,22 @@ export default function ProfilePage() {
         {activeTab === 'notifications' && (
           <div className="content-card form-card mt-3 animate-fade-in">
             {/* Header */}
-            <div className="section-title-wrap flex-between-center mb-4">
-              <div>
-                <div className="flex items-center gap-2">
-                  <div className="p-2 bg-blue-100 text-blue-800 rounded-lg">
-                    <Bell size={20} />
-                  </div>
-                  <div>
-                    <h2 className="mb-0">Multi-Channel Communications & Delivery Queue</h2>
-                    <p className="text-sm text-slate-500 mb-0">
-                      Configure WhatsApp & Email channels, simulate customer re-engagement campaigns, and monitor resilient Dead-Letter Queue (DLQ) recoveries.
-                    </p>
-                  </div>
-                </div>
+            <div className="tab-section-header">
+              <div className="tab-section-title-wrap">
+                <h3 className="tab-section-title">Multi-Channel Communications & Delivery Queue</h3>
+                <p className="tab-section-sub">
+                  Configure WhatsApp & Email channels, simulate customer re-engagement campaigns, and monitor resilient Dead-Letter Queue (DLQ) recoveries.
+                </p>
               </div>
-
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  className="secondary-btn small flex-align-center gap-1"
-                  onClick={refreshQueueStatus}
-                  title="Refresh Queue Metrics"
-                >
-                  <RefreshCw size={14} className={notifLoading ? 'animate-spin' : ''} />
-                  <span>Refresh Queue</span>
-                </button>
-              </div>
+              <button
+                type="button"
+                className="manage-all-link"
+                onClick={refreshQueueStatus}
+                title="Refresh Queue Metrics"
+              >
+                <RefreshCw size={14} className={notifLoading ? 'animate-spin' : ''} />
+                <span>Refresh Queue</span>
+              </button>
             </div>
 
             {/* Sub-Section 1: Channel Preferences */}

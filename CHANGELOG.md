@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.1.4] - 2026-09-16
+
+### Site-Wide Tab Section Header Architecture & Flex Utility Alignment
+
+#### Unified Tab Section Headers Across All Profile Hubs (`client/src/pages/ProfilePage.jsx`, `client/src/App.css`)
+- **Resolved Dropped/Stacked Action Buttons**:
+  - Replaced legacy unstyled `.section-title-wrap` and `.section-header-row` across all 6 tabs in `ProfilePage` (My Trips, Refunds & Claims, Personal Info, Saved Travellers, Travel Preferences, and Communications & Queue) with the standardized `.tab-section-header` and `.tab-section-title-wrap` system.
+  - Aligned all primary/secondary tab actions (`+ Submit Direct Claim`, `+ Add New Traveller`, `🔄 Refresh Queue`, `Manage All Bookings →`) to the top-right of the header container with `.manage-all-link` and `.manage-all-link.primary-cta` styling.
+- **Fixed Utility Tokens (`client/src/index.css`)**:
+  - Corrected `.flex-between-center` and `.flex-align-center` to enforce `display: flex !important;` alongside `justify-content: space-between` and `align-items: center`, preventing child buttons from falling below block text.
+
+---
+
 ## [2.1.3] - 2026-09-16
 
 ### Button Text Wrapping Elimination & Comprehensive Action Row Standardization
