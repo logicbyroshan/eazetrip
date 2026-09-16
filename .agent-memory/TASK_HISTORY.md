@@ -4,6 +4,19 @@ This file logs meaningful agent tasks, architectural milestones, and fixes chron
 
 ---
 
+### Task: Razorpay Prefill & Input Field Constraint Optimization
+* **Date**: 2026-09-16
+* **Reason**: User requested investigation into Razorpay checkout contact prompt behavior and standard modal vs full-page integration model.
+* **Branch / PR**: `fix/razorpay-prefill-and-clarification` (PR #11 merged).
+* **Files Affected**:
+  - `client/src/services/razorpay.js`
+  - `CHANGELOG.md`
+* **What Changed**:
+  - Removed restrictive `readonly: { contact: true }` constraint from `razorpay.js` so Razorpay dynamically receives the phone number without input lock.
+* **Testing Performed**: All 35 automated tests passing, Vite production build clean.
+
+---
+
 ### Task: Direct Native Razorpay Checkout & Instant E-Ticket Confirmation
 * **Date**: 2026-09-16
 * **Reason**: User requested removing redundant intermediate payment selection pages ("Pay via UPI, Cards, Razorpay etc.") and having `/review-booking` trigger Razorpay natively directly when clicking the Pay button.

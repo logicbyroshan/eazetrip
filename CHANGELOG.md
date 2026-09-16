@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.3.4] - 2026-09-16
+
+### Razorpay Prefill & Input Field Constraint Optimization
+
+#### Fixed
+- **Contact Input Binding in Razorpay Widget**: Removed restrictive `readonly: { contact: true }` property in `razorpay.js` so that Razorpay's input binding handler can smoothly auto-populate and validate the customer's phone number without locking the text field.
+
+---
+
 ## [1.3.3] - 2026-09-16
 
 ### Direct Native Razorpay Checkout & Instant Confirmation
