@@ -55,7 +55,7 @@ export default function ReviewBookingPage() {
 
   // Primary Passenger / Contact State
   const [title, setTitle] = useState('Mr');
-  const [firstName, setFirstName] = useState(user?.name?.split(' ')[0] || '');
+  const [firstName, setFirstName] = useState(user?.name?.split(' ')[0] || authFirstName || '');
   const [lastName, setLastName] = useState(user?.name?.split(' ').slice(1).join(' ') || 'Traveler');
   const [gender, setGender] = useState('Male');
   const [dob, setDob] = useState('1994-05-15');

@@ -49,7 +49,7 @@ import {
 import { Link, useNavigate } from 'react-router-dom';
 
 export default function ProfilePage() {
-  const { user, updateProfile, openLoginModal, isAuthenticated, logout } = useAuth();
+  const { user, firstName, updateProfile, openLoginModal, isAuthenticated, logout } = useAuth();
   const { bookings, refunds, openTicketModal, requestCancellationRefund, showToast } = useBooking();
   const navigate = useNavigate();
   const {
@@ -139,10 +139,14 @@ export default function ProfilePage() {
           <div className="profile-lock-icon mx-auto mb-3">
             <User size={48} color="#034ea2" />
           </div>
-          <h2>Please Sign In to Access Your Account</h2>
-          <p className="lead">You need to be signed in to view and manage your travel profile, bookings, and saved passengers.</p>
+          <h2>{firstName ? `Welcome Back, ${firstName}! Please Sign In` : 'Please Sign In to Access Your Account'}</h2>
+          <p className="lead">
+            {firstName
+              ? `Hello ${firstName}, sign in to access your saved traveler profiles, loyalty rewards balance, and active bookings.`
+              : 'You need to be signed in to view and manage your travel profile, bookings, and saved passengers.'}
+          </p>
           <button type="button" className="primary-btn mt-3" onClick={openLoginModal}>
-            Sign In / Register
+            {firstName ? `Sign In as ${firstName}` : 'Sign In / Register'}
           </button>
         </div>
       </div>
