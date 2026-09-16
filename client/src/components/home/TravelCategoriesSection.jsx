@@ -12,26 +12,26 @@ export const categoryCardsData = [
   },
   {
     id: 'cultural',
-    title: 'Cultural Heritage',
+    title: 'Cultural Heritage Tours',
     subtitle: 'Palaces, forts & historic trails',
     image: 'https://images.unsplash.com/photo-1587474260584-136574528ed5?w=500&auto=format&fit=crop&q=80',
-    link: '/hotel-booking',
+    link: '/holiday-booking',
     offsetClass: 'offset-step-2'
   },
   {
     id: 'beach',
-    title: 'Beach Getaways',
+    title: 'Beach Holiday Getaways',
     subtitle: 'Turquoise lagoons & tropical sand',
     image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=500&auto=format&fit=crop&q=80',
-    link: '/hotel-booking',
+    link: '/holiday-booking',
     offsetClass: 'offset-step-3'
   },
   {
     id: 'luxury',
-    title: 'Luxury Stays',
+    title: 'Luxury Curated Packages',
     subtitle: '5-star resorts & private villas',
     image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=500&auto=format&fit=crop&q=80',
-    link: '/hotel-booking',
+    link: '/holiday-booking',
     offsetClass: 'offset-step-2'
   },
   {
@@ -39,7 +39,7 @@ export const categoryCardsData = [
     title: 'Scenic Rails & Roads',
     subtitle: 'Alpine valleys & sleeper journeys',
     image: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=500&auto=format&fit=crop&q=80',
-    link: '/bus-booking',
+    link: '/holiday-booking',
     offsetClass: 'offset-step-1'
   }
 ];

@@ -11,7 +11,7 @@ export default function OffersPage() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [copiedCode, setCopiedCode] = useState(null);
 
-  const categories = ['All', 'Flights', 'Hotels', 'Buses', 'Railway'];
+  const categories = ['All', 'Flights', 'Hotels', 'Buses', 'Railway', 'Holidays'];
 
   // Combine special bank offers and general promotional offers
   const allOffersList = [
@@ -39,7 +39,16 @@ export default function OffersPage() {
       code: o.code,
       image: o.image,
       category: o.category,
-      link: o.category === 'Hotels' ? '/hotel-booking' : o.category === 'Buses' ? '/bus-booking' : o.category === 'Railway' ? '/railway' : '/flight-booking'
+      link:
+        o.category === 'Hotels'
+          ? '/hotel-booking'
+          : o.category === 'Buses'
+          ? '/bus-booking'
+          : o.category === 'Railway'
+          ? '/railway'
+          : o.category === 'Holidays'
+          ? '/holiday-booking'
+          : '/flight-booking'
     }))
   ];
 
