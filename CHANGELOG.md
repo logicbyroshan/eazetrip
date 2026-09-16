@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.1.8] - 2026-09-16
+
+### Deep Holiday Packages Integration & Cross-Product Lifecycle
+
+#### Manage Bookings & Reservation Hub (`client/src/pages/ManageBookingsPage.jsx`, `client/src/context/BookingContext.jsx`)
+- **Dedicated Holidays Filter Pill**:
+  - Added `{ key: 'holiday', label: 'Holidays' }` filter button to the reservations toolbar alongside All Trips, Flights, Hotels, Buses, and Trains.
+  - Added `<Palmtree size={20} color="#ea580c" />` icon in `getTypeIcon` for seamless holiday card rendering.
+  - Added initial demo holiday package booking (`Royal Rajasthan & Udaipur Heritage Tour (4N/5D)`, PNR: `6EZ9HL`, ₹28,499) into default booking store.
+
+#### Cancellation & Refund Calculator & Statutory Policies (`client/src/pages/CancellationRefundPage.jsx`, `server/services/refundService.js`)
+- **Interactive Refund Calculator**:
+  - Added `Holiday Tour` selector button with `<Palmtree />` icon and dynamic penalty calculator (>15 days 10% operator retainer, 7–15 days 25% retention, 3–7 days 50% deduction, <72h 80% non-refundable flight/hotel portion, 100% refund with Zero Shield).
+- **Policy Accordion**:
+  - Added **5. Holiday Packages & Curated Tours Policy** detailing advance notice cancellation slabs, hotel voucher terms, and tour rescheduling.
+
+#### Discovery, SEO & Support Integrations (`client/src/data/siteData.js`, `client/src/components/home/TravelCategoriesSection.jsx`, `client/src/components/common/Footer.jsx`, `client/src/components/common/SeoFooterDirectory.jsx`, `client/src/pages/OffersPage.jsx`, `client/src/pages/HelpDeskPage.jsx`, `client/src/components/common/HelpDeskWidget.jsx`)
+- **Homepage Tour Categories**: Updated category cards (Cultural Heritage, Beach Getaways, Luxury Stays, Scenic Roads) to link directly to `/holiday-booking`.
+- **Footer & SEO Directory**: Added `Holiday Packages` to `Our Products` in Footer, added dedicated `Curated Holiday Packages & Tour Escapes` group to `SeoFooterDirectory.jsx`, and enriched `siteFaqs` with 3 Holiday Tour Package Q&As.
+- **Offers & Bank Discounts**: Added `Holidays` category filter on `/offers`, mapped holiday promotional deals (`HOLIDAY25` 25% OFF, `KOTAKHOLIDAY` ₹5,000 OFF).
+- **24/7 Concierge Support**: Added `🌴 Holiday Package / Tour Customization` to problem categories across full `/helpdesk` page and floating widget.
+
+---
+
 ## [2.1.7] - 2026-09-16
 
 ### Manage Bookings Alignment & Enterprise About Us Showcase

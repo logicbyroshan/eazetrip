@@ -58,6 +58,26 @@ const initialDemoBookings = [
     boardingPoint: 'Swargate (Opp Bus Stand)',
     paymentMethod: 'Paytm Wallet',
     paymentStatus: 'Paid'
+  },
+  {
+    id: 'EZ-HL-61902',
+    type: 'holiday',
+    title: 'Royal Rajasthan & Udaipur Heritage Tour (4N/5D)',
+    location: 'Jaipur • Jodhpur • Udaipur, Rajasthan',
+    date: '2026-10-18 to 2026-10-22',
+    status: 'Confirmed',
+    totalAmount: 28499,
+    createdAt: '2026-09-08T11:20:00.000Z',
+    guests: '2 Adults (Deluxe Package)',
+    roomType: 'Heritage Haveli & Palaces',
+    passengers: [
+      { name: 'Rohit Sharma', gender: 'Male', age: '32', seat: 'Royal Deluxe Suite' },
+      { name: 'Pooja Sharma', gender: 'Female', age: '30', seat: 'Royal Deluxe Suite' }
+    ],
+    pnr: '6EZ9HL',
+    bookingRef: 'PKG-RAJ-4491',
+    paymentMethod: 'UPI / Google Pay',
+    paymentStatus: 'Paid'
   }
 ];
 

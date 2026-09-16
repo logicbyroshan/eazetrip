@@ -25,7 +25,8 @@ import {
   ExternalLink,
   Receipt,
   RotateCcw,
-  Compass
+  Compass,
+  Palmtree
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -173,6 +174,7 @@ export default function ManageBookingsPage() {
     if (type === 'flight') return <Plane size={20} color="#034ea2" />;
     if (type === 'hotel') return <Building2 size={20} color="#034ea2" />;
     if (type === 'bus') return <Bus size={20} color="#034ea2" />;
+    if (type === 'holiday') return <Palmtree size={20} color="#ea580c" />;
     return <Train size={20} color="#034ea2" />;
   };
 
@@ -235,7 +237,8 @@ export default function ManageBookingsPage() {
                 { key: 'flight', label: 'Flights' },
                 { key: 'hotel', label: 'Hotels' },
                 { key: 'bus', label: 'Buses' },
-                { key: 'train', label: 'Trains' }
+                { key: 'train', label: 'Trains' },
+                { key: 'holiday', label: 'Holidays' }
               ].map((t) => (
                 <button
                   key={t.key}

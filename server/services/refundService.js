@@ -193,6 +193,27 @@ function calculateRefund({ serviceType = 'flight', grossAmount = 3000, hoursBefo
         }
         break;
 
+      case 'holiday':
+      case 'holidays':
+        if (hours >= 360) {
+          // > 15 days
+          penaltyRate = 0.1;
+          penaltyDescription = 'Advance Holiday Tour Notice (10% Operator Retainer)';
+        } else if (hours >= 168) {
+          // 7 to 15 days
+          penaltyRate = 0.25;
+          penaltyDescription = 'Holiday Hotel & Sightseeing Retention (25% deduction)';
+        } else if (hours >= 72) {
+          // 3 to 7 days
+          penaltyRate = 0.5;
+          penaltyDescription = 'Late Holiday Package Cancellation (50% deduction)';
+        } else {
+          penaltyRate = 0.8;
+          penaltyDescription = 'Last-minute Tour Cancellation (80% non-refundable flight/hotel)';
+        }
+        serviceFeeWaiver = 500;
+        break;
+
       default:
         penaltyRate = 0.2;
         penaltyDescription = 'Standard Package Cancellation Surcharge';

@@ -65,7 +65,21 @@ export default function SeoFooterDirectory() {
           </div>
         </div>
 
-        {/* Category 6: EazeTrip Travel Products */}
+        {/* Category 6: Curated Holiday Packages */}
+        {seoDirectoryData.popularHolidayPackages && (
+          <div className="seo-directory-group">
+            <h4 className="seo-group-title">Curated Holiday Packages & Tour Escapes</h4>
+            <div className="seo-links-inline-grid">
+              {seoDirectoryData.popularHolidayPackages.map((pkg, idx) => (
+                <Link key={idx} to={pkg.path} className="seo-dir-link">
+                  {pkg.title}
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Category 7: EazeTrip Travel Products */}
         <div className="seo-directory-group">
           <h4 className="seo-group-title">EazeTrip Products</h4>
           <div className="seo-links-inline-grid products-row">

@@ -35,7 +35,8 @@ import {
   Plus,
   Copy,
   Check,
-  Award
+  Award,
+  Palmtree
 } from 'lucide-react';
 
 export default function CancellationRefundPage() {
@@ -118,6 +119,7 @@ export default function CancellationRefundPage() {
       if (calcService === 'flight') penalty = calcNoticeHours >= 72 ? 1200 : calcNoticeHours >= 24 ? 2500 : 3500;
       else if (calcService === 'hotel') penalty = calcNoticeHours >= 24 ? 0 : Math.round(gross * 0.5);
       else if (calcService === 'bus') penalty = Math.round(gross * (calcNoticeHours >= 12 ? 0.15 : 0.35));
+      else if (calcService === 'holiday') penalty = Math.round(gross * (calcNoticeHours >= 72 ? 0.15 : calcNoticeHours >= 24 ? 0.35 : 0.6));
       else penalty = 180;
     }
 
@@ -430,7 +432,8 @@ export default function CancellationRefundPage() {
                 { key: 'flight', label: 'Flight', icon: <Plane size={15} /> },
                 { key: 'hotel', label: 'Hotel', icon: <Building2 size={15} /> },
                 { key: 'bus', label: 'Bus', icon: <Bus size={15} /> },
-                { key: 'train', label: 'Railway', icon: <Train size={15} /> }
+                { key: 'train', label: 'Railway', icon: <Train size={15} /> },
+                { key: 'holiday', label: 'Holiday Tour', icon: <Palmtree size={15} /> }
               ].map((s) => (
                 <button
                   key={s.key}
@@ -716,6 +719,42 @@ export default function CancellationRefundPage() {
                       <span className="rule-time">Tatkal Confirm Tickets</span>
                       <strong className="rule-fee">Non-Refundable</strong>
                       <p>As per IRCTC rules, confirmed Tatkal tickets are non-refundable.</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Holiday Tour Packages Policy */}
+            <div className={`policy-item ${expandedPolicy === 'holidays' ? 'expanded' : ''}`}>
+              <div
+                className="policy-item-header"
+                onClick={() => setExpandedPolicy(expandedPolicy === 'holidays' ? '' : 'holidays')}
+              >
+                <div className="policy-title-left">
+                  <Palmtree size={20} color="#ea580c" />
+                  <strong>5. Holiday Packages & Curated Tours Policy</strong>
+                </div>
+                {expandedPolicy === 'holidays' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+              </div>
+
+              {expandedPolicy === 'holidays' && (
+                <div className="policy-item-body">
+                  <div className="rules-grid-modern">
+                    <div className="rule-box">
+                      <span className="rule-time">&gt; 15 Days Before Tour</span>
+                      <strong className="rule-fee text-success">90% Refund (10% Operator Fee)</strong>
+                      <p>Minimal administrative deduction. Remaining balance refunded to source.</p>
+                    </div>
+                    <div className="rule-box">
+                      <span className="rule-time">7 to 15 Days Before Tour</span>
+                      <strong className="rule-fee">75% Refund (25% Deduction)</strong>
+                      <p>Covers advance hotel retention and sight-seeing reservation charges.</p>
+                    </div>
+                    <div className="rule-box">
+                      <span className="rule-time">&lt; 7 Days of Tour Start</span>
+                      <strong className="rule-fee">50% Refund / Re-schedule</strong>
+                      <p>Airfare and non-refundable hotel portions retained per partner terms.</p>
                     </div>
                   </div>
                 </div>

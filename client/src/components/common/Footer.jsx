@@ -43,6 +43,7 @@ export default function Footer() {
             <Link to="/hotel-booking">Hotel Stays</Link>
             <Link to="/bus-booking">Bus Tickets</Link>
             <Link to="/railway">Railway Bookings</Link>
+            <Link to="/holiday-booking">Holiday Packages</Link>
             <Link to="/offers">Latest Travel Offers</Link>
           </div>
 

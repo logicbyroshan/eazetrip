@@ -381,6 +381,7 @@ export default function HelpDeskWidget() {
                             required
                           >
                             <option value="Flight / Train / Bus Booking Issue">✈️ Flight / Train / Bus Booking Issue</option>
+                            <option value="Holiday Package / Tour Inquiry">🌴 Holiday Package / Tour Customization</option>
                             <option value="Payment, Billing & Refund Inquiry">💳 Payment & Refund Inquiry</option>
                             <option value="Date Change / Reschedule Assistance">📅 Date Change / Reschedule</option>
                             <option value="Flight Cancellation & Fare Refund">❌ Cancellation & Refund</option>

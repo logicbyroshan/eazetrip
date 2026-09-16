@@ -104,6 +104,19 @@ export const specialBankOffers = [
     code: 'TRAINSBI',
     image: 'https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=600&auto=format&fit=crop&q=80',
     link: '/railway'
+  },
+  {
+    id: 'bank-7',
+    bank: 'KOTAK BANK',
+    bankLogo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Kotak_Mahindra_Bank_logo.svg/320px-Kotak_Mahindra_Bank_logo.svg.png',
+    bankTheme: '#ed1c24',
+    title: 'Up to INR 5,000 OFF*',
+    category: 'Holidays',
+    subtitle: 'On Domestic & International Holiday Packages',
+    terms: '*Offer applicable on Kotak Credit & Debit Cards on min package value of ₹25,000.',
+    code: 'KOTAKHOLIDAY',
+    image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&auto=format&fit=crop&q=80',
+    link: '/holiday-booking'
   }
 ];
 
@@ -146,6 +159,16 @@ export const siteOffers = [
     code: 'TRAINEAZ',
     discount: 'Zero Convenience Fee',
     image: 'https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=500&auto=format&fit=crop&q=80',
+    validTill: '31 Dec 2026'
+  },
+  {
+    id: 5,
+    title: 'Curated Holiday Escapes & Honeymoon Tours',
+    description: 'Get Flat 25% OFF on dream vacation packages across Kashmir, Goa, Kerala & Rajasthan with all-inclusive flights & 5-star stays.',
+    category: 'Holidays',
+    code: 'HOLIDAY25',
+    discount: 'Flat 25% OFF',
+    image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=500&auto=format&fit=crop&q=80',
     validTill: '31 Dec 2026'
   }
 ];
@@ -422,12 +445,25 @@ export const seoDirectoryData = {
     { title: 'Pune to Goa Multi-Axle Bus', path: '/bus-booking?from=Pune&to=Goa' },
     { title: 'Ahmedabad to Udaipur AC Sleeper', path: '/bus-booking?from=Ahmedabad&to=Udaipur' }
   ],
+  popularHolidayPackages: [
+    { title: 'Goa Sun, Sand & Beach Holiday', path: '/holiday-booking?destination=Goa' },
+    { title: 'Magical Kashmir & Dal Lake Paradise', path: '/holiday-booking?destination=Kashmir' },
+    { title: 'Kerala God\'s Own Country Backwaters', path: '/holiday-booking?destination=Kerala' },
+    { title: 'Royal Rajasthan & Udaipur Heritage Tour', path: '/holiday-booking?destination=Rajasthan' },
+    { title: 'Himachal Snow Peaks & Manali Retreat', path: '/holiday-booking?destination=Himachal' },
+    { title: 'Andaman Coral Islands & Scuba Escape', path: '/holiday-booking?destination=Andaman' },
+    { title: 'Dubai Luxury Desert Safari & Skyline', path: '/holiday-booking?destination=Dubai' },
+    { title: 'Bali Tropical Island Honeymoon Package', path: '/holiday-booking?destination=Bali' },
+    { title: 'Thailand Bangkok & Phuket Island Tour', path: '/holiday-booking?destination=Thailand' }
+  ],
   eazetripProducts: [
     { title: 'Flights Booking', path: '/flight-booking' },
     { title: 'International Airlines', path: '/flight-booking' },
     { title: 'Domestic Airlines', path: '/flight-booking' },
     { title: 'Hotels & Stays', path: '/hotel-booking' },
     { title: 'Luxury Resorts', path: '/hotel-booking' },
+    { title: 'Holiday Packages', path: '/holiday-booking' },
+    { title: 'Curated Tour Packages', path: '/holiday-booking' },
     { title: 'IRCTC Train Booking', path: '/railway' },
     { title: 'Bus Booking', path: '/bus-booking' },
     { title: 'AC Sleeper Buses', path: '/bus-booking' },
@@ -476,6 +512,23 @@ export const siteFaqs = [
       {
         q: 'Can I cancel my hotel reservation for free?',
         a: 'Free cancellation depends on the property and the specific rate selected. Listings with "Free Cancellation" badges allow zero cancellation charges up to 24-48 hours before check-in.'
+      }
+    ]
+  },
+  {
+    category: 'Holidays & Packages',
+    items: [
+      {
+        q: 'What is included in an EazeTrip Holiday Tour Package?',
+        a: 'Our all-inclusive holiday packages include round-trip flights or transfers, verified 4-star/5-star accommodation, daily breakfast & gourmet dinners, dedicated AC vehicle for airport transfers & private sightseeing, and English/Hindi speaking tour guides.'
+      },
+      {
+        q: 'Can I customize my holiday package itinerary?',
+        a: 'Yes! You can choose your departure city, upgrade hotel room categories, add adventure excursions (scuba diving, desert safari, hot air ballooning), and adjust the number of nights via our 24/7 concierge desk.'
+      },
+      {
+        q: 'How does the cancellation policy work for Holiday Packages?',
+        a: 'Cancellations made more than 15 days prior to the tour date incur only a 10% administrative operator fee. Between 7 to 15 days, 75% refund is disbursed, and within 7 days, 50% refund or re-scheduling is facilitated.'
       }
     ]
   },

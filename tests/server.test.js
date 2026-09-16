@@ -933,3 +933,56 @@ test('62. API defensively sanitizes negative and malformed pagination bounds', a
   assert.ok(boundsRes.data.count <= 100);
 });
 
+test('63. POST /api/refunds/calculate computes accurate penalty for Holiday tour packages', async () => {
+  // 1. Advance notice (>15 days / 360h) -> 10% penalty
+  const advRes = await requestJson('/api/refunds/calculate', {
+    method: 'POST',
+    body: {
+      serviceType: 'holiday',
+      grossAmount: 30000,
+      hoursBeforeDeparture: 400,
+      hasShield: false
+    }
+  });
+  assert.strictEqual(advRes.status, 200);
+  assert.strictEqual(advRes.data.data.penaltyAmount, 3000);
+  assert.strictEqual(advRes.data.data.netRefundAmount, 27000);
+
+  // 2. Zero Cancellation Shield Active -> 0% penalty
+  const shieldRes = await requestJson('/api/refunds/calculate', {
+    method: 'POST',
+    body: {
+      serviceType: 'holiday',
+      grossAmount: 30000,
+      hoursBeforeDeparture: 48,
+      hasShield: true
+    }
+  });
+  assert.strictEqual(shieldRes.status, 200);
+  assert.strictEqual(shieldRes.data.data.penaltyAmount, 0);
+  assert.strictEqual(shieldRes.data.data.netRefundAmount, 30000);
+});
+
+test('64. POST /api/bookings creates confirmed holiday package booking with PNR and dates', async () => {
+  const holBookRes = await requestJson('/api/bookings', {
+    method: 'POST',
+    body: {
+      type: 'holiday',
+      title: 'Royal Rajasthan Heritage Tour (4N/5D)',
+      date: '2026-11-15',
+      totalAmount: 28499,
+      contactEmail: 'holiday_traveler@example.com',
+      contactPhone: '9876543210',
+      passengers: [
+        { name: 'Rohit Sharma', gender: 'Male', age: '32' },
+        { name: 'Pooja Sharma', gender: 'Female', age: '30' }
+      ]
+    }
+  });
+  assert.strictEqual(holBookRes.status, 201);
+  assert.strictEqual(holBookRes.data.success, true);
+  assert.strictEqual(holBookRes.data.data.type, 'holiday');
+  assert.ok(holBookRes.data.data.pnr);
+});
+
+
