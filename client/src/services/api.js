@@ -6,26 +6,57 @@ import { mockFlights } from '../data/flightData';
 import { mockHotels } from '../data/hotelData';
 import { mockBuses } from '../data/busData';
 import { mockTrains } from '../data/trainData';
+import { mockHolidayPackages } from '../data/holidayData';
 import { siteOffers, siteFaqs } from '../data/siteData';
 
 const BASE_URL = import.meta.env.VITE_API_URL || '';
+const DEFAULT_TIMEOUT_MS = 10000;
 
 async function request(endpoint, options = {}) {
   const url = `${BASE_URL}${endpoint}`;
-  const config = {
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers
-    },
-    ...options
+  const token = typeof localStorage !== 'undefined' ? localStorage.getItem('eazetrip_token') : null;
+  const timeoutMs = options.timeout || DEFAULT_TIMEOUT_MS;
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+  const headers = {
+    'Content-Type': 'application/json',
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    ...options.headers
   };
 
-  try {
-    const res = await fetch(url, config);
-    const data = await res.json();
-    return { ok: res.ok, status: res.status, data };
-  } catch (err) {
-    return { ok: false, error: err.message, networkError: true };
+  const config = {
+    ...options,
+    headers,
+    signal: controller.signal
+  };
+
+  const isGet = !options.method || options.method.toUpperCase() === 'GET';
+  let attempts = 0;
+  const maxAttempts = isGet ? 2 : 1;
+
+  while (attempts < maxAttempts) {
+    attempts++;
+    try {
+      const res = await fetch(url, config);
+      clearTimeout(timeoutId);
+      const data = await res.json();
+      return { ok: res.ok, status: res.status, data };
+    } catch (err) {
+      if (attempts >= maxAttempts) {
+        clearTimeout(timeoutId);
+        const isAbort = err.name === 'AbortError';
+        return {
+          ok: false,
+          error: isAbort ? 'Request timed out after 10s' : err.message,
+          networkError: true,
+          timedOut: isAbort
+        };
+      }
+      // Brief jittered delay before idempotent retry
+      await new Promise((r) => setTimeout(r, 250));
+    }
   }
 }
 
@@ -55,6 +86,12 @@ export const api = {
     return mockHotels;
   },
 
+  getHotelById: async (id) => {
+    const res = await request(`/api/hotels/${id}`);
+    if (res.ok && res.data?.data) return res.data.data;
+    return mockHotels.find((h) => h.id === id) || null;
+  },
+
   // Buses
   getBuses: async (params = {}) => {
     const query = new URLSearchParams(params).toString();
@@ -63,12 +100,38 @@ export const api = {
     return mockBuses;
   },
 
+  getBusById: async (id) => {
+    const res = await request(`/api/buses/${id}`);
+    if (res.ok && res.data?.data) return res.data.data;
+    return mockBuses.find((b) => b.id === id) || null;
+  },
+
   // Railways
   getRailways: async (params = {}) => {
     const query = new URLSearchParams(params).toString();
     const res = await request(`/api/railways${query ? `?${query}` : ''}`);
     if (res.ok && res.data?.data) return res.data.data;
     return mockTrains;
+  },
+
+  getRailwayById: async (id) => {
+    const res = await request(`/api/railways/${id}`);
+    if (res.ok && res.data?.data) return res.data.data;
+    return mockTrains.find((t) => t.id === id) || null;
+  },
+
+  // Holidays & Tour Packages
+  getHolidays: async (params = {}) => {
+    const query = new URLSearchParams(params).toString();
+    const res = await request(`/api/holidays${query ? `?${query}` : ''}`);
+    if (res.ok && res.data?.data) return res.data.data;
+    return mockHolidayPackages || [];
+  },
+
+  getHolidayById: async (id) => {
+    const res = await request(`/api/holidays/${id}`);
+    if (res.ok && res.data?.data) return res.data.data;
+    return (mockHolidayPackages || []).find((h) => h.id === id) || null;
   },
 
   // Offers & FAQs
