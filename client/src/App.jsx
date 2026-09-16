@@ -11,7 +11,6 @@ import Toast from './components/common/Toast';
 import Preloader from './components/common/Preloader';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import LoginModal from './components/auth/LoginModal';
-import CheckoutModal from './components/checkout/CheckoutModal';
 import TicketModal from './components/checkout/TicketModal';
 
 import HomePage from './pages/HomePage';
@@ -152,7 +151,6 @@ function AppContent() {
         {/* Global Overlays & Modals */}
         <Preloader />
         <LoginModal />
-        <CheckoutModal />
         <TicketModal />
         <Toast />
       </div>

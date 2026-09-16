@@ -65,3 +65,19 @@ This file logs meaningful agent tasks, architectural milestones, and fixes chron
   - `.agent-memory/TASK_HISTORY.md`
 * **What Changed**: Configured `VITE_RAZORPAY_KEY_ID` in `client/.env`, added `.env` to `client/.gitignore`, and verified live Razorpay order generation and 35/35 test passing.
 * **Testing Performed**: Ran `POST /api/payment/create-order` (verified real order generated), `GET /api/payment/razorpay-key`, all 35 tests passed (`npm test`), and verified Vite production build.
+
+---
+
+### Task: Legacy CheckoutModal Removal
+* **Date**: 2026-09-16
+* **Reason**: User observed the old modal popup opening on top of the newly introduced `/review-booking` page.
+* **Files Affected**:
+  - `client/src/App.jsx`
+  - `client/src/components/checkout/CheckoutModal.jsx` (Deleted)
+  - `STRUCTURE.md`
+  - `CHANGELOG.md`
+  - `.agent-memory/TASK_HISTORY.md`
+  - `.agent-memory/CURRENT_STATE.md`
+* **What Changed**: Completely removed obsolete `CheckoutModal` from `App.jsx` and the client component tree so clicking "Book Now" opens the full multi-step `/review-booking` page cleanly without any overlay popups.
+* **Testing Performed**: Verified clean Vite build (`npm run build`), all 35 tests passing (`npm test`), and git tree clean.
+
