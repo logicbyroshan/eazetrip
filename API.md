@@ -87,6 +87,51 @@ Authenticates a user via email or phone.
   }
   ```
 
+### `GET /api/auth/google-client-id`
+Returns public Google OAuth 2.0 Client ID and configuration state for frontend GIS SDK.
+
+- **Auth Required:** No
+- **Rate Limit:** 120 req/min
+- **Response `200 OK`:**
+  ```json
+  {
+    "success": true,
+    "configured": true,
+    "clientId": "your_client_id.apps.googleusercontent.com",
+    "mode": "live"
+  }
+  ```
+
+### `POST /api/auth/google`
+Authenticates a traveler using Google Identity Services (GIS) ID token or OAuth authorization code.
+
+- **Auth Required:** No
+- **Rate Limit:** 20 req/min
+- **Request Body:**
+  ```json
+  {
+    "credential": "eyJhbGciOiJSUzI1NiIsImtpZCI6Ij...",
+    "code": "optional_oauth_authorization_code"
+  }
+  ```
+- **Response `200 OK`:**
+  ```json
+  {
+    "success": true,
+    "message": "Google authentication successful",
+    "mode": "live",
+    "data": {
+      "id": "USR-109283",
+      "name": "Priyansh Sharma",
+      "email": "priyansh.sharma@gmail.com",
+      "avatar": "https://lh3.googleusercontent.com/a/...",
+      "tier": "Gold Explorer",
+      "authProvider": "Google",
+      "token": "7a8b9c0d1e2f..."
+    }
+  }
+  ```
+
 ### `PUT /api/auth/profile`
 Updates traveler account information and saved details.
 

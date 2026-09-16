@@ -32,9 +32,26 @@ Copy the example configuration:
 ```bash
 cp .env.example .env
 ```
-Default ports:
-- Backend: `5001`
-- Frontend: `5173` (or `4174` during custom dev/preview)
+
+#### Configuring Google OAuth 2.0 / Sign-In:
+1. Navigate to the [Google Cloud Console Credentials](https://console.cloud.google.com/apis/credentials).
+2. Click **Create Credentials** -> **OAuth client ID**.
+3. Select Application type: **Web application**.
+4. Add **Authorized JavaScript origins**:
+   - `http://localhost:4174`
+   - `http://localhost:5173`
+   - `http://127.0.0.1:4174`
+5. Paste your credentials into `.env`:
+   ```env
+   GOOGLE_CLIENT_ID=your_client_id_here.apps.googleusercontent.com
+   GOOGLE_CLIENT_SECRET=your_client_secret_here
+   VITE_GOOGLE_CLIENT_ID=your_client_id_here.apps.googleusercontent.com
+   ```
+*(Note: If left empty or placeholder, EazeTrip automatically operates in seamless sandbox simulation mode).*
+
+#### Configuring Razorpay Gateway:
+1. Retrieve API keys from [Razorpay Dashboard](https://dashboard.razorpay.com/app/keys).
+2. Paste `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET` into `.env`.
 
 ### Step 4: Start the Applications
 

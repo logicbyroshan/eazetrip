@@ -133,6 +133,27 @@ export const api = {
     return res;
   },
 
+  googleAuth: async (authPayload) => {
+    const res = await request('/api/auth/google', {
+      method: 'POST',
+      body: JSON.stringify(authPayload)
+    });
+    return res;
+  },
+
+  getGoogleClientId: async () => {
+    const res = await request('/api/auth/google-client-id');
+    if (res.ok && res.data) return res.data;
+    const clientEnvKey = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
+    const isReal = Boolean(clientEnvKey && !clientEnvKey.includes('your_google_client_id') && clientEnvKey.includes('.apps.googleusercontent.com'));
+    return {
+      success: true,
+      configured: isReal,
+      clientId: isReal ? clientEnvKey : '',
+      mode: isReal ? 'live' : 'simulation'
+    };
+  },
+
   updateProfile: async (profileData) => {
     const res = await request('/api/auth/profile', {
       method: 'PUT',

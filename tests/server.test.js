@@ -816,3 +816,38 @@ test('52. POST /api/refunds/request handles direct airline cancellation dispute 
   assert.ok(claimRes.data.data.id.startsWith('RFND-'));
   assert.ok(claimRes.data.data.arnNumber.startsWith('ARN-'));
 });
+
+test('53. GET /api/auth/google-client-id returns public Google OAuth configuration', async () => {
+  const res = await requestJson('/api/auth/google-client-id');
+  assert.strictEqual(res.status, 200);
+  assert.strictEqual(res.data.success, true);
+  assert.ok(typeof res.data.configured === 'boolean');
+  assert.ok(typeof res.data.clientId === 'string');
+  assert.ok(['live', 'simulation'].includes(res.data.mode));
+});
+
+test('54. POST /api/auth/google authenticates Google credential and returns user session', async () => {
+  const authRes = await requestJson('/api/auth/google', {
+    method: 'POST',
+    body: {
+      credential: 'simulated_google_jwt_token_for_tests'
+    }
+  });
+  assert.strictEqual(authRes.status, 200);
+  assert.strictEqual(authRes.data.success, true);
+  assert.ok(authRes.data.data.id.startsWith('USR-'));
+  assert.strictEqual(authRes.data.data.authProvider, 'Google');
+  assert.ok(authRes.data.data.email.includes('@'));
+  assert.ok(authRes.data.data.token && authRes.data.data.token.length === 64);
+});
+
+test('55. POST /api/auth/google rejects empty payload with 400 Bad Request', async () => {
+  const badRes = await requestJson('/api/auth/google', {
+    method: 'POST',
+    body: {}
+  });
+  assert.strictEqual(badRes.status, 400);
+  assert.strictEqual(badRes.data.success, false);
+  assert.ok(badRes.data.error.includes('required'));
+});
+

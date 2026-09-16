@@ -152,6 +152,17 @@ function validateContact(req, res, next) {
   next();
 }
 
+function validateGoogleAuth(req, res, next) {
+  const { credential, idToken, code, email } = req.body || {};
+  if (!credential && !idToken && !code && !email) {
+    return res.status(400).json({
+      success: false,
+      error: 'Google authentication credential, idToken, or authorization code is required'
+    });
+  }
+  next();
+}
+
 module.exports = {
   validateLogin,
   validateRegister,
@@ -159,5 +170,6 @@ module.exports = {
   validatePayment,
   validateRazorpayOrder,
   validateRazorpayVerify,
-  validateContact
+  validateContact,
+  validateGoogleAuth
 };

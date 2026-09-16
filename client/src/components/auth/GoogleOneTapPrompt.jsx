@@ -4,7 +4,7 @@ import { useBooking } from '../../context/BookingContext';
 import { X, ShieldCheck } from 'lucide-react';
 
 export default function GoogleOneTapPrompt() {
-  const { user, loginWithGoogle } = useAuth();
+  const { user, loginWithGoogle, firstName, googleConfig } = useAuth();
   const { showToast } = useBooking();
 
   const [isVisible, setIsVisible] = useState(false);
@@ -36,9 +36,20 @@ export default function GoogleOneTapPrompt() {
   const handleContinueAsGoogle = async () => {
     setIsSigningIn(true);
     try {
-      await loginWithGoogle();
-      setIsVisible(false);
-      showToast('Welcome back, Priyansh! Signed in with Google');
+      if (window.google?.accounts?.id && googleConfig?.configured) {
+        window.google.accounts.id.prompt((notification) => {
+          if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+            loginWithGoogle(firstName || 'Priyansh Sharma').then(() => {
+              setIsVisible(false);
+              showToast(`Welcome back, ${firstName || 'Traveler'}! Signed in with Google`);
+            }).catch(() => {});
+          }
+        });
+      } else {
+        await loginWithGoogle(firstName || 'Priyansh Sharma');
+        setIsVisible(false);
+        showToast(`Welcome back, ${firstName || 'Traveler'}! Signed in with Google`);
+      }
     } catch (err) {
       console.error('Google One-Tap Error:', err);
       showToast('Google Sign-in failed. Please try again.', 'error');
@@ -97,12 +108,12 @@ export default function GoogleOneTapPrompt() {
         <div className="google-onetap-account-tile" onClick={handleContinueAsGoogle}>
           <img
             src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80"
-            alt="Priyansh Sharma"
+            alt={firstName || 'Traveler'}
             className="google-onetap-avatar"
           />
           <div className="google-onetap-user-meta">
-            <strong className="user-name">Priyansh Sharma</strong>
-            <span className="user-email">priyansh.sharma@gmail.com</span>
+            <strong className="user-name">{firstName || 'Priyansh Sharma'}</strong>
+            <span className="user-email">{firstName ? `${firstName.toLowerCase()}@gmail.com` : 'priyansh.sharma@gmail.com'}</span>
           </div>
           <div className="google-onetap-g-mini">
             <ShieldCheck size={14} color="#10b981" />
@@ -117,7 +128,7 @@ export default function GoogleOneTapPrompt() {
             onClick={handleContinueAsGoogle}
             disabled={isSigningIn}
           >
-            {isSigningIn ? 'Signing in with Google...' : 'Continue as Priyansh'}
+            {isSigningIn ? 'Signing in with Google...' : `Continue as ${firstName || 'Priyansh'}`}
           </button>
         </div>
 

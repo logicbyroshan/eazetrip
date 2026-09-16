@@ -92,23 +92,108 @@ export function AuthProvider({ children }) {
     return { success: true, user: loggedInUser };
   };
 
-  const loginWithGoogle = async (customName = 'Priyansh Sharma') => {
-    const googleUser = {
-      id: 'USR-' + Math.floor(100000 + Math.random() * 900000),
-      name: customName,
-      email: `${customName.toLowerCase().replace(/\s+/g, '.')}@gmail.com`,
-      phone: '+91 9876543210',
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
-      memberSince: new Date().getFullYear(),
-      tier: 'Gold Member',
-      authProvider: 'Google'
+  const [googleConfig, setGoogleConfig] = useState({
+    configured: false,
+    clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID || '',
+    mode: 'simulation'
+  });
+
+  // Load Google Client ID from backend or Vite env
+  useEffect(() => {
+    let isMounted = true;
+    api.getGoogleClientId().then((cfg) => {
+      if (isMounted && cfg) {
+        setGoogleConfig({
+          configured: cfg.configured || Boolean(cfg.clientId && !cfg.clientId.includes('your_google_client_id')),
+          clientId: cfg.clientId || import.meta.env.VITE_GOOGLE_CLIENT_ID || '',
+          mode: cfg.mode || 'simulation'
+        });
+      }
+    }).catch(() => {});
+    return () => { isMounted = false; };
+  }, []);
+
+  // Initialize Google Identity Services when script is ready
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const initGis = () => {
+      if (window.google?.accounts?.id && googleConfig.clientId && !googleConfig.clientId.includes('your_google_client_id')) {
+        try {
+          window.google.accounts.id.initialize({
+            client_id: googleConfig.clientId,
+            callback: (response) => {
+              if (response?.credential) {
+                loginWithGoogle({ credential: response.credential });
+              }
+            },
+            auto_select: false,
+            cancel_on_tap_outside: true
+          });
+        } catch (e) {
+          console.warn('[Google GIS] Initialization warning:', e);
+        }
+      }
     };
-    setUser(googleUser);
-    const first = customName.trim().split(' ')[0];
-    localStorage.setItem('eazetrip_remembered_name', first);
-    setRememberedName(first);
+
+    if (window.google?.accounts?.id) {
+      initGis();
+    } else {
+      const interval = setInterval(() => {
+        if (window.google?.accounts?.id) {
+          initGis();
+          clearInterval(interval);
+        }
+      }, 500);
+      return () => clearInterval(interval);
+    }
+  }, [googleConfig.clientId]);
+
+  const loginWithGoogle = async (googleParam) => {
+    let loggedInUser = null;
+    let authPayload = {};
+
+    if (typeof googleParam === 'object' && googleParam !== null) {
+      authPayload = googleParam;
+    } else if (typeof googleParam === 'string' && googleParam.startsWith('eyJ')) {
+      authPayload = { credential: googleParam };
+    } else {
+      const customName = typeof googleParam === 'string' ? googleParam : 'Priyansh Sharma';
+      authPayload = {
+        name: customName,
+        email: `${customName.toLowerCase().replace(/\s+/g, '.')}@gmail.com`
+      };
+    }
+
+    // Call backend Google Auth endpoint
+    const apiRes = await api.googleAuth(authPayload);
+
+    if (apiRes.ok && apiRes.data?.data) {
+      loggedInUser = apiRes.data.data;
+    } else {
+      // Robust fallback in case of simulated / offline mode
+      const resolvedName = authPayload.name || 'Priyansh Sharma';
+      const resolvedEmail = authPayload.email || `${resolvedName.toLowerCase().replace(/\s+/g, '.')}@gmail.com`;
+      loggedInUser = {
+        id: 'USR-' + Math.floor(100000 + Math.random() * 900000),
+        name: resolvedName,
+        email: resolvedEmail,
+        phone: '+91 9876543210',
+        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
+        memberSince: new Date().getFullYear(),
+        tier: 'Gold Member',
+        authProvider: 'Google'
+      };
+    }
+
+    setUser(loggedInUser);
+    if (loggedInUser.name) {
+      const first = loggedInUser.name.trim().split(' ')[0];
+      localStorage.setItem('eazetrip_remembered_name', first);
+      setRememberedName(first);
+    }
     setIsLoginModalOpen(false);
-    return { success: true, user: googleUser };
+    return { success: true, user: loggedInUser };
   };
 
   const register = async (userData) => {
@@ -166,6 +251,7 @@ export function AuthProvider({ children }) {
         getPersonalizedTitle,
         login,
         loginWithGoogle,
+        googleConfig,
         register,
         logout,
         updateProfile,

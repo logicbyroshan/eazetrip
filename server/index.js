@@ -15,6 +15,7 @@ const mockStore = require('./data/mockStore');
 const notificationService = require('./services/notificationService');
 const supportService = require('./services/supportService');
 const refundService = require('./services/refundService');
+const googleAuthService = require('./services/googleAuthService');
 const { securityHeaders, rateLimit, sanitizeInput } = require('./middleware/security');
 const {
   validateLogin,
@@ -23,7 +24,8 @@ const {
   validatePayment,
   validateContact,
   validateRazorpayOrder,
-  validateRazorpayVerify
+  validateRazorpayVerify,
+  validateGoogleAuth
 } = require('./middleware/validation');
 const { notFoundHandler, errorHandler } = require('./middleware/errorHandler');
 
@@ -446,6 +448,81 @@ app.post('/api/auth/register', sensitiveLimiter, validateRegister, (req, res) =>
     message: 'Account registered successfully',
     data: user
   });
+});
+
+app.get('/api/auth/google-client-id', (req, res) => {
+  res.json(googleAuthService.getPublicConfig());
+});
+
+app.post('/api/auth/google', sensitiveLimiter, validateGoogleAuth, async (req, res) => {
+  try {
+    const { credential, idToken, code, email: fallbackEmail, name: fallbackName } = req.body || {};
+    const tokenToVerify = credential || idToken;
+    let authResult;
+
+    if (code) {
+      authResult = await googleAuthService.exchangeGoogleAuthCode(code);
+    } else if (tokenToVerify) {
+      authResult = await googleAuthService.verifyGoogleIdToken(tokenToVerify);
+    } else if (fallbackEmail) {
+      // Direct simulation fallback
+      authResult = {
+        success: true,
+        mode: 'simulated-profile',
+        googleId: `G-${Date.now()}`,
+        email: fallbackEmail,
+        name: fallbackName || fallbackEmail.split('@')[0],
+        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
+        emailVerified: true
+      };
+    } else {
+      return res.status(400).json({ success: false, error: 'Valid Google credential or authorization code is required' });
+    }
+
+    if (!authResult.success) {
+      return res.status(401).json({ success: false, error: authResult.error || 'Google authentication failed' });
+    }
+
+    const { email, name, avatar, googleId } = authResult;
+
+    // Find existing user by email or googleId, or create new user
+    let user = users.find(
+      (u) =>
+        (u.email && email && u.email.toLowerCase() === email.toLowerCase()) ||
+        (u.googleId && googleId && u.googleId === googleId)
+    );
+
+    if (!user) {
+      user = {
+        id: `USR-${Math.floor(100000 + Math.random() * 900000)}`,
+        name: name || (email ? email.split('@')[0] : 'Traveler'),
+        email: email,
+        phone: '+91 9876543210',
+        avatar: avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
+        tier: 'Gold Explorer',
+        authProvider: 'Google',
+        googleId: googleId,
+        memberSince: new Date().getFullYear(),
+        token: crypto.randomBytes(32).toString('hex')
+      };
+      users.push(user);
+    } else {
+      if (name && (!user.name || user.name === 'Traveler')) user.name = name;
+      if (avatar) user.avatar = avatar;
+      user.authProvider = 'Google';
+      if (googleId) user.googleId = googleId;
+      if (!user.token) user.token = crypto.randomBytes(32).toString('hex');
+    }
+
+    res.json({
+      success: true,
+      message: 'Google authentication successful',
+      mode: authResult.mode || 'live',
+      data: user
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: `Google authentication internal error: ${err.message}` });
+  }
 });
 
 app.put('/api/auth/profile', sensitiveLimiter, (req, res) => {
