@@ -81,3 +81,23 @@ This file logs meaningful agent tasks, architectural milestones, and fixes chron
 * **What Changed**: Completely removed obsolete `CheckoutModal` from `App.jsx` and the client component tree so clicking "Book Now" opens the full multi-step `/review-booking` page cleanly without any overlay popups.
 * **Testing Performed**: Verified clean Vite build (`npm run build`), all 35 tests passing (`npm test`), and git tree clean.
 
+---
+
+### Task: Deep Razorpay Payment Hub & Zero Detail Re-Entry Integration
+* **Date**: 2026-09-16
+* **Reason**: User requested a complete, native Razorpay payment hub on `/booking-payment` without simulated fake forms, and requested fixing duplicate contact info prompts during checkout.
+* **Files Affected**:
+  - `client/src/services/razorpay.js`
+  - `client/src/pages/BookingPaymentPage.jsx`
+  - `client/src/App.css`
+  - `CHANGELOG.md`
+  - `.agent-memory/TASK_HISTORY.md`
+  - `.agent-memory/CURRENT_STATE.md`
+* **What Changed**:
+  - Integrated official Razorpay payment channels (Express 1-Click, UPI & QR, Cards, Net Banking, Wallets).
+  - Configured `prefill` sanitization (10-digit mobile, trimmed email, lead passenger) and enforced `readonly: { contact: true, email: true, name: true }` so Razorpay never re-prompts for details.
+  - Added Verified Traveller & Contact Details summary box at the top of the payment hub.
+  - Added real-time processing overlay with spinner and bank status updates.
+* **Testing Performed**: Verified clean Vite production build (`npm run build`), all 35 automated tests passing (`npm test`), and git tree clean.
+
+

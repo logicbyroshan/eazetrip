@@ -31,11 +31,12 @@ export const loadRazorpayScript = () => {
 export const initiateRazorpayCheckout = async ({
   keyId,
   orderId,
-  amount, // amount in paise or rupees
+  amount, // amount in paise (e.g. 539700) or rupees
   currency = 'INR',
-  name = 'EazeTrip India',
-  description = 'EazeTrip Booking & Itinerary Checkout',
+  name = 'EazeTrip',
+  description = 'Travel Booking & Itinerary Confirmation',
   prefill = {},
+  method, // Optional: 'upi' | 'card' | 'netbanking' | 'wallet'
   themeColor = '#034ea2',
   onSuccess,
   onFailure,
@@ -43,9 +44,24 @@ export const initiateRazorpayCheckout = async ({
 }) => {
   const isLoaded = await loadRazorpayScript();
 
-  // If Razorpay SDK is available and we have a valid key or standard test key
+  // Sanitize prefill values so Razorpay validates them cleanly without re-asking
+  const cleanPhone = (prefill.contact || '9876543210').toString().replace(/\D/g, '').slice(-10);
+  const cleanEmail = (prefill.email || 'traveler@eazetrip.com').toString().trim().toLowerCase();
+  const cleanName = (prefill.name || 'Traveler').toString().trim();
+
+  // If Razorpay SDK is available and we have a valid key
   if (isLoaded && window.Razorpay && keyId && !keyId.includes('placeholder')) {
     try {
+      const prefillObj = {
+        name: cleanName,
+        email: cleanEmail,
+        contact: cleanPhone
+      };
+
+      if (method) {
+        prefillObj.method = method;
+      }
+
       const options = {
         key: keyId,
         amount: Number(amount),
@@ -63,19 +79,23 @@ export const initiateRazorpayCheckout = async ({
             });
           }
         },
-        prefill: {
-          name: prefill.name || '',
-          email: prefill.email || '',
-          contact: prefill.contact || ''
+        prefill: prefillObj,
+        readonly: {
+          name: true,
+          email: true,
+          contact: true
         },
         notes: {
           platform: 'EazeTrip',
-          itinerary: description
+          itinerary: description,
+          customer_name: cleanName
         },
         theme: {
-          color: themeColor
+          color: themeColor,
+          backdrop_color: 'rgba(10, 25, 47, 0.85)'
         },
         modal: {
+          confirm_close: true,
           ondismiss: () => {
             if (onDismiss) onDismiss();
           }
@@ -85,7 +105,7 @@ export const initiateRazorpayCheckout = async ({
       const rzpInstance = new window.Razorpay(options);
       rzpInstance.on('payment.failed', (response) => {
         if (onFailure) {
-          onFailure(response.error || { description: 'Payment failed' });
+          onFailure(response.error || { description: 'Payment failed or cancelled' });
         }
       });
 

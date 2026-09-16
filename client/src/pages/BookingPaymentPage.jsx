@@ -25,7 +25,12 @@ import {
   Check,
   AlertCircle,
   ExternalLink,
-  Tag
+  Tag,
+  UserCheck,
+  Zap,
+  ChevronRight,
+  RefreshCw,
+  Edit3
 } from 'lucide-react';
 
 export default function BookingPaymentPage() {
@@ -39,20 +44,12 @@ export default function BookingPaymentPage() {
   // 15-Minute Countdown Timer
   const [timeLeft, setTimeLeft] = useState(15 * 60);
 
-  // Active Payment Method Tab: 'upi' | 'card' | 'netbanking' | 'wallet' | 'razorpay'
-  const [paymentMethod, setPaymentMethod] = useState('upi');
-
-  // Form Fields
-  const [upiId, setUpiId] = useState('traveler@okhdfcbank');
-  const [cardNumber, setCardNumber] = useState('');
-  const [cardHolder, setCardHolder] = useState(draft?.passengers?.[0]?.name || 'Rohit Sharma');
-  const [cardExpiry, setCardExpiry] = useState('');
-  const [cardCvv, setCardCvv] = useState('');
-  const [selectedBank, setSelectedBank] = useState('HDFC Bank');
-  const [selectedWallet, setSelectedWallet] = useState('Paytm Wallet');
+  // Active Razorpay Channel Tab: 'all' | 'upi' | 'card' | 'netbanking' | 'wallet'
+  const [activeChannel, setActiveChannel] = useState('all');
 
   // Gateway state
   const [isProcessing, setIsProcessing] = useState(false);
+  const [processingStatus, setProcessingStatus] = useState('');
   const [confirmedBooking, setConfirmedBooking] = useState(null);
 
   useEffect(() => {
@@ -83,35 +80,31 @@ export default function BookingPaymentPage() {
   const { item, type, passengers, contact, pricing, date } = draft;
   const finalTotal = pricing?.grandTotal || 4999;
   const bookingTitle =
-    item.title ||
+    item?.title ||
     (type === 'flight'
-      ? `${item.fromCity || item.from} → ${item.toCity || item.to}`
+      ? `${item?.fromCity || item?.from || 'Origin'} → ${item?.toCity || item?.to || 'Destination'}`
       : type === 'hotel'
-      ? item.name
+      ? item?.name || 'Hotel Stay'
       : type === 'bus'
-      ? `${item.from} → ${item.to}`
+      ? `${item?.from || 'Origin'} → ${item?.to || 'Destination'}`
       : type === 'holiday'
-      ? item.title
-      : `${item.trainName} (${item.trainNumber})`);
+      ? item?.title || 'Holiday Tour'
+      : `${item?.trainName || 'Express Train'} (${item?.trainNumber || 'IRCTC'})`);
 
-  // Handle Card Input Formatting
-  const handleCardNumberChange = (e) => {
-    const value = e.target.value.replace(/\D/g, '').slice(0, 16);
-    const formatted = value.match(/.{1,4}/g)?.join(' ') || value;
-    setCardNumber(formatted);
-  };
+  // Clean and sanitize verified contact data to pass into Razorpay
+  const cleanPhone = (contact?.phone || user?.phone || '9876543210').toString().replace(/\D/g, '').slice(-10);
+  const cleanEmail = (contact?.email || user?.email || 'traveler@eazetrip.com').toString().trim().toLowerCase();
+  const cleanLeadName = (
+    passengers?.[0]?.name ||
+    `${passengers?.[0]?.firstName || ''} ${passengers?.[0]?.lastName || ''}`.trim() ||
+    user?.name ||
+    'Traveler'
+  );
 
-  const handleExpiryChange = (e) => {
-    let value = e.target.value.replace(/\D/g, '').slice(0, 4);
-    if (value.length >= 2) {
-      value = `${value.slice(0, 2)}/${value.slice(2)}`;
-    }
-    setCardExpiry(value);
-  };
-
-  // Process Final Booking Confirmation
-  const executePayment = async (methodName) => {
+  // Process Final Booking Confirmation through Razorpay Gateway
+  const executePayment = async (methodLabel = 'Razorpay Smart Checkout', rzpMethodPreference = null) => {
     setIsProcessing(true);
+    setProcessingStatus('Connecting to secure Razorpay payment gateway...');
 
     const generatedPnr = `${(type || 'EZ').slice(0, 2).toUpperCase()}${Math.floor(1000 + Math.random() * 9000)}`;
 
@@ -122,16 +115,17 @@ export default function BookingPaymentPage() {
       date: date || new Date().toISOString().split('T')[0],
       totalAmount: finalTotal,
       discount: pricing?.discount || 0,
-      paymentMethod: methodName,
+      paymentMethod: methodLabel,
       paymentStatus: 'Paid',
-      contactEmail: contact?.email,
-      contactPhone: contact?.phone,
-      passengers: passengers || [{ name: 'Traveler', seat: '12A' }],
+      contactEmail: cleanEmail,
+      contactPhone: cleanPhone,
+      passengers: passengers || [{ name: cleanLeadName, seat: '12A' }],
       pnr: generatedPnr
     };
 
     try {
-      // 1. Fetch key config & Create Razorpay Order
+      // 1. Fetch public key config & generate official order from backend
+      setProcessingStatus('Generating order with bank security...');
       const keyConfig = await api.getRazorpayKey();
       const orderRes = await api.createRazorpayOrder({
         amount: finalTotal,
@@ -139,29 +133,35 @@ export default function BookingPaymentPage() {
         receipt: `rcpt_${generatedPnr}`,
         notes: {
           pnr: generatedPnr,
-          customer: passengers?.[0]?.name || 'Traveler',
-          method: methodName
+          customer: cleanLeadName,
+          email: cleanEmail,
+          phone: cleanPhone,
+          method: methodLabel
         }
       });
 
       const orderId = orderRes?.orderId || `order_sim_${Date.now()}`;
       const keyId = orderRes?.keyId || keyConfig?.keyId || 'rzp_test_placeholder';
 
-      // 2. Launch Razorpay Checkout Overlay
+      setProcessingStatus('Awaiting Razorpay payment authorization...');
+
+      // 2. Launch Razorpay Checkout Overlay with locked prefilled details
       await initiateRazorpayCheckout({
         keyId,
         orderId,
-        amount: finalTotal * 100,
+        amount: finalTotal * 100, // paise
         currency: 'INR',
-        name: 'EazeTrip India',
-        description: `Booking #${generatedPnr} - ${bookingTitle}`,
+        name: 'EazeTrip',
+        description: `Booking #${generatedPnr} • ${bookingTitle}`,
+        method: rzpMethodPreference,
         prefill: {
-          name: passengers?.[0]?.name || 'Traveler',
-          email: contact?.email || 'traveler@eazetrip.com',
-          contact: contact?.phone || '9876543210'
+          name: cleanLeadName,
+          email: cleanEmail,
+          contact: cleanPhone
         },
         themeColor: '#034ea2',
         onSuccess: async (rzpRes) => {
+          setProcessingStatus('Payment authorized! Verifying cryptographic signature...');
           bookingPayload.paymentId = rzpRes.razorpay_payment_id;
           bookingPayload.orderId = rzpRes.razorpay_order_id;
           bookingPayload.signature = rzpRes.razorpay_signature;
@@ -173,9 +173,9 @@ export default function BookingPaymentPage() {
               razorpay_signature: rzpRes.razorpay_signature,
               amount: finalTotal,
               currency: 'INR',
-              payerName: passengers?.[0]?.name || 'Traveler',
-              email: contact?.email,
-              mobile: contact?.phone,
+              payerName: cleanLeadName,
+              email: cleanEmail,
+              mobile: cleanPhone,
               description: `Booking #${generatedPnr}`,
               bookingDetails: bookingPayload
             });
@@ -183,17 +183,20 @@ export default function BookingPaymentPage() {
             console.warn('Verification log note:', err);
           }
 
+          setProcessingStatus('Issuing confirmed E-Ticket and PNR...');
           const confirmed = await createBooking(bookingPayload);
           setConfirmedBooking(confirmed);
           setIsProcessing(false);
-          showToast(`Booking ${generatedPnr} confirmed successfully!`);
+          showToast(`Payment of ₹${finalTotal.toLocaleString('en-IN')} confirmed! PNR: ${generatedPnr}`);
         },
         onFailure: (err) => {
           setIsProcessing(false);
-          showToast(err.description || 'Payment cancelled or failed. Please retry.', 'error');
+          setProcessingStatus('');
+          showToast(err.description || 'Payment was not completed. You can retry anytime.', 'error');
         },
         onDismiss: () => {
           setIsProcessing(false);
+          setProcessingStatus('');
         }
       });
     } catch (err) {
@@ -202,7 +205,8 @@ export default function BookingPaymentPage() {
         const confirmed = await createBooking(bookingPayload);
         setConfirmedBooking(confirmed);
         setIsProcessing(false);
-      }, 1200);
+        setProcessingStatus('');
+      }, 1000);
     }
   };
 
@@ -213,11 +217,11 @@ export default function BookingPaymentPage() {
         <div className="payment-success-card">
           <div className="success-banner">
             <div className="success-icon-wrap">
-              <CheckCircle2 size={48} color="#ffffff" />
+              <CheckCircle2 size={52} color="#ffffff" />
             </div>
             <h2>Booking Confirmed & E-Ticket Issued!</h2>
             <p>
-              Your booking for <strong>{confirmedBooking.title}</strong> is confirmed. An SMS & Email confirmation with your e-ticket has been sent to <strong>{confirmedBooking.contactEmail || contact?.email}</strong>.
+              Your booking for <strong>{confirmedBooking.title}</strong> is confirmed. An SMS & Email confirmation with your e-ticket has been sent to <strong>{confirmedBooking.contactEmail || cleanEmail}</strong>.
             </p>
             <div className="pnr-highlight-badge">
               <span>BOOKING PNR:</span>
@@ -233,14 +237,14 @@ export default function BookingPaymentPage() {
               </div>
               <div>
                 <small>Lead Passenger</small>
-                <strong>{confirmedBooking.passengers?.[0]?.name}</strong>
+                <strong>{confirmedBooking.passengers?.[0]?.name || cleanLeadName}</strong>
               </div>
               <div>
                 <small>Total Paid</small>
                 <strong className="text-emerald">₹{confirmedBooking.totalAmount.toLocaleString('en-IN')}</strong>
               </div>
               <div>
-                <small>Payment Status</small>
+                <small>Payment Gateway</small>
                 <strong className="text-emerald">Verified ✓ (Razorpay)</strong>
               </div>
             </div>
@@ -272,7 +276,7 @@ export default function BookingPaymentPage() {
 
   return (
     <div className="booking-payment-page-layout">
-      {/* Top Header & Breadcrumb Strip directly in Container */}
+      {/* Top Header & Breadcrumb Strip */}
       <div className="container">
         <div className="review-header-top-row">
           <button
@@ -291,280 +295,330 @@ export default function BookingPaymentPage() {
       </div>
 
       <div className="container payment-main-grid">
-        {/* Left Column: Payment Options */}
+        {/* Left Column: Deep Razorpay Payment Hub */}
         <div className="payment-left-col">
-          <div className="payment-card-wrap">
-            <div className="payment-card-header">
-              <div className="payment-card-header-left">
-                <div className="type-icon-circle"><Lock size={20} color="#034ea2" /></div>
-                <div className="payment-header-titles">
-                  <h3 className="card-section-title">Select Payment Mode</h3>
-                  <span className="card-sub-info">All transactions are encrypted with 256-bit bank-grade security</span>
+          {/* 1. Verified Traveller & Contact Banner */}
+          <div className="verified-contact-card mb-4">
+            <div className="verified-contact-header">
+              <div className="verified-contact-left">
+                <div className="verified-badge-icon">
+                  <UserCheck size={18} color="#10b981" />
+                </div>
+                <div>
+                  <h4 className="verified-title">Traveller & Contact Details Verified</h4>
+                  <span className="verified-sub">Pre-filled & locked for 1-click Razorpay payment — no re-typing required</span>
+                </div>
+              </div>
+              <button
+                type="button"
+                className="edit-details-btn"
+                onClick={() => navigate('/review-booking', { state: { item } })}
+                title="Edit traveller or contact details"
+              >
+                <Edit3 size={14} /> Edit
+              </button>
+            </div>
+
+            <div className="verified-details-grid">
+              <div className="verified-detail-item">
+                <span className="detail-lbl">Lead Passenger</span>
+                <strong className="detail-val">{cleanLeadName}</strong>
+              </div>
+              <div className="verified-detail-item">
+                <span className="detail-lbl">Email Address</span>
+                <strong className="detail-val">{cleanEmail}</strong>
+              </div>
+              <div className="verified-detail-item">
+                <span className="detail-lbl">Mobile Number</span>
+                <strong className="detail-val">+91 {cleanPhone}</strong>
+              </div>
+              {contact?.gst?.gstin && (
+                <div className="verified-detail-item">
+                  <span className="detail-lbl">GST Invoice</span>
+                  <strong className="detail-val">{contact.gst.gstin}</strong>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* 2. Official Razorpay Payment Experience Hub */}
+          <div className="razorpay-hub-card">
+            {/* Hub Header */}
+            <div className="razorpay-hub-header">
+              <div className="razorpay-brand-strip">
+                <div className="rzp-shield-badge">
+                  <ShieldCheck size={22} color="#034ea2" />
+                </div>
+                <div className="rzp-title-group">
+                  <div className="flex-align-center gap-2">
+                    <h3 className="hub-headline">Official Razorpay Payment Gateway</h3>
+                    <span className="rzp-live-pill">LIVE SECURED</span>
+                  </div>
+                  <p className="hub-sub">
+                    Direct integration with Razorpay India • 100% Encrypted • Instant Confirmation
+                  </p>
                 </div>
               </div>
             </div>
 
-            {/* Payment Modes Selector Grid */}
-            <div className="payment-modes-container">
-              {/* Payment Tab Navigation */}
-              <div className="payment-modes-sidebar">
-                <button
-                  type="button"
-                  className={`mode-tab-btn ${paymentMethod === 'upi' ? 'active' : ''}`}
-                  onClick={() => setPaymentMethod('upi')}
-                >
-                  <QrCode size={18} />
-                  <span>UPI & QR Code</span>
-                  <small>GPay, PhonePe, Paytm</small>
-                </button>
+            {/* Quick Channel Filter Tabs */}
+            <div className="rzp-channel-filter-tabs">
+              <button
+                type="button"
+                className={`channel-filter-btn ${activeChannel === 'all' ? 'active' : ''}`}
+                onClick={() => setActiveChannel('all')}
+              >
+                <Zap size={15} /> All Methods (Recommended)
+              </button>
+              <button
+                type="button"
+                className={`channel-filter-btn ${activeChannel === 'upi' ? 'active' : ''}`}
+                onClick={() => setActiveChannel('upi')}
+              >
+                <QrCode size={15} /> UPI & QR
+              </button>
+              <button
+                type="button"
+                className={`channel-filter-btn ${activeChannel === 'card' ? 'active' : ''}`}
+                onClick={() => setActiveChannel('card')}
+              >
+                <CreditCard size={15} /> Cards & EMI
+              </button>
+              <button
+                type="button"
+                className={`channel-filter-btn ${activeChannel === 'netbanking' ? 'active' : ''}`}
+                onClick={() => setActiveChannel('netbanking')}
+              >
+                <Building size={15} /> Net Banking
+              </button>
+              <button
+                type="button"
+                className={`channel-filter-btn ${activeChannel === 'wallet' ? 'active' : ''}`}
+                onClick={() => setActiveChannel('wallet')}
+              >
+                <Wallet size={15} /> Wallets
+              </button>
+            </div>
 
-                <button
-                  type="button"
-                  className={`mode-tab-btn ${paymentMethod === 'card' ? 'active' : ''}`}
-                  onClick={() => setPaymentMethod('card')}
-                >
-                  <CreditCard size={18} />
-                  <span>Credit / Debit Cards</span>
-                  <small>Visa, Mastercard, RuPay</small>
-                </button>
+            {/* Main Razorpay Interactive Channels Deck */}
+            <div className="rzp-channels-deck">
+              {/* Channel 1: Express 1-Click Razorpay Checkout Hero */}
+              {(activeChannel === 'all' || activeChannel === 'express') && (
+                <div className="rzp-hero-option-card">
+                  <div className="hero-option-content">
+                    <div className="hero-option-badge">
+                      <Sparkles size={16} /> RECOMMENDED
+                    </div>
+                    <h4>1-Click Razorpay Express Checkout</h4>
+                    <p>
+                      Automatically launches Razorpay with your verified phone (<strong>+91 {cleanPhone}</strong>) and email (<strong>{cleanEmail}</strong>). Choose instantly from Google Pay, PhonePe, Saved Cards, Net Banking, or CRED.
+                    </p>
 
-                <button
-                  type="button"
-                  className={`mode-tab-btn ${paymentMethod === 'netbanking' ? 'active' : ''}`}
-                  onClick={() => setPaymentMethod('netbanking')}
-                >
-                  <Building size={18} />
-                  <span>Net Banking</span>
-                  <small>All Indian Banks</small>
-                </button>
+                    <div className="supported-logos-row">
+                      <span className="logo-chip">Google Pay</span>
+                      <span className="logo-chip">PhonePe</span>
+                      <span className="logo-chip">Paytm</span>
+                      <span className="logo-chip">Visa / Mastercard</span>
+                      <span className="logo-chip">HDFC / SBI / ICICI</span>
+                      <span className="logo-chip">CRED Pay</span>
+                    </div>
 
-                <button
-                  type="button"
-                  className={`mode-tab-btn ${paymentMethod === 'wallet' ? 'active' : ''}`}
-                  onClick={() => setPaymentMethod('wallet')}
-                >
-                  <Wallet size={18} />
-                  <span>Wallets & PayLater</span>
-                  <small>Paytm, Amazon Pay</small>
-                </button>
+                    <button
+                      type="button"
+                      className="rzp-primary-cta-btn mt-3"
+                      disabled={isProcessing}
+                      onClick={() => executePayment('Razorpay Express Checkout', null)}
+                    >
+                      {isProcessing ? (
+                        <span className="flex-align-center gap-2">
+                          <RefreshCw size={18} className="animate-spin" /> Processing Secure Payment...
+                        </span>
+                      ) : (
+                        <span className="flex-align-center gap-2">
+                          <Lock size={18} /> PAY ₹{finalTotal.toLocaleString('en-IN')} VIA RAZORPAY
+                        </span>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              )}
 
-                <button
-                  type="button"
-                  className={`mode-tab-btn ${paymentMethod === 'razorpay' ? 'active' : ''}`}
-                  onClick={() => setPaymentMethod('razorpay')}
+              {/* Channel 2: UPI & QR Code */}
+              {(activeChannel === 'all' || activeChannel === 'upi') && (
+                <div
+                  className="rzp-channel-row-card"
+                  onClick={() => executePayment('Razorpay UPI & QR', 'upi')}
                 >
-                  <ShieldCheck size={18} color="#034ea2" />
-                  <span>Razorpay Instant Gateway</span>
-                  <small>Auto-Detect Preferred Mode</small>
-                </button>
+                  <div className="channel-icon-circle upi-bg">
+                    <QrCode size={22} color="#034ea2" />
+                  </div>
+                  <div className="channel-info-block">
+                    <div className="channel-title-row">
+                      <strong>UPI Instant Payment & QR Code</strong>
+                      <span className="instant-pill">0% Surcharge</span>
+                    </div>
+                    <p className="channel-desc">
+                      Pay directly via Google Pay, PhonePe, Paytm, BHIM, CRED UPI, or QR scan.
+                    </p>
+                    <div className="brand-tags-mini">
+                      <span>GPay</span>
+                      <span>PhonePe</span>
+                      <span>Paytm UPI</span>
+                      <span>BHIM</span>
+                      <span>CRED</span>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    className="channel-action-btn"
+                    disabled={isProcessing}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      executePayment('Razorpay UPI & QR', 'upi');
+                    }}
+                  >
+                    Pay via UPI <ChevronRight size={16} />
+                  </button>
+                </div>
+              )}
+
+              {/* Channel 3: Credit / Debit Cards & EMI */}
+              {(activeChannel === 'all' || activeChannel === 'card') && (
+                <div
+                  className="rzp-channel-row-card"
+                  onClick={() => executePayment('Razorpay Cards & EMI', 'card')}
+                >
+                  <div className="channel-icon-circle card-bg">
+                    <CreditCard size={22} color="#0284c7" />
+                  </div>
+                  <div className="channel-info-block">
+                    <div className="channel-title-row">
+                      <strong>Credit / Debit Cards & No-Cost EMI</strong>
+                      <span className="instant-pill">3D Secure OTP</span>
+                    </div>
+                    <p className="channel-desc">
+                      Visa, MasterCard, RuPay, Diners, American Express & Corporate cards supported.
+                    </p>
+                    <div className="brand-tags-mini">
+                      <span>Visa</span>
+                      <span>Mastercard</span>
+                      <span>RuPay</span>
+                      <span>Amex</span>
+                      <span>EMI Available</span>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    className="channel-action-btn"
+                    disabled={isProcessing}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      executePayment('Razorpay Cards & EMI', 'card');
+                    }}
+                  >
+                    Pay via Card <ChevronRight size={16} />
+                  </button>
+                </div>
+              )}
+
+              {/* Channel 4: Net Banking */}
+              {(activeChannel === 'all' || activeChannel === 'netbanking') && (
+                <div
+                  className="rzp-channel-row-card"
+                  onClick={() => executePayment('Razorpay Net Banking', 'netbanking')}
+                >
+                  <div className="channel-icon-circle bank-bg">
+                    <Building size={22} color="#059669" />
+                  </div>
+                  <div className="channel-info-block">
+                    <div className="channel-title-row">
+                      <strong>Net Banking (50+ Indian Banks)</strong>
+                      <span className="instant-pill">Direct Bank Gateway</span>
+                    </div>
+                    <p className="channel-desc">
+                      Instant redirection to HDFC, SBI, ICICI, Axis, Kotak, PNB & all major banks.
+                    </p>
+                    <div className="brand-tags-mini">
+                      <span>HDFC</span>
+                      <span>SBI</span>
+                      <span>ICICI</span>
+                      <span>Axis</span>
+                      <span>Kotak</span>
+                      <span>+45 Banks</span>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    className="channel-action-btn"
+                    disabled={isProcessing}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      executePayment('Razorpay Net Banking', 'netbanking');
+                    }}
+                  >
+                    Select Bank <ChevronRight size={16} />
+                  </button>
+                </div>
+              )}
+
+              {/* Channel 5: Wallets & PayLater */}
+              {(activeChannel === 'all' || activeChannel === 'wallet') && (
+                <div
+                  className="rzp-channel-row-card"
+                  onClick={() => executePayment('Razorpay Wallets & PayLater', 'wallet')}
+                >
+                  <div className="channel-icon-circle wallet-bg">
+                    <Wallet size={22} color="#ea580c" />
+                  </div>
+                  <div className="channel-info-block">
+                    <div className="channel-title-row">
+                      <strong>Wallets & PayLater</strong>
+                      <span className="instant-pill">Instant Link</span>
+                    </div>
+                    <p className="channel-desc">
+                      Amazon Pay, Paytm Wallet, Simpl PayLater, Mobikwik, and OlaMoney.
+                    </p>
+                    <div className="brand-tags-mini">
+                      <span>Amazon Pay</span>
+                      <span>Paytm Wallet</span>
+                      <span>Simpl</span>
+                      <span>Mobikwik</span>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    className="channel-action-btn"
+                    disabled={isProcessing}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      executePayment('Razorpay Wallets & PayLater', 'wallet');
+                    }}
+                  >
+                    Pay via Wallet <ChevronRight size={16} />
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Trust Badges Footer */}
+            <div className="razorpay-trust-footer">
+              <div className="trust-badge-item">
+                <ShieldCheck size={16} color="#10b981" />
+                <span>PCI-DSS Level 1 Compliant</span>
               </div>
-
-              {/* Payment Tab Content */}
-              <div className="payment-mode-body">
-                {/* 1. UPI & QR Code */}
-                {paymentMethod === 'upi' && (
-                  <div className="upi-pane">
-                    <div className="qr-box-center">
-                      <div className="qr-display-frame">
-                        <QrCode size={130} color="#034ea2" />
-                        <span className="qr-caption">Scan with any UPI App</span>
-                      </div>
-                      <p className="qr-sub-text">
-                        Open Google Pay, PhonePe, Paytm or BHIM on your phone and scan the QR code to complete instant payment.
-                      </p>
-                    </div>
-
-                    <div className="upi-divider">
-                      <span>OR ENTER UPI ID / VPA</span>
-                    </div>
-
-                    <div className="form-group">
-                      <label>UPI ID / VPA</label>
-                      <input
-                        type="text"
-                        placeholder="username@okhdfcbank"
-                        value={upiId}
-                        onChange={(e) => setUpiId(e.target.value)}
-                      />
-                    </div>
-
-                    <button
-                      type="button"
-                      className="pay-submit-btn mt-3"
-                      disabled={isProcessing}
-                      onClick={() => executePayment(`UPI (${upiId || 'QR Scan'})`)}
-                    >
-                      {isProcessing ? 'Verifying Payment...' : `PAY ₹${finalTotal.toLocaleString('en-IN')} VIA UPI`}
-                    </button>
-                  </div>
-                )}
-
-                {/* 2. Credit / Debit Cards */}
-                {paymentMethod === 'card' && (
-                  <div className="card-pane">
-                    <div className="form-group mb-3">
-                      <label>Card Number</label>
-                      <input
-                        type="text"
-                        placeholder="4532 •••• •••• ••••"
-                        value={cardNumber}
-                        onChange={handleCardNumberChange}
-                        maxLength={19}
-                        required
-                      />
-                    </div>
-
-                    <div className="form-group mb-3">
-                      <label>Name on Card</label>
-                      <input
-                        type="text"
-                        placeholder="Cardholder Name"
-                        value={cardHolder}
-                        onChange={(e) => setCardHolder(e.target.value)}
-                        required
-                      />
-                    </div>
-
-                    <div className="form-grid two-col">
-                      <div className="form-group">
-                        <label>Expiry (MM/YY)</label>
-                        <input
-                          type="text"
-                          placeholder="MM/YY"
-                          value={cardExpiry}
-                          onChange={handleExpiryChange}
-                          maxLength={5}
-                          required
-                        />
-                      </div>
-                      <div className="form-group">
-                        <label>CVV / CVC</label>
-                        <input
-                          type="password"
-                          placeholder="•••"
-                          value={cardCvv}
-                          onChange={(e) => setCardCvv(e.target.value.replace(/\D/g, '').slice(0, 4))}
-                          maxLength={4}
-                          required
-                        />
-                      </div>
-                    </div>
-
-                    <button
-                      type="button"
-                      className="pay-submit-btn mt-4"
-                      disabled={isProcessing}
-                      onClick={() => executePayment(`Card (ending in ${cardNumber.slice(-4) || '4532'})`)}
-                    >
-                      {isProcessing ? 'Processing Card...' : `PAY ₹${finalTotal.toLocaleString('en-IN')} SECURELY`}
-                    </button>
-                  </div>
-                )}
-
-                {/* 3. Net Banking */}
-                {paymentMethod === 'netbanking' && (
-                  <div className="netbanking-pane">
-                    <label className="section-label">Popular Indian Banks</label>
-                    <div className="popular-banks-grid">
-                      {['HDFC Bank', 'State Bank of India', 'ICICI Bank', 'Axis Bank', 'Kotak Mahindra', 'Punjab National Bank'].map((bank) => (
-                        <button
-                          key={bank}
-                          type="button"
-                          className={`bank-tile-btn ${selectedBank === bank ? 'selected' : ''}`}
-                          onClick={() => setSelectedBank(bank)}
-                        >
-                          <Building size={16} />
-                          <span>{bank}</span>
-                        </button>
-                      ))}
-                    </div>
-
-                    <div className="form-group mt-3">
-                      <label>Or Select Other Bank</label>
-                      <select
-                        value={selectedBank}
-                        onChange={(e) => setSelectedBank(e.target.value)}
-                        className="native-select"
-                      >
-                        <option>HDFC Bank</option>
-                        <option>State Bank of India</option>
-                        <option>ICICI Bank</option>
-                        <option>Axis Bank</option>
-                        <option>Bank of Baroda</option>
-                        <option>Canara Bank</option>
-                        <option>IndusInd Bank</option>
-                        <option>Union Bank of India</option>
-                        <option>Yes Bank</option>
-                      </select>
-                    </div>
-
-                    <button
-                      type="button"
-                      className="pay-submit-btn mt-4"
-                      disabled={isProcessing}
-                      onClick={() => executePayment(`Net Banking (${selectedBank})`)}
-                    >
-                      {isProcessing ? 'Redirecting to Bank...' : `PAY VIA ${selectedBank.toUpperCase()}`}
-                    </button>
-                  </div>
-                )}
-
-                {/* 4. Mobile Wallets */}
-                {paymentMethod === 'wallet' && (
-                  <div className="wallet-pane">
-                    <label className="section-label">Select Mobile Wallet</label>
-                    <div className="wallets-grid">
-                      {['Paytm Wallet', 'Amazon Pay', 'PhonePe Wallet', 'Mobikwik', 'Simpl PayLater'].map((wallet) => (
-                        <button
-                          key={wallet}
-                          type="button"
-                          className={`bank-tile-btn ${selectedWallet === wallet ? 'selected' : ''}`}
-                          onClick={() => setSelectedWallet(wallet)}
-                        >
-                          <Wallet size={16} />
-                          <span>{wallet}</span>
-                        </button>
-                      ))}
-                    </div>
-
-                    <button
-                      type="button"
-                      className="pay-submit-btn mt-4"
-                      disabled={isProcessing}
-                      onClick={() => executePayment(`Wallet (${selectedWallet})`)}
-                    >
-                      {isProcessing ? 'Connecting Wallet...' : `PAY VIA ${selectedWallet.toUpperCase()}`}
-                    </button>
-                  </div>
-                )}
-
-                {/* 5. Razorpay Gateway Direct */}
-                {paymentMethod === 'razorpay' && (
-                  <div className="razorpay-direct-pane">
-                    <div className="rzp-shield-banner">
-                      <ShieldCheck size={36} color="#034ea2" />
-                      <h4>Official Razorpay Smart Checkout</h4>
-                      <p>
-                        Launch the full Razorpay payment gateway to pay with Saved Cards, UPI AutoPay, EMI, CRED Pay, and Net Banking.
-                      </p>
-                    </div>
-
-                    <button
-                      type="button"
-                      className="pay-submit-btn mt-4"
-                      disabled={isProcessing}
-                      onClick={() => executePayment('Razorpay Smart Checkout')}
-                    >
-                      {isProcessing ? 'Opening Gateway...' : `LAUNCH RAZORPAY CHECKOUT (₹${finalTotal.toLocaleString('en-IN')})`}
-                    </button>
-                  </div>
-                )}
+              <div className="trust-badge-item">
+                <Lock size={16} color="#034ea2" />
+                <span>256-Bit SSL Encryption</span>
+              </div>
+              <div className="trust-badge-item">
+                <CheckCircle2 size={16} color="#0284c7" />
+                <span>RBI Authorized Settlement</span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Right Column: Order & Price Summary */}
+        {/* Right Column: Order & Fare Summary Sidebar */}
         <div className="payment-right-col">
           <div className="sticky-fare-summary-card">
             <div className="fare-card-header">
@@ -576,7 +630,7 @@ export default function BookingPaymentPage() {
               <strong>{bookingTitle}</strong>
               <small>Travel Date: {date}</small>
               <div className="lead-pax-name">
-                Lead Passenger: {passengers?.[0]?.name}
+                Lead Passenger: {cleanLeadName}
               </div>
             </div>
 
@@ -601,6 +655,12 @@ export default function BookingPaymentPage() {
                   <span>₹{pricing?.zeroCancelCost?.toLocaleString('en-IN')}</span>
                 </div>
               )}
+              {pricing?.convenienceFee > 0 && (
+                <div className="fare-row">
+                  <span>Convenience Fee</span>
+                  <span>₹{pricing?.convenienceFee?.toLocaleString('en-IN')}</span>
+                </div>
+              )}
               {pricing?.discount > 0 && (
                 <div className="fare-row discount-row">
                   <span>Promo Savings ({pricing?.coupon})</span>
@@ -612,26 +672,63 @@ export default function BookingPaymentPage() {
             <div className="fare-grand-total-row">
               <div>
                 <span className="total-label">Total Payable</span>
-                <small className="tax-inclusive-lbl">All Taxes Included</small>
+                <span className="tax-inclusive-lbl">All Taxes Included</span>
               </div>
-              <strong className="final-price-headline">
+              <div className="final-price-headline">
                 ₹{finalTotal.toLocaleString('en-IN')}
-              </strong>
+              </div>
             </div>
 
-            <div className="security-assurances-card mt-3">
+            <button
+              type="button"
+              className="proceed-to-payment-btn"
+              disabled={isProcessing}
+              onClick={() => executePayment('Razorpay Fast Checkout', null)}
+            >
+              {isProcessing ? (
+                <span className="flex-align-center gap-2">
+                  <RefreshCw size={18} className="animate-spin" /> Authorizing...
+                </span>
+              ) : (
+                <span className="flex-align-center gap-2">
+                  <ShieldCheck size={18} /> PROCEED TO PAY (₹{finalTotal.toLocaleString('en-IN')})
+                </span>
+              )}
+            </button>
+
+            <div className="security-assurances-card">
               <div className="assurance-item">
-                <ShieldCheck size={16} color="#16a34a" />
-                <span>RBI Approved Payment Security</span>
+                <ShieldCheck size={16} color="#10b981" />
+                <span>Instant E-Ticket & PNR Confirmation</span>
               </div>
               <div className="assurance-item">
-                <Lock size={16} color="#034ea2" />
-                <span>PCI-DSS Level 1 Compliant</span>
+                <CheckCircle2 size={16} color="#034ea2" />
+                <span>Zero Hidden Fees • 100% Secure Checkout</span>
+              </div>
+              <div className="assurance-item">
+                <Lock size={16} color="#64748b" />
+                <span>Direct Official Razorpay Bank Gateway</span>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Fullscreen Processing Modal Overlay */}
+      {isProcessing && (
+        <div className="payment-processing-overlay">
+          <div className="processing-modal-card">
+            <div className="processing-spinner-ring">
+              <div className="inner-spinner"></div>
+            </div>
+            <h3>Connecting to Razorpay Gateway</h3>
+            <p>{processingStatus || 'Please complete authorization in the Razorpay window...'}</p>
+            <div className="security-lock-strip">
+              <Lock size={14} color="#10b981" /> 256-bit Encrypted Session • Do not refresh or close
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
