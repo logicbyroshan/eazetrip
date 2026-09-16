@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.1.0] - 2026-09-16
+
+### Live Payment Integration & Agent Operating Rules
+
+#### Added
+- **Live/Test Razorpay Gateway Activation**: Integrated active merchant API keys into `.env`, enabling live order creation (`order_...`), public key distribution, and cryptographic HMAC signature verification.
+- **Agent Operating Constitution**: Added mandatory Git branch creation and `gh` CLI Pull Request workflow rules to `AGENTS.md` and `.agent-memory/CONVENTIONS.md`.
+- **Security Guard**: Added `.env` exclusion to `client/.gitignore` to protect against client-side credential exposure.
+
+---
+
 ## [1.0.0] - 2026-09-15
 
 ### Baseline Architecture & Production Release
