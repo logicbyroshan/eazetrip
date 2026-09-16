@@ -10,7 +10,6 @@ EazeTrip/
 │   │   ├── assets/             # Brand logos, icons, vector illustrations
 │   │   ├── components/         # Reusable UI components & modals
 │   │   │   ├── BusSeatPickerModal.jsx
-│   │   │   ├── CheckoutModal.jsx
 │   │   │   ├── FlightDetailsModal.jsx
 │   │   │   ├── Footer.jsx
 │   │   │   ├── HotelFilters.jsx
