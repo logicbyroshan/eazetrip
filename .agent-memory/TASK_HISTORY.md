@@ -52,3 +52,16 @@ This file logs meaningful agent tasks, architectural milestones, and fixes chron
   - `.agent-memory/TASK_HISTORY.md`
   - `.agent-memory/sessions/.gitkeep`
 * **Testing Performed**: Audited full repository without modifying any existing application/source files.
+
+---
+
+### Task: Razorpay Live Merchant Key Activation & PR Rule Verification
+* **Date**: 2026-09-16
+* **Reason**: User added live/test Razorpay API credentials to `.env`. Verified server initialization, live order creation (`order_...`), public key endpoint, and client `.gitignore` protection.
+* **Files Affected**:
+  - `client/.env`
+  - `client/.gitignore`
+  - `CHANGELOG.md`
+  - `.agent-memory/TASK_HISTORY.md`
+* **What Changed**: Configured `VITE_RAZORPAY_KEY_ID` in `client/.env`, added `.env` to `client/.gitignore`, and verified live Razorpay order generation and 35/35 test passing.
+* **Testing Performed**: Ran `POST /api/payment/create-order` (verified real order generated), `GET /api/payment/razorpay-key`, all 35 tests passed (`npm test`), and verified Vite production build.
