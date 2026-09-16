@@ -10,6 +10,7 @@ import {
   Bus,
   Train,
   Palmtree,
+  ShieldCheck,
   CheckCircle2,
   Tag,
   User,
