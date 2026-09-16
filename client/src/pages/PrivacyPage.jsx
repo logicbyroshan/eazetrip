@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import Breadcrumb from '../components/common/Breadcrumb';
 import {
   Lock,
   ShieldCheck,
@@ -127,13 +128,13 @@ export default function PrivacyPage() {
   return (
     <div className="terms-page-wrapper container page-wrap">
       {/* Breadcrumbs */}
-      <div className="page-topbar">
-        <Link to="/">Home</Link>
-        <span>/</span>
-        <span>Legal & Compliance</span>
-        <span>/</span>
-        <span className="current-crumb">Privacy Policy</span>
-      </div>
+      <Breadcrumb
+        items={[
+          { label: 'Home', path: '/' },
+          { label: 'Legal & Compliance', path: '/terms' },
+          { label: 'Privacy Policy' }
+        ]}
+      />
 
       {/* Hero Header Banner */}
       <div className="legal-hero-banner privacy-theme">

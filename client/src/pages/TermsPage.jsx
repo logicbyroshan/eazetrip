@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import Breadcrumb from '../components/common/Breadcrumb';
 import {
   FileText,
   ShieldCheck,
@@ -197,13 +198,13 @@ export default function TermsPage({ title = 'Terms & Conditions & User Agreement
   return (
     <div className="terms-page-wrapper container page-wrap">
       {/* Breadcrumbs */}
-      <div className="page-topbar">
-        <Link to="/">Home</Link>
-        <span>/</span>
-        <span>Legal & Compliance</span>
-        <span>/</span>
-        <span className="current-crumb">{title.includes('User Agreement') ? 'User Agreement' : 'Terms & Conditions'}</span>
-      </div>
+      <Breadcrumb
+        items={[
+          { label: 'Home', path: '/' },
+          { label: 'Legal & Compliance', path: '/terms' },
+          { label: title.includes('User Agreement') ? 'User Agreement' : 'Terms & Conditions' }
+        ]}
+      />
 
       {/* Hero Header Banner */}
       <div className="legal-hero-banner">

@@ -13,6 +13,7 @@ import {
   FileCheck
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import Breadcrumb from '../components/common/Breadcrumb';
 
 export default function PartnerPage({ mode = 'login' }) {
   const { showToast } = useBooking();
@@ -38,11 +39,7 @@ export default function PartnerPage({ mode = 'login' }) {
   return (
     <div className="container page-wrap">
       <div className="page-shell narrow">
-        <div className="page-topbar">
-          <Link to="/">Home</Link>
-          <span>/</span>
-          <span>B2B Partner & Corporate Portal</span>
-        </div>
+        <Breadcrumb items={[{ label: 'Home', path: '/' }, { label: 'B2B Partner & Corporate Portal' }]} />
 
         {/* Top Benefits Cards Strip */}
         <div className="partner-perks-grid mb-4">

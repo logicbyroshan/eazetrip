@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useBooking } from '../context/BookingContext';
 import { api } from '../services/api';
+import Breadcrumb from '../components/common/Breadcrumb';
 import {
   RotateCcw,
   ShieldCheck,
@@ -229,11 +230,7 @@ export default function CancellationRefundPage() {
   return (
     <div className="cancellation-refund-page container page-wrap">
       <div className="page-shell">
-        <div className="page-topbar">
-          <Link to="/">Home</Link>
-          <span>/</span>
-          <span>Cancellation & Refund Hub</span>
-        </div>
+        <Breadcrumb items={[{ label: 'Home', path: '/' }, { label: 'Cancellation & Refund Hub' }]} />
 
         {/* Hero Section */}
         <div className="refund-hub-hero">

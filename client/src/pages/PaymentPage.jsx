@@ -21,6 +21,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import Breadcrumb from '../components/common/Breadcrumb';
 
 export default function PaymentPage() {
   const { showToast } = useBooking();
@@ -183,11 +184,7 @@ export default function PaymentPage() {
   return (
     <div className="container page-wrap">
       <div className="page-shell">
-        <div className="page-topbar">
-          <Link to="/">Home</Link>
-          <span>/</span>
-          <span>Razorpay Payment Gateway</span>
-        </div>
+        <Breadcrumb items={[{ label: 'Home', path: '/' }, { label: 'Invoice & Quick Payment' }]} />
 
         {paymentSuccess ? (
           <div className="content-card payment-success-card text-center">
