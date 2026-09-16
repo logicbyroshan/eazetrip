@@ -100,4 +100,20 @@ This file logs meaningful agent tasks, architectural milestones, and fixes chron
   - Added real-time processing overlay with spinner and bank status updates.
 * **Testing Performed**: Verified clean Vite production build (`npm run build`), all 35 automated tests passing (`npm test`), and git tree clean.
 
+---
+
+### Task: Fare Summary Sidebar Trust Box Spacing & Formatting Fix
+* **Date**: 2026-09-16
+* **Reason**: User observed oversized vertical gap between trust items and a vertical line artifact in the Fare Summary sidebar.
+* **Files Affected**:
+  - `client/src/pages/ReviewBookingPage.jsx`
+  - `client/src/pages/BookingPaymentPage.jsx`
+  - `client/src/App.css`
+  - `CHANGELOG.md`
+  - `.agent-memory/TASK_HISTORY.md`
+  - `.agent-memory/CURRENT_STATE.md`
+* **What Changed**: Eliminated CSS collision on `.assurance-item` from homepage strip, created dedicated `.sidebar-trust-box` and `.trust-point-item` styles with 7px item gaps, clean padding (10px 14px), and border cleanup.
+* **Testing Performed**: Verified clean Vite production build (`npm run build`), all 35 automated tests passing (`npm test`), and git tree clean.
+
+
 

@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.2.1] - 2026-09-16
+
+### Sidebar Trust & Security Box Formatting Fix
+
+#### Fixed
+- **Fare Summary Sidebar Spacing**: Resolved CSS collision on `.assurance-item` that was causing oversized vertical gaps and an unwanted border artifact in the sidebar security box. Scoped styles to `.sidebar-trust-box` and `.trust-point-item` with compact 7px item gaps, clean padding (10px 14px), and crisp alignment.
+
+---
+
 ## [1.2.0] - 2026-09-16
 
 ### Deep Razorpay Payment Hub & Zero Detail Re-Entry
