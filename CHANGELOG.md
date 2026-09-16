@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.7.3] - 2026-09-16
+
+### Deepened Traveler Recognition in Profile & Booking Review Flows
+
+#### Added
+- **Account Access Personalization (`ProfilePage.jsx`)**: Unauthenticated account access card dynamically greets returning travelers with `Welcome Back, [Name]! Please Sign In` and one-click `Sign In as [Name]`.
+- **Pre-populated Primary Passenger Fields (`ReviewBookingPage.jsx`)**: Form fields automatically pre-populate with the remembered traveler's name for faster, seamless checkout.
+
+---
+
 ## [1.7.2] - 2026-09-16
 
 ### Site-Wide Personalized Traveler Experience & Persistent Memory
