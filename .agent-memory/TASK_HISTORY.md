@@ -4,6 +4,29 @@ This file logs meaningful agent tasks, architectural milestones, and fixes chron
 
 ---
 
+### Task: Direct Refund Claim Wizard & Profile Refunds & Claims Resolution Hub
+* **Date**: 2026-09-16
+* **Reason**: User requested an elevated refund experience with a direct claim submission wizard (+ Submit Direct Refund Claim modal) on `/cancellation-refund` and a dedicated "Refunds & Claims" hub in `/profile` with live ARN tracking, stats strip, cancellation triggers, and printable credit notes.
+* **Branch / PR**: `feature/refund-request-hub-and-profile-claims` (PR pending merge).
+* **Files Affected**:
+  - `client/src/pages/CancellationRefundPage.jsx`
+  - `client/src/pages/ProfilePage.jsx`
+  - `client/src/context/BookingContext.jsx`
+  - `client/src/App.css`
+  - `tests/server.test.js`
+  - `CHANGELOG.md`
+  - `.agent-memory/CURRENT_STATE.md`
+  - `.agent-memory/TASK_HISTORY.md`
+* **What Changed**:
+  - Implemented Direct Refund Request / Claim Wizard Modal (`CancellationRefundPage.jsx`) with 5 dispute categories (Airline Delay >3h, Medical Emergency, Duplicate Debits, Railway Waitlist, Hotel Overbooking), zero-surcharge shield logic, and payout destination choices.
+  - Generates instant `#RFND-XXXXX` tracking reference and immediately binds to the interactive 4-step progress stepper with copyable tracking links and printable credit notes.
+  - Implemented 6th "Refunds & Claims" tab in `/profile` (`ProfilePage.jsx`) with status filter tabs (`All`, `Completed`, `In Progress`, `Under Review`), metric summary cards, and rich claim items with NPCI ARN tracking badges.
+  - Added direct "Cancel & Refund" action on confirmed bookings and "Track Refund" on cancelled bookings in "My Trips".
+  - Expanded test suite to 52 tests (`tests/server.test.js`) with 100% pass rate.
+* **Testing Performed**: Automated tests (52/52 passing), Vite production build clean, full browser subagent flow recorded and verified (`full_refund_claim_and_profile_flow_1789548414752.webp`).
+
+---
+
 ### Task: Refund Resolution Engine, Cookie Consent, Personalized UX & Pre-Payment Auth
 * **Date**: 2026-09-16
 * **Reason**: User requested complete refund request & calculation flow with payout options, live refund tracking hub on `/cancellation-refund`, DPDP/GDPR compliant user agreement & cookie consent banner, site-wide personalized titles remembering logged-in travelers, and mandatory authentication enforcement before payment.

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useBooking } from '../context/BookingContext';
 import { useNotification } from '../context/NotificationContext';
+import { api } from '../services/api';
 import {
   User,
   Mail,
@@ -32,13 +33,25 @@ import {
   RotateCw,
   ExternalLink,
   ShieldCheck,
-  Zap
+  ShieldAlert,
+  Zap,
+  RotateCcw,
+  Receipt,
+  Printer,
+  CreditCard,
+  Building,
+  Smartphone,
+  Search,
+  X,
+  ChevronRight,
+  AlertCircle
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function ProfilePage() {
   const { user, updateProfile, openLoginModal, isAuthenticated, logout } = useAuth();
-  const { bookings, openTicketModal, showToast } = useBooking();
+  const { bookings, refunds, openTicketModal, requestCancellationRefund, showToast } = useBooking();
+  const navigate = useNavigate();
   const {
     queueStatus,
     preferences: notifPrefs,
@@ -51,10 +64,23 @@ export default function ProfilePage() {
     loading: notifLoading
   } = useNotification();
 
-  const [activeTab, setActiveTab] = useState('trips'); // 'trips' | 'personal' | 'travellers' | 'preferences' | 'notifications'
+  const [activeTab, setActiveTab] = useState('trips'); // 'trips' | 'refunds' | 'personal' | 'travellers' | 'preferences' | 'notifications'
   const [tripFilter, setTripFilter] = useState('all'); // 'all' | 'flight' | 'hotel' | 'bus' | 'train' | 'holiday'
+  const [refundFilter, setRefundFilter] = useState('all'); // 'all' | 'completed' | 'in_progress'
   const [simulatingFail, setSimulatingFail] = useState(false);
-  const [campaignSuccessToast, setCampaignSuccessToast] = useState('');
+
+  // In-Page Cancellation Modal States
+  const [selectedBookingForCancel, setSelectedBookingForCancel] = useState(null);
+  const [cancelStep, setCancelStep] = useState(1);
+  const [cancelReason, setCancelReason] = useState('Travel plans changed');
+  const [customRemark, setCustomRemark] = useState('');
+  const [payoutMode, setPayoutMode] = useState('wallet');
+  const [bankAccount, setBankAccount] = useState('');
+  const [ifscCode, setIfscCode] = useState('');
+  const [upiId, setUpiId] = useState('');
+  const [refundCalculation, setRefundCalculation] = useState(null);
+  const [isSubmittingRefund, setIsSubmittingRefund] = useState(false);
+  const [completedRefundResult, setCompletedRefundResult] = useState(null);
 
   const [name, setName] = useState(user?.name || 'Traveler');
   const [email, setEmail] = useState(user?.email || 'traveler@eazetrip.com');
@@ -168,6 +194,106 @@ export default function ProfilePage() {
     return <Train size={18} color="#7c3aed" />;
   };
 
+  const handleOpenCancelModal = async (booking) => {
+    setSelectedBookingForCancel(booking);
+    setCancelStep(1);
+    setCancelReason('Travel plans changed');
+    setCustomRemark('');
+    setPayoutMode('wallet');
+    setBankAccount('');
+    setIfscCode('');
+    setUpiId('');
+    setCompletedRefundResult(null);
+
+    const gross = Number(booking.totalAmount || 3000);
+    const hasShield = Boolean(booking.hasShield || booking.travelAssurance);
+
+    try {
+      const calc = await api.calculateRefund({
+        serviceType: booking.type || 'flight',
+        grossAmount: gross,
+        hoursBeforeDeparture: 48,
+        hasShield
+      });
+      if (calc) {
+        setRefundCalculation(calc);
+        return;
+      }
+    } catch {
+      // Local fallback calculation
+    }
+
+    const penalty = hasShield ? 0 : Math.round(gross * 0.25);
+    setRefundCalculation({
+      serviceType: booking.type || 'flight',
+      grossAmount: gross,
+      hasShield,
+      penaltyAmount: penalty,
+      penaltyDescription: hasShield ? 'Zero Cancellation Shield Active' : 'Standard Operator Penalty Slab',
+      serviceFeeWaiver: 250,
+      netRefundAmount: Math.max(0, gross - penalty),
+      bonusWalletCredits: Math.round(gross * 0.05 + 100)
+    });
+  };
+
+  const closeCancelModal = () => {
+    setSelectedBookingForCancel(null);
+    setCancelStep(1);
+    setRefundCalculation(null);
+    setCompletedRefundResult(null);
+  };
+
+  const handleProceedToPayout = () => {
+    setCancelStep(2);
+  };
+
+  const handleConfirmRefundSubmission = async () => {
+    if (!selectedBookingForCancel || !refundCalculation) return;
+
+    setIsSubmittingRefund(true);
+    const refundPayload = {
+      bookingId: selectedBookingForCancel.id,
+      pnr: selectedBookingForCancel.pnr,
+      customerName: selectedBookingForCancel.passengers?.[0]?.name || name || 'Traveler',
+      customerEmail: selectedBookingForCancel.contactEmail || selectedBookingForCancel.email || email,
+      customerPhone: selectedBookingForCancel.contactPhone || selectedBookingForCancel.phone || phone,
+      serviceType: selectedBookingForCancel.type || 'flight',
+      serviceTitle: selectedBookingForCancel.title || 'Trip Booking',
+      grossAmount: refundCalculation.grossAmount,
+      penaltyAmount: refundCalculation.penaltyAmount,
+      netRefundAmount: refundCalculation.netRefundAmount,
+      reason: `${cancelReason}${customRemark ? ` - ${customRemark}` : ''}`,
+      payoutMode,
+      bankAccount,
+      ifscCode,
+      upiId,
+      hasShield: refundCalculation.hasShield,
+      selectedPassengers: selectedBookingForCancel.passengers?.map((p) => p.name) || []
+    };
+
+    try {
+      const result = await requestCancellationRefund(refundPayload);
+      setCompletedRefundResult(result);
+      setCancelStep(3);
+    } catch (err) {
+      console.error('Refund submission failed', err);
+    } finally {
+      setIsSubmittingRefund(false);
+    }
+  };
+
+  const completedRefundsCount = refunds.filter((r) => r.status === 'Completed').length;
+  const inProgressRefundsCount = refunds.filter((r) => r.status !== 'Completed').length;
+  const totalDisbursedAmount = refunds
+    .filter((r) => r.status === 'Completed')
+    .reduce((acc, curr) => acc + Number(curr.netRefundAmount || 0), 0);
+
+  const filteredRefunds = refunds.filter((r) => {
+    if (refundFilter === 'completed') return r.status === 'Completed';
+    if (refundFilter === 'in_progress') return r.status !== 'Completed';
+    return true;
+  });
+
   const confirmedCount = bookings.filter((b) => b.status === 'Confirmed').length;
   const filteredBookings = bookings.filter((b) => {
     if (tripFilter === 'all') return true;
@@ -210,6 +336,9 @@ export default function ProfilePage() {
             <Link to="/manage-bookings" className="profile-head-btn">
               <Luggage size={15} /> All Bookings
             </Link>
+            <Link to="/cancellation-refund" className="profile-head-btn">
+              <RotateCcw size={15} /> Refund Hub
+            </Link>
             <button
               type="button"
               className="profile-head-btn logout-head-btn"
@@ -245,21 +374,21 @@ export default function ProfilePage() {
 
           <div className="stat-metric-card">
             <div className="metric-icon-box amber">
-              <Sparkles size={20} />
+              <RotateCcw size={20} />
             </div>
             <div>
-              <strong>{(confirmedCount * 250 + 1200).toLocaleString('en-IN')} pts</strong>
-              <small>EazeRewards Balance</small>
+              <strong>{refunds.length}</strong>
+              <small>Refund Claims</small>
             </div>
           </div>
 
           <div className="stat-metric-card">
             <div className="metric-icon-box purple">
-              <User size={20} />
+              <Sparkles size={20} />
             </div>
             <div>
-              <strong>{savedTravellers.length}</strong>
-              <small>Saved Travellers</small>
+              <strong>{(confirmedCount * 250 + 1200).toLocaleString('en-IN')} pts</strong>
+              <small>EazeRewards Balance</small>
             </div>
           </div>
         </div>
@@ -273,6 +402,15 @@ export default function ProfilePage() {
           >
             <Luggage size={16} />
             <span>My Trips & Bookings ({bookings.length})</span>
+          </button>
+          <button
+            type="button"
+            className={`profile-nav-tab ${activeTab === 'refunds' ? 'active' : ''}`}
+            onClick={() => setActiveTab('refunds')}
+          >
+            <RotateCcw size={16} />
+            <span>Refunds & Claims ({refunds.length})</span>
+            {inProgressRefundsCount > 0 && <span className="tab-badge-pill warning">{inProgressRefundsCount} in progress</span>}
           </button>
           <button
             type="button"
@@ -320,9 +458,14 @@ export default function ProfilePage() {
                 <h2>Recent Trips & Active Reservations</h2>
                 <p>Track your confirmed flights, hotels, trains, and bus tickets</p>
               </div>
-              <Link to="/manage-bookings" className="secondary-btn small flex-align-center gap-1">
-                Full Management Hub <ArrowRight size={14} />
-              </Link>
+              <div className="flex-align-center gap-2">
+                <Link to="/cancellation-refund" className="secondary-btn small flex-align-center gap-1">
+                  <RotateCcw size={14} /> Refund Hub
+                </Link>
+                <Link to="/manage-bookings" className="secondary-btn small flex-align-center gap-1">
+                  Full Management Hub <ArrowRight size={14} />
+                </Link>
+              </div>
             </div>
 
             {/* Filter Pills */}
@@ -348,46 +491,261 @@ export default function ProfilePage() {
               </div>
             ) : (
               <div className="profile-bookings-list">
-                {filteredBookings.map((b) => (
-                  <div key={b.id} className="profile-booking-item-card">
-                    <div className="booking-item-left">
-                      <div className="type-badge-icon">{getTypeIcon(b.type)}</div>
-                      <div className="booking-item-details">
-                        <div className="booking-title-row">
-                          <strong>{b.title}</strong>
-                          <span className={`status-pill-badge ${b.status?.toLowerCase()}`}>
-                            {b.status === 'Confirmed' ? '✓ Confirmed' : b.status}
-                          </span>
-                        </div>
-                        <div className="booking-meta-chips">
-                          <span><Calendar size={13} /> {b.date}</span>
-                          <span><strong>PNR:</strong> {b.pnr || b.bookingRef || b.id}</span>
-                          {b.passengers?.[0]?.name && <span><strong>Lead:</strong> {b.passengers[0].name}</span>}
-                        </div>
-                      </div>
-                    </div>
+                {filteredBookings.map((b) => {
+                  const isCancelled = b.status === 'Cancelled';
+                  return (
+                    <div key={b.id} className={`profile-booking-item-card ${isCancelled ? 'cancelled-card' : ''}`}>
+                      <div className="booking-item-left">
+                        <div className="type-badge-icon">{getTypeIcon(b.type)}</div>
+                        <div className="booking-item-details">
+                          <div className="booking-title-row">
+                            <strong>{b.title}</strong>
+                            <span className={`status-pill-badge ${b.status?.toLowerCase()}`}>
+                              {isCancelled ? '● Cancelled' : '✓ Confirmed'}
+                            </span>
+                          </div>
+                          <div className="booking-meta-chips">
+                            <span><Calendar size={13} /> {b.date}</span>
+                            <span><strong>PNR:</strong> {b.pnr || b.bookingRef || b.id}</span>
+                            {b.passengers?.[0]?.name && <span><strong>Lead:</strong> {b.passengers[0].name}</span>}
+                          </div>
 
-                    <div className="booking-item-right">
-                      <div className="booking-amount-box">
-                        <small>Total Paid</small>
-                        <strong>₹{(b.totalAmount || 4999).toLocaleString('en-IN')}</strong>
+                          {isCancelled && (
+                            <div className="profile-cancelled-callout mt-2">
+                              <ShieldAlert size={14} color="#ea580c" />
+                              <span>{b.refundStatus || 'Refund Initiated'}</span>
+                              {b.refundId && (
+                                <Link
+                                  to={`/cancellation-refund?ref=${b.refundId}`}
+                                  className="profile-refund-pill-link"
+                                >
+                                  Track Refund #{b.refundId} →
+                                </Link>
+                              )}
+                            </div>
+                          )}
+                        </div>
                       </div>
-                      <button
-                        type="button"
-                        className="view-ticket-btn flex-align-center gap-1"
-                        onClick={() => openTicketModal(b)}
-                      >
-                        <FileText size={14} /> View E-Ticket
-                      </button>
+
+                      <div className="booking-item-right">
+                        <div className="booking-amount-box">
+                          <small>{isCancelled ? 'Gross Fare Paid' : 'Total Paid'}</small>
+                          <strong>₹{(b.totalAmount || 4999).toLocaleString('en-IN')}</strong>
+                        </div>
+                        <div className="profile-card-action-btns">
+                          <button
+                            type="button"
+                            className="view-ticket-btn flex-align-center gap-1"
+                            onClick={() => openTicketModal(b)}
+                          >
+                            <FileText size={14} /> E-Ticket
+                          </button>
+                          {!isCancelled ? (
+                            <button
+                              type="button"
+                              className="profile-cancel-btn flex-align-center gap-1"
+                              onClick={() => handleOpenCancelModal(b)}
+                            >
+                              <RotateCcw size={13} /> Cancel & Refund
+                            </button>
+                          ) : (
+                            <Link
+                              to={`/cancellation-refund?ref=${b.refundId || b.pnr || b.id}`}
+                              className="profile-track-refund-btn flex-align-center gap-1"
+                            >
+                              <Zap size={13} /> Track Refund
+                            </Link>
+                          )}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
         )}
 
-        {/* Tab 1: Personal Information Form */}
+        {/* Tab: Refunds & Claims */}
+        {activeTab === 'refunds' && (
+          <div className="content-card form-card mt-3 animate-fade-in">
+            {/* Header */}
+            <div className="section-title-wrap flex-between-center mb-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <div className="p-2 bg-amber-100 text-amber-800 rounded-lg">
+                    <RotateCcw size={20} />
+                  </div>
+                  <div>
+                    <h2 className="mb-0">Refunds & Claims Resolution Hub</h2>
+                    <p className="text-sm text-slate-500 mb-0">
+                      Track live refund disbursements, banking ARN reference codes, and DGCA/IRCTC claim status.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Link
+                  to="/cancellation-refund?openClaim=true"
+                  className="primary-btn small flex-align-center gap-1"
+                >
+                  <Plus size={14} /> Submit Direct Claim
+                </Link>
+              </div>
+            </div>
+
+            {/* Refund Metric Stat Chips */}
+            <div className="profile-refund-stats-grid mb-4">
+              <div className="refund-stat-box">
+                <span className="stat-label">Total Claims Raised</span>
+                <strong className="stat-num">{refunds.length}</strong>
+                <small className="text-xs text-muted">All Mediums</small>
+              </div>
+              <div className="refund-stat-box success">
+                <span className="stat-label">Total Disbursed</span>
+                <strong className="stat-num text-success">₹{totalDisbursedAmount.toLocaleString('en-IN')}</strong>
+                <small className="text-xs text-success">✓ 100% Settled</small>
+              </div>
+              <div className="refund-stat-box warning">
+                <span className="stat-label">In Banking Clearing</span>
+                <strong className="stat-num text-amber-600">{inProgressRefundsCount}</strong>
+                <small className="text-xs text-amber-600">Active NPCI / Bank</small>
+              </div>
+              <div className="refund-stat-box info">
+                <span className="stat-label">Instant EazeWallet SLA</span>
+                <strong className="stat-num text-blue-600">⚡ 0 Seconds</strong>
+                <small className="text-xs text-blue-600">+5% Bonus Credit</small>
+              </div>
+            </div>
+
+            {/* Filter Pills */}
+            <div className="profile-refund-filters-row mb-3 flex-between-center">
+              <div className="filter-pill-group">
+                <button
+                  type="button"
+                  className={`filter-pill-btn ${refundFilter === 'all' ? 'active' : ''}`}
+                  onClick={() => setRefundFilter('all')}
+                >
+                  All Claims ({refunds.length})
+                </button>
+                <button
+                  type="button"
+                  className={`filter-pill-btn ${refundFilter === 'completed' ? 'active' : ''}`}
+                  onClick={() => setRefundFilter('completed')}
+                >
+                  Completed ({completedRefundsCount})
+                </button>
+                <button
+                  type="button"
+                  className={`filter-pill-btn ${refundFilter === 'in_progress' ? 'active' : ''}`}
+                  onClick={() => setRefundFilter('in_progress')}
+                >
+                  In Progress ({inProgressRefundsCount})
+                </button>
+              </div>
+
+              <Link to="/cancellation-refund" className="text-xs text-blue-700 font-semibold flex-align-center gap-1 hover:underline">
+                Open Full Cancellation Hub <ArrowRight size={13} />
+              </Link>
+            </div>
+
+            {/* Refunds List */}
+            {filteredRefunds.length === 0 ? (
+              <div className="empty-state-card text-center py-5">
+                <RotateCcw size={36} color="#94a3b8" className="mx-auto mb-2" />
+                <h3>No Refund Claims Found</h3>
+                <p className="text-slate-500 text-sm">
+                  {refundFilter !== 'all'
+                    ? `No claims matching "${refundFilter}".`
+                    : 'You have zero active refund claims. All journeys are running smoothly!'}
+                </p>
+                <Link to="/cancellation-refund?openClaim=true" className="primary-btn small mt-3 inline-block">
+                  Submit a Refund Claim
+                </Link>
+              </div>
+            ) : (
+              <div className="profile-refunds-list">
+                {filteredRefunds.map((refund) => {
+                  const isCompleted = refund.status === 'Completed';
+                  return (
+                    <div key={refund.id} className="profile-refund-item-card">
+                      <div className="refund-card-top-row">
+                        <div className="refund-ref-badge-group">
+                          <span className="refund-id-tag">#{refund.id}</span>
+                          <span className={`refund-status-tag ${isCompleted ? 'completed' : 'in-progress'}`}>
+                            {isCompleted ? '✓ Disbursed' : '⏳ In Progress (Step 3/4)'}
+                          </span>
+                        </div>
+                        <span className="refund-date-text">
+                          {new Date(refund.createdAt).toLocaleDateString('en-IN', {
+                            day: 'numeric',
+                            month: 'short',
+                            year: 'numeric'
+                          })}
+                        </span>
+                      </div>
+
+                      <div className="refund-card-middle-grid mt-3">
+                        <div className="refund-service-details">
+                          <h4 className="service-title-text">{refund.serviceTitle}</h4>
+                          <div className="refund-meta-tags mt-1">
+                            <span><strong>Booking ID:</strong> {refund.bookingId}</span>
+                            {refund.pnr && <span><strong>PNR:</strong> {refund.pnr}</span>}
+                            <span><strong>Reason:</strong> {refund.reason || 'Travel Plan Changed'}</span>
+                          </div>
+                        </div>
+
+                        <div className="refund-finance-box">
+                          <div className="finance-row">
+                            <span>Gross Paid:</span>
+                            <strong>₹{Number(refund.grossAmount || 0).toLocaleString('en-IN')}</strong>
+                          </div>
+                          <div className="finance-row">
+                            <span>Penalty / Fees:</span>
+                            <strong className={Number(refund.penaltyAmount) === 0 ? 'text-success' : 'text-danger'}>
+                              {Number(refund.penaltyAmount) === 0 ? '₹0 (Waived)' : `-₹${Number(refund.penaltyAmount).toLocaleString('en-IN')}`}
+                            </strong>
+                          </div>
+                          <div className="finance-row net-row">
+                            <span>Net Refund:</span>
+                            <strong className="text-success font-bold">₹{Number(refund.netRefundAmount || 0).toLocaleString('en-IN')}</strong>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="refund-card-footer mt-3">
+                        <div className="payout-info-strip">
+                          <span className="payout-label">Disbursed to:</span>
+                          <span className="payout-value">{refund.payoutDetails}</span>
+                          {refund.arnNumber && (
+                            <span className="arn-badge">ARN: {refund.arnNumber}</span>
+                          )}
+                        </div>
+
+                        <div className="refund-actions-row">
+                          <button
+                            type="button"
+                            className="secondary-btn small"
+                            onClick={() => window.print()}
+                          >
+                            <Printer size={13} /> Print Credit Note
+                          </button>
+                          <Link
+                            to={`/cancellation-refund?ref=${refund.id}`}
+                            className="primary-btn small flex-align-center gap-1"
+                          >
+                            <Zap size={13} /> Track Live Progress
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
         {activeTab === 'personal' && (
           <div className="content-card form-card mt-3">
             <div className="section-title-wrap mb-3">
@@ -1062,6 +1420,358 @@ export default function ProfilePage() {
                   </div>
                 )}
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* 3-Step In-Page Cancellation & Refund Experience Modal */}
+        {selectedBookingForCancel && (
+          <div className="modal-overlay" onClick={closeCancelModal}>
+            <div
+              className="modal-container refund-wizard-modal"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Modal Stepper Header */}
+              <div className="refund-modal-header">
+                <div>
+                  <div className="refund-modal-tag">
+                    <ShieldCheck size={16} />
+                    <span>TRANSPARENT REFUND GUARANTEE</span>
+                  </div>
+                  <h3>Cancel Booking & Initiate Refund</h3>
+                  <span className="refund-ref-sub">
+                    Booking ID: <strong>{selectedBookingForCancel.id}</strong> • PNR: <strong>{selectedBookingForCancel.pnr || 'N/A'}</strong>
+                  </span>
+                </div>
+                <button
+                  className="modal-close-btn"
+                  onClick={closeCancelModal}
+                  type="button"
+                  aria-label="Close modal"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              {/* Step Tracker Indicator */}
+              <div className="refund-stepper-bar">
+                <div className={`refund-step-item ${cancelStep >= 1 ? 'active' : ''} ${cancelStep > 1 ? 'completed' : ''}`}>
+                  <span className="step-num">1</span>
+                  <span className="step-label">Penalty & Breakdown</span>
+                </div>
+                <div className="step-divider-line"></div>
+                <div className={`refund-step-item ${cancelStep >= 2 ? 'active' : ''} ${cancelStep > 2 ? 'completed' : ''}`}>
+                  <span className="step-num">2</span>
+                  <span className="step-label">Payout Destination</span>
+                </div>
+                <div className="step-divider-line"></div>
+                <div className={`refund-step-item ${cancelStep === 3 ? 'active completed' : ''}`}>
+                  <span className="step-num">3</span>
+                  <span className="step-label">Confirmation & Receipt</span>
+                </div>
+              </div>
+
+              {/* Step 1: Breakdown & Reason */}
+              {cancelStep === 1 && refundCalculation && (
+                <div className="refund-modal-body">
+                  <div className="refund-summary-breakdown-card">
+                    <div className="breakdown-row">
+                      <span>Gross Booking Fare Paid:</span>
+                      <strong>₹{refundCalculation.grossAmount.toLocaleString('en-IN')}</strong>
+                    </div>
+
+                    <div className="breakdown-row text-muted">
+                      <span>
+                        Operator Cancellation Penalty:
+                        <small className="d-block text-xs text-secondary">{refundCalculation.penaltyDescription}</small>
+                      </span>
+                      <strong className={refundCalculation.penaltyAmount === 0 ? 'text-success' : 'text-danger'}>
+                        {refundCalculation.penaltyAmount === 0 ? '₹0 (Waived)' : `-₹${refundCalculation.penaltyAmount.toLocaleString('en-IN')}`}
+                      </strong>
+                    </div>
+
+                    <div className="breakdown-row text-muted">
+                      <span>EazeTrip Processing & Resolution Fee:</span>
+                      <strong className="text-success">₹0 (Free / Waived)</strong>
+                    </div>
+
+                    <div className="breakdown-divider"></div>
+
+                    <div className="breakdown-row highlight-net">
+                      <div>
+                        <span className="net-refund-title">Estimated Net Refund Amount</span>
+                        <small className="d-block text-xs text-muted">Directly credited with zero deduction surcharge</small>
+                      </div>
+                      <strong className="net-refund-price">₹{refundCalculation.netRefundAmount.toLocaleString('en-IN')}</strong>
+                    </div>
+                  </div>
+
+                  {refundCalculation.hasShield && (
+                    <div className="shield-active-callout mt-3">
+                      <ShieldCheck size={18} color="#10b981" />
+                      <span>
+                        <strong>Zero Cancellation Shield Protected</strong>: 100% of operator penalty waived.
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Reason for Cancellation */}
+                  <div className="form-group mt-3">
+                    <label htmlFor="cancel-reason-input">Reason for Cancellation</label>
+                    <select
+                      id="cancel-reason-input"
+                      value={cancelReason}
+                      onChange={(e) => setCancelReason(e.target.value)}
+                      className="native-select"
+                    >
+                      <option value="Travel plans changed">Travel plans changed</option>
+                      <option value="Found better fare / dates">Found better fare / alternative dates</option>
+                      <option value="Flight / Schedule rescheduled by airline">Flight rescheduled by airline</option>
+                      <option value="Personal emergency / Health reasons">Personal emergency / Health reasons</option>
+                      <option value="Booked duplicate ticket by mistake">Booked duplicate ticket by mistake</option>
+                    </select>
+                  </div>
+
+                  <div className="form-group mt-2">
+                    <label htmlFor="custom-remarks">Additional Notes (Optional)</label>
+                    <input
+                      id="custom-remarks"
+                      type="text"
+                      className="native-input"
+                      placeholder="e.g. Doctor's note available, baggage adjustment..."
+                      value={customRemark}
+                      onChange={(e) => setCustomRemark(e.target.value)}
+                    />
+                  </div>
+
+                  {/* Actions */}
+                  <div className="refund-actions-bar mt-4">
+                    <button type="button" className="secondary-btn" onClick={closeCancelModal}>
+                      Keep Booking
+                    </button>
+                    <button type="button" className="primary-btn" onClick={handleProceedToPayout}>
+                      Select Payout Method <ChevronRight size={16} />
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Step 2: Choose Payout Destination */}
+              {cancelStep === 2 && refundCalculation && (
+                <div className="refund-modal-body">
+                  <h4 className="payout-selection-heading">Where should we disburse your ₹{refundCalculation.netRefundAmount.toLocaleString('en-IN')} refund?</h4>
+                  <p className="payout-selection-sub">Choose your preferred payout destination for instant or standard disbursement.</p>
+
+                  <div className="payout-options-grid mt-3">
+                    {/* Option 1: Instant EazeWallet */}
+                    <div
+                      className={`payout-option-card ${payoutMode === 'wallet' ? 'selected' : ''}`}
+                      onClick={() => setPayoutMode('wallet')}
+                    >
+                      <div className="payout-card-radio">
+                        <input
+                          type="radio"
+                          name="payoutMode"
+                          checked={payoutMode === 'wallet'}
+                          onChange={() => setPayoutMode('wallet')}
+                        />
+                      </div>
+                      <div className="payout-card-icon wallet">
+                        <Zap size={22} />
+                      </div>
+                      <div className="payout-card-content">
+                        <div className="payout-title-row">
+                          <strong>Instant EazeWallet Credit</strong>
+                          <span className="instant-badge">⚡ 0-SECOND CREDIT</span>
+                        </div>
+                        <p>Immediate credit to your EazeTrip wallet balance with <strong>+₹{refundCalculation.bonusWalletCredits} Bonus Booking Voucher</strong>.</p>
+                      </div>
+                    </div>
+
+                    {/* Option 2: Original Mode */}
+                    <div
+                      className={`payout-option-card ${payoutMode === 'original_mode' ? 'selected' : ''}`}
+                      onClick={() => setPayoutMode('original_mode')}
+                    >
+                      <div className="payout-card-radio">
+                        <input
+                          type="radio"
+                          name="payoutMode"
+                          checked={payoutMode === 'original_mode'}
+                          onChange={() => setPayoutMode('original_mode')}
+                        />
+                      </div>
+                      <div className="payout-card-icon card">
+                        <CreditCard size={22} />
+                      </div>
+                      <div className="payout-card-content">
+                        <div className="payout-title-row">
+                          <strong>Original Payment Method</strong>
+                          <span className="standard-badge">24 - 48 HRS</span>
+                        </div>
+                        <p>Credited back to the original UPI ID, Credit/Debit Card, or Net Banking account used during booking.</p>
+                      </div>
+                    </div>
+
+                    {/* Option 3: Instant UPI */}
+                    <div
+                      className={`payout-option-card ${payoutMode === 'upi' ? 'selected' : ''}`}
+                      onClick={() => setPayoutMode('upi')}
+                    >
+                      <div className="payout-card-radio">
+                        <input
+                          type="radio"
+                          name="payoutMode"
+                          checked={payoutMode === 'upi'}
+                          onChange={() => setPayoutMode('upi')}
+                        />
+                      </div>
+                      <div className="payout-card-icon upi">
+                        <Smartphone size={22} />
+                      </div>
+                      <div className="payout-card-content">
+                        <div className="payout-title-row">
+                          <strong>Direct UPI Transfer</strong>
+                          <span className="instant-badge">2 - 6 HRS</span>
+                        </div>
+                        <p>Disbursed directly to your personal UPI Virtual Payment Address (VPA).</p>
+
+                        {payoutMode === 'upi' && (
+                          <div className="mt-2" onClick={(e) => e.stopPropagation()}>
+                            <input
+                              type="text"
+                              className="native-input"
+                              placeholder="Enter your UPI ID (e.g. mobile@okhdfcbank)"
+                              value={upiId}
+                              onChange={(e) => setUpiId(e.target.value)}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Option 4: Bank Transfer NEFT/IMPS */}
+                    <div
+                      className={`payout-option-card ${payoutMode === 'bank_transfer' ? 'selected' : ''}`}
+                      onClick={() => setPayoutMode('bank_transfer')}
+                    >
+                      <div className="payout-card-radio">
+                        <input
+                          type="radio"
+                          name="payoutMode"
+                          checked={payoutMode === 'bank_transfer'}
+                          onChange={() => setPayoutMode('bank_transfer')}
+                        />
+                      </div>
+                      <div className="payout-card-icon bank">
+                        <Building size={22} />
+                      </div>
+                      <div className="payout-card-content">
+                        <div className="payout-title-row">
+                          <strong>Direct Bank Account (NEFT / IMPS)</strong>
+                          <span className="standard-badge">1 - 2 BANKING DAYS</span>
+                        </div>
+                        <p>Direct electronic clearing into your savings or current bank account.</p>
+
+                        {payoutMode === 'bank_transfer' && (
+                          <div className="payout-nested-inputs mt-2" onClick={(e) => e.stopPropagation()}>
+                            <input
+                              type="text"
+                              className="native-input mb-2"
+                              placeholder="Bank Account Number"
+                              value={bankAccount}
+                              onChange={(e) => setBankAccount(e.target.value)}
+                            />
+                            <input
+                              type="text"
+                              className="native-input"
+                              placeholder="Bank IFSC Code (e.g. HDFC0000123)"
+                              value={ifscCode}
+                              onChange={(e) => setIfscCode(e.target.value.toUpperCase())}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="refund-actions-bar mt-4">
+                    <button type="button" className="secondary-btn" onClick={() => setCancelStep(1)}>
+                      Back to Breakdown
+                    </button>
+                    <button
+                      type="button"
+                      className="danger-btn"
+                      onClick={handleConfirmRefundSubmission}
+                      disabled={isSubmittingRefund}
+                    >
+                      {isSubmittingRefund ? 'Processing Cancellation...' : `Confirm Cancellation & Disburse ₹${refundCalculation.netRefundAmount.toLocaleString('en-IN')}`}
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Step 3: Confirmation & Receipt */}
+              {cancelStep === 3 && completedRefundResult && (
+                <div className="refund-modal-body text-center py-4">
+                  <div className="refund-success-icon-circle mx-auto mb-3">
+                    <CheckCircle2 size={48} color="#10b981" />
+                  </div>
+
+                  <h3>Cancellation Confirmed & Refund Disbursed!</h3>
+                  <p className="refund-success-lead">
+                    Your cancellation request has been recorded. Tracking Reference ID: <strong>{completedRefundResult.id}</strong>
+                  </p>
+
+                  <div className="refund-receipt-voucher-card text-start mt-4">
+                    <div className="voucher-header">
+                      <span className="voucher-badge">OFFICIAL REFUND CREDIT NOTE</span>
+                      <span className="voucher-status-pill">{completedRefundResult.status}</span>
+                    </div>
+
+                    <div className="voucher-details-grid mt-3">
+                      <div className="voucher-field">
+                        <span>Refund Tracking ID:</span>
+                        <strong>{completedRefundResult.id}</strong>
+                      </div>
+                      <div className="voucher-field">
+                        <span>Banking ARN / Reference:</span>
+                        <strong>{completedRefundResult.arnNumber || 'ARN-IND9928194821'}</strong>
+                      </div>
+                      <div className="voucher-field">
+                        <span>Booking Reference:</span>
+                        <strong>{completedRefundResult.bookingId} ({completedRefundResult.pnr || 'PNR'})</strong>
+                      </div>
+                      <div className="voucher-field">
+                        <span>Net Refund Disbursed:</span>
+                        <strong className="text-success font-bold">₹{Number(completedRefundResult.netRefundAmount || 0).toLocaleString('en-IN')}</strong>
+                      </div>
+                      <div className="voucher-field full-width">
+                        <span>Disbursement Channel:</span>
+                        <strong>{completedRefundResult.payoutDetails || 'Instant EazeWallet Credit'}</strong>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="refund-confirmation-actions mt-4">
+                    <button
+                      type="button"
+                      className="secondary-btn"
+                      onClick={() => window.print()}
+                    >
+                      <Printer size={16} /> Print Refund Receipt
+                    </button>
+                    <Link
+                      to={`/cancellation-refund?ref=${completedRefundResult.id}`}
+                      className="primary-btn"
+                      onClick={closeCancelModal}
+                    >
+                      Track Live Refund Status →
+                    </Link>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}
