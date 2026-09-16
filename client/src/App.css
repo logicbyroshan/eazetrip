@@ -7897,7 +7897,8 @@ input[type="radio"]:focus-visible {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  min-width: 150px;
+  min-width: 180px;
+  width: 180px;
 }
 
 .view-ticket-btn {
@@ -7916,6 +7917,8 @@ input[type="radio"]:focus-visible {
   transition: all 0.2s ease !important;
   cursor: pointer !important;
   text-decoration: none !important;
+  white-space: nowrap !important;
+  width: 100% !important;
 }
 
 .view-ticket-btn:hover {
@@ -7932,13 +7935,15 @@ input[type="radio"]:focus-visible {
   gap: 6px !important;
   background: #ffffff !important;
   color: #dc2626 !important;
-  padding: 8px 16px !important;
+  padding: 9px 16px !important;
   border-radius: 10px !important;
-  font-size: 12.5px !important;
+  font-size: 13px !important;
   font-weight: 700 !important;
   border: 1.5px solid #fecaca !important;
   transition: all 0.2s ease !important;
   cursor: pointer !important;
+  white-space: nowrap !important;
+  width: 100% !important;
 }
 
 .profile-cancel-btn:hover {
@@ -7954,12 +7959,14 @@ input[type="radio"]:focus-visible {
   gap: 6px !important;
   background: #fff7ed !important;
   color: #c2410c !important;
-  padding: 8px 16px !important;
+  padding: 9px 16px !important;
   border-radius: 10px !important;
-  font-size: 12.5px !important;
+  font-size: 13px !important;
   font-weight: 700 !important;
   border: 1.5px solid #fed7aa !important;
   text-decoration: none !important;
+  white-space: nowrap !important;
+  width: 100% !important;
 }
 
 /* Tab 2: Refunds & Claims Hub */
@@ -8537,41 +8544,84 @@ input[type="radio"]:focus-visible {
 .action-buttons-stack {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  width: 100%;
+  gap: 8px;
+  width: 180px;
+  min-width: 180px;
 }
 
 .view-ticket-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  background: var(--primary);
-  color: #ffffff;
-  padding: 8px 14px;
-  border-radius: var(--radius-xs);
-  font-size: 0.82rem;
-  font-weight: 700;
-  transition: all var(--transition-fast);
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  background: #034ea2 !important;
+  color: #ffffff !important;
+  padding: 10px 16px !important;
+  border-radius: 10px !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  border: 1.5px solid #034ea2 !important;
+  box-shadow: 0 2px 8px rgba(3, 78, 162, 0.25) !important;
+  transition: all 0.2s ease !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
+  white-space: nowrap !important;
+  width: 100% !important;
 }
 
 .view-ticket-btn:hover {
-  background: var(--primary-hover);
+  background: #023875 !important;
+  border-color: #023875 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 14px rgba(3, 78, 162, 0.35) !important;
 }
 
 .cancel-trip-btn {
-  background: transparent;
-  color: var(--danger);
-  border: 1px solid var(--danger-border);
-  padding: 6px 12px;
-  border-radius: var(--radius-xs);
-  font-size: 0.78rem;
-  font-weight: 700;
-  transition: all var(--transition-fast);
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  background: #ffffff !important;
+  color: #dc2626 !important;
+  padding: 9px 16px !important;
+  border-radius: 10px !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  border: 1.5px solid #fecaca !important;
+  transition: all 0.2s ease !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+  width: 100% !important;
 }
 
 .cancel-trip-btn:hover {
-  background: #fef2f2;
+  background: #fef2f2 !important;
+  border-color: #ef4444 !important;
+  transform: translateY(-1px) !important;
+}
+
+.track-refund-secondary-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  background: #fff7ed !important;
+  color: #c2410c !important;
+  padding: 9px 16px !important;
+  border-radius: 10px !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  border: 1.5px solid #fed7aa !important;
+  text-decoration: none !important;
+  white-space: nowrap !important;
+  width: 100% !important;
+  transition: all 0.2s ease !important;
+}
+
+.track-refund-secondary-btn:hover {
+  background: #ffedd5 !important;
+  border-color: #fdba74 !important;
+  transform: translateY(-1px) !important;
 }
 
 /* Partner Perks */
@@ -15434,6 +15484,7 @@ input:checked + .slider:before {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  white-space: nowrap !important;
   transition: all 0.2s ease;
 }
 
@@ -16117,43 +16168,60 @@ input:checked + .slider:before {
 .profile-card-action-btns {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  width: 140px;
+  gap: 10px;
+  width: 180px;
+  min-width: 180px;
+  flex-shrink: 0;
 }
 
 .profile-cancel-btn {
-  background: #fff1f2;
-  color: #e11d48;
-  border: 1px solid #fecdd3;
-  font-size: 12px;
-  font-weight: 700;
-  padding: 6px 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  justify-content: center;
-  transition: all 0.15s ease;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  background: #ffffff !important;
+  color: #dc2626 !important;
+  border: 1.5px solid #fecaca !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  padding: 9px 16px !important;
+  border-radius: 10px !important;
+  cursor: pointer !important;
+  justify-content: center !important;
+  transition: all 0.2s ease !important;
+  white-space: nowrap !important;
+  width: 100% !important;
 }
 
 .profile-cancel-btn:hover {
-  background: #ffe4e6;
-  border-color: #fda4af;
+  background: #fef2f2 !important;
+  border-color: #ef4444 !important;
+  transform: translateY(-1px) !important;
 }
 
 .profile-track-refund-btn {
-  background: #eff6ff;
-  color: #034ea2;
-  border: 1px solid #bfdbfe;
-  font-size: 12px;
-  font-weight: 700;
-  padding: 6px 10px;
-  border-radius: 8px;
-  text-decoration: none;
-  justify-content: center;
-  transition: all 0.15s ease;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  background: #fff7ed !important;
+  color: #c2410c !important;
+  border: 1.5px solid #fed7aa !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  padding: 9px 16px !important;
+  border-radius: 10px !important;
+  text-decoration: none !important;
+  justify-content: center !important;
+  transition: all 0.2s ease !important;
+  white-space: nowrap !important;
+  width: 100% !important;
 }
 
 .profile-track-refund-btn:hover {
-  background: #dbeafe;
+  background: #ffedd5 !important;
+  border-color: #fdba74 !important;
+  transform: translateY(-1px) !important;
 }
 
 .profile-cancelled-callout {
@@ -17516,6 +17584,7 @@ input:checked + .slider:before {
   transition: all 0.15s ease;
   text-decoration: none;
   border: none;
+  white-space: nowrap !important;
 }
 
 .camp-btn.preview-wa {

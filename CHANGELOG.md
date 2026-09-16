@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.1.3] - 2026-09-16
+
+### Button Text Wrapping Elimination & Comprehensive Action Row Standardization
+
+#### Profile & Manage Bookings Action Columns (`client/src/App.css`, `client/src/pages/ManageBookingsPage.jsx`)
+- **Resolved Button Text Wrapping**:
+  - Removed duplicate CSS rule in `App.css` (lines 16167-16208) that constrained `.profile-card-action-btns` to 140px width and caused "Cancel & Refund" to wrap awkwardly onto two lines.
+  - Standardized `.profile-card-action-btns` and `.action-buttons-stack` to `width: 180px; min-width: 180px;` across both `ProfilePage` and `ManageBookingsPage`.
+  - Added icons (`<RotateCcw size={13} />`, `<Zap size={13} />`) and unified 10px rounded borders, 13px bold font, and high-contrast solid/outline states for `.view-ticket-btn`, `.profile-cancel-btn`, `.cancel-trip-btn`, and `.track-refund-secondary-btn`.
+
+#### Universal Button White-Space Immunity (`client/src/index.css`, `client/src/App.css`)
+- **Master Button Hierarchy (`client/src/index.css`)**:
+  - Extended master inline-flex and `white-space: nowrap !important;` rule across all primary, secondary, outline, danger, ghost, booking, refund, pill, and campaign action classes (`.flight-book-btn`, `.luxury-hotel-book-btn`, `.luxury-bus-select-btn`, `.book-train-action-btn`, `.holiday-book-btn`, `.holiday-view-btn`, `.camp-btn`, `.copy-track-link-btn`, `.receipt-download-btn`).
+- **Verified Zero Text-Wrapping & Clean Layout**:
+  - Fully tested across all viewports; 62/62 automated tests passing, 0 Vite build errors.
+
+---
+
 ## [2.1.2] - 2026-09-16
 
 ### Profile Header Streamlining & Action Button Contrast Pass

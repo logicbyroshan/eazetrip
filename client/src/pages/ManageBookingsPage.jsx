@@ -23,8 +23,8 @@ import {
   Smartphone,
   ChevronRight,
   ExternalLink,
-  Printer,
-  Receipt
+  Receipt,
+  RotateCcw
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -374,14 +374,16 @@ export default function ManageBookingsPage() {
                             className="cancel-trip-btn"
                             onClick={() => handleOpenCancelModal(booking)}
                           >
-                            Cancel & Refund
+                            <RotateCcw size={13} />
+                            <span>Cancel & Refund</span>
                           </button>
                         ) : (
                           <Link
                             to={`/cancellation-refund?ref=${booking.refundId || booking.pnr || booking.id}`}
                             className="track-refund-secondary-btn"
                           >
-                            Track Live Refund
+                            <Zap size={13} />
+                            <span>Track Live Refund</span>
                           </Link>
                         )}
                       </div>
