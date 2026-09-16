@@ -2,7 +2,7 @@
 
 ## 1. Release Baseline & Status
 * **Status**: Stable / Feature Complete / 100% Passing Tests
-* **Version**: `2.1.5`
+* **Version**: `2.1.6`
 * **Test Suite**: 62 / 62 automated tests passing (`npm test`).
 * **Client Build**: Clean Vite production build (`npm run build`).
 * **Active Branch**: `main`
@@ -26,7 +26,7 @@
 | **Personalized Experience**| ✅ Complete | Site-wide (`HomePage`, `Offers`, `SpecialOffers`) | Dynamic personalized greetings & offer titles with logged-in user's first name. |
 | **Auth & Profile** | ✅ Complete | `/login`, `/signup`, `/profile` | Email/phone auth, profile update, tier badges, My Trips & Bookings hub, Dedicated Refunds & Claims Resolution Hub. |
 | **Notifications & Queue** | ✅ Complete | `/profile`, `NotificationCenter.jsx` | Multi-channel Email & WhatsApp dispatch, inactivity campaigns, exponential backoff, DLQ recovery. |
-| **Help Desk & Support Hub** | ✅ Complete | Global `HelpDeskWidget.jsx`, `/contact` | 24/7 floating drawer, direct problem reporting, 1-click WhatsApp, Direct Mail, 5-min callback, ticket tracking. |
+| **Help Desk & Support Hub** | ✅ Complete | `/helpdesk`, `/help-desk`, `/support`, Global `HelpDeskWidget.jsx` | Dedicated luxury full page, 24/7 floating drawer with "Full Page ↗" header link, direct problem reporting, 1-click WhatsApp, Direct Mail, 5-min callback, ticket tracking. |
 | **Partner / B2B**  | ✅ Complete | `/partner` | B2B agent and corporate login/registration. |
 
 ---

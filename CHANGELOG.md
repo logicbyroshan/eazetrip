@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.1.6] - 2026-09-16
+
+### Dedicated 24/7 Help Desk Page & Floating Modal Formatting Overhaul
+
+#### Dedicated Full-Page Help Desk & Concierge (`client/src/pages/HelpDeskPage.jsx`, `client/src/App.jsx`, `client/src/App.css`)
+- **Luxury Concierge Hero & SLA Metrics**:
+  - Implemented dedicated `/helpdesk`, `/help-desk`, `/support`, and `/help` full-page experience featuring a gradient hero banner (`.helpdesk-hero-banner`) with glowing ambient backdrop, personalized welcome banner, and 4 SLA stat badges (`< 15 Mins Response SLA`, `+91 82690 54018 24/7 Direct Helpline`, `WhatsApp Chat Instant 1-on-1 Support`, and `100% Guaranteed Resolution Commitment`).
+- **Interactive Multi-Mode Support Hub (`.helpdesk-hub-card`, `.helpdesk-hub-tabs-bar`)**:
+  - **`🚨 Report Problem / Ticket`**: 2-column dropdown grid (`.form-grid.two-col`) for *Problem Category* and *Urgency Level*, active PNR auto-fill (`6EZ9KM`), detailed description box, and 3-column contact fields (`.form-grid.three-col`).
+  - **`💬 Direct WhatsApp Concierge`**: 1-click WhatsApp launch (`https://wa.me/918269054018`) with real-time pre-configured chat message template containing traveler name, active PNR, and problem summary.
+  - **`✉️ Direct Email Dispatch`**: In-app email composer routing directly to `support@eazetrip.com`.
+  - **`📞 5-Min Priority Callback`**: Urgent queue scheduler for airport emergencies and flight date changes.
+  - **`📋 Track My Tickets (Live Desk)`**: Real-time 2-column ticket conversation viewer and interactive reply composer.
+- **Support Features & Common Tools Grid (`.helpdesk-features-grid`, `.helpdesk-feature-card`)**:
+  - Added 4 bottom cards for *Flight Reschedule & Date Change*, *Zero Shield Refund Protection*, *Hotel Check-in & Special Requests*, and *Baggage & Airport Emergency*.
+  - Added sidebar with *Concierge Desk Channels* and *Common Self-Serve Tasks* (`View & Print E-Tickets`, `Cancel & Calculate Refund`, `Frequently Asked Questions`).
+
+#### Floating HelpDesk Widget & Modal Layout Optimization (`client/src/components/common/HelpDeskWidget.jsx`, `client/src/App.css`)
+- **Resolved Viewport Overflow & Submit Button Clipping**:
+  - Replaced unstyled Tailwind classes (`grid-cols-2`, `grid-cols-3`) with native `.form-grid.two-col` and `.form-grid.three-col` CSS classes.
+  - Added **`Full Page ↗`** header navigation link (`.helpdesk-open-fullpage-link`) directly inside the modal topbar for 1-click transition to the dedicated `/helpdesk` page.
+  - Adjusted modal window max-height (`min(92vh, 720px)`) and body padding (`18px 22px`) ensuring all input fields and the submit button remain fully visible without clipping.
+
+---
+
 ## [2.1.5] - 2026-09-16
 
 ### Visual Polish & Experience Redesign (FAQ, About Us, Contact Desk & Payment Portal)
