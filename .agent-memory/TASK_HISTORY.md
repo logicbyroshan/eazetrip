@@ -4,6 +4,20 @@ This file logs meaningful agent tasks, architectural milestones, and fixes chron
 
 ---
 
+### Task: Direct Native Razorpay Checkout & Instant E-Ticket Confirmation
+* **Date**: 2026-09-16
+* **Reason**: User requested removing redundant intermediate payment selection pages ("Pay via UPI, Cards, Razorpay etc.") and having `/review-booking` trigger Razorpay natively directly when clicking the Pay button.
+* **Branch / PR**: `feature/direct-razorpay-native-checkout` (PR #10 merged).
+* **Files Affected**:
+  - `client/src/pages/ReviewBookingPage.jsx`
+  - `CHANGELOG.md`
+* **What Changed**:
+  - Replaced intermediate page navigation with direct Razorpay checkout generation from `/review-booking`.
+  - Configured instant E-Ticket issue screen upon successful payment verification.
+* **Testing Performed**: Browser subagent end-to-end verified, 35/35 automated unit & security tests passing, Vite production build clean.
+
+---
+
 ### Task: Resolve Review Booking Error Boundary & Razorpay Modal Verification
 * **Date**: 2026-09-16
 * **Reason**: User reported glitch view on `/review-booking` and modal not opening when clicking payment buttons.
