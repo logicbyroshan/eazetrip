@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.1.1] - 2026-09-16
+
+### Master Universal Spacing Tokens & Segmented Tab Navigation Pass
+
+#### Universal Spacing & Layout Tokens (`client/src/index.css`)
+- Added comprehensive 8-point utility tokens for margins (`.mt-0` through `.mt-8`, `.mb-0` through `.mb-8`, `.my-1` through `.my-6`), paddings (`.p-0` through `.p-6`, `.py-1` through `.py-6`, `.px-1` through `.px-5`), flex alignment (`.flex`, `.inline-flex`, `.flex-col`, `.items-center`, `.justify-between`), gaps (`.gap-1` through `.gap-8`), typography, and color helpers.
+- Resolved zero-margin sticking across all pages where Tailwind-like utility classes were used without prior CSS definitions.
+
+#### Profile & Account Hub Overhaul (`client/src/App.css`, `client/src/pages/ProfilePage.jsx`)
+- **Luxury Segmented Tab Bar (`.profile-tabs-strip`)**:
+  - Rebuilt tab bar into an elevated container with 16px radius, background surface, and active blue pill highlighting with soft drop shadow.
+- **Hero & Stat Metric Card Spacing**:
+  - Added 24px bottom margins to `.profile-hero-banner`, `.profile-stats-strip`, `.bookings-hero-banner`, and `.bookings-stats-strip`.
+- **Trip & Refund Cards Polish**:
+  - Structured `.profile-booking-item-card` with generous 22x26px padding, 48px rounded icon badges, clean typography, right-aligned amount boxes, and styled `.view-ticket-btn` / `.profile-cancel-btn`.
+
+---
+
 ## [2.1.0] - 2026-09-16
 
 ### Legal Hub & Profile Communications UI/UX Consolidation

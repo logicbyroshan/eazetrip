@@ -4,6 +4,25 @@ This file logs meaningful agent tasks, architectural milestones, and fixes chron
 
 ---
 
+### Task: Master Universal Spacing Tokens & Segmented Tab Navigation Pass
+* **Date**: 2026-09-16
+* **Reason**: User reported elements clinging/sticking directly to each other across Profile and Manage Bookings pages due to missing margin/padding utility definitions and unstyled tabs.
+* **Branch / PR**: `fix/master-spacing-and-segmented-tabbar-polish` (PR merged into `main`).
+* **Files Affected**:
+  - `client/src/index.css`
+  - `client/src/App.css`
+  - `CHANGELOG.md`
+  - `.agent-memory/CURRENT_STATE.md`
+  - `.agent-memory/TASK_HISTORY.md`
+* **What Changed**:
+  - Implemented comprehensive 8-point utility tokens in `client/src/index.css` (`.mt-0` through `.mt-8`, `.mb-0` through `.mb-8`, `.my-1` through `.my-6`, `.p-0` through `.p-6`, `.flex`, `.gap-1` through `.gap-8`, typography & colors).
+  - Overhauled `.profile-tabs-strip` into an elevated segmented container with rounded tabs, hover states, and active blue pill badges.
+  - Added generous 24px margins to hero banners and stats rows in Profile & Manage Bookings hubs.
+  - Rebuilt trip cards and refund cards with 22x26px padding, 48px icon badges, clean pricing boxes, and responsive 2-column breakdowns.
+* **Testing Performed**: Automated test suite (62/62 passing), Vite production build clean (`npm run build`).
+
+---
+
 ### Task: Legal & Compliance Hub Overhaul & Profile Communications UI Consolidation
 * **Date**: 2026-09-16
 * **Reason**: User reported inconsistent, poorly formatted, narrow legal pages with missing regulatory clauses, and misaligned buttons/cards in the Profile Communications & Queue recovery view.
