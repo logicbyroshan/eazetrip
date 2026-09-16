@@ -34,22 +34,34 @@ export default function AboutPage() {
             EazeTrip was founded with a clear mission: to simplify travel planning, deliver honest transparent pricing with zero hidden fees, and provide 24/7 dedicated customer assistance for millions of journeys across flights, hotels, trains, and buses.
           </p>
 
-          <div className="stats-counter-strip mt-4">
-            <div className="stat-node">
+          <div className="about-stats-grid mt-4">
+            <div className="stat-card-luxury">
+              <div className="stat-icon-wrap">
+                <Users size={22} />
+              </div>
               <strong className="stat-num">1.2M+</strong>
-              <small>Happy Travelers</small>
+              <span className="stat-label">Happy Travelers</span>
             </div>
-            <div className="stat-node">
+            <div className="stat-card-luxury">
+              <div className="stat-icon-wrap">
+                <Plane size={22} />
+              </div>
               <strong className="stat-num">450+</strong>
-              <small>Airline & Bus Partners</small>
+              <span className="stat-label">Airline & Bus Partners</span>
             </div>
-            <div className="stat-node">
+            <div className="stat-card-luxury">
+              <div className="stat-icon-wrap">
+                <Building2 size={22} />
+              </div>
               <strong className="stat-num">15,000+</strong>
-              <small>Verified Hotel Stays</small>
+              <span className="stat-label">Verified Hotel Stays</span>
             </div>
-            <div className="stat-node">
+            <div className="stat-card-luxury">
+              <div className="stat-icon-wrap">
+                <Clock size={22} />
+              </div>
               <strong className="stat-num">24 / 7</strong>
-              <small>Priority Live Support</small>
+              <span className="stat-label">Priority Live Support</span>
             </div>
           </div>
         </div>

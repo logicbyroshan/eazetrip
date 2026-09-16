@@ -17721,6 +17721,622 @@ input:checked + .slider:before {
   }
 }
 
+/* ==========================================================================
+   12. FAQ & HELP CENTER DESIGN SYSTEM
+   ========================================================================== */
+.faq-hero-box {
+  background: linear-gradient(135deg, #0a192f 0%, #034ea2 60%, #0284c7 100%);
+  color: #ffffff;
+  padding: 44px 32px;
+  border-radius: 20px;
+  box-shadow: 0 16px 36px rgba(3, 78, 162, 0.2);
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+
+.faq-hero-icon {
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+.faq-hero-box h1 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 8px 0 10px;
+}
+
+.faq-hero-box .lead {
+  font-size: 1rem;
+  color: #e0f2fe;
+  max-width: 640px;
+  margin: 0 auto 20px;
+}
+
+.faq-search-input-wrap {
+  position: relative;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.faq-search-input-wrap .search-icon {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748b;
+  pointer-events: none;
+}
+
+.faq-search-input-wrap input {
+  width: 100%;
+  padding: 14px 20px 14px 48px;
+  border-radius: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  background: #ffffff;
+  font-size: 0.95rem;
+  color: #0f172a;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.faq-search-input-wrap input:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.25);
+}
+
+.category-filter-strip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 12px 16px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.cat-pill-btn {
+  padding: 8px 18px;
+  border-radius: 9999px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #475569;
+  background: #f1f5f9;
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  white-space: nowrap !important;
+  transition: all 0.2s ease;
+}
+
+.cat-pill-btn:hover {
+  background: #e2e8f0;
+  color: #034ea2;
+  transform: translateY(-1px);
+}
+
+.cat-pill-btn.active {
+  background: #034ea2;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(3, 78, 162, 0.25);
+}
+
+.faq-sections-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.faq-section-group {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.faq-section-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #0a192f;
+  margin: 0 0 16px;
+  padding-bottom: 10px;
+  border-bottom: 1.5px solid #f1f5f9;
+}
+
+.faq-accordion-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.faq-accordion-item {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #f8fafc;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.faq-accordion-item:hover {
+  border-color: #cbd5e1;
+  background: #ffffff;
+}
+
+.faq-accordion-item.open {
+  border-color: #93c5fd;
+  background: #ffffff;
+  box-shadow: 0 4px 14px rgba(3, 78, 162, 0.08);
+}
+
+.faq-question-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px;
+  background: transparent;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.faq-q-text {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.4;
+}
+
+.faq-accordion-item.open .faq-q-text {
+  color: #034ea2;
+}
+
+.faq-icon-arrow {
+  color: #64748b;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.faq-accordion-item.open .faq-icon-arrow {
+  color: #034ea2;
+}
+
+.faq-answer-content {
+  padding: 0 20px 18px 20px;
+  border-top: 1px dashed #e2e8f0;
+  margin-top: 4px;
+  padding-top: 14px;
+}
+
+.faq-answer-content p {
+  font-size: 0.92rem;
+  color: #475569;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.contact-cta-card {
+  background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+  border: 1.5px solid #a7f3d0;
+  border-radius: 18px;
+  padding: 32px 24px;
+  text-align: center;
+}
+
+.cta-icon-box {
+  width: 52px;
+  height: 52px;
+  background: #ffffff;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+  margin: 0 auto 12px;
+  color: #059669;
+}
+
+.contact-cta-card h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #064e3b;
+  margin: 0 0 6px;
+}
+
+.contact-cta-card p {
+  color: #047857;
+  font-size: 0.92rem;
+  max-width: 540px;
+  margin: 0 auto 18px;
+}
+
+.cta-actions-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* ==========================================================================
+   13. ABOUT US LUXURY EXPERIENCE DESIGN SYSTEM
+   ========================================================================== */
+.about-hero-card {
+  background: linear-gradient(135deg, #0a192f 0%, #034ea2 60%, #0077b6 100%);
+  color: #ffffff;
+  padding: 44px 36px;
+  border-radius: 20px;
+  box-shadow: 0 16px 36px rgba(3, 78, 162, 0.18);
+  position: relative;
+  overflow: hidden;
+}
+
+.about-hero-card h1 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 8px 0 14px;
+  line-height: 1.25;
+}
+
+.about-hero-card .lead {
+  font-size: 1.05rem;
+  color: #e0f2fe;
+  line-height: 1.6;
+  max-width: 780px;
+  margin-bottom: 28px;
+}
+
+.about-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.stat-card-luxury {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 20px 16px;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.stat-card-luxury:hover {
+  background: rgba(255, 255, 255, 0.18);
+  transform: translateY(-2px);
+}
+
+.stat-card-luxury .stat-icon-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 10px;
+}
+
+.stat-card-luxury .stat-num {
+  display: block;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.stat-card-luxury .stat-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #bfdbfe;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.about-values-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.value-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 24px;
+  transition: all 0.2s ease;
+}
+
+.value-box:hover {
+  background: #ffffff;
+  border-color: #bfdbfe;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(3, 78, 162, 0.08);
+}
+
+.value-icon-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+
+.value-icon-circle.blue {
+  background: #eff6ff;
+  color: #034ea2;
+}
+
+.value-icon-circle.teal {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.value-icon-circle.amber {
+  background: #fffbeb;
+  color: #d97706;
+}
+
+.value-icon-circle.purple {
+  background: #faf5ff;
+  color: #7e22ce;
+}
+
+.value-box h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0a192f;
+  margin: 0 0 8px;
+}
+
+.value-box p {
+  font-size: 0.9rem;
+  color: #64748b;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.headquarters-details-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.hq-detail-node {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.hq-detail-node strong {
+  display: block;
+  font-size: 0.92rem;
+  color: #0a192f;
+  margin-bottom: 2px;
+}
+
+.hq-detail-node p {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin: 0;
+}
+
+/* ==========================================================================
+   14. 24/7 CONCIERGE & CONTACT DESK DESIGN SYSTEM
+   ========================================================================== */
+.contact-layout-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.35fr;
+  gap: 28px;
+  align-items: start;
+}
+
+.contact-info-col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.info-card-themed {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 32px 28px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.04);
+}
+
+.info-card-themed h2 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #0a192f;
+  margin: 8px 0 10px;
+}
+
+.info-card-themed p {
+  font-size: 0.92rem;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.contact-details-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.contact-box-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  transition: all 0.2s ease;
+}
+
+.contact-box-item:hover {
+  background: #ffffff;
+  border-color: #bfdbfe;
+  box-shadow: 0 4px 12px rgba(3, 78, 162, 0.06);
+}
+
+.contact-icon-box {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: #eff6ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.contact-box-item strong {
+  display: block;
+  font-size: 0.88rem;
+  color: #0a192f;
+  margin-bottom: 2px;
+}
+
+.contact-box-item p {
+  font-size: 0.84rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.whatsapp-help-box {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 20px;
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+  border: 1.5px solid #a7f3d0;
+  border-radius: 16px;
+}
+
+.wa-icon-glow {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+}
+
+.whatsapp-help-box strong {
+  display: block;
+  font-size: 0.92rem;
+  color: #064e3b;
+  margin-bottom: 2px;
+}
+
+.whatsapp-help-box p {
+  font-size: 0.82rem;
+  color: #047857;
+  margin-bottom: 6px;
+}
+
+.whatsapp-action-link {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #059669;
+  text-decoration: underline;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.contact-form-mode-tabs {
+  display: flex;
+  gap: 10px;
+  background: #f1f5f9;
+  padding: 6px;
+  border-radius: 12px;
+}
+
+.mode-tab-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #64748b;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap !important;
+  transition: all 0.2s ease;
+}
+
+.mode-tab-btn:hover {
+  color: #034ea2;
+}
+
+.mode-tab-btn.active {
+  background: #ffffff;
+  color: #034ea2;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Media Query Responsiveness for the 4 Overhauled Pages */
+@media screen and (max-width: 960px) {
+  .contact-layout-grid {
+    grid-template-columns: 1fr;
+  }
+  .about-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .about-values-grid {
+    grid-template-columns: 1fr;
+  }
+  .headquarters-details-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 
 
 
