@@ -2,8 +2,8 @@
 
 ## 1. Release Baseline & Status
 * **Status**: Stable / Feature Complete / 100% Passing Tests
-* **Version**: `1.5.0`
-* **Test Suite**: 40 / 40 automated tests passing (`npm test`).
+* **Version**: `1.6.0`
+* **Test Suite**: 45 / 45 automated tests passing (`npm test`).
 * **Client Build**: Clean Vite production build (`npm run build`).
 * **Active Branch**: `main`
 
@@ -23,6 +23,7 @@
 | **Manage Bookings**| ✅ Complete | `/manage-bookings` | PNR lookup, cancellation with refund calculation, E-Ticket print/download. |
 | **Auth & Profile** | ✅ Complete | `/login`, `/signup`, `/profile` | Email/phone auth, profile update, tier badges, saved passenger quick fill. |
 | **Notifications & Queue** | ✅ Complete | `/profile`, `NotificationCenter.jsx` | Multi-channel Email & WhatsApp dispatch, inactivity campaigns, exponential backoff, DLQ recovery. |
+| **Help Desk & Support Hub** | ✅ Complete | Global `HelpDeskWidget.jsx`, `/contact` | 24/7 floating drawer, direct problem reporting, 1-click WhatsApp, Direct Mail, 5-min callback, ticket tracking. |
 | **Partner / B2B**  | ✅ Complete | `/partner` | B2B agent and corporate login/registration. |
 
 ---

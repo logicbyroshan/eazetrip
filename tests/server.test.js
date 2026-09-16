@@ -598,3 +598,86 @@ test('40. POST /api/notifications/retry-failed re-enqueues DLQ items and marks n
   assert.strictEqual(markRes.data.success, true);
 });
 
+test('41. POST /api/support/tickets creates a new support ticket with category and PNR', async () => {
+  const ticketRes = await requestJson('/api/support/tickets', {
+    method: 'POST',
+    body: {
+      userId: 'USR-1',
+      pnr: 'FL2775',
+      category: 'Date Change',
+      subject: 'Reschedule flight BOM-DEL',
+      description: 'Need to move flight date by 2 days due to schedule change.',
+      name: 'Priyansh Sharma',
+      email: 'priyansh.sharma@gmail.com',
+      phone: '+91 98765 43210',
+      urgency: 'High'
+    }
+  });
+  assert.strictEqual(ticketRes.status, 201);
+  assert.strictEqual(ticketRes.data.success, true);
+  assert.ok(ticketRes.data.data.id.startsWith('TKT-'));
+  assert.strictEqual(ticketRes.data.data.status, 'Open');
+  assert.strictEqual(ticketRes.data.data.pnr, 'FL2775');
+  assert.ok(ticketRes.data.data.messages.length >= 2);
+});
+
+test('42. GET /api/support/tickets retrieves user tickets with status & category filtering', async () => {
+  const getRes = await requestJson('/api/support/tickets?userId=USR-1');
+  assert.strictEqual(getRes.status, 200);
+  assert.strictEqual(getRes.data.success, true);
+  assert.ok(Array.isArray(getRes.data.data));
+  assert.ok(getRes.data.count > 0);
+});
+
+test('43. POST /api/support/tickets/:id/message appends messages to ticket conversation thread', async () => {
+  const msgRes = await requestJson('/api/support/tickets/TKT-89214/message', {
+    method: 'POST',
+    body: {
+      sender: 'Priyansh Sharma (You)',
+      text: 'Yes, please proceed with the 26 Sep 06:00 AM flight seat.'
+    }
+  });
+  assert.strictEqual(msgRes.status, 201);
+  assert.strictEqual(msgRes.data.success, true);
+  assert.ok(msgRes.data.data.id.startsWith('MSG-'));
+
+  // Verify message persisted on ticket
+  const ticketRes = await requestJson('/api/support/tickets/TKT-89214');
+  assert.strictEqual(ticketRes.status, 200);
+  const msgs = ticketRes.data.data.messages;
+  assert.ok(msgs.some((m) => m.text.includes('26 Sep 06:00 AM')));
+});
+
+test('44. POST /api/support/callback queues 5-minute priority callback request', async () => {
+  const cbRes = await requestJson('/api/support/callback', {
+    method: 'POST',
+    body: {
+      name: 'Priyansh Sharma',
+      phone: '+91 98765 43210',
+      topic: 'Urgent Airport Check-in Issue',
+      pnr: 'FL2775'
+    }
+  });
+  assert.strictEqual(cbRes.status, 201);
+  assert.strictEqual(cbRes.data.success, true);
+  assert.ok(cbRes.data.data.id.startsWith('CB-'));
+  assert.strictEqual(cbRes.data.data.estimatedWaitMins, 5);
+});
+
+test('45. POST /api/support/direct-mail validates payload and records direct inquiry', async () => {
+  const mailRes = await requestJson('/api/support/direct-mail', {
+    method: 'POST',
+    body: {
+      name: 'Priyansh Sharma',
+      email: 'priyansh.sharma@gmail.com',
+      subject: 'Holiday Package Customization',
+      message: 'Looking for 4 Nights Kashmir package with private shikara ride.',
+      pnr: 'HOL-101'
+    }
+  });
+  assert.strictEqual(mailRes.status, 201);
+  assert.strictEqual(mailRes.data.success, true);
+  assert.strictEqual(mailRes.data.data.sentTo, 'support@eazetrip.com');
+});
+
+
