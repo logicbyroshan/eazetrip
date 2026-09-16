@@ -6,6 +6,7 @@ import HotelFilters from '../components/hotels/HotelFilters';
 import { mockHotels } from '../data/hotelData';
 import { HERO_BACKDROPS } from '../data/siteData';
 import { useBooking } from '../context/BookingContext';
+import { useAuth } from '../context/AuthContext';
 import { Building2 } from 'lucide-react';
 
 export default function HotelBookingPage() {
@@ -13,6 +14,7 @@ export default function HotelBookingPage() {
   const navigate = useNavigate();
   const searchState = location.state || {};
   const { startCheckout } = useBooking();
+  const { user, firstName } = useAuth();
 
   const [selectedStars, setSelectedStars] = useState([]);
   const [freeCancelOnly, setFreeCancelOnly] = useState(false);
@@ -98,9 +100,11 @@ export default function HotelBookingPage() {
         <main className="listing-results-col">
           <div className="results-header-bar">
             <div>
-              <h2>Hotels & Stays in {searchState.city || 'Goa'}</h2>
+              <h2>{firstName ? `Luxury Stays Handpicked for ${firstName}` : `Hotels & Stays in ${searchState.city || 'Goa'}`}</h2>
               <span className="results-count">
-                Showing {filteredHotels.length} luxury & verified properties
+                {firstName
+                  ? `Member perks & complimentary upgrades for ${firstName} • Showing ${filteredHotels.length} verified properties in ${searchState.city || 'Goa'}`
+                  : `Showing ${filteredHotels.length} luxury & verified properties`}
               </span>
             </div>
           </div>

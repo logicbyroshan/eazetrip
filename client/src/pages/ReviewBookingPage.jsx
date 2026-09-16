@@ -36,10 +36,10 @@ import {
 } from 'lucide-react';
 
 export default function ReviewBookingPage() {
-  const navigate = useNavigate();
   const location = useLocation();
-  const { activeCheckoutItem, saveBookingDraft, createBooking, showToast } = useBooking();
-  const { user, isAuthenticated, openLoginModal } = useAuth();
+  const navigate = useNavigate();
+  const { activeCheckoutItem, checkoutDraft, saveBookingDraft, createBooking, showToast } = useBooking();
+  const { user, isAuthenticated, openLoginModal, firstName: authFirstName } = useAuth();
 
   // Retrieve item from context or location state or fallback
   const bookingItem = activeCheckoutItem || location.state?.item || null;
@@ -565,11 +565,13 @@ export default function ReviewBookingPage() {
                 <div className="type-icon-circle">{getTypeIcon()}</div>
                 <div className="review-header-titles">
                   <h3 className="card-section-title">
-                    {type === 'flight' && 'Flight Itinerary & Baggage'}
-                    {type === 'hotel' && 'Hotel & Stay Reservation'}
-                    {type === 'bus' && 'Bus Journey & Boarding Info'}
-                    {type === 'train' && 'Train Schedule & Class Info'}
-                    {type === 'holiday' && 'Holiday Tour Package Itinerary'}
+                    {authFirstName ? `${authFirstName}'s ${type === 'flight' ? 'Flight Itinerary' : type === 'hotel' ? 'Hotel Stay' : type === 'bus' ? 'Bus Journey' : type === 'holiday' ? 'Holiday Package' : 'Train Schedule'}` : (
+                      type === 'flight' ? 'Flight Itinerary & Baggage' :
+                      type === 'hotel' ? 'Hotel & Stay Reservation' :
+                      type === 'bus' ? 'Bus Journey & Boarding Info' :
+                      type === 'holiday' ? 'Holiday Tour Package Itinerary' :
+                      'Train Schedule & Class Info'
+                    )}
                   </h3>
                   <span className="card-sub-info">
                     {bookingItem.title ||

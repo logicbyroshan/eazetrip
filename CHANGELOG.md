@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.7.2] - 2026-09-16
+
+### Site-Wide Personalized Traveler Experience & Persistent Memory
+
+#### Added
+- **Persistent Traveler Identity & Recognition Engine (`AuthContext.jsx`)**:
+  - Automatically remembers the traveler's first name (`eazetrip_remembered_name`) upon login, Google One-Tap, or registration.
+  - Exposes `firstName`, `rememberedName`, and `getPersonalizedTitle` helper utilities to all components across the site.
+  - Recognizes returning visitors in the top navigation bar with a personalized `Hi [Name] (Login)` prompt even before explicit re-authentication.
+- **Dynamic Site-Wide Titles & Headlines**:
+  - **Homepage Hero (`HomePage.jsx`)**: Displays dynamic `Welcome Back, [Name]!` title with glassmorphic VIP badge pill (`Personalized Experience for [Name] • [Tier]`).
+  - **Special Offers Section (`SpecialOffersSection.jsx`)**: Displays exact customized `Offers Only For You, [Name]` header, `Curated For [Name]` badge, and `Exclusive Member Deals for [Name]` banner.
+  - **Dedicated Offers Page (`OffersPage.jsx`)**: Top banner and headlines dynamically update to `Offers Only For You, [Name]` with tailored member descriptions.
+  - **Flight Search Results (`FlightBookingPage.jsx`)**: Displays `Flights Selected for [Name]` with personalized member fare tags.
+  - **Hotel Search Results (`HotelBookingPage.jsx`)**: Displays `Luxury Stays Handpicked for [Name]` with complimentary upgrade badges.
+  - **Bus Search Results (`BusBookingPage.jsx`)**: Displays `Bus Routes Curated for [Name]`.
+  - **Railway Booking (`RailwayBookingPage.jsx`)**: Displays `IRCTC Train Schedules for [Name]`.
+  - **Holiday Packages (`HolidayBookingPage.jsx`)**: Displays `Customized Holiday Packages for [Name]` with VIP concierge tags.
+  - **Manage Bookings (`ManageBookingsPage.jsx`)**: Displays `Manage Your Bookings, [Name]`.
+  - **Cancellation & Refund Hub (`CancellationRefundPage.jsx`)**: Displays `Cancellation & Refund Resolution Hub for [Name]`.
+  - **Review Booking & Payment (`ReviewBookingPage.jsx`, `BookingPaymentPage.jsx`)**: Displays `[Name]'s Flight Itinerary` and `[Name]'s Traveller & Contact Details Verified`.
+  - **24/7 Help Desk & Contact Page (`HelpDeskWidget.jsx`, `ContactPage.jsx`)**: Displays `Hi [Name], How Can We Help?` and `Hello [Name], We're Here to Help`.
+  - **Top Navigation Bar (`TopBar.jsx`)**: Displays `Hi, [Name]` in profile button.
+
+---
+
 ## [1.7.1] - 2026-09-16
 
 ### Direct Refund Claim Wizard & Profile Refunds & Claims Resolution Hub

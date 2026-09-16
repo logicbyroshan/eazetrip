@@ -10,8 +10,7 @@ export default function SpecialOffersSection() {
   const [copiedCode, setCopiedCode] = useState(null);
   const carouselRef = useRef(null);
   const { showToast } = useBooking();
-  const { user } = useAuth();
-  const firstName = user?.name ? user.name.split(' ')[0] : '';
+  const { user, firstName } = useAuth();
 
   const categories = ['All', 'Flights', 'Hotels', 'Buses', 'Railway'];
 
@@ -47,8 +46,10 @@ export default function SpecialOffersSection() {
         <div className="campaign-promo-banner">
           <div className="promo-banner-left">
             <div className="promo-banner-title-wrap">
-              <span className="promo-banner-sun">☀️</span>
-              <h3 className="promo-banner-title">Pack your Journey</h3>
+              <span className="promo-banner-sun">{firstName ? '✨' : '☀️'}</span>
+              <h3 className="promo-banner-title">
+                {firstName ? `Exclusive Member Deals for ${firstName}` : 'Pack your Journey'}
+              </h3>
             </div>
             <div className="promo-banner-discount">
               <span className="discount-prefix">UP TO</span>
@@ -87,10 +88,17 @@ export default function SpecialOffersSection() {
           {/* Header & Carousel Arrows */}
           <div className="special-offers-header">
             <div className="offers-title-group">
-              <h2>{firstName ? `Special Offers For You, ${firstName}` : 'Special Offers'}</h2>
+              {firstName && (
+                <div className="vip-personal-tag-strip mb-1">
+                  <span className="vip-personal-badge">
+                    <Sparkles size={13} /> Curated For {firstName}
+                  </span>
+                </div>
+              )}
+              <h2>{firstName ? `Offers Only For You, ${firstName}` : 'Special Offers'}</h2>
               <p className="offers-sub-text">
                 {firstName
-                  ? `Handpicked bank discounts, card savings, and exclusive member vouchers curated for ${firstName}`
+                  ? `Handpicked bank discounts, card savings, and VIP member vouchers curated exclusively for ${firstName}`
                   : 'Exclusive bank discounts, card savings and instant cashback'}
               </p>
             </div>

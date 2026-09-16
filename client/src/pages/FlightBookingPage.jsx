@@ -7,13 +7,15 @@ import FlightDetailsModal from '../components/flights/FlightDetailsModal';
 import { mockFlights } from '../data/flightData';
 import { HERO_BACKDROPS } from '../data/siteData';
 import { useBooking } from '../context/BookingContext';
-import { Plane } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { Plane, Sparkles } from 'lucide-react';
 
 export default function FlightBookingPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const searchState = location.state || {};
   const { startCheckout } = useBooking();
+  const { user, firstName } = useAuth();
 
   const [activeModalFlight, setActiveModalFlight] = useState(null);
 
@@ -147,10 +149,12 @@ export default function FlightBookingPage() {
           <div className="results-header-bar">
             <div>
               <h2>
-                Flights from {searchState.from || 'Mumbai'} to {searchState.to || 'New Delhi'}
+                {firstName ? `Flights Selected for ${firstName}` : `Flights from ${searchState.from || 'Mumbai'} to ${searchState.to || 'New Delhi'}`}
               </h2>
               <span className="results-count">
-                Showing {filteredFlights.length} available flights • Special Fares & Instant Booking
+                {firstName
+                  ? `Exclusive member pricing & 0 cancellation fee for ${firstName} • Showing ${filteredFlights.length} flights (${searchState.from || 'Mumbai'} → ${searchState.to || 'New Delhi'})`
+                  : `Showing ${filteredFlights.length} available flights • Special Fares & Instant Booking`}
               </span>
             </div>
           </div>

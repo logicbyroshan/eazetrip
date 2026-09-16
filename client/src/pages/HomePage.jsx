@@ -15,8 +15,7 @@ import { HERO_BACKDROPS } from '../data/siteData';
 
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState('flights'); // flights | hotels | bus | railway | holidays
-  const { user } = useAuth();
-  const firstName = user?.name ? user.name.split(' ')[0] : '';
+  const { user, firstName } = useAuth();
 
   const currentHero = HERO_BACKDROPS[activeTab] || HERO_BACKDROPS.flights;
 
@@ -31,12 +30,19 @@ export default function HomePage() {
       >
         <div className="container">
           <div className="hero-content">
+            {firstName && (
+              <div className="hero-personal-pill">
+                <span className="personal-pill-dot" />
+                <span>Personalized Experience for <strong>{firstName}</strong></span>
+                <span className="personal-pill-badge">{user?.tier || 'Gold Member'}</span>
+              </div>
+            )}
             <h1 className="hero-headline">
               {firstName ? `Welcome Back, ${firstName}! ${currentHero.title}` : currentHero.title}
             </h1>
             <p className="hero-subheadline">
               {firstName
-                ? `Exclusive member pricing, personalized flight & hotel recommendations, and instant refunds.`
+                ? `Exclusive member pricing, personalized flight & hotel recommendations, and instant refunds for ${firstName}.`
                 : currentHero.subtitle}
             </p>
 
@@ -199,8 +205,8 @@ export default function HomePage() {
         <div className="container">
           <div className="section-header center">
             <span className="section-tag">WHY US</span>
-            <h2>Why Choose EazeTrip</h2>
-            <p>We combine cutting-edge travel technology with exceptional customer care</p>
+            <h2>{firstName ? `Why ${firstName} & 500,000+ Travellers Choose EazeTrip` : 'Why Choose EazeTrip'}</h2>
+            <p>{firstName ? `Exclusive discounts, 0 convenience fee cancellation shield, and dedicated 24/7 concierge for ${firstName}.` : 'We combine cutting-edge travel technology with exceptional customer care'}</p>
           </div>
 
           <div className="features-grid">

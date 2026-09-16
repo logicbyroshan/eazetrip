@@ -7,6 +7,7 @@ import BusSeatPickerModal from '../components/buses/BusSeatPickerModal';
 import { mockBuses } from '../data/busData';
 import { HERO_BACKDROPS } from '../data/siteData';
 import { useBooking } from '../context/BookingContext';
+import { useAuth } from '../context/AuthContext';
 import { Bus, RotateCcw } from 'lucide-react';
 
 export default function BusBookingPage() {
@@ -14,6 +15,7 @@ export default function BusBookingPage() {
   const navigate = useNavigate();
   const searchState = location.state || {};
   const { startCheckout } = useBooking();
+  const { user, firstName } = useAuth();
 
   const [activeBusModal, setActiveBusModal] = useState(null);
 
@@ -122,9 +124,11 @@ export default function BusBookingPage() {
         <main className="listing-results-col">
           <div className="results-header-bar">
             <div>
-              <h2>Buses from {searchState.from || 'Pune'} to {searchState.to || 'Mumbai'}</h2>
+              <h2>{firstName ? `Bus Routes Curated for ${firstName}` : `Buses from ${searchState.from || 'Pune'} to ${searchState.to || 'Mumbai'}`}</h2>
               <span className="results-count">
-                Showing {filteredBuses.length} verified operators • Real-Time GPS Tracking & Live Seat Selection
+                {firstName
+                  ? `Real-Time GPS Tracking & Live Seat Selection for ${firstName} • ${filteredBuses.length} verified operators (${searchState.from || 'Pune'} → ${searchState.to || 'Mumbai'})`
+                  : `Showing ${filteredBuses.length} verified operators • Real-Time GPS Tracking & Live Seat Selection`}
               </span>
             </div>
           </div>

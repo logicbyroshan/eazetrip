@@ -23,7 +23,7 @@ import { useBooking } from '../../context/BookingContext';
 import { api } from '../../services/api';
 
 export default function HelpDeskWidget() {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, firstName } = useAuth();
   const { bookings, showToast } = useBooking();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -238,9 +238,11 @@ export default function HelpDeskWidget() {
                   <Headphones className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h3 className="helpdesk-header-title">EazeTrip Concierge Help Desk</h3>
+                  <h3 className="helpdesk-header-title">{firstName ? `Hi ${firstName}, How Can We Help?` : 'EazeTrip Concierge Help Desk'}</h3>
                   <p className="helpdesk-header-sub">
-                    Direct Problem Reporting, 1-Click WhatsApp Chat, Direct Email & 5-Min Callback
+                    {firstName
+                      ? `24/7 dedicated travel concierge for ${firstName} • Direct WhatsApp, Email & 5-Min Callback`
+                      : 'Direct Problem Reporting, 1-Click WhatsApp Chat, Direct Email & 5-Min Callback'}
                   </p>
                 </div>
               </div>
