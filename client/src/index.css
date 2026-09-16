@@ -724,13 +724,21 @@ input:focus, select:focus, textarea:focus {
 .flex-1 { flex: 1 1 0% !important; }
 .flex-shrink-0 { flex-shrink: 0 !important; }
 
-.items-center, .flex-align-center { align-items: center !important; }
+.items-center, .flex-align-center {
+  display: flex !important;
+  align-items: center !important;
+}
 .items-start { align-items: flex-start !important; }
 .items-end { align-items: flex-end !important; }
 .items-stretch { align-items: stretch !important; }
 
 .justify-center { justify-content: center !important; }
-.justify-between, .flex-between-center { justify-content: space-between !important; }
+.justify-between { justify-content: space-between !important; }
+.flex-between-center {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
 .justify-start { justify-content: flex-start !important; }
 .justify-end { justify-content: flex-end !important; }
 

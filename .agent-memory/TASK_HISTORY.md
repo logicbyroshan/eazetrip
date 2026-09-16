@@ -4,6 +4,25 @@ This file logs meaningful agent tasks, architectural milestones, and fixes chron
 
 ---
 
+### Task: Site-Wide Tab Section Header Architecture & Flex Utility Alignment
+* **Date**: 2026-09-16
+* **Reason**: User pointed out that action buttons across all other profile tabs (Refunds, Saved Travellers, Communications & Queue) were improperly stacked and dropped below titles instead of aligned neatly on the top-right.
+* **Branch / PR**: `fix/standardize-tab-headers-and-flex-layout` (PR merged into `main`).
+* **Files Affected**:
+  - `client/src/pages/ProfilePage.jsx`
+  - `client/src/App.css`
+  - `client/src/index.css`
+  - `CHANGELOG.md`
+  - `.agent-memory/CURRENT_STATE.md`
+  - `.agent-memory/TASK_HISTORY.md`
+* **What Changed**:
+  - Replaced ad-hoc `.section-title-wrap` and `.section-header-row` across all 6 tabs in `ProfilePage` with the unified `.tab-section-header` and `.tab-section-title-wrap` architecture.
+  - Aligned all tab action buttons (`+ Submit Direct Claim`, `+ Add New Traveller`, `🔄 Refresh Queue`, `Manage All Bookings →`) to the top-right using `.manage-all-link` and `.manage-all-link.primary-cta`.
+  - Fixed utility tokens `.flex-between-center` and `.flex-align-center` in `index.css` to enforce `display: flex !important;`.
+* **Testing Performed**: Automated test suite (62/62 passing), Vite production build clean (`npm run build`).
+
+---
+
 ### Task: Button Text Wrapping Elimination & Comprehensive Action Row Standardization
 * **Date**: 2026-09-16
 * **Reason**: User reported that the "Cancel & Refund" button on trip cards wrapped text onto two lines ("Cancel &" / "Refund") looking unpolished, and requested deeply fixing similar issues across the site.
