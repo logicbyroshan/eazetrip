@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { X, Plane, Luggage, ShieldAlert, Receipt, Clock, Calendar, CheckCircle2 } from 'lucide-react';
+import { useCurrency } from '../../context/CurrencyContext';
 
 export default function FlightDetailsModal({ flight, onClose, onBook }) {
   const [activeTab, setActiveTab] = useState('schedule'); // schedule | baggage | cancellation | fare
+  const { formatPrice } = useCurrency();
 
   useEffect(() => {
     function handleKeyDown(e) {
@@ -68,9 +70,12 @@ export default function FlightDetailsModal({ flight, onClose, onBook }) {
           {activeTab === 'schedule' && (
             <div className="schedule-tab-content">
               <div className="flight-segment-box">
-                <div className="segment-airline">
-                  <strong>{flight.airline} ({flight.flightNumber})</strong>
-                  <span className="badge-pill">{flight.cabinClass || 'Economy'}</span>
+                <div className="segment-airline-header">
+                  <div className="airline-name-code">
+                    <strong className="airline-title">{flight.airline}</strong>
+                    <span className="flight-code-pill">{flight.flightNumber}</span>
+                  </div>
+                  <span className="cabin-badge-pill">{flight.cabinClass || 'Economy Class'}</span>
                 </div>
 
                 <div className="segment-timeline">
@@ -187,16 +192,16 @@ export default function FlightDetailsModal({ flight, onClose, onBook }) {
         <div className="modal-footer-custom">
           <div className="footer-price-info">
             <span className="total-label">Fare per adult:</span>
-            <strong className="footer-total">₹{flight.price.toLocaleString('en-IN')}</strong>
+            <strong className="footer-total">{formatPrice(flight.price)}</strong>
           </div>
           <div className="footer-buttons">
-            <button type="button" className="secondary-btn" onClick={onClose}>
+            <button type="button" className="modal-dismiss-btn" onClick={onClose}>
               Close
             </button>
             {onBook && (
               <button
                 type="button"
-                className="primary-btn"
+                className="modal-book-cta-btn"
                 onClick={() => {
                   onClose();
                   onBook(flight);

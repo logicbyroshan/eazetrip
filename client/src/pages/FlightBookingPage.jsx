@@ -4,10 +4,12 @@ import FlightSearchWidget from '../components/search/FlightSearchWidget';
 import FlightCard from '../components/flights/FlightCard';
 import FlightFilters from '../components/flights/FlightFilters';
 import FlightDetailsModal from '../components/flights/FlightDetailsModal';
+import ReviewSection from '../components/reviews/ReviewSection';
 import { mockFlights } from '../data/flightData';
 import { HERO_BACKDROPS } from '../data/siteData';
 import { useBooking } from '../context/BookingContext';
 import { useAuth } from '../context/AuthContext';
+import { useCurrency } from '../context/CurrencyContext';
 import { Plane, Sparkles } from 'lucide-react';
 
 export default function FlightBookingPage() {
@@ -16,6 +18,7 @@ export default function FlightBookingPage() {
   const searchState = location.state || {};
   const { startCheckout } = useBooking();
   const { user, firstName } = useAuth();
+  const { formatPrice, t } = useCurrency();
 
   const [activeModalFlight, setActiveModalFlight] = useState(null);
 
@@ -190,6 +193,13 @@ export default function FlightBookingPage() {
               })}
             </div>
           )}
+
+          {/* Verified Traveler Reviews & Photo Uploads */}
+          <ReviewSection
+            serviceType="Flight"
+            serviceId="FLIGHT-ROUTE-BOM-DEL"
+            serviceName={`${searchState.from || 'Mumbai'} → ${searchState.to || 'New Delhi'} Route`}
+          />
         </main>
       </div>
 
@@ -202,7 +212,7 @@ export default function FlightBookingPage() {
                 <small>Onward Flight:</small>
                 {selectedOnwardFlight ? (
                   <strong>
-                    {selectedOnwardFlight.airline} ({selectedOnwardFlight.departureTime}) - ₹{selectedOnwardFlight.price}
+                    {selectedOnwardFlight.airline} ({selectedOnwardFlight.departureTime}) - {formatPrice(selectedOnwardFlight.price)}
                   </strong>
                 ) : (
                   <span className="text-warning">Select onward flight above</span>
@@ -212,7 +222,7 @@ export default function FlightBookingPage() {
                 <small>Return Flight:</small>
                 {selectedReturnFlight ? (
                   <strong>
-                    {selectedReturnFlight.airline} ({selectedReturnFlight.departureTime}) - ₹{selectedReturnFlight.price}
+                    {selectedReturnFlight.airline} ({selectedReturnFlight.departureTime}) - {formatPrice(selectedReturnFlight.price)}
                   </strong>
                 ) : (
                   <span className="text-warning">Select return flight</span>
@@ -224,11 +234,10 @@ export default function FlightBookingPage() {
               <div className="total-combo-price">
                 <span className="lbl">Total Fare:</span>
                 <strong>
-                  ₹
-                  {(
+                  {formatPrice(
                     (selectedOnwardFlight?.price || 0) +
                     (selectedReturnFlight?.price || 0)
-                  ).toLocaleString('en-IN')}
+                  )}
                 </strong>
               </div>
               <button

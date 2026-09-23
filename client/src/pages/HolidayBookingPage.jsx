@@ -4,6 +4,7 @@ import HolidaySearchWidget from '../components/search/HolidaySearchWidget';
 import HolidayCard from '../components/holidays/HolidayCard';
 import HolidayFilters from '../components/holidays/HolidayFilters';
 import HolidayDetailsModal from '../components/holidays/HolidayDetailsModal';
+import ReviewSection from '../components/reviews/ReviewSection';
 import { mockHolidayPackages } from '../data/holidayData';
 import { HERO_BACKDROPS } from '../data/siteData';
 import { useBooking } from '../context/BookingContext';
@@ -160,6 +161,12 @@ export default function HolidayBookingPage() {
               ))}
             </div>
           )}
+
+          <ReviewSection
+            serviceType="Holiday"
+            serviceId="HOLIDAY-CURATED-PACKAGES"
+            serviceName="EazeTrip Curated Holiday Packages & Expeditions"
+          />
         </main>
       </div>
 

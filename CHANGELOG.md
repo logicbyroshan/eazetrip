@@ -7,6 +7,51 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.4.0] - 2026-09-23
+
+### Phase 3 & Enterprise UI/UX Overhaul: Spacing Architecture, Color Hierarchy, Multi-Currency, Verified Reviews & PWA Wallet
+
+#### UI/UX Spacing Architecture & Color Psychology Overhaul
+- **Navbar & TopBar Refresh (`client/src/components/common/TopBar.jsx`)**:
+  - Removed awkward condensed gaps; added generous 12px vertical padding, subtle separator borders, and unified text hierarchy.
+  - Implemented sleek user profile pill (`.user-profile-btn`) with subtle outline and hover contrast.
+  - Added dedicated WhatsApp and 24/7 hotline direct contact links in the top utility ribbon.
+- **Search Widget & Special Fares Layout (`client/src/App.css`)**:
+  - Redesigned "Special Fares" chips with 10px spacing and visual pill containers, preventing text wrap overlap.
+  - Separated Search CTA (`.search-action-wrap`) with a crisp divider and 18px top margin, eliminating cramped button boundaries.
+- **Flight Results & Filter Sidebar (`client/src/components/flights/FlightFilters.jsx`)**:
+  - Transformed departure time filter buttons into a balanced 2x2 grid layout (`grid-template-columns: repeat(2, 1fr)`) with dedicated icon slots and clean, unwrapped labels.
+  - Fixed price slider to dynamically render values in the active selected currency.
+- **Flight Cards & Action Button Group (`client/src/components/flights/FlightCard.jsx`)**:
+  - Completely decoupled sticking action buttons: "Flight Details" is now a refined bordered glass pill (`.btn-details-pill`) while "Book Now" is an elevated primary gradient pill (`.btn-book-pill`).
+  - Added 12px horizontal gap and `justify-content: flex-end` for natural visual scannability.
+- **Modal Isolation & Backdrop Elevation (`client/src/App.css`, `client/src/components/flights/FlightDetailsModal.jsx`)**:
+  - Set modal overlay `z-index: 100000` with high-density backdrop blur (`backdrop-filter: blur(10px)`) and deep drop shadows (`0 28px 75px rgba(3, 78, 162, 0.22)`).
+  - Repositioned and isolated the floating 24/7 Help Desk button (`z-index: 1000`), permanently eliminating widget bleeding over opened modals.
+  - Fixed awkward segment title text bug (`IndiGo • 6E-2041 · Economy Class` cleanly separated).
+  - Added 14px gap in modal action footer between "Close" and "Proceed to Book".
+- **Lenis Smooth Scrolling (`client/src/App.jsx`, `client/src/index.css`)**:
+  - Tuned Lenis smooth scroll duration (1.2s), custom ease-out-quart curve (`t => Math.min(1, 1.001 - Math.pow(2, -10 * t))`), and added standard Lenis CSS reset tokens.
+
+#### Multi-Currency & Internationalization Support (`client/src/context/CurrencyContext.jsx`)
+- Introduced global `CurrencyContext` with automatic conversion and symbol formatting for 5 major global currencies: `INR (₹)`, `USD ($)`, `EUR (€)`, `GBP (£)`, and `AED (د.إ)`.
+- Added dynamic language selector supporting English (`EN`) and Hindi (`HI`).
+- Persists user preferences seamlessly in `localStorage` (`eazetrip_currency`, `eazetrip_language`).
+- Fully hooked into TopBar, search forms, price sliders, flight/hotel cards, and checkout modals.
+
+#### Verified Traveler Reviews & Photo Uploads (`client/src/components/reviews/`)
+- Created interactive `ReviewSection.jsx` featuring verified customer rating score badges (`5.0/5`), filter pills (`All`, `With Photos`, `5 Star`), and photo thumbnail gallery with modal lightbox preview.
+- Created `ReviewSubmitModal.jsx` allowing travelers to leave verified 1-5 star ratings, structured feedback, and drag-and-drop travel photos.
+- Integrated Base64 image encoding with immediate preview and delete support, storing media directly into the database.
+- Embedded across Flight, Hotel, and Holiday booking detail views.
+
+#### Progressive Web App (PWA) & Offline E-Ticket Wallet (`client/public/*`)
+- Implemented `manifest.json` with theme color `#034ea2`, modern icons, and standalone display mode for desktop and mobile home screen installation.
+- Created Service Worker (`sw.js`) with cache-first strategy for static assets and offline ticket caching.
+- Created `OfflineTicketBanner.jsx` displaying non-intrusive offline warnings with instant access to cached tickets in `/manage-bookings`.
+
+---
+
 ## [2.3.0] - 2026-09-23
 
 ### Phase 2 Enterprise Architecture: Multi-Channel Communications Gateway & Admin Operations Portal
