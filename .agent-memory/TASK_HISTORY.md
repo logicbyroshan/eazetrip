@@ -4,6 +4,22 @@ This file logs meaningful agent tasks, architectural milestones, and fixes chron
 
 ---
 
+### Task: Infinite Dual-Row Reviews Marquee with Opposite Directions & Left/Right Fade Masks
+* **Date**: 2026-09-23
+* **Reason**: User requested an overhaul of the 3-card ratings and reviews section into an infinite bidirectional scrolling marquee with 2 opposite rows, many cards, smooth left-to-right fade edges so cards don't cut off abruptly, and luxury styling.
+* **Branch / PR**: `feature/infinite-marquee-reviews`.
+* **Files Affected**:
+  - `client/src/components/home/ReviewsSection.jsx` (Converted 3 static cards to 16 rich verified reviews across 2 opposite-scrolling rows with seamless duplicated array looping)
+  - `client/src/App.css` (Added `@keyframes marqueeScrollLeft` and `marqueeScrollRight`, dual-layer `mask-image` and edge overlay curtains, hover pause, route chips, and responsive breakpoints)
+  - `CHANGELOG.md`, `.agent-memory/CURRENT_STATE.md`, `.agent-memory/TASK_HISTORY.md`
+* **What Changed**:
+  - Row 1 streams Left, Row 2 streams Right in opposite directions.
+  - Edge fade masks (`mask-image: linear-gradient(...)` and `.reviews-marquee-fade-left/right`) provide a soft, seamless transition into the background.
+  - Hovering pauses the animation (`animation-play-state: paused`) and gently elevates the card.
+* **Testing Performed**: 76 / 76 automated tests passing, clean Vite build (599ms), browser subagent visual validation with recordings and screenshots.
+
+---
+
 ### Task: Phase 3 & UI/UX Overhaul: Spacing Architecture, Color Hierarchy, Multi-Currency, Verified Reviews & PWA Offline Wallet
 * **Date**: 2026-09-23
 * **Reason**: User requested complete resolution of Phase 3 items (Verified User Reviews with photos, Multi-Currency / i18n, PWA Offline Wallet) and an extensive UI/UX overhaul to resolve crammed/sticking buttons, topbar gaps, color hierarchy, modal layering conflicts with floating widgets, and smooth scrolling.
