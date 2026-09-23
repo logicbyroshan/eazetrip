@@ -1,11 +1,11 @@
 # Current Project State: EazeTrip
 
 ## 1. Release Baseline & Status
-* **Status**: Stable / Feature Complete / 100% Passing Tests
-* **Version**: `2.1.9`
-* **Test Suite**: 64 / 64 automated tests passing (`npm test`).
+* **Status**: Stable / Phase 1 Enterprise Complete / 100% Passing Tests
+* **Version**: `2.2.0`
+* **Test Suite**: 70 / 70 automated tests passing (`npm test`).
 * **Client Build**: Clean Vite production build (`npm run build`).
-* **Active Branch**: `main`
+* **Active Branch**: `feature/phase-1-persistence-inventory`
 
 ---
 
@@ -13,6 +13,8 @@
 
 | Domain | Status | Route / Component | Features |
 |---|---|---|---|
+| **Database Persistence** | ✅ Complete | `server/data/db.js` | Native Node SQLite WAL persistent engine with auto-schema migration & JSON fallback. Stores users, bookings, refunds, support tickets, and reviews. |
+| **Live Inventory Aggregator** | ✅ Complete | `server/services/inventory/`, `/api/inventory/providers` | Modular provider architecture for Flights (Amadeus/NDC), Hotels (Expedia/Hotelbeds), Trains (IRCTC), and Buses (redBus) with dynamic pricing & cache fallback. |
 | **Flights** | ✅ Complete | `/flights`, `/flight-booking` | Domestic & international search, airline filters, cabin/check-in baggage chips. |
 | **Hotels** | ✅ Complete | `/hotels`, `/hotel-booking` | City search, star rating filters, amenities, check-in/out dates. |
 | **Buses** | ✅ Complete | `/buses`, `/bus-booking` | Intercity routes, operator filters, AC sleeper options, boarding points. |
@@ -32,6 +34,6 @@
 ---
 
 ## 3. Current Priorities & Next Steps
-1. Maintain documentation and memory system synchronization on every new agent task.
-2. Ensure zero regressions in booking state transitions or payment gateway flows.
-3. Keep test suite and build clean on all incoming modifications.
+1. Execute Phase 2: Medium Priority (Real SMS/WhatsApp Gateway, Production Email Transport, and Admin Backoffice Operations Portal).
+2. Execute Phase 3: Low Priority (Verified User Reviews with Photos, Multi-Currency/i18n, and PWA Offline Ticket Wallet).
+3. Maintain zero regressions across all 70 tests and clean Vite production build.

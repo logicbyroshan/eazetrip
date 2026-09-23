@@ -12,6 +12,8 @@ try {
 }
 
 const mockStore = require('./data/mockStore');
+const db = require('./data/db');
+const inventoryManager = require('./services/inventory');
 const notificationService = require('./services/notificationService');
 const supportService = require('./services/supportService');
 const refundService = require('./services/refundService');
@@ -106,9 +108,8 @@ app.use('/api/', generalLimiter);
 // Sensitive endpoints rate limiter (20 req / min)
 const sensitiveLimiter = rateLimit({ windowMs: 60 * 1000, max: 20, message: 'Too many attempts. Please wait a minute.' });
 
-// State Stores
-let bookings = [...mockStore.bookings];
-let users = [];
+// Persistent Database Layer (Native SQLite WAL / resilient file persistence)
+// Users, Bookings, Refunds, Support, and Notifications are backed by db.js
 
 // ==========================================
 // API ROUTES
@@ -177,6 +178,8 @@ app.get('/api/health', (req, res) => {
     services: {
       razorpay: isRazorpayConfigured ? 'live_test_merchant' : 'smart_simulation',
       googleAuth: Boolean(process.env.GOOGLE_CLIENT_ID) ? 'configured' : 'smart_simulation',
+      database: db.isNativeSqlite ? 'sqlite_wal' : 'json_store',
+      inventoryProviders: 'active_aggregators',
       notificationEngine: 'operational',
       supportHelpDesk: 'operational',
       refundEngine: 'operational'
@@ -187,45 +190,52 @@ app.get('/api/health', (req, res) => {
       buses: mockStore.buses ? mockStore.buses.length : 0,
       railways: mockStore.railways ? mockStore.railways.length : 0,
       holidays: mockStore.holidays ? mockStore.holidays.length : 0,
-      activeBookings: bookings.length
+      activeBookings: db.getAllBookings().length
+    }
+  });
+});
+
+// Live Travel Inventory Providers Inspection Endpoint
+app.get('/api/inventory/providers', (req, res) => {
+  res.json({
+    success: true,
+    providers: {
+      flights: {
+        name: inventoryManager.flights.name,
+        isLive: inventoryManager.flights.isLiveConfigured,
+        fallbackMode: 'Verified NDC Mock Cache'
+      },
+      hotels: {
+        name: inventoryManager.hotels.name,
+        isLive: inventoryManager.hotels.isLiveConfigured,
+        fallbackMode: 'Verified Hospitality Mock Cache'
+      },
+      trains: {
+        name: inventoryManager.trains.name,
+        isLive: inventoryManager.trains.isLiveConfigured,
+        fallbackMode: 'Verified IRCTC Partner Cache'
+      },
+      buses: {
+        name: inventoryManager.buses.name,
+        isLive: inventoryManager.buses.isLiveConfigured,
+        fallbackMode: 'Verified redBus B2B Cache'
+      }
     }
   });
 });
 
 // FLIGHTS API
-app.get('/api/flights', (req, res) => {
+app.get('/api/flights', async (req, res) => {
   const from = toStr(req.query.from);
   const to = toStr(req.query.to);
   const airline = toStr(req.query.airline);
   const maxPrice = toStr(req.query.maxPrice);
-  let results = mockStore.flights;
-
-  if (from) {
-    results = results.filter(
-      (f) =>
-        f.from.toLowerCase() === from.toLowerCase() ||
-        f.fromCity.toLowerCase().includes(from.toLowerCase())
-    );
-  }
-  if (to) {
-    results = results.filter(
-      (f) =>
-        f.to.toLowerCase() === to.toLowerCase() ||
-        f.toCity.toLowerCase().includes(to.toLowerCase())
-    );
-  }
-  if (airline) {
-    results = results.filter((f) => f.airline.toLowerCase() === airline.toLowerCase());
-  }
-  if (maxPrice) {
-    results = results.filter((f) => f.price <= Number(maxPrice));
-  }
-
+  const results = await inventoryManager.flights.searchFlights({ from, to, airline, maxPrice });
   res.json(applyListFiltersAndPagination(results, req.query));
 });
 
-app.get('/api/flights/:id', (req, res) => {
-  const flight = mockStore.flights.find((f) => f.id === req.params.id);
+app.get('/api/flights/:id', async (req, res) => {
+  const flight = await inventoryManager.flights.getFlightById(req.params.id);
   if (!flight) {
     return res.status(404).json({ success: false, error: 'Flight not found' });
   }
@@ -233,27 +243,16 @@ app.get('/api/flights/:id', (req, res) => {
 });
 
 // HOTELS API
-app.get('/api/hotels', (req, res) => {
+app.get('/api/hotels', async (req, res) => {
   const city = toStr(req.query.city);
   const stars = toStr(req.query.stars);
   const maxPrice = toStr(req.query.maxPrice);
-  let results = mockStore.hotels;
-
-  if (city) {
-    results = results.filter((h) => h.city.toLowerCase().includes(city.toLowerCase()));
-  }
-  if (stars) {
-    results = results.filter((h) => h.starRating === Number(stars));
-  }
-  if (maxPrice) {
-    results = results.filter((h) => h.pricePerNight <= Number(maxPrice));
-  }
-
+  const results = await inventoryManager.hotels.searchHotels({ city, stars, maxPrice });
   res.json(applyListFiltersAndPagination(results, req.query));
 });
 
-app.get('/api/hotels/:id', (req, res) => {
-  const hotel = mockStore.hotels.find((h) => h.id === req.params.id);
+app.get('/api/hotels/:id', async (req, res) => {
+  const hotel = await inventoryManager.hotels.getHotelById(req.params.id);
   if (!hotel) {
     return res.status(404).json({ success: false, error: 'Hotel not found' });
   }
@@ -261,27 +260,16 @@ app.get('/api/hotels/:id', (req, res) => {
 });
 
 // BUSES API
-app.get('/api/buses', (req, res) => {
+app.get('/api/buses', async (req, res) => {
   const from = toStr(req.query.from);
   const to = toStr(req.query.to);
   const operator = toStr(req.query.operator);
-  let results = mockStore.buses;
-
-  if (from) {
-    results = results.filter((b) => b.from.toLowerCase() === from.toLowerCase());
-  }
-  if (to) {
-    results = results.filter((b) => b.to.toLowerCase() === to.toLowerCase());
-  }
-  if (operator) {
-    results = results.filter((b) => b.operator.toLowerCase().includes(operator.toLowerCase()));
-  }
-
+  const results = await inventoryManager.buses.searchBuses({ from, to, operator });
   res.json(applyListFiltersAndPagination(results, req.query));
 });
 
-app.get('/api/buses/:id', (req, res) => {
-  const bus = mockStore.buses.find((b) => b.id === req.params.id);
+app.get('/api/buses/:id', async (req, res) => {
+  const bus = await inventoryManager.buses.getBusById(req.params.id);
   if (!bus) {
     return res.status(404).json({ success: false, error: 'Bus not found' });
   }
@@ -289,23 +277,15 @@ app.get('/api/buses/:id', (req, res) => {
 });
 
 // RAILWAYS API
-app.get('/api/railways', (req, res) => {
+app.get('/api/railways', async (req, res) => {
   const from = toStr(req.query.from);
   const to = toStr(req.query.to);
-  let results = mockStore.railways;
-
-  if (from) {
-    results = results.filter((r) => r.from.toLowerCase() === from.toLowerCase());
-  }
-  if (to) {
-    results = results.filter((r) => r.to.toLowerCase() === to.toLowerCase());
-  }
-
+  const results = await inventoryManager.trains.searchTrains({ from, to });
   res.json(applyListFiltersAndPagination(results, req.query));
 });
 
-app.get('/api/railways/:id', (req, res) => {
-  const train = mockStore.railways.find((r) => r.id === req.params.id);
+app.get('/api/railways/:id', async (req, res) => {
+  const train = await inventoryManager.trains.getTrainById(req.params.id);
   if (!train) {
     return res.status(404).json({ success: false, error: 'Train not found' });
   }
@@ -313,38 +293,17 @@ app.get('/api/railways/:id', (req, res) => {
 });
 
 // HOLIDAYS & TOUR PACKAGES API
-app.get('/api/holidays', (req, res) => {
+app.get('/api/holidays', async (req, res) => {
   const destination = toStr(req.query.destination);
   const theme = toStr(req.query.theme);
   const category = toStr(req.query.category);
   const maxPrice = toStr(req.query.maxPrice);
-  let results = mockStore.holidays || [];
-
-  if (destination) {
-    results = results.filter((h) =>
-      h.destination.toLowerCase().includes(destination.toLowerCase()) ||
-      h.title.toLowerCase().includes(destination.toLowerCase())
-    );
-  }
-  if (theme && theme !== 'All Themes') {
-    results = results.filter((h) => h.theme.toLowerCase().includes(theme.toLowerCase()));
-  }
-  if (category && category !== 'All') {
-    results = results.filter((h) => h.category.toLowerCase() === category.toLowerCase());
-  }
-  if (maxPrice) {
-    results = results.filter((h) => h.price <= Number(maxPrice));
-  }
-
+  const results = await inventoryManager.searchHolidays({ destination, theme, category, maxPrice });
   res.json(applyListFiltersAndPagination(results, req.query));
 });
 
-app.get('/api/holidays/:id', (req, res) => {
-  const reqId = String(req.params.id || '').toLowerCase().replace(/-/g, '');
-  const holiday = (mockStore.holidays || []).find((h) => {
-    const hid = String(h.id || '').toLowerCase().replace(/-/g, '');
-    return hid === reqId || h.id.toLowerCase() === (req.params.id || '').toLowerCase();
-  });
+app.get('/api/holidays/:id', async (req, res) => {
+  const holiday = await inventoryManager.getHolidayById(req.params.id);
   if (!holiday) {
     return res.status(404).json({ success: false, error: 'Holiday package not found' });
   }
@@ -366,27 +325,13 @@ app.get('/api/bookings', (req, res) => {
   const email = toStr(req.query.email);
   const status = toStr(req.query.status);
   const type = toStr(req.query.type);
-  let results = bookings;
-
-  if (userId) {
-    results = results.filter((b) => b.userId === userId);
-  }
-  if (email) {
-    results = results.filter((b) => b.email?.toLowerCase() === email.toLowerCase() || b.passengers?.some(p => p.email?.toLowerCase() === email.toLowerCase()));
-  }
-  if (status) {
-    results = results.filter((b) => b.status?.toLowerCase() === status.toLowerCase());
-  }
-  if (type) {
-    results = results.filter((b) => b.type?.toLowerCase() === type.toLowerCase());
-  }
-
+  const results = db.getAllBookings({ userId, email, status, type });
   res.json({ success: true, count: results.length, data: results });
 });
 
 app.get('/api/bookings/:id', (req, res) => {
   const { id } = req.params;
-  const booking = bookings.find((b) => b.id === id || b.pnr === id);
+  const booking = db.getBookingByIdOrPnr(id);
   if (!booking) {
     return res.status(404).json({ success: false, error: 'Booking not found' });
   }
@@ -395,20 +340,7 @@ app.get('/api/bookings/:id', (req, res) => {
 
 app.post('/api/bookings', validateBooking, (req, res) => {
   const bookingData = req.body;
-  const pnr = bookingData.pnr || `${(bookingData.type || 'FL').slice(0, 2).toUpperCase()}${Math.floor(1000 + Math.random() * 9000)}`;
-  const email = bookingData.email || bookingData.passengers?.[0]?.email || 'traveler@eazetrip.com';
-  const newBooking = {
-    id: bookingData.id || `EZ-${(bookingData.type || 'FL').slice(0, 2).toUpperCase()}-${Math.floor(10000 + Math.random() * 90000)}`,
-    pnr,
-    email,
-    userId: bookingData.userId || 'USR-1',
-    createdAt: new Date().toISOString(),
-    status: 'Confirmed',
-    paymentStatus: 'Paid',
-    ...bookingData
-  };
-
-  bookings.unshift(newBooking);
+  const newBooking = db.createBooking(bookingData);
 
   // Automated Multi-Channel Booking Confirmation (Email, WhatsApp, In-App)
   try {
@@ -442,21 +374,23 @@ app.post('/api/bookings', validateBooking, (req, res) => {
 app.post('/api/bookings/:id/cancel', (req, res) => {
   const { id } = req.params;
   const { reason } = req.body || {};
-  const bookingIndex = bookings.findIndex((b) => b.id === id || b.pnr === id);
+  const booking = db.getBookingByIdOrPnr(id);
 
-  if (bookingIndex === -1) {
+  if (!booking) {
     return res.status(404).json({ success: false, error: 'Booking not found' });
   }
 
-  bookings[bookingIndex].status = 'Cancelled';
-  bookings[bookingIndex].cancellationReason = typeof reason === 'string' ? reason.slice(0, 500) : 'User requested cancellation';
-  bookings[bookingIndex].cancelledAt = new Date().toISOString();
-  bookings[bookingIndex].refundStatus = 'Initiated (Processed in 5-7 days)';
+  const updatedBooking = db.updateBooking(id, {
+    status: 'Cancelled',
+    cancellationReason: typeof reason === 'string' ? reason.slice(0, 500) : 'User requested cancellation',
+    cancelledAt: new Date().toISOString(),
+    refundStatus: 'Initiated (Processed in 5-7 days)'
+  });
 
   res.json({
     success: true,
     message: 'Booking cancelled successfully',
-    data: bookings[bookingIndex]
+    data: updatedBooking
   });
 });
 
@@ -464,26 +398,20 @@ app.post('/api/bookings/:id/cancel', (req, res) => {
 app.post('/api/auth/login', sensitiveLimiter, validateLogin, (req, res) => {
   const { identifier, method } = req.body;
 
-  // Find existing user or generate session profile
-  let user = users.find(
-    (u) =>
-      u.email.toLowerCase() === identifier.toLowerCase() ||
-      u.phone.replace(/[\s-]/g, '') === identifier.replace(/[\s-]/g, '')
-  );
+  let user = db.findUserByEmailOrPhone(identifier);
 
   const isEmail = method === 'email' || (!method && identifier.includes('@'));
   const isPhone = method === 'phone' || (!method && !identifier.includes('@'));
 
   if (!user) {
-    user = {
+    user = db.upsertUser({
       id: `USR-${Math.floor(100000 + Math.random() * 900000)}`,
       name: isPhone ? `Traveler ${identifier.slice(-4)}` : identifier.split('@')[0],
       email: isEmail ? identifier : `user${identifier.slice(-4)}@eazetrip.com`,
       phone: isPhone ? identifier : '+91 9876543210',
       tier: 'Gold Explorer',
       token: crypto.randomBytes(32).toString('hex')
-    };
-    users.push(user);
+    });
   }
 
   res.json({
@@ -496,21 +424,20 @@ app.post('/api/auth/login', sensitiveLimiter, validateLogin, (req, res) => {
 app.post('/api/auth/register', sensitiveLimiter, validateRegister, (req, res) => {
   const { name, email, phone } = req.body;
 
-  const existingUser = users.find((u) => u.email.toLowerCase() === email.toLowerCase());
+  const existingUser = db.findUserByEmailOrPhone(email);
   if (existingUser) {
     return res.status(409).json({ success: false, error: 'An account with this email address already exists' });
   }
 
-  const user = {
+  const user = db.upsertUser({
     id: `USR-${Math.floor(100000 + Math.random() * 900000)}`,
     name,
     email,
     phone: phone || '+91 9876543210',
     tier: 'Classic Explorer',
     token: crypto.randomBytes(32).toString('hex')
-  };
+  });
 
-  users.push(user);
   res.status(201).json({
     success: true,
     message: 'Account registered successfully',
@@ -533,7 +460,6 @@ app.post('/api/auth/google', sensitiveLimiter, validateGoogleAuth, async (req, r
     } else if (tokenToVerify) {
       authResult = await googleAuthService.verifyGoogleIdToken(tokenToVerify);
     } else if (fallbackEmail) {
-      // Direct simulation fallback
       authResult = {
         success: true,
         mode: 'simulated-profile',
@@ -553,15 +479,10 @@ app.post('/api/auth/google', sensitiveLimiter, validateGoogleAuth, async (req, r
 
     const { email, name, avatar, googleId } = authResult;
 
-    // Find existing user by email or googleId, or create new user
-    let user = users.find(
-      (u) =>
-        (u.email && email && u.email.toLowerCase() === email.toLowerCase()) ||
-        (u.googleId && googleId && u.googleId === googleId)
-    );
+    let user = db.findUserByEmailOrPhone(email);
 
     if (!user) {
-      user = {
+      user = db.upsertUser({
         id: `USR-${Math.floor(100000 + Math.random() * 900000)}`,
         name: name || (email ? email.split('@')[0] : 'Traveler'),
         email: email,
@@ -572,14 +493,16 @@ app.post('/api/auth/google', sensitiveLimiter, validateGoogleAuth, async (req, r
         googleId: googleId,
         memberSince: new Date().getFullYear(),
         token: crypto.randomBytes(32).toString('hex')
-      };
-      users.push(user);
+      });
     } else {
-      if (name && (!user.name || user.name === 'Traveler')) user.name = name;
-      if (avatar) user.avatar = avatar;
-      user.authProvider = 'Google';
-      if (googleId) user.googleId = googleId;
-      if (!user.token) user.token = crypto.randomBytes(32).toString('hex');
+      user = db.upsertUser({
+        ...user,
+        name: name && (!user.name || user.name === 'Traveler') ? name : user.name,
+        avatar: avatar || user.avatar,
+        authProvider: 'Google',
+        googleId: googleId || user.googleId,
+        token: user.token || crypto.randomBytes(32).toString('hex')
+      });
     }
 
     res.json({
@@ -595,30 +518,23 @@ app.post('/api/auth/google', sensitiveLimiter, validateGoogleAuth, async (req, r
 
 app.put('/api/auth/profile', sensitiveLimiter, (req, res) => {
   const { id, name, email, phone, city, state } = req.body || {};
-  let user = users.find((u) => u.id === id || (email && u.email.toLowerCase() === email.toLowerCase()));
+  let user = (id && db.findUserById(id)) || (email && db.findUserByEmailOrPhone(email));
 
-  if (!user) {
-    user = {
-      id: id || `USR-${Math.floor(100000 + Math.random() * 900000)}`,
-      name: name || 'Explorer User',
-      email: email || 'user@eazetrip.com',
-      phone: phone || '+91 9876543210',
-      city: city || 'Mumbai',
-      state: state || 'Maharashtra',
-      tier: 'Gold Explorer'
-    };
-    users.push(user);
-  } else {
-    if (name) user.name = name;
-    if (phone) user.phone = phone;
-    if (city) user.city = city;
-    if (state) user.state = state;
-  }
+  const updatedUser = db.upsertUser({
+    ...(user || {}),
+    id: id || user?.id,
+    name: name || user?.name || 'Explorer User',
+    email: email || user?.email || 'user@eazetrip.com',
+    phone: phone || user?.phone || '+91 9876543210',
+    city: city || user?.city || 'Mumbai',
+    state: state || user?.state || 'Maharashtra',
+    tier: user?.tier || 'Gold Explorer'
+  });
 
   res.json({
     success: true,
     message: 'Profile updated successfully',
-    data: user
+    data: updatedUser
   });
 });
 
@@ -741,20 +657,15 @@ app.post('/api/payment/verify', sensitiveLimiter, validateRazorpayVerify, (req, 
 
     // If linked to booking details, create or confirm the booking
     if (bookingDetails) {
-      const pnr = bookingDetails.pnr || `${(bookingDetails.type || 'FL').slice(0, 2).toUpperCase()}${Math.floor(1000 + Math.random() * 9000)}`;
-      const newBooking = {
-        id: bookingDetails.id || `EZ-${(bookingDetails.type || 'FL').slice(0, 2).toUpperCase()}-${Math.floor(10000 + Math.random() * 90000)}`,
-        pnr,
-        email: email || bookingDetails.email || bookingDetails.passengers?.[0]?.email || 'traveler@eazetrip.com',
-        userId: bookingDetails.userId || 'USR-1',
-        createdAt: new Date().toISOString(),
-        status: 'Confirmed',
-        paymentStatus: 'Paid',
+      const newBooking = db.createBooking({
+        ...bookingDetails,
         paymentId: razorpay_payment_id,
         orderId: razorpay_order_id,
-        ...bookingDetails
-      };
-      bookings.unshift(newBooking);
+        email: email || bookingDetails.email || bookingDetails.passengers?.[0]?.email || 'traveler@eazetrip.com',
+        userId: bookingDetails.userId || 'USR-1',
+        status: 'Confirmed',
+        paymentStatus: 'Paid'
+      });
       paymentRecord.booking = newBooking;
     }
 

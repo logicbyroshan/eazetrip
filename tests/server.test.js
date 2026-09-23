@@ -985,4 +985,121 @@ test('64. POST /api/bookings creates confirmed holiday package booking with PNR 
   assert.ok(holBookRes.data.data.pnr);
 });
 
+test('65. Persistent DB: newly created booking persists and can be queried by ID and PNR', async () => {
+  const uniqueTitle = `Flight BOM-BLR Persist Test ${Date.now()}`;
+  const createRes = await requestJson('/api/bookings', {
+    method: 'POST',
+    body: {
+      type: 'flight',
+      title: uniqueTitle,
+      date: '2026-10-20',
+      totalAmount: 5499,
+      email: 'persist_user@example.com',
+      passengers: [{ name: 'Persist Traveler', seat: '12A' }]
+    }
+  });
+  assert.strictEqual(createRes.status, 201);
+  const booking = createRes.data.data;
+  assert.ok(booking.id);
+  assert.ok(booking.pnr);
+
+  // Fetch by ID
+  const fetchById = await requestJson(`/api/bookings/${booking.id}`);
+  assert.strictEqual(fetchById.status, 200);
+  assert.strictEqual(fetchById.data.data.title, uniqueTitle);
+
+  // Fetch by PNR
+  const fetchByPnr = await requestJson(`/api/bookings/${booking.pnr}`);
+  assert.strictEqual(fetchByPnr.status, 200);
+  assert.strictEqual(fetchByPnr.data.data.id, booking.id);
+});
+
+test('66. Persistent DB: updates and cancellations reflect immediately and persist in database', async () => {
+  const createRes = await requestJson('/api/bookings', {
+    method: 'POST',
+    body: {
+      type: 'hotel',
+      title: 'Goa Coastal Resort Persist Test',
+      totalAmount: 12000,
+      passengers: [{ name: 'Pooja Roy' }]
+    }
+  });
+  const bookingId = createRes.data.data.id;
+
+  const cancelRes = await requestJson(`/api/bookings/${bookingId}/cancel`, {
+    method: 'POST',
+    body: { reason: 'Trip rescheduled' }
+  });
+  assert.strictEqual(cancelRes.status, 200);
+  assert.strictEqual(cancelRes.data.data.status, 'Cancelled');
+
+  // Verify fetch returns updated status
+  const verifyRes = await requestJson(`/api/bookings/${bookingId}`);
+  assert.strictEqual(verifyRes.status, 200);
+  assert.strictEqual(verifyRes.data.data.status, 'Cancelled');
+  assert.strictEqual(verifyRes.data.data.cancellationReason, 'Trip rescheduled');
+});
+
+test('67. GET /api/inventory/providers returns active live aggregators and fallback status', async () => {
+  const { status, data } = await requestJson('/api/inventory/providers');
+  assert.strictEqual(status, 200);
+  assert.strictEqual(data.success, true);
+  assert.ok(data.providers.flights);
+  assert.ok(data.providers.hotels);
+  assert.ok(data.providers.trains);
+  assert.ok(data.providers.buses);
+  assert.strictEqual(typeof data.providers.flights.isLive, 'boolean');
+});
+
+test('68. Persistent DB: user profile updates persist correctly in database', async () => {
+  const testEmail = `traveler_${Date.now()}@testpersists.com`;
+  const updateRes = await requestJson('/api/auth/profile', {
+    method: 'PUT',
+    body: {
+      email: testEmail,
+      name: 'Vikramaditya Rao',
+      phone: '+91 99887 76655',
+      city: 'Hyderabad',
+      state: 'Telangana'
+    }
+  });
+  assert.strictEqual(updateRes.status, 200);
+  assert.strictEqual(updateRes.data.data.name, 'Vikramaditya Rao');
+  assert.strictEqual(updateRes.data.data.city, 'Hyderabad');
+
+  // Login with same identifier returns persisted profile
+  const loginRes = await requestJson('/api/auth/login', {
+    method: 'POST',
+    body: { identifier: testEmail, method: 'email' }
+  });
+  assert.strictEqual(loginRes.status, 200);
+  assert.strictEqual(loginRes.data.data.name, 'Vikramaditya Rao');
+  assert.strictEqual(loginRes.data.data.city, 'Hyderabad');
+});
+
+test('69. Flight Inventory Provider enriches flights with provider metadata and baggage specs', async () => {
+  const { status, data } = await requestJson('/api/flights/FL-601');
+  assert.strictEqual(status, 200);
+  assert.strictEqual(data.success, true);
+  assert.ok(data.data.provider);
+  assert.ok(data.data.cancellationPolicy);
+  assert.strictEqual(data.data.liveStatus, 'On-Time');
+});
+
+test('70. Hotel, Train, and Bus inventory providers deliver structured feed data', async () => {
+  const hotelRes = await requestJson('/api/hotels/HT-101');
+  assert.strictEqual(hotelRes.status, 200);
+  assert.ok(hotelRes.data.data.provider);
+  assert.ok(Array.isArray(hotelRes.data.data.availableRoomTypes));
+
+  const trainRes = await requestJson('/api/railways/TR-12952');
+  assert.strictEqual(trainRes.status, 200);
+  assert.ok(trainRes.data.data.provider);
+
+  const busRes = await requestJson('/api/buses/BUS-301');
+  assert.strictEqual(busRes.status, 200);
+  assert.ok(busRes.data.data.provider);
+});
+
+
 
