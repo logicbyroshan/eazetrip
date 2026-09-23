@@ -39,6 +39,7 @@ const FaqPage = lazy(() => import('./pages/FaqPage'));
 const TermsPage = lazy(() => import('./pages/TermsPage'));
 const PrivacyPage = lazy(() => import('./pages/PrivacyPage'));
 const CancellationRefundPage = lazy(() => import('./pages/CancellationRefundPage'));
+const AdminDashboardPage = lazy(() => import('./pages/AdminDashboardPage'));
 
 import './App.css';
 
@@ -176,6 +177,13 @@ function AppContent() {
               <Route path="/user-agreement" element={<TermsPage title="User Agreement" />} />
               <Route path="/privacy" element={<PrivacyPage />} />
               <Route path="/cancellation-refund" element={<CancellationRefundPage />} />
+              
+              {/* Operations & Backoffice Admin Portal */}
+              <Route path="/admin" element={<AdminDashboardPage />} />
+              <Route path="/admin-dashboard" element={<AdminDashboardPage />} />
+              <Route path="/admin/bookings" element={<AdminDashboardPage />} />
+              <Route path="/admin/refunds" element={<AdminDashboardPage />} />
+              <Route path="/admin/support" element={<AdminDashboardPage />} />
               
               <Route path="*" element={<HomePage />} />
             </Routes>

@@ -54,6 +54,7 @@ export default function Footer() {
             <Link to="/contact">Contact Support</Link>
             <Link to="/manage-bookings">Manage Bookings</Link>
             <Link to="/profile">My Account</Link>
+            <Link to="/admin">Operations Backoffice</Link>
             <Link to="/payment">Make Invoice Payment</Link>
           </div>
 

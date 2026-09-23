@@ -6,6 +6,8 @@
  */
 
 const crypto = require('crypto');
+const emailService = require('./emailService');
+const smsWhatsappService = require('./smsWhatsappService');
 
 // In-Memory State Stores
 const inAppNotifications = [
@@ -387,6 +389,41 @@ function processQueue() {
       // SUCCESSFUL DELIVERY
       item.status = 'delivered';
       item.deliveredAt = new Date().toISOString();
+
+      if (item.channel === 'email') {
+        try {
+          emailService.sendEmail({
+            to: item.recipient,
+            subject: item.data?.subject || `EazeTrip Update: ${(item.template || 'Notification').replace(/_/g, ' ').toUpperCase()}`,
+            html: item.renderedContent,
+            pnr: item.data?.pnr || ''
+          });
+        } catch (e) {
+          console.warn('[Outbound Email Delivery Warning]:', e.message);
+        }
+      } else if (item.channel === 'whatsapp') {
+        try {
+          smsWhatsappService.sendWhatsApp({
+            to: item.recipient,
+            message: item.renderedContent,
+            pnr: item.data?.pnr || '',
+            template: item.template
+          });
+        } catch (e) {
+          console.warn('[Outbound WhatsApp Delivery Warning]:', e.message);
+        }
+      } else if (item.channel === 'sms') {
+        try {
+          smsWhatsappService.sendSms({
+            to: item.recipient,
+            message: item.renderedContent || item.data?.message || 'EazeTrip notification',
+            pnr: item.data?.pnr || ''
+          });
+        } catch (e) {
+          console.warn('[Outbound SMS Delivery Warning]:', e.message);
+        }
+      }
+
       deliveredArchive.unshift({ ...item });
       deliveryQueue.splice(i, 1);
     } else {
@@ -543,6 +580,10 @@ function getQueueMetrics() {
       deadLetterQueueCount: dlqCount,
       successRatePercent: successRate,
       supportedChannels: ['email', 'whatsapp', 'in_app', 'sms', 'push']
+    },
+    gateways: {
+      email: emailService.getStatus(),
+      telecom: smsWhatsappService.getStatus()
     },
     activeQueue: deliveryQueue.slice(0, 10),
     deadLetterQueue: deadLetterQueue.slice(0, 15),
