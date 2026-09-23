@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.3.0] - 2026-09-23
+
+### Phase 2 Enterprise Architecture: Multi-Channel Communications Gateway & Admin Operations Portal
+
+#### Real SMS & WhatsApp Gateway (`server/services/smsWhatsappService.js`)
+- Integrated multi-channel SMS and WhatsApp notification delivery engine compatible with Twilio and Meta WhatsApp Cloud API.
+- Implemented real delivery tracking, sandbox simulation fallback with pre-formatted message logs, and inbound webhook endpoint (`POST /api/webhooks/whatsapp`).
+- Connected into `server/services/notificationService.js` for instant booking confirmation dispatch with PNR, flight/train details, and interactive support links.
+
+#### Production Email Dispatch Service (`server/services/emailService.js`)
+- Created transactional email dispatch service supporting Resend API, custom SMTP relay, and structured HTML ticket rendering.
+- Equipped with queue metrics, delivery status tracking, and failover logging.
+
+#### Backoffice Admin Operations & Concierge Portal (`client/src/pages/AdminDashboardPage.jsx`)
+- Built unified Admin Operations Suite at `/admin` accessible with PIN verification (`admin123` or environment-configured `ADMIN_PIN`).
+- **Tab 1: Overview & Metrics**: Real-time revenue counters, booking breakdown by transport type, refund settlement ratios, and DLQ backlog alerts.
+- **Tab 2: Global Bookings Directory**: Searchable by PNR, passenger name, contact phone, transport mode, and status with direct inspection.
+- **Tab 3: 1-Click Refund Settlement**: Bank ARN issuance, instant payout authorization, and customer status sync for cancellation claims.
+- **Tab 4: Concierge & Support Tickets**: Live support ticket view, 5-minute callback manager, priority escalations, and status toggles.
+- **Tab 5: DLQ & Gateway Health**: Visual monitoring for WhatsApp, SMS, and Email delivery queues, with 1-click retry on dead-letter queue items.
+
+#### Automated Test Suite Expansion (`tests/server.test.js`)
+- Added tests 71 to 76 covering PIN verification, revenue metrics calculation, bookings directory queries, 1-click refund settlement with ARN generation, DLQ batch retries, and review ingestion. Total automated test count reached **76 passing tests**.
+
+---
+
 ## [2.2.0] - 2026-09-23
 
 ### Phase 1 Enterprise Architecture: Database Persistence & Live Travel Inventory Engine

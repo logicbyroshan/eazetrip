@@ -1175,6 +1175,170 @@ app.get('/api/refunds', (req, res) => {
   });
 });
 
+// ==========================================
+// 7. ADMIN BACKOFFICE & CONCIERGE OPERATIONS API
+// ==========================================
+
+// Verify Admin Security Access PIN
+app.post('/api/admin/verify-pin', (req, res) => {
+  const { pin } = req.body || {};
+  const validPin = process.env.ADMIN_PIN || 'admin123';
+  if (pin === validPin) {
+    return res.json({
+      success: true,
+      role: 'Operations Administrator',
+      token: `adm_${Date.now()}_${crypto.randomBytes(16).toString('hex')}`
+    });
+  }
+  return res.status(401).json({ success: false, error: 'Invalid Administrator PIN' });
+});
+
+// Admin System Metrics Overview
+app.get('/api/admin/metrics', (req, res) => {
+  const allBookings = db.getAllBookings();
+  const confirmed = allBookings.filter((b) => (b.status || '').toLowerCase() === 'confirmed');
+  const cancelled = allBookings.filter((b) => (b.status || '').toLowerCase() === 'cancelled');
+  const totalRevenue = confirmed.reduce((sum, b) => sum + Number(b.price || b.totalAmount || 0), 0);
+  const allRefunds = refundService.getAllRefunds();
+  const pendingRefunds = allRefunds.filter((r) => r.status !== 'Completed');
+  const allTickets = supportService.getTickets({});
+  const openTickets = allTickets.filter((t) => t.status !== 'Resolved');
+  const qMetrics = notificationService.getQueueMetrics();
+
+  res.json({
+    success: true,
+    timestamp: new Date().toISOString(),
+    metrics: {
+      totalBookings: allBookings.length,
+      confirmedBookings: confirmed.length,
+      cancelledBookings: cancelled.length,
+      totalRevenueINR: totalRevenue,
+      totalRefundClaims: allRefunds.length,
+      pendingRefunds: pendingRefunds.length,
+      totalTickets: allTickets.length,
+      openTickets: openTickets.length,
+      dlqCount: qMetrics.metrics.deadLetterQueueCount,
+      notificationSuccessRate: qMetrics.metrics.successRatePercent,
+      systemUptimeSeconds: Math.round(process.uptime()),
+      databaseType: db.isNativeSqlite ? 'SQLite (WAL Mode)' : 'File-Backed Store'
+    }
+  });
+});
+
+// Admin Global Bookings Search & Filter
+app.get('/api/admin/bookings', (req, res) => {
+  const search = toStr(req.query.search);
+  const status = toStr(req.query.status);
+  const type = toStr(req.query.type);
+  let list = db.getAllBookings();
+
+  if (search) {
+    const q = search.toLowerCase();
+    list = list.filter(
+      (b) =>
+        b.pnr?.toLowerCase().includes(q) ||
+        b.id?.toLowerCase().includes(q) ||
+        b.email?.toLowerCase().includes(q) ||
+        b.title?.toLowerCase().includes(q) ||
+        b.airline?.toLowerCase().includes(q)
+    );
+  }
+  if (status && status !== 'all') {
+    list = list.filter((b) => b.status?.toLowerCase() === status.toLowerCase());
+  }
+  if (type && type !== 'all') {
+    list = list.filter((b) => b.type?.toLowerCase() === type.toLowerCase());
+  }
+
+  res.json(applyListFiltersAndPagination(list, req.query));
+});
+
+// Admin 1-Click Settle Pending Refund
+app.post('/api/admin/refunds/:id/settle', (req, res) => {
+  const { id } = req.params;
+  const refund = refundService.getRefundByQuery(id);
+  if (!refund) {
+    return res.status(404).json({ success: false, error: 'Refund claim not found' });
+  }
+
+  refund.status = 'Completed';
+  refund.statusStep = 4;
+  refund.completedAt = new Date().toISOString();
+  if (!refund.arnNumber || refund.arnNumber.includes('TBD')) {
+    refund.arnNumber = `ARN-ADM${Math.floor(100000000000 + Math.random() * 900000000000)}`;
+  }
+
+  // Update last timeline step
+  if (Array.isArray(refund.timeline)) {
+    refund.timeline.forEach((step) => {
+      step.completed = true;
+    });
+  }
+
+  res.json({
+    success: true,
+    message: `Refund #${refund.id} approved and settled. Bank ARN: ${refund.arnNumber}`,
+    data: refund
+  });
+});
+
+// Admin DLQ Queue Inspection & Retry All
+app.get('/api/admin/dlq', (req, res) => {
+  const qMetrics = notificationService.getQueueMetrics();
+  res.json({
+    success: true,
+    count: qMetrics.deadLetterQueue.length,
+    data: qMetrics.deadLetterQueue
+  });
+});
+
+app.post('/api/admin/dlq/retry-all', (req, res) => {
+  const result = notificationService.retryDlqItem('all');
+  res.json(result);
+});
+
+// WhatsApp / SMS Inbound Webhook Callback
+app.post('/api/webhooks/whatsapp', (req, res) => {
+  const smsWhatsappService = require('./services/smsWhatsappService');
+  const result = smsWhatsappService.handleWebhook(req.body);
+  res.status(200).json(result);
+});
+
+// ==========================================
+// 8. VERIFIED REVIEWS & RATINGS API
+// ==========================================
+app.get('/api/reviews', (req, res) => {
+  const serviceType = toStr(req.query.serviceType);
+  const serviceId = toStr(req.query.serviceId);
+  const reviews = db.getReviews(serviceType, serviceId);
+  res.json({
+    success: true,
+    count: reviews.length,
+    data: reviews
+  });
+});
+
+app.post('/api/reviews', (req, res) => {
+  const { serviceType, serviceId, userId, userName, rating, comment, photos } = req.body || {};
+  if (!serviceId) {
+    return res.status(400).json({ success: false, error: 'serviceId is required for review submission' });
+  }
+  const review = db.createReview({
+    serviceType: serviceType || 'Flight',
+    serviceId,
+    userId: userId || 'USR-1',
+    userName: userName || 'Verified Traveler',
+    rating: Number(rating) || 5,
+    comment: comment || '',
+    photos: Array.isArray(photos) ? photos : []
+  });
+  res.status(201).json({
+    success: true,
+    message: 'Thank you! Your verified review has been submitted.',
+    data: review
+  });
+});
+
 // 2. API 404 Handler
 app.use(notFoundHandler);
 

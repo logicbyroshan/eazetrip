@@ -1101,5 +1101,87 @@ test('70. Hotel, Train, and Bus inventory providers deliver structured feed data
   assert.ok(busRes.data.data.provider);
 });
 
+test('71. Admin Authentication rejects invalid PIN and authenticates valid admin PIN', async () => {
+  const failRes = await requestJson('/api/admin/verify-pin', {
+    method: 'POST',
+    body: { pin: 'wrongpin99' }
+  });
+  assert.strictEqual(failRes.status, 401);
+  assert.strictEqual(failRes.data.success, false);
+
+  const passRes = await requestJson('/api/admin/verify-pin', {
+    method: 'POST',
+    body: { pin: 'admin123' }
+  });
+  assert.strictEqual(passRes.status, 200);
+  assert.strictEqual(passRes.data.success, true);
+  assert.ok(passRes.data.token.startsWith('adm_'));
+});
+
+test('72. Admin Metrics API returns live revenue, booking counts, and DLQ health', async () => {
+  const { status, data } = await requestJson('/api/admin/metrics');
+  assert.strictEqual(status, 200);
+  assert.strictEqual(data.success, true);
+  assert.strictEqual(typeof data.metrics.totalBookings, 'number');
+  assert.strictEqual(typeof data.metrics.totalRevenueINR, 'number');
+  assert.ok(data.metrics.databaseType);
+});
+
+test('73. Admin Bookings API supports search filtering by PNR and status', async () => {
+  const { status, data } = await requestJson('/api/admin/bookings?search=FL&limit=5');
+  assert.strictEqual(status, 200);
+  assert.strictEqual(data.success, true);
+  assert.ok(Array.isArray(data.data));
+});
+
+test('74. Admin 1-Click Settle approves refund claim and issues bank ARN reference', async () => {
+  // First create a refund claim
+  const reqRes = await requestJson('/api/refunds/request', {
+    method: 'POST',
+    body: {
+      bookingId: 'BK-ADM-TEST',
+      pnr: 'ADM9921',
+      customerName: 'Aarav Patel',
+      customerEmail: 'aarav@example.com',
+      serviceType: 'flight',
+      grossAmount: 8000,
+      payoutMode: 'bank_transfer',
+      bankAccount: '123456789012',
+      ifscCode: 'HDFC0001234'
+    }
+  });
+  assert.strictEqual(reqRes.status, 201);
+  const refundId = reqRes.data.data.id;
+
+  // Settle the refund via admin terminal
+  const settleRes = await requestJson(`/api/admin/refunds/${refundId}/settle`, {
+    method: 'POST'
+  });
+  assert.strictEqual(settleRes.status, 200);
+  assert.strictEqual(settleRes.data.success, true);
+  assert.strictEqual(settleRes.data.data.status, 'Completed');
+  assert.strictEqual(settleRes.data.data.statusStep, 4);
+  assert.ok(settleRes.data.data.arnNumber.startsWith('ARN-'));
+});
+
+test('75. Communications queue status reports live Telecom and Email gateway statuses', async () => {
+  const { status, data } = await requestJson('/api/notifications/queue-status');
+  assert.strictEqual(status, 200);
+  assert.ok(data.gateways);
+  assert.ok(data.gateways.email);
+  assert.ok(data.gateways.telecom);
+  assert.strictEqual(typeof data.gateways.email.liveDelivery, 'boolean');
+});
+
+test('76. WhatsApp status callback webhook acknowledges delivery receipts', async () => {
+  const { status, data } = await requestJson('/api/webhooks/whatsapp', {
+    method: 'POST',
+    body: { event: 'delivered', messageId: 'MSG-TEST-123' }
+  });
+  assert.strictEqual(status, 200);
+  assert.strictEqual(data.success, true);
+});
+
+
 
 
