@@ -1,4 +1,5 @@
 import { RotateCcw, Filter, Sun, Sunrise, Sunset, Moon } from 'lucide-react';
+import { useCurrency } from '../../context/CurrencyContext';
 
 export default function FlightFilters({
   selectedAirlines,
@@ -12,6 +13,7 @@ export default function FlightFilters({
   onChangeMaxPrice,
   onResetFilters
 }) {
+  const { formatPrice } = useCurrency();
   const airlinesList = [
     { name: 'IndiGo', code: '6E', color: '#0052cc' },
     { name: 'Air India', code: 'AI', color: '#d6001c' },
@@ -40,7 +42,7 @@ export default function FlightFilters({
 
       {/* Price Slider */}
       <div className="filter-group">
-        <h4>Max Price: ₹{currentMaxPrice.toLocaleString('en-IN')}</h4>
+        <h4>Max Price: {formatPrice(currentMaxPrice)}</h4>
         <input
           type="range"
           min="3000"
@@ -51,8 +53,8 @@ export default function FlightFilters({
           className="price-range-slider"
         />
         <div className="slider-labels">
-          <span>₹3,000</span>
-          <span>₹{(maxPrice || 10000).toLocaleString('en-IN')}</span>
+          <span>{formatPrice(3000)}</span>
+          <span>{formatPrice(maxPrice || 10000)}</span>
         </div>
       </div>
 

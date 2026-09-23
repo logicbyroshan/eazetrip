@@ -8,3 +8,12 @@ createRoot(document.getElementById('root')).render(
     <App />
   </StrictMode>,
 );
+
+// Register Progressive Web App (PWA) Service Worker for Offline E-Ticket Access
+if ('serviceWorker' in navigator && process.env.NODE_ENV !== 'test') {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch((err) => {
+      console.warn('PWA ServiceWorker registration failed: ', err);
+    });
+  });
+}

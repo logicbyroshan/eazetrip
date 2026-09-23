@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import HotelSearchWidget from '../components/search/HotelSearchWidget';
 import HotelCard from '../components/hotels/HotelCard';
 import HotelFilters from '../components/hotels/HotelFilters';
+import ReviewSection from '../components/reviews/ReviewSection';
 import { mockHotels } from '../data/hotelData';
 import { HERO_BACKDROPS } from '../data/siteData';
 import { useBooking } from '../context/BookingContext';
@@ -118,6 +119,12 @@ export default function HotelBookingPage() {
               />
             ))}
           </div>
+
+          <ReviewSection
+            serviceType="Hotel"
+            serviceId="HOTEL-PREMIUM-LISTING"
+            serviceName={`${searchState.destination || 'Selected Destination'} Hotels & Luxury Stays`}
+          />
         </main>
       </div>
     </div>

@@ -4,6 +4,7 @@ import Lenis from 'lenis';
 import { AuthProvider } from './context/AuthContext';
 import { BookingProvider } from './context/BookingContext';
 import { NotificationProvider } from './context/NotificationContext';
+import { CurrencyProvider } from './context/CurrencyContext';
 
 import TopBar from './components/common/TopBar';
 import Header from './components/common/Header';
@@ -17,6 +18,7 @@ import TicketModal from './components/checkout/TicketModal';
 import NotificationPreviewModal from './components/common/NotificationPreviewModal';
 import HelpDeskWidget from './components/common/HelpDeskWidget';
 import CookieConsentBanner from './components/common/CookieConsentBanner';
+import OfflineTicketBanner from './components/common/OfflineTicketBanner';
 
 const HomePage = lazy(() => import('./pages/HomePage'));
 const FlightBookingPage = lazy(() => import('./pages/FlightBookingPage'));
@@ -80,9 +82,13 @@ function ScrollHandler() {
     if (prefersReducedMotion) return;
 
     const lenis = new Lenis({
-      duration: 0.9,
+      duration: 1.1,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: true
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+      wheelMultiplier: 0.9,
+      touchMultiplier: 1.5
     });
 
     let frameId;
@@ -116,6 +122,7 @@ function AppContent() {
   return (
     <ErrorBoundary>
       <div className={`app-shell ${isAuthIsolatedPage ? 'auth-isolated-shell' : ''}`}>
+        <OfflineTicketBanner />
         {!isAuthIsolatedPage && <TopBar />}
         {!isAuthIsolatedPage && <Header />}
         
@@ -209,14 +216,16 @@ function AppContent() {
 export default function App() {
   return (
     <AuthProvider>
-      <BookingProvider>
-        <NotificationProvider>
-          <BrowserRouter>
-            <ScrollHandler />
-            <AppContent />
-          </BrowserRouter>
-        </NotificationProvider>
-      </BookingProvider>
+      <CurrencyProvider>
+        <BookingProvider>
+          <NotificationProvider>
+            <BrowserRouter>
+              <ScrollHandler />
+              <AppContent />
+            </BrowserRouter>
+          </NotificationProvider>
+        </BookingProvider>
+      </CurrencyProvider>
     </AuthProvider>
   );
 }

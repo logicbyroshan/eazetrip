@@ -2,11 +2,13 @@ import { Link, useLocation } from 'react-router-dom';
 import { Plane, Building2, Bus, Train, Palmtree, Menu, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { useCurrency } from '../../context/CurrencyContext';
 
 export default function Header() {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { openLoginModal, isAuthenticated, user } = useAuth();
+  const { t } = useCurrency();
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -24,11 +26,11 @@ export default function Header() {
   }, [location.pathname]);
 
   const services = [
-    { label: 'Flights', path: '/flight-booking', icon: Plane },
-    { label: 'Hotels', path: '/hotel-booking', icon: Building2 },
-    { label: 'Bus', path: '/bus-booking', icon: Bus },
-    { label: 'Railway', path: '/railway', icon: Train },
-    { label: 'Holidays', path: '/holiday-booking', icon: Palmtree }
+    { key: 'flights', label: t('flights', 'Flights'), path: '/flight-booking', icon: Plane },
+    { key: 'hotels', label: t('hotels', 'Hotels'), path: '/hotel-booking', icon: Building2 },
+    { key: 'buses', label: t('buses', 'Buses'), path: '/bus-booking', icon: Bus },
+    { key: 'trains', label: t('trains', 'Trains'), path: '/railway', icon: Train },
+    { key: 'holidays', label: t('holidays', 'Holidays'), path: '/holiday-booking', icon: Palmtree }
   ];
 
   return (

@@ -1,4 +1,5 @@
 import { Plane, ChevronRight, Info, Luggage, ShieldCheck, Sparkles, Clock, ArrowRight } from 'lucide-react';
+import { useCurrency } from '../../context/CurrencyContext';
 
 export default function FlightCard({
   flight,
@@ -7,6 +8,7 @@ export default function FlightCard({
   isSelected = false,
   isReturn = false
 }) {
+  const { formatPrice, t } = useCurrency();
   return (
     <div className={`flight-card luxury-flight-card ${isSelected ? 'selected' : ''}`}>
       {/* Airline Info Block */}
@@ -67,8 +69,7 @@ export default function FlightCard({
             <span className="baggage-tag">15kg Luggage</span>
           </div>
           <div className="price-amount">
-            <span className="currency">₹</span>
-            <strong>{flight.price.toLocaleString('en-IN')}</strong>
+            <strong className="flight-dynamic-price">{formatPrice(flight.price)}</strong>
           </div>
           <span className="per-pax">per adult · taxes included</span>
         </div>
@@ -87,7 +88,7 @@ export default function FlightCard({
             className={`flight-book-btn ${isSelected ? 'active-select' : ''}`}
             onClick={() => onSelect(flight, isReturn)}
           >
-            {isSelected ? 'SELECTED ✓' : 'BOOK NOW'}
+            {isSelected ? 'SELECTED ✓' : t('bookNow', 'BOOK NOW')}
           </button>
         </div>
       </div>
