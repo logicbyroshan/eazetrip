@@ -25,3 +25,11 @@ yarn-error.log*
 .idea/
 .DS_Store
 Thumbs.db
+
+# Database stores
+*.db
+*.db-wal
+*.db-shm
+*.db-journal
+eazetrip_store.json
+

@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.2.0] - 2026-09-23
+
+### Phase 1 Enterprise Architecture: Database Persistence & Live Travel Inventory Engine
+
+#### Persistent Database Engine (`server/data/db.js`)
+- Implemented persistent SQLite storage engine utilizing Node 24 native `node:sqlite` (`DatabaseSync`) with Write-Ahead Logging (`PRAGMA journal_mode = WAL;`) and auto-schema migration.
+- Fully persists users, bookings, PNR records, refunds, support tickets, callbacks, notifications, DLQ items, and reviews across server restarts.
+- Auto-seeds baseline catalog and users on initial startup; uses in-memory SQLite isolation during automated test runner executions (`NODE_ENV === 'test'`).
+- Added robust file-backed JSON store fallback mechanism for maximum cross-platform resilience.
+
+#### Modular Live Travel Inventory Engine (`server/services/inventory/*`)
+- **Flights**: Created `flightProvider.js` adhering to Amadeus GDS / Airline NDC formats with real-time seat availability, dynamic pricing, and baggage specs.
+- **Hotels**: Created `hotelProvider.js` modeled after Expedia EPS / Hotelbeds schemas with live room categories, free cancellation deadlines, and breakfast options.
+- **Railways**: Created `trainProvider.js` integrating IRCTC B2B partner schemas with live running status and PNR confirmation probabilities.
+- **Buses**: Created `busProvider.js` supporting redBus / AbhiBus B2B layout with live tracking status and boarding point timelines.
+- Added live provider inspection diagnostic route: `GET /api/inventory/providers`.
+
+#### Test Suite Expansion (`tests/server.test.js`)
+- Added tests 65 to 70 validating database booking persistence, update synchronization, user profile persistence, provider feed metadata, and aggregator fallbacks. Total automated test count reached **70 passing tests**.
+
+---
+
 ## [2.1.9] - 2026-09-16
 
 ### Universal Breadcrumb Standardization & Design Enhancement
