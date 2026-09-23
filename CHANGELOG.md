@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.4.1] - 2026-09-23
+
+### Infinite Dual-Row Reviews Marquee & Cinematic Edge Gradient Fade
+
+#### Reviews Section Redesign (`client/src/components/home/ReviewsSection.jsx`, `client/src/App.css`)
+- **Dual-Row Bidirectional Marquee**: Replaced the static 3-card grid with 16 rich verified traveler review cards split across two continuous streaming rows moving in opposite directions (Row 1 scrolling Left, Row 2 scrolling Right).
+- **Cinematic Edge Gradient Fade**: Configured dual-layer edge masks with `mask-image: linear-gradient(to right, transparent 0%, black 7%, black 93%, transparent 100%)` and dedicated absolute linear-gradient overlay curtains on left and right borders to guarantee seamless card entry and exit without abrupt cutoffs.
+- **Micro-Interactions & Hover Pause**: Enabled automatic stream pause (`animation-play-state: paused`) and subtle card elevation (`transform: translateY(-5px)`) when hovering over any card.
+- **Rich Verified Travel Metadata**: Each card displays 5 gold stars, 5.0 score badge, travel category pill with custom Lucide icon (Flight, Hotel, IRCTC Train, Bus, Holiday), route/destination chip (e.g. `BOM ✈ DEL`, `Taj Fort Aguada`, `Vande Bharat Express`), quote with quotation mark, gradient avatar circle, and green Verified Booking badge.
+- **Responsive Layout**: Fluid downscaling to 320px cards and adjusted animation speeds on tablet and mobile viewports.
+
+---
+
 ## [2.4.0] - 2026-09-23
 
 ### Phase 3 & Enterprise UI/UX Overhaul: Spacing Architecture, Color Hierarchy, Multi-Currency, Verified Reviews & PWA Wallet

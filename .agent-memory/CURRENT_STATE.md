@@ -1,11 +1,11 @@
 # Current Project State: EazeTrip
 
 ## 1. Release Baseline & Status
-* **Status**: Production Ready / All 3 Phases Complete / Enterprise UI/UX / 100% Passing Tests
-* **Version**: `2.4.0`
+* **Status**: Production Ready / Infinite Dual-Row Reviews Marquee / Enterprise UI/UX / 100% Passing Tests
+* **Version**: `2.4.1`
 * **Test Suite**: 76 / 76 automated tests passing (`npm test`).
-* **Client Build**: Clean Vite production build (`npm run build` in 3.8s).
-* **Active Branch**: `feature/phase-3-reviews-pwa-i18n` (Merging to `main`)
+* **Client Build**: Clean Vite production build (`npm run build`).
+* **Active Branch**: `feature/infinite-marquee-reviews` (Merging to `main`)
 
 ---
 
@@ -13,6 +13,7 @@
 
 | Domain | Status | Route / Component | Features |
 |---|---|---|---|
+| **Infinite Reviews Marquee** | ✅ Complete | `ReviewsSection.jsx`, `App.css` | Dual-row bidirectional infinite streaming marquee (Row 1 left, Row 2 right) with 16 rich verified reviews, CSS edge fade masks, and hover pause. |
 | **Database Persistence** | ✅ Complete | `server/data/db.js` | Native Node SQLite WAL persistent engine with auto-schema migration & JSON fallback. Stores users, bookings, refunds, support tickets, and reviews. |
 | **Live Inventory Aggregator** | ✅ Complete | `server/services/inventory/`, `/api/inventory/providers` | Modular provider architecture for Flights (Amadeus/NDC), Hotels (Expedia/Hotelbeds), Trains (IRCTC), and Buses (redBus) with dynamic pricing & cache fallback. |
 | **Multi-Channel Telecom & Email Gateway** | ✅ Complete | `server/services/smsWhatsappService.js`, `server/services/emailService.js` | Twilio / Meta WhatsApp delivery engine, Resend / SMTP email dispatch with HTML E-Tickets and DLQ auto-recovery. |
