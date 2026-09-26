@@ -325,7 +325,30 @@ function enqueueNotification(options) {
   }
 
   // 2. Enqueue external channel messages (Email, WhatsApp)
-  const externalChannels = channels.filter((c) => c === 'email' || c === 'whatsapp');
+  const isMarketingTemplate = template === 'reengagement_inactivity' || template === 'price_drop_alert' || template === 'offer';
+  
+  // DPDP Section 9: Strict prohibition of targeted marketing directed at minors
+  if (isMarketingTemplate && data.isMinor) {
+    console.log(`[DPDP Section 9 Safeguard] Blocked promotional dispatch to minor passenger`);
+    return {
+      notificationId,
+      enqueuedItems: [],
+      inAppCreated: false,
+      blockedByDpdp: 'Minor marketing prohibited under Section 9'
+    };
+  }
+
+  // DPDP Section 6(4): Respect consent preferences and withdrawal
+  const prefs = userPreferences[userId];
+  const allowMarketing = !prefs || prefs.promotionalOffers !== false;
+  const allowWhatsApp = !prefs || prefs.whatsapp !== false;
+  const allowEmail = !prefs || prefs.email !== false;
+
+  const externalChannels = channels.filter((c) => {
+    if (c === 'email') return allowEmail && (!isMarketingTemplate || allowMarketing);
+    if (c === 'whatsapp') return allowWhatsApp && (!isMarketingTemplate || allowMarketing);
+    return false;
+  });
 
   const enqueuedItems = externalChannels.map((channel) => {
     const queueItemId = `QITEM-${channel.toUpperCase().slice(0, 2)}-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`;

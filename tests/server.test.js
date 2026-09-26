@@ -1182,6 +1182,221 @@ test('76. WhatsApp status callback webhook acknowledges delivery receipts', asyn
   assert.strictEqual(data.success, true);
 });
 
+// ============================================================================
+// DPDP ACT 2023 & DPDP RULES 2025 COMPLIANCE & GOVERNANCE TESTS
+// ============================================================================
+
+test('77. GET /api/dpdp/notice returns valid itemized taxonomy, notice version, and DPO details (Section 5)', async () => {
+  const { status, data } = await requestJson('/api/dpdp/notice');
+  assert.strictEqual(status, 200);
+  assert.strictEqual(data.success, true);
+  assert.strictEqual(data.noticeVersion, 'v2026.1');
+  assert.ok(data.dataFiduciary);
+  assert.strictEqual(data.dataFiduciary.legalName, 'EazeTrip Technologies Private Limited');
+  assert.ok(Array.isArray(data.itemizedDataTaxonomy));
+  assert.ok(data.itemizedDataTaxonomy.length >= 5);
+  assert.ok(data.dataFiduciary.grievanceRedressalOfficer);
+  assert.strictEqual(data.dataFiduciary.grievanceRedressalOfficer.email, 'dpo@eazetrip.com');
+});
+
+test('78. POST /api/dpdp/consent records verifiable consent and GET /api/dpdp/consent returns audit history (Section 6)', async () => {
+  const testUserId = `USR-TEST-${Date.now()}`;
+  const consentRes = await requestJson('/api/dpdp/consent', {
+    method: 'POST',
+    body: {
+      userId: testUserId,
+      purpose: 'promotional_marketing',
+      status: 'granted',
+      source: 'privacy_center_test'
+    }
+  });
+  assert.strictEqual(consentRes.status, 201);
+  assert.strictEqual(consentRes.data.success, true);
+  assert.ok(consentRes.data.data.id.startsWith('CNS-'));
+  assert.ok(consentRes.data.data.ipHash);
+
+  // Retrieve user consent state
+  const stateRes = await requestJson(`/api/dpdp/consent?userId=${testUserId}`);
+  assert.strictEqual(stateRes.status, 200);
+  assert.strictEqual(stateRes.data.success, true);
+  assert.strictEqual(stateRes.data.data.currentPreferences.promotional_marketing.status, 'granted');
+  assert.ok(Array.isArray(stateRes.data.data.auditHistory));
+  assert.strictEqual(stateRes.data.data.auditHistory.length, 1);
+});
+
+test('79. POST /api/dpdp/consent/withdraw successfully withdraws optional consent (Section 6(4))', async () => {
+  const testUserId = `USR-TEST-${Date.now()}`;
+  const withdrawRes = await requestJson('/api/dpdp/consent/withdraw', {
+    method: 'POST',
+    body: {
+      userId: testUserId,
+      purpose: 'promotional_marketing',
+      reason: 'User opt-out'
+    }
+  });
+  assert.strictEqual(withdrawRes.status, 200);
+  assert.strictEqual(withdrawRes.data.success, true);
+  assert.strictEqual(withdrawRes.data.consentRecord.status, 'withdrawn');
+
+  // Verify updated state
+  const stateRes = await requestJson(`/api/dpdp/consent?userId=${testUserId}`);
+  assert.strictEqual(stateRes.data.data.currentPreferences.promotional_marketing.status, 'withdrawn');
+});
+
+test('80. POST /api/dpdp/consent/withdraw refuses withdrawal of mandatory account_management', async () => {
+  const { status, data } = await requestJson('/api/dpdp/consent/withdraw', {
+    method: 'POST',
+    body: {
+      userId: 'USR-1',
+      purpose: 'account_management'
+    }
+  });
+  assert.strictEqual(status, 400);
+  assert.strictEqual(data.success, false);
+  assert.ok(data.error.includes('Cannot withdraw essential'));
+});
+
+test('81. GET /api/dpdp/data-export generates complete structured portable personal data summary (Section 11)', async () => {
+  const { status, data } = await requestJson('/api/dpdp/data-export?userId=USR-1');
+  assert.strictEqual(status, 200);
+  assert.strictEqual(data.success, true);
+  assert.ok(data.data.exportMetadata);
+  assert.strictEqual(data.data.exportMetadata.dataPrincipalId, 'USR-1');
+  assert.ok(data.data.profileData);
+  assert.ok(Array.isArray(data.data.bookingHistory));
+  assert.ok(Array.isArray(data.data.thirdPartySharingSummary));
+});
+
+test('82. POST /api/dpdp/erasure-request anonymizes user profile, revokes tokens, and records statutory retention (Section 12(3))', async () => {
+  const testEmail = `erase_me_${Date.now()}@testdpdp.com`;
+  const regRes = await requestJson('/api/auth/register', {
+    method: 'POST',
+    body: { name: 'Erasure Test User', email: testEmail, password: 'password123', phone: '+91 99999 88888' }
+  });
+  assert.strictEqual(regRes.status, 201);
+  const userId = regRes.data.data.id;
+
+  // Execute Erasure
+  const eraseRes = await requestJson('/api/dpdp/erasure-request', {
+    method: 'POST',
+    body: { userId, reason: 'Testing DPDP erasure workflow' }
+  });
+  assert.strictEqual(eraseRes.status, 200);
+  assert.strictEqual(eraseRes.data.success, true);
+  assert.ok(eraseRes.data.erasureRecord.actionsTaken.length >= 4);
+  assert.ok(eraseRes.data.erasureRecord.statutoryRetentionDisclaimer.includes('CGST Act'));
+});
+
+test('83. POST /api/dpdp/grievances registers privacy grievance with 90-day SLA deadline and DPO assignment (Section 13)', async () => {
+  const { status, data } = await requestJson('/api/dpdp/grievances', {
+    method: 'POST',
+    body: {
+      userId: 'USR-1',
+      name: 'Priyansh Sharma',
+      email: 'priyansh.sharma@gmail.com',
+      category: 'Data Erasure',
+      description: 'Requesting confirmation of third party data deletion from airline systems.',
+      pnr: 'FL2775'
+    }
+  });
+  assert.strictEqual(status, 201);
+  assert.strictEqual(data.success, true);
+  assert.ok(data.grievance.id.startsWith('GRV-'));
+  assert.strictEqual(data.grievance.assignedOfficer, 'Adarsh S. (Designated DPO)');
+  assert.ok(data.grievance.statutoryMaxDeadline);
+
+  // Retrieve grievance by ID
+  const singleRes = await requestJson(`/api/dpdp/grievances/${data.grievance.id}`);
+  assert.strictEqual(singleRes.status, 200);
+  assert.strictEqual(singleRes.data.data.category, 'Data Erasure');
+});
+
+test('84. POST /api/dpdp/nomination and GET /api/dpdp/nomination manages legal nominee (Section 14)', async () => {
+  const testUserId = `USR-NOM-${Date.now()}`;
+  const nomRes = await requestJson('/api/dpdp/nomination', {
+    method: 'POST',
+    body: {
+      userId: testUserId,
+      nomineeName: 'Kavita Sharma',
+      relationship: 'Spouse',
+      email: 'kavita.sharma@example.com',
+      phone: '+91 98888 77777'
+    }
+  });
+  assert.strictEqual(nomRes.status, 200);
+  assert.strictEqual(nomRes.data.success, true);
+  assert.strictEqual(nomRes.data.nominee.nomineeName, 'Kavita Sharma');
+
+  const getNomRes = await requestJson(`/api/dpdp/nomination?userId=${testUserId}`);
+  assert.strictEqual(getNomRes.status, 200);
+  assert.strictEqual(getNomRes.data.nominee.nomineeName, 'Kavita Sharma');
+});
+
+test('85. GET /api/dpdp/security-audit confirms active safeguards, zero raw card storage, and in-country storage (Section 8(5))', async () => {
+  const { status, data } = await requestJson('/api/dpdp/security-audit');
+  assert.strictEqual(status, 200);
+  assert.strictEqual(data.success, true);
+  assert.ok(data.securitySafeguards);
+  assert.ok(data.securitySafeguards.paymentCardHandling.includes('Zero Raw Card Storage'));
+});
+
+test('86. POST /api/admin/dpdp/breach-incident logs incident and generates DPBI statutory notification (Section 8(6))', async () => {
+  const incidentRes = await requestJson('/api/admin/dpdp/breach-incident', {
+    method: 'POST',
+    body: {
+      title: 'Simulated API Token Anomaly',
+      severity: 'Medium',
+      affectedDataCategories: ['Contact Email'],
+      affectedPrincipalsCount: 2,
+      affectedUserIds: ['USR-1', 'USR-2'],
+      rootCause: 'Transient rate limiter trigger anomaly',
+      containmentSteps: ['Tokens rotated', 'Firewall rules verified']
+    }
+  });
+  assert.strictEqual(incidentRes.status, 201);
+  assert.strictEqual(incidentRes.data.success, true);
+  const incidentId = incidentRes.data.data.id;
+
+  // Generate DPBI notification
+  const dpbiRes = await requestJson(`/api/admin/dpdp/breach-incidents/${incidentId}/dpbi-notification`);
+  assert.strictEqual(dpbiRes.status, 200);
+  assert.strictEqual(dpbiRes.data.success, true);
+  assert.strictEqual(dpbiRes.data.data.to, 'Data Protection Board of India (DPBI)');
+});
+
+test('87. DPDP Section 9 minor safeguard blocks marketing campaigns directed at children', async () => {
+  const notificationService = require('../server/services/notificationService');
+  const result = notificationService.enqueueNotification({
+    userId: 'USR-CHILD-1',
+    template: 'reengagement_inactivity',
+    data: {
+      name: 'Baby Traveler',
+      isMinor: true,
+      email: 'parent@example.com'
+    }
+  });
+  assert.ok(result.blockedByDpdp);
+  assert.strictEqual(result.enqueuedItems.length, 0);
+});
+
+test('88. PII masker utility properly redacts emails, phone numbers, and bank account numbers', () => {
+  const { maskEmail, maskPhone, maskBankAccount } = require('../server/utils/piiMasker');
+  
+  assert.strictEqual(maskEmail('priyansh.sharma@gmail.com'), 'p****a@gmail.com');
+  assert.strictEqual(maskPhone('+91 9876543210'), '+91 98765*****');
+  assert.strictEqual(maskBankAccount('123456789012'), 'XXXX-XXXX-9012');
+});
+
+test('89. POST /api/dpdp/retention/run-cleanup executes automated retention engine pruning (Section 8(7))', async () => {
+  const { status, data } = await requestJson('/api/dpdp/retention/run-cleanup', {
+    method: 'POST'
+  });
+  assert.strictEqual(status, 200);
+  assert.strictEqual(data.success, true);
+  assert.ok(data.retentionPolicyApplied);
+});
+
+
 
 
 

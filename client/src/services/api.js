@@ -436,5 +436,87 @@ export const api = {
     const res = await request(`/api/refunds${userQuery ? `?user=${encodeURIComponent(userQuery)}` : ''}`);
     if (res.ok && res.data?.data) return res.data.data;
     return [];
+  },
+
+  // DPDP Act 2023 & DPDP Rules 2025 Data Governance Suite
+  getPrivacyNotice: async () => {
+    const res = await request('/api/dpdp/notice');
+    if (res.ok && res.data) return res.data;
+    return null;
+  },
+
+  recordConsent: async (consentPayload) => {
+    const res = await request('/api/dpdp/consent', {
+      method: 'POST',
+      body: JSON.stringify(consentPayload)
+    });
+    return res;
+  },
+
+  getUserConsent: async (userId = 'USR-1') => {
+    const res = await request(`/api/dpdp/consent?userId=${encodeURIComponent(userId)}`);
+    if (res.ok && res.data?.data) return res.data.data;
+    return null;
+  },
+
+  withdrawConsent: async (withdrawPayload) => {
+    const res = await request('/api/dpdp/consent/withdraw', {
+      method: 'POST',
+      body: JSON.stringify(withdrawPayload)
+    });
+    return res;
+  },
+
+  exportUserData: async (userId = 'USR-1') => {
+    const res = await request(`/api/dpdp/data-export?userId=${encodeURIComponent(userId)}`);
+    return res;
+  },
+
+  requestDataErasure: async (erasurePayload) => {
+    const res = await request('/api/dpdp/erasure-request', {
+      method: 'POST',
+      body: JSON.stringify(erasurePayload)
+    });
+    return res;
+  },
+
+  submitPrivacyGrievance: async (grievancePayload) => {
+    const res = await request('/api/dpdp/grievances', {
+      method: 'POST',
+      body: JSON.stringify(grievancePayload)
+    });
+    return res;
+  },
+
+  getPrivacyGrievances: async (userId = '') => {
+    const res = await request(`/api/dpdp/grievances${userId ? `?userId=${encodeURIComponent(userId)}` : ''}`);
+    if (res.ok && res.data?.data) return res.data.data;
+    return [];
+  },
+
+  getPrivacyGrievanceById: async (id) => {
+    const res = await request(`/api/dpdp/grievances/${encodeURIComponent(id)}`);
+    if (res.ok && res.data?.data) return res.data.data;
+    return null;
+  },
+
+  setNominee: async (nomineePayload) => {
+    const res = await request('/api/dpdp/nomination', {
+      method: 'POST',
+      body: JSON.stringify(nomineePayload)
+    });
+    return res;
+  },
+
+  getNominee: async (userId = 'USR-1') => {
+    const res = await request(`/api/dpdp/nomination?userId=${encodeURIComponent(userId)}`);
+    if (res.ok && res.data) return res.data;
+    return null;
+  },
+
+  getDpdpSecurityAudit: async () => {
+    const res = await request('/api/dpdp/security-audit');
+    if (res.ok && res.data) return res.data;
+    return null;
   }
 };

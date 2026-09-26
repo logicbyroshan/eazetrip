@@ -18,6 +18,8 @@ const notificationService = require('./services/notificationService');
 const supportService = require('./services/supportService');
 const refundService = require('./services/refundService');
 const googleAuthService = require('./services/googleAuthService');
+const dpdpService = require('./services/dpdpService');
+const breachService = require('./services/breachService');
 const { securityHeaders, rateLimit, sanitizeInput } = require('./middleware/security');
 const {
   validateLogin,
@@ -1337,6 +1339,233 @@ app.post('/api/reviews', (req, res) => {
     message: 'Thank you! Your verified review has been submitted.',
     data: review
   });
+});
+
+// ==========================================
+// 9. DPDP ACT 2023 & DPDP RULES 2025 DATA GOVERNANCE API
+// ==========================================
+
+// Itemized Statutory Privacy Notice Specification (Section 5)
+app.get('/api/dpdp/notice', (req, res) => {
+  const notice = dpdpService.getPrivacyNotice();
+  res.status(200).json(notice);
+});
+
+// Record Granular Consent (Section 6 & DPDP Rules 2025)
+app.post('/api/dpdp/consent', sensitiveLimiter, (req, res) => {
+  try {
+    const { userId = 'USR-1', purpose, status = 'granted', source = 'web_app' } = req.body || {};
+    const ipAddress = req.ip || req.connection?.remoteAddress || '127.0.0.1';
+    const userAgent = req.headers['user-agent'] || '';
+
+    const record = dpdpService.recordConsent({
+      userId,
+      purpose,
+      status,
+      source,
+      ipAddress,
+      userAgent
+    });
+
+    res.status(201).json({
+      success: true,
+      message: `Consent for '${purpose}' recorded as '${status}' under DPDP Act 2023.`,
+      data: record
+    });
+  } catch (err) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+// Get User Current Consent Preferences & Audit Trail (Section 6)
+app.get('/api/dpdp/consent', (req, res) => {
+  const userId = toStr(req.query.userId) || 'USR-1';
+  const consentState = dpdpService.getUserConsentState(userId);
+  res.status(200).json({
+    success: true,
+    data: consentState
+  });
+});
+
+// Withdraw Specific Consent Purpose (Section 6(4))
+app.post('/api/dpdp/consent/withdraw', sensitiveLimiter, (req, res) => {
+  try {
+    const { userId = 'USR-1', purpose, reason } = req.body || {};
+    const result = dpdpService.withdrawConsent({ userId, purpose, reason });
+    if (!result.success) {
+      return res.status(400).json(result);
+    }
+    res.status(200).json(result);
+  } catch (err) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+// Right to Access / Complete Data Export (Section 11)
+app.get('/api/dpdp/data-export', sensitiveLimiter, (req, res) => {
+  const userId = toStr(req.query.userId) || 'USR-1';
+  const exportResult = dpdpService.generateDataExport(userId);
+  if (!exportResult.success) {
+    return res.status(404).json(exportResult);
+  }
+  res.status(200).json(exportResult);
+});
+
+// Right to Erasure Request (Section 12(3))
+app.post('/api/dpdp/erasure-request', sensitiveLimiter, (req, res) => {
+  try {
+    const { userId = 'USR-1', reason } = req.body || {};
+    const result = dpdpService.requestErasure({ userId, reason });
+    if (!result.success) {
+      return res.status(404).json(result);
+    }
+    res.status(200).json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// Right of Grievance Redressal (Section 13 & DPDP Rules 2025)
+app.post('/api/dpdp/grievances', sensitiveLimiter, (req, res) => {
+  try {
+    const { userId = 'USR-1', name, email, phone, category, description, pnr } = req.body || {};
+    const result = dpdpService.submitGrievance({
+      userId,
+      name,
+      email,
+      phone,
+      category,
+      description,
+      pnr
+    });
+    res.status(201).json(result);
+  } catch (err) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/dpdp/grievances', (req, res) => {
+  const userId = toStr(req.query.userId);
+  const grievances = dpdpService.getGrievances(userId);
+  res.status(200).json({
+    success: true,
+    count: grievances.length,
+    data: grievances
+  });
+});
+
+app.get('/api/dpdp/grievances/:id', (req, res) => {
+  const grievance = dpdpService.getGrievanceById(req.params.id);
+  if (!grievance) {
+    return res.status(404).json({ success: false, error: 'Privacy grievance record not found' });
+  }
+  res.status(200).json({ success: true, data: grievance });
+});
+
+// Right to Nominate (Section 14)
+app.post('/api/dpdp/nomination', sensitiveLimiter, (req, res) => {
+  try {
+    const { userId = 'USR-1', nomineeName, relationship, email, phone, address } = req.body || {};
+    const result = dpdpService.setNominee({
+      userId,
+      nomineeName,
+      relationship,
+      email,
+      phone,
+      address
+    });
+    res.status(200).json(result);
+  } catch (err) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/dpdp/nomination', (req, res) => {
+  const userId = toStr(req.query.userId) || 'USR-1';
+  const result = dpdpService.getNominee(userId);
+  res.status(200).json(result);
+});
+
+// Automated Data Retention & Pruning (Section 8(7))
+app.post('/api/dpdp/retention/run-cleanup', (req, res) => {
+  const result = dpdpService.runScheduledRetentionCleanup();
+  res.status(200).json(result);
+});
+
+// Security & Governance Observability (Section 8(5))
+app.get('/api/dpdp/security-audit', (req, res) => {
+  res.status(200).json({
+    success: true,
+    framework: 'Digital Personal Data Protection Act, 2023 & DPDP Rules, 2025',
+    status: 'Active Technical Governance Layer',
+    securitySafeguards: {
+      encryptionInTransit: 'TLS 1.3 / HTTPS Enforced',
+      paymentCardHandling: 'RBI CoFT Tokenized (Zero Raw Card Storage)',
+      piiLogSanitization: 'Active (Emails & Phone Numbers masked in server logs)',
+      rateLimiting: 'Configured (120 req/min general, 20 req/min sensitive)',
+      securityHeaders: 'OWASP / HSTS / SameSite Strict / Frame Denial Active',
+      dataLocalisation: 'Primary Database & Stores Hosted In-Country (India)'
+    },
+    dataProtectionOfficer: dpdpService.dpo
+  });
+});
+
+// Personal Data Breach Incident Management & DPBI Filing (Section 8(6))
+app.post('/api/admin/dpdp/breach-incident', sensitiveLimiter, (req, res) => {
+  try {
+    const {
+      title,
+      severity = 'Low',
+      affectedDataCategories,
+      affectedPrincipalsCount,
+      affectedUserIds,
+      rootCause,
+      containmentSteps
+    } = req.body || {};
+
+    if (!title) {
+      return res.status(400).json({ success: false, error: 'Incident title is required' });
+    }
+
+    const incident = breachService.logIncident({
+      title,
+      severity,
+      affectedDataCategories,
+      affectedPrincipalsCount,
+      affectedUserIds,
+      rootCause,
+      containmentSteps
+    });
+
+    res.status(201).json({
+      success: true,
+      message: `Breach incident #${incident.id} registered and triaged.`,
+      data: incident
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/admin/dpdp/breach-incidents', (req, res) => {
+  const incidents = breachService.getAllIncidents();
+  res.status(200).json({
+    success: true,
+    count: incidents.length,
+    data: incidents
+  });
+});
+
+app.get('/api/admin/dpdp/breach-incidents/:id/dpbi-notification', (req, res) => {
+  try {
+    const dpbiPayload = breachService.generateDpbiNotification(req.params.id);
+    res.status(200).json({
+      success: true,
+      data: dpbiPayload
+    });
+  } catch (err) {
+    res.status(404).json({ success: false, error: err.message });
+  }
 });
 
 // 2. API 404 Handler

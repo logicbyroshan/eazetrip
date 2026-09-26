@@ -1317,6 +1317,15 @@ export default function ReviewBookingPage() {
               </strong>
             </div>
 
+            <div className="dpdp-checkout-consent-box p-2 bg-slate-50 border rounded text-xs text-slate-600 mb-3">
+              <div className="flex items-start gap-1">
+                <ShieldCheck size={14} className="text-emerald-600 flex-shrink-0 mt-0.5" />
+                <span>
+                  By proceeding, you agree to our <Link to="/terms" className="text-primary underline">Terms</Link> and <Link to="/privacy" className="text-primary underline">Itemized Privacy Notice</Link> under DPDP Act 2023. For co-passengers under 18 years, you confirm verifiable parental/guardian consent.
+                </span>
+              </div>
+            </div>
+
             {/* CTA Button to proceed directly via Razorpay */}
             <button
               type="button"

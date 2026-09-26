@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.5.0] - 2026-09-26
+
+### Digital Personal Data Protection Act, 2023 & DPDP Rules, 2025 Full-Stack Implementation
+
+#### Data Governance & Privacy Architecture (`server/services/dpdpService.js`, `server/data/db.js`)
+- **Itemized Statutory Notice (Section 5 & Rules 2025)**: Introduced `GET /api/dpdp/notice` exposing version `v2026.1` with an itemized taxonomy of personal data categories, purposes, retention periods, legal bases, downstream processors, and DPO escalation information.
+- **Verifiable Consent Engine (Section 6)**: Implemented immutable consent record logging (`consent_records` table) capturing purpose, status (`granted`, `withdrawn`, `denied`), notice version, masked IP hash, user agent, and timestamps.
+- **Consent Withdrawal (Section 6(4))**: Enabled instant consent revocation via `POST /api/dpdp/consent/withdraw` with automated cascading to notification preferences and marketing dispatch queues.
+- **Self-Service Data Principal Rights (Sections 11–14)**:
+  - *Right to Access (Section 11)*: `GET /api/dpdp/data-export` produces a portable JSON summary of profile data, passenger manifests, payment records, and third-party sharing.
+  - *Right to Erasure (Section 12(3))*: `POST /api/dpdp/erasure-request` anonymizes traveler accounts and revokes credentials while segregating statutory GST invoices in locked audit storage.
+  - *Right of Grievance Redressal (Section 13)*: `POST /api/dpdp/grievances` logs privacy grievances with statutory 90-day SLA deadline calculations and automated DPO assignment.
+  - *Right to Nominate (Section 14)*: `POST /api/dpdp/nomination` and `GET /api/dpdp/nomination` allow Data Principals to appoint a legal representative.
+- **Minor & Children's Data Safeguard (Section 9)**: Implemented minor detection (`isMinor: true`) and automated blocking of targeted marketing and behavioral profiling campaigns directed at child travelers.
+- **Automated Retention & Pruning Engine (Section 8(7))**: Scheduled cleanup purging expired rate limiter records, stale session tokens, and communications delivery logs older than 90 days.
+- **Personal Data Breach Response (Section 8(6))**: Built `server/services/breachService.js` with structured severity triage, DPBI statutory notification generation, and affected user disclosure templates.
+- **PII Log Sanitization & Redaction (`server/utils/piiMasker.js`)**: Implemented utility functions to mask raw email addresses (`p****a@gmail.com`), phone numbers (`+91 98765*****`), and bank accounts (`XXXX-XXXX-9012`) in server telemetry.
+
+#### Interactive Frontend Privacy Center & Account Integration
+- **Interactive Privacy & Data Protection Center (`client/src/pages/PrivacyPage.jsx`)**: Built a full-featured 3-mode interface with Statutory Notice taxonomy table, Self-Service Data Rights Center (Download Data, Manage Consent, Appoint Nominee, Erasure), and DPO Grievance Portal.
+- **Profile Privacy & Governance Tab (`client/src/pages/ProfilePage.jsx`)**: Added a dedicated "Privacy & Governance (DPDP)" tab allowing authenticated travelers to manage purpose-based consents, download personal archives, and appoint legal nominees.
+- **Cookie Consent Banner (`client/src/components/common/CookieConsentBanner.jsx`)**: Updated notice links to `/privacy` and synchronized granular consent recording with backend DPDP audit stores.
+- **Checkout Consent & Minor Attestation (`client/src/pages/ReviewBookingPage.jsx`)**: Added statutory DPDP consent disclosures and verifiable parental consent attestation for child passengers prior to payment.
+
+#### Automated Test Suite Expansion (`tests/server.test.js`)
+- Added tests 77–89 verifying all DPDP endpoints, consent state transitions, data export schema, IDOR protection, minor safeguards, grievance SLA timers, breach filing generator, PII log masking, and automated retention pruning (89/89 tests passing).
+
+---
+
 ## [2.4.3] - 2026-09-26
 
 ### Fluid Responsive Typography, Dynamic Spacing Tokens & Adaptive Corner Radii
