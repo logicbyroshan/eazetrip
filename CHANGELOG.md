@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.4.2] - 2026-09-26
+
+### Mobile & Cross-Device Adaptive Overhaul
+
+#### Mobile Listing Cards & Responsive Viewport Hierarchy (`client/src/App.css`)
+- **Luxury Travel Cards Stacking**: Resolved CSS specificity overrides on `.flight-card.luxury-flight-card`, `.hotel-card.luxury-hotel-card`, `.bus-card.luxury-bus-card`, `.train-card.luxury-train-card`, and `.holiday-card.luxury-holiday-card` to cleanly stack on mobile viewports (<900px, <600px, <400px), eliminating horizontal clipping and cramped side-by-side columns.
+- **Adaptive Pricing & CTA Row**: On mobile screens, flight, hotel, and bus price amounts and action buttons ("Book Now", "Book Room", "Select Seats") transition into dedicated horizontal/full-width flex bars with 44px+ touch targets.
+- **Mobile Search Widget Grids**: Converted flight, hotel, bus, train, and holiday search field grids to dynamic 2-column on tablet (<1024px) and 1-column on mobile (<600px).
+- **Swap Button Orientation**: Re-anchored the swap origin/destination button to center vertically on mobile screens with smooth 90° orientation.
+- **Marquee Mask Optimization**: Narrowed edge gradient masks to 28px on mobile to preserve full readability of verified customer reviews without masking center content.
+- **Step Tracker & Route Strips**: Configured `.booking-step-tracker-bar` and `.flight-route-strip` for seamless rendering on 320px–390px mobile viewports with zero horizontal overflow.
+
+---
+
 ## [2.4.1] - 2026-09-23
 
 ### Infinite Dual-Row Reviews Marquee & Cinematic Edge Gradient Fade
