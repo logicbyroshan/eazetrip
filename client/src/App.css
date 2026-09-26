@@ -21135,6 +21135,179 @@ input:checked + .slider:before {
   }
 }
 
+/* ==========================================================================
+   7. DPDP ACT 2023 & DPDP RULES 2025 PRIVACY & GOVERNANCE STYLES
+   ========================================================================== */
+
+.privacy-mode-nav-tabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.12);
+  padding: 6px;
+  border-radius: 12px;
+  width: fit-content;
+  margin-top: 14px;
+}
+
+.privacy-mode-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.privacy-mode-tab:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+}
+
+.privacy-mode-tab.active {
+  background: #ffffff;
+  color: #034ea2;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.legal-taxonomy-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  background: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.legal-taxonomy-table th {
+  background: #f8fafc;
+  padding: 10px 12px;
+  color: #1e293b;
+  font-weight: 700;
+  text-align: left;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.legal-taxonomy-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: top;
+}
+
+.rights-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.rights-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+}
+
+.rights-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.rights-icon-wrap {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.rights-card-header h4 {
+  font-size: 0.95rem;
+  margin: 0;
+  color: #0f172a;
+}
+
+.rights-card-body {
+  font-size: 0.82rem;
+  color: #475569;
+  line-height: 1.5;
+  flex: 1;
+}
+
+.toggle-pill-btn {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.toggle-pill-btn.granted {
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+}
+
+.toggle-pill-btn.withdrawn {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.dpo-contact-card {
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.dpo-meta-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 0.85rem;
+}
+
+.dpo-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dpdp-checkout-consent-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: #475569;
+}
+
+@media (max-width: 768px) {
+  .privacy-mode-nav-tabs {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+
 
 
 

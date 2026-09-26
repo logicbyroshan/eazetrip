@@ -359,3 +359,109 @@ Simulates secure multi-channel payment gateway transactions (Cards, UPI, NetBank
 - `GET /api/offers`: Lists live promotional discount coupon codes.
 - `GET /api/faqs`: Retrieves categorized frequently asked questions.
 - `POST /api/contact`: Submits a customer inquiry ticket.
+
+---
+
+## 10. DPDP Act 2023 & DPDP Rules 2025 Compliance
+
+### `GET /api/dpdp/notice`
+Returns the itemized statutory data processing notice (v2026.1) containing categories of data, specific purposes, legal bases, third-party processors, retention periods, and DPO contact.
+
+- **Auth Required:** No
+- **Rate Limit:** 120 req/min
+
+### `GET /api/dpdp/consent-matrix`
+Returns the consent taxonomy matrix detailing purpose IDs, mandatory/optional status, descriptions, and default states.
+
+- **Auth Required:** No
+- **Rate Limit:** 120 req/min
+
+### `POST /api/dpdp/consent`
+Records explicit, granular, verifiable consent from a Data Principal.
+
+- **Auth Required:** Optional (supports logged-in users and anonymous sessions)
+- **Rate Limit:** 20 req/min
+- **Request Body:**
+  ```json
+  {
+    "userId": "USR-1",
+    "purposes": {
+      "booking_fulfillment": true,
+      "notifications": true,
+      "analytics": false,
+      "marketing": false
+    },
+    "channel": "web_privacy_hub"
+  }
+  ```
+
+### `POST /api/dpdp/consent/withdraw`
+Allows a Data Principal to withdraw consent for specific optional processing purposes.
+
+- **Auth Required:** Optional (identifies by `userId` or `email`)
+- **Rate Limit:** 20 req/min
+- **Request Body:**
+  ```json
+  {
+    "userId": "USR-1",
+    "purposes": ["marketing", "analytics"],
+    "reason": "No longer interested in promotional communications"
+  }
+  ```
+
+### `GET /api/dpdp/data-export`
+Executes Right of Access (Section 11) by generating an auditable JSON bundle of all personal data, bookings, consent logs, and grievances associated with the principal.
+
+- **Query Parameters:** `userId` or `email`
+- **Rate Limit:** 20 req/min
+
+### `POST /api/dpdp/erasure-request`
+Executes Right to Erasure (Section 12(3)) with statutory retention lock under Section 36 of CGST Act 2017 & DGCA regulations.
+
+- **Request Body:**
+  ```json
+  {
+    "userId": "USR-1",
+    "email": "priyansh@example.com",
+    "reason": "Account closure"
+  }
+  ```
+
+### `POST /api/dpdp/grievances`
+Submits a privacy grievance to the designated Data Protection Officer (DPO) with automatic 90-day SLA deadline calculation (DPDP Rules 2025).
+
+- **Request Body:**
+  ```json
+  {
+    "name": "Priyansh Sharma",
+    "email": "priyansh@example.com",
+    "category": "consent_withdrawal",
+    "description": "Please verify marketing opt-out across telecom channels"
+  }
+  ```
+
+### `GET /api/dpdp/grievances/:ticketId`
+Tracks the live resolution status, assigned DPO, SLA target date, and remarks for a filed grievance.
+
+- **Path Parameter:** `ticketId` (e.g., `DPO-GRV-748291`)
+- **Rate Limit:** 120 req/min
+
+### `POST /api/dpdp/nomination`
+Appoints a lawful nominee to exercise data principal rights in case of death or incapacity (DPDP Section 14).
+
+- **Request Body:**
+  ```json
+  {
+    "userId": "USR-1",
+    "nomineeName": "Anita Sharma",
+    "nomineeEmail": "anita@example.com",
+    "nomineePhone": "9876543211",
+    "relationship": "Spouse"
+  }
+  ```
+
+### `POST /api/dpdp/retention/run-cleanup`
+Automated daemon job to prune expired ephemeral notifications, audit logs, and temporary sessions past their retention threshold.
+
+- **Rate Limit:** 20 req/min (Admin / Internal CRON)
+

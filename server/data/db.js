@@ -32,7 +32,12 @@ class PersistentDB {
       support_callbacks: [],
       notifications: [],
       dlq_records: [],
-      reviews: []
+      reviews: [],
+      consent_records: [],
+      privacy_grievances: [],
+      nominees: [],
+      breach_incidents: [],
+      data_erasure_requests: []
     };
 
     this.init();
@@ -159,6 +164,52 @@ class PersistentDB {
         rating REAL,
         comment TEXT,
         photos TEXT,
+        created_at TEXT
+      );
+
+      CREATE TABLE IF NOT EXISTS consent_records (
+        id TEXT PRIMARY KEY,
+        user_id TEXT,
+        purpose TEXT,
+        status TEXT,
+        notice_version TEXT,
+        data TEXT,
+        created_at TEXT
+      );
+
+      CREATE TABLE IF NOT EXISTS privacy_grievances (
+        id TEXT PRIMARY KEY,
+        user_id TEXT,
+        pnr TEXT,
+        category TEXT,
+        status TEXT,
+        data TEXT,
+        created_at TEXT
+      );
+
+      CREATE TABLE IF NOT EXISTS nominees (
+        user_id TEXT PRIMARY KEY,
+        nominee_name TEXT,
+        email TEXT,
+        phone TEXT,
+        data TEXT,
+        created_at TEXT
+      );
+
+      CREATE TABLE IF NOT EXISTS breach_incidents (
+        id TEXT PRIMARY KEY,
+        title TEXT,
+        severity TEXT,
+        status TEXT,
+        data TEXT,
+        created_at TEXT
+      );
+
+      CREATE TABLE IF NOT EXISTS data_erasure_requests (
+        id TEXT PRIMARY KEY,
+        user_id TEXT,
+        status TEXT,
+        data TEXT,
         created_at TEXT
       );
     `);
@@ -758,6 +809,245 @@ class PersistentDB {
     );
 
     return record;
+  }
+
+  // ==========================================
+  // DPDP ACT 2023 & RULES 2025 DATA GOVERNANCE
+  // ==========================================
+
+  // 1. Consent Records
+  saveConsentRecord(record) {
+    if (!this.isNativeSqlite) {
+      this.fallbackStore.consent_records.unshift(record);
+      this.saveFallback();
+      return record;
+    }
+
+    const insert = this.db.prepare(`
+      INSERT INTO consent_records (id, user_id, purpose, status, notice_version, data, created_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `);
+
+    insert.run(
+      record.id,
+      record.userId || 'USR-1',
+      record.purpose,
+      record.status,
+      record.noticeVersion || 'v2026.1',
+      JSON.stringify(record),
+      record.createdAt || new Date().toISOString()
+    );
+
+    return record;
+  }
+
+  getConsentRecords(userId = 'USR-1') {
+    if (!this.isNativeSqlite) {
+      return this.fallbackStore.consent_records.filter((c) => c.userId === userId);
+    }
+
+    const rows = this.db.prepare('SELECT data FROM consent_records WHERE user_id = ? ORDER BY created_at DESC').all(userId);
+    return rows.map((r) => JSON.parse(r.data));
+  }
+
+  // 2. Privacy Grievances
+  saveGrievance(record) {
+    if (!this.isNativeSqlite) {
+      this.fallbackStore.privacy_grievances.unshift(record);
+      this.saveFallback();
+      return record;
+    }
+
+    const insert = this.db.prepare(`
+      INSERT INTO privacy_grievances (id, user_id, pnr, category, status, data, created_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `);
+
+    insert.run(
+      record.id,
+      record.userId || 'USR-1',
+      record.pnr || '',
+      record.category || 'General',
+      record.status || 'Open',
+      JSON.stringify(record),
+      record.filedAt || new Date().toISOString()
+    );
+
+    return record;
+  }
+
+  getGrievances(userId = 'USR-1') {
+    if (!this.isNativeSqlite) {
+      return this.fallbackStore.privacy_grievances.filter((g) => !userId || g.userId === userId);
+    }
+
+    if (!userId) {
+      const rows = this.db.prepare('SELECT data FROM privacy_grievances ORDER BY created_at DESC').all();
+      return rows.map((r) => JSON.parse(r.data));
+    }
+
+    const rows = this.db.prepare('SELECT data FROM privacy_grievances WHERE user_id = ? ORDER BY created_at DESC').all(userId);
+    return rows.map((r) => JSON.parse(r.data));
+  }
+
+  getGrievanceById(id) {
+    if (!id) return null;
+    if (!this.isNativeSqlite) {
+      return this.fallbackStore.privacy_grievances.find((g) => g.id === id) || null;
+    }
+
+    const row = this.db.prepare('SELECT data FROM privacy_grievances WHERE id = ?').get(id);
+    return row ? JSON.parse(row.data) : null;
+  }
+
+  // 3. Nominees (Section 14)
+  saveNominee(record) {
+    if (!this.isNativeSqlite) {
+      const idx = this.fallbackStore.nominees.findIndex((n) => n.userId === record.userId);
+      if (idx !== -1) {
+        this.fallbackStore.nominees[idx] = record;
+      } else {
+        this.fallbackStore.nominees.push(record);
+      }
+      this.saveFallback();
+      return record;
+    }
+
+    const insert = this.db.prepare(`
+      INSERT INTO nominees (user_id, nominee_name, email, phone, data, created_at)
+      VALUES (?, ?, ?, ?, ?, ?)
+      ON CONFLICT(user_id) DO UPDATE SET
+        nominee_name=excluded.nominee_name,
+        email=excluded.email,
+        phone=excluded.phone,
+        data=excluded.data
+    `);
+
+    insert.run(
+      record.userId,
+      record.nomineeName,
+      record.email,
+      record.phone,
+      JSON.stringify(record),
+      record.appointedAt || new Date().toISOString()
+    );
+
+    return record;
+  }
+
+  getNominee(userId = 'USR-1') {
+    if (!userId) return null;
+    if (!this.isNativeSqlite) {
+      return this.fallbackStore.nominees.find((n) => n.userId === userId) || null;
+    }
+
+    const row = this.db.prepare('SELECT data FROM nominees WHERE user_id = ?').get(userId);
+    return row ? JSON.parse(row.data) : null;
+  }
+
+  // 4. Data Erasure Requests (Section 12(3))
+  saveErasureRequest(record) {
+    if (!this.isNativeSqlite) {
+      this.fallbackStore.data_erasure_requests.unshift(record);
+      this.saveFallback();
+      return record;
+    }
+
+    const insert = this.db.prepare(`
+      INSERT INTO data_erasure_requests (id, user_id, status, data, created_at)
+      VALUES (?, ?, ?, ?, ?)
+    `);
+
+    insert.run(
+      record.id,
+      record.userId,
+      record.status,
+      JSON.stringify(record),
+      record.requestedAt || new Date().toISOString()
+    );
+
+    return record;
+  }
+
+  getErasureRequests(userId) {
+    if (!this.isNativeSqlite) {
+      return userId
+        ? this.fallbackStore.data_erasure_requests.filter((e) => e.userId === userId)
+        : this.fallbackStore.data_erasure_requests;
+    }
+
+    if (userId) {
+      const rows = this.db.prepare('SELECT data FROM data_erasure_requests WHERE user_id = ? ORDER BY created_at DESC').all(userId);
+      return rows.map((r) => JSON.parse(r.data));
+    }
+
+    const rows = this.db.prepare('SELECT data FROM data_erasure_requests ORDER BY created_at DESC').all();
+    return rows.map((r) => JSON.parse(r.data));
+  }
+
+  // 5. Breach Incident Management (Section 8(6))
+  saveBreachIncident(record) {
+    if (!this.isNativeSqlite) {
+      this.fallbackStore.breach_incidents.unshift(record);
+      this.saveFallback();
+      return record;
+    }
+
+    const insert = this.db.prepare(`
+      INSERT INTO breach_incidents (id, title, severity, status, data, created_at)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `);
+
+    insert.run(
+      record.id,
+      record.title,
+      record.severity,
+      record.status,
+      JSON.stringify(record),
+      record.detectedAt || new Date().toISOString()
+    );
+
+    return record;
+  }
+
+  getAllBreachIncidents() {
+    if (!this.isNativeSqlite) {
+      return [...this.fallbackStore.breach_incidents];
+    }
+
+    const rows = this.db.prepare('SELECT data FROM breach_incidents ORDER BY created_at DESC').all();
+    return rows.map((r) => JSON.parse(r.data));
+  }
+
+  getBreachIncidentById(id) {
+    if (!id) return null;
+    if (!this.isNativeSqlite) {
+      return this.fallbackStore.breach_incidents.find((b) => b.id === id) || null;
+    }
+
+    const row = this.db.prepare('SELECT data FROM breach_incidents WHERE id = ?').get(id);
+    return row ? JSON.parse(row.data) : null;
+  }
+
+  // 6. Retention Engine Pruning (Section 8(7))
+  pruneStaleNotifications(cutoffIsoDate) {
+    let count = 0;
+    if (!this.isNativeSqlite) {
+      const beforeLen = this.fallbackStore.notifications.length;
+      this.fallbackStore.notifications = this.fallbackStore.notifications.filter(
+        (n) => n.createdAt > cutoffIsoDate
+      );
+      count = beforeLen - this.fallbackStore.notifications.length;
+      this.saveFallback();
+      return count;
+    }
+
+    try {
+      const res = this.db.prepare('DELETE FROM notifications WHERE created_at < ?').run(cutoffIsoDate);
+      return res.changes || 0;
+    } catch {
+      return 0;
+    }
   }
 }
 

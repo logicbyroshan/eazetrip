@@ -59,12 +59,19 @@ ExploreEase (EazeTrip) is engineered following defensive security practices, str
 - Datepicker inputs dynamically enforce chronological validity (e.g. `checkOut >= checkIn`, `returnDate >= departureDate`).
 - Forms include HTML5 fallback validation attributes (`required`, `type="email"`, `pattern`, `min`).
 
+### E. DPDP Act 2023 & DPDP Rules 2025 Data Governance
+- **PII Log Sanitization (`piiMasker.js`):** Automatically masks sensitive phone numbers, email addresses, names, and financial identifiers before writing to server logs or third-party telemetry.
+- **Child Protection (DPDP Section 9):** Automated detection of minor travelers (`isMinor: true`) with hard blocking of targeted advertising, tracking, or behavioral profiling.
+- **RBI CoFT Card Security:** Zero raw card number or CVV retention; leverages RBI-mandated tokenization via PCI-DSS certified gateway (Razorpay).
+- **Statutory Retention Segregation:** When a Data Principal requests account erasure, personal profiles and marketing consents are permanently purged while transaction invoices are moved to a restricted, encrypted compliance archive for the mandatory 7-year CGST/DGCA retention window.
+- **Data Protection Board of India (DPBI) Incident Response:** Automated breach triage engine with formal DPBI intimation generation and affected Data Principal notification workflows.
+
 ---
 
-## 3. Reporting Vulnerabilities
+## 3. Reporting Vulnerabilities & Grievances
 
-If you discover a security vulnerability in ExploreEase:
-1. Please do not create a public GitHub issue.
-2. Email security details to `security@exploreeaz.com` or `roshan@eazetrip.internal`.
-3. Include detailed steps to reproduce the issue.
-4. Security patches are prioritized and released promptly.
+If you discover a security vulnerability or wish to exercise data rights under DPDP:
+1. **Security Vulnerabilities:** Email `security@eazetrip.com` with steps to reproduce.
+2. **Privacy Grievances / DPO:** Submit online at `/privacy` or email `dpo@eazetrip.com` (Statutory 90-day resolution SLA).
+3. Security patches are prioritized and released promptly.
+

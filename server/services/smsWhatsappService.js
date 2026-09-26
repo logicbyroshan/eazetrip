@@ -3,6 +3,8 @@
  * Integrates Twilio, Meta WhatsApp Cloud API, and Gupshup with Smart Sandbox Simulation
  */
 
+const { maskPhone } = require('../utils/piiMasker');
+
 class SmsWhatsappService {
   constructor() {
     this.twilioAccountSid = process.env.TWILIO_ACCOUNT_SID || '';
@@ -81,7 +83,7 @@ class SmsWhatsappService {
     this.sentMessagesLog.unshift(messageRecord);
     if (this.sentMessagesLog.length > 100) this.sentMessagesLog.pop();
 
-    console.log(`[SMS Gateway] Dispatched to ${cleanPhone}: "${message.slice(0, 60)}..."`);
+    console.log(`[SMS Gateway] Dispatched to ${maskPhone(cleanPhone)}: "${message.slice(0, 60)}..."`);
     return messageRecord;
   }
 
@@ -129,7 +131,7 @@ class SmsWhatsappService {
     this.sentMessagesLog.unshift(messageRecord);
     if (this.sentMessagesLog.length > 100) this.sentMessagesLog.pop();
 
-    console.log(`[WhatsApp Gateway] Dispatched to ${cleanPhone}: "${message.slice(0, 60)}..."`);
+    console.log(`[WhatsApp Gateway] Dispatched to ${maskPhone(cleanPhone)}: "${message.slice(0, 60)}..."`);
     return messageRecord;
   }
 

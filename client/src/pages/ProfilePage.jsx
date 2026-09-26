@@ -124,6 +124,42 @@ export default function ProfilePage() {
   const [newTravellerRelation, setNewTravellerRelation] = useState('Friend');
   const [showAddTraveller, setShowAddTraveller] = useState(false);
 
+  // DPDP Act 2023 Governance States
+  const [dpdpConsent, setDpdpConsent] = useState({
+    account_management: { status: 'granted', required: true },
+    booking_fulfillment: { status: 'granted', required: true },
+    promotional_marketing: { status: 'granted', required: false },
+    whatsapp_alerts: { status: 'granted', required: false },
+    travel_insurance: { status: 'granted', required: false },
+    analytics_telemetry: { status: 'granted', required: false }
+  });
+  const [dpdpLoading, setDpdpLoading] = useState(false);
+  const [exportDataLoading, setExportDataLoading] = useState(false);
+  const [profileNomineeName, setProfileNomineeName] = useState('');
+  const [profileNomineeEmail, setProfileNomineeEmail] = useState('');
+  const [profileNomineePhone, setProfileNomineePhone] = useState('');
+  const [profileNomineeRelation, setProfileNomineeRelation] = useState('Spouse');
+  const [profileNomineeSaved, setProfileNomineeSaved] = useState(false);
+  const [profileErasureReason, setProfileErasureReason] = useState('Account closure requested');
+  const [profileErasureDone, setProfileErasureDone] = useState(null);
+
+  useEffect(() => {
+    if (user?.id) {
+      api.getUserConsent(user.id).then((res) => {
+        if (res?.currentPreferences) setDpdpConsent(res.currentPreferences);
+      });
+      api.getNominee(user.id).then((res) => {
+        if (res?.nominee) {
+          setProfileNomineeName(res.nominee.nomineeName || '');
+          setProfileNomineeEmail(res.nominee.email || '');
+          setProfileNomineePhone(res.nominee.phone || '');
+          setProfileNomineeRelation(res.nominee.relationship || 'Spouse');
+          setProfileNomineeSaved(true);
+        }
+      });
+    }
+  }, [user]);
+
   const saveTravellersToStorage = (list) => {
     setSavedTravellers(list);
     try {
@@ -448,6 +484,14 @@ export default function ProfilePage() {
             <Bell size={16} />
             <span>Communications & Queue</span>
             {unreadCount > 0 && <span className="tab-badge-pill">{unreadCount}</span>}
+          </button>
+          <button
+            type="button"
+            className={`profile-nav-tab ${activeTab === 'privacy' ? 'active' : ''}`}
+            onClick={() => setActiveTab('privacy')}
+          >
+            <ShieldCheck size={16} />
+            <span>Privacy & Governance (DPDP)</span>
           </button>
         </div>
 
@@ -1412,6 +1456,291 @@ export default function ProfilePage() {
                       </div>
                     ))}
                   </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Tab 5: Privacy & Data Governance (DPDP Act 2023) */}
+        {activeTab === 'privacy' && (
+          <div className="content-card form-card mt-3">
+            <div className="tab-section-header">
+              <div className="tab-section-title-wrap">
+                <h3 className="tab-section-title">Privacy & Data Governance</h3>
+                <p className="tab-section-sub">Manage your DPDP Act 2023 consent preferences, data portability, and statutory rights</p>
+              </div>
+              <Link to="/privacy" className="manage-all-link">
+                <span>View Itemized Privacy Notice</span>
+                <ArrowRight size={15} />
+              </Link>
+            </div>
+
+            <div className="p-4">
+              {/* Statutory Data Principal Rights Strip */}
+              <div className="rights-banner-strip p-3 bg-blue-50 border border-blue-200 rounded mb-4 flex-between-center">
+                <div className="flex items-center gap-2">
+                  <ShieldCheck size={24} color="#034ea2" />
+                  <div>
+                    <strong className="text-sm text-blue-900">DPDP Act 2023 & DPDP Rules 2025 Sovereign Data Rights</strong>
+                    <p className="text-xs text-blue-700 mb-0">You have complete sovereignty over your personal data processed on EazeTrip.</p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  className="primary-btn small flex items-center gap-1"
+                  disabled={exportDataLoading}
+                  onClick={async () => {
+                    setExportDataLoading(true);
+                    try {
+                      const res = await api.exportUserData(user?.id || 'USR-1');
+                      if (res.ok && res.data?.data) {
+                        const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(res.data.data, null, 2));
+                        const anchor = document.createElement('a');
+                        anchor.setAttribute('href', dataStr);
+                        anchor.setAttribute('download', `EazeTrip_Data_Archive_${user?.id || 'USR-1'}.json`);
+                        document.body.appendChild(anchor);
+                        anchor.click();
+                        anchor.remove();
+                        showToast('Personal data archive downloaded successfully!');
+                      }
+                    } catch {
+                      showToast('Failed to export data archive.');
+                    } finally {
+                      setExportDataLoading(false);
+                    }
+                  }}
+                >
+                  <Download size={14} />
+                  <span>{exportDataLoading ? 'Exporting...' : 'Download My Data Archive'}</span>
+                </button>
+              </div>
+
+              {/* 1. Purpose-Specific Consents */}
+              <div className="dpdp-section-block mb-4 pb-4 border-b">
+                <h4 className="font-semibold text-sm text-slate-800 mb-2 flex items-center gap-2">
+                  <Key size={16} color="#059669" /> Purpose-Specific Processing Consents (Section 6(4))
+                </h4>
+                <p className="text-xs text-slate-500 mb-3">
+                  Under Section 6(4) of the DPDP Act 2023, you can grant or withdraw non-essential consents at any time.
+                </p>
+
+                <div className="consent-grid-rows">
+                  <div className="consent-item-card p-3 border rounded mb-2 flex-between-center">
+                    <div>
+                      <strong className="text-sm">Promotional Travel Marketing & Holiday Deals</strong>
+                      <p className="text-xs text-slate-500 mb-0">Receive curated seasonal flight discounts and holiday vouchers via email and SMS.</p>
+                    </div>
+                    <button
+                      type="button"
+                      className={`toggle-pill-btn ${dpdpConsent.promotional_marketing?.status === 'granted' ? 'granted' : 'withdrawn'}`}
+                      disabled={dpdpLoading}
+                      onClick={async () => {
+                        setDpdpLoading(true);
+                        const isGranted = dpdpConsent.promotional_marketing?.status === 'granted';
+                        if (isGranted) {
+                          await api.withdrawConsent({ userId: user?.id || 'USR-1', purpose: 'promotional_marketing' });
+                          setDpdpConsent(prev => ({ ...prev, promotional_marketing: { ...prev.promotional_marketing, status: 'withdrawn' } }));
+                          showToast('Promotional marketing consent withdrawn.');
+                        } else {
+                          await api.recordConsent({ userId: user?.id || 'USR-1', purpose: 'promotional_marketing', status: 'granted' });
+                          setDpdpConsent(prev => ({ ...prev, promotional_marketing: { ...prev.promotional_marketing, status: 'granted' } }));
+                          showToast('Promotional marketing consent granted.');
+                        }
+                        setDpdpLoading(false);
+                      }}
+                    >
+                      {dpdpConsent.promotional_marketing?.status === 'granted' ? 'GRANTED' : 'WITHDRAWN'}
+                    </button>
+                  </div>
+
+                  <div className="consent-item-card p-3 border rounded mb-2 flex-between-center">
+                    <div>
+                      <strong className="text-sm">WhatsApp Journey Updates & Alerts</strong>
+                      <p className="text-xs text-slate-500 mb-0">Receive automated PNR confirmations, flight delay notices, and web check-in reminders on WhatsApp.</p>
+                    </div>
+                    <button
+                      type="button"
+                      className={`toggle-pill-btn ${dpdpConsent.whatsapp_alerts?.status === 'granted' ? 'granted' : 'withdrawn'}`}
+                      disabled={dpdpLoading}
+                      onClick={async () => {
+                        setDpdpLoading(true);
+                        const isGranted = dpdpConsent.whatsapp_alerts?.status === 'granted';
+                        if (isGranted) {
+                          await api.withdrawConsent({ userId: user?.id || 'USR-1', purpose: 'whatsapp_alerts' });
+                          setDpdpConsent(prev => ({ ...prev, whatsapp_alerts: { ...prev.whatsapp_alerts, status: 'withdrawn' } }));
+                          showToast('WhatsApp updates consent withdrawn.');
+                        } else {
+                          await api.recordConsent({ userId: user?.id || 'USR-1', purpose: 'whatsapp_alerts', status: 'granted' });
+                          setDpdpConsent(prev => ({ ...prev, whatsapp_alerts: { ...prev.whatsapp_alerts, status: 'granted' } }));
+                          showToast('WhatsApp updates consent granted.');
+                        }
+                        setDpdpLoading(false);
+                      }}
+                    >
+                      {dpdpConsent.whatsapp_alerts?.status === 'granted' ? 'GRANTED' : 'WITHDRAWN'}
+                    </button>
+                  </div>
+
+                  <div className="consent-item-card p-3 border rounded flex-between-center">
+                    <div>
+                      <strong className="text-sm">Travel Protection & Insurance Recommendations</strong>
+                      <p className="text-xs text-slate-500 mb-0">Allow tailored trip delay and medical coverage add-ons during checkout.</p>
+                    </div>
+                    <button
+                      type="button"
+                      className={`toggle-pill-btn ${dpdpConsent.travel_insurance?.status === 'granted' ? 'granted' : 'withdrawn'}`}
+                      disabled={dpdpLoading}
+                      onClick={async () => {
+                        setDpdpLoading(true);
+                        const isGranted = dpdpConsent.travel_insurance?.status === 'granted';
+                        if (isGranted) {
+                          await api.withdrawConsent({ userId: user?.id || 'USR-1', purpose: 'travel_insurance' });
+                          setDpdpConsent(prev => ({ ...prev, travel_insurance: { ...prev.travel_insurance, status: 'withdrawn' } }));
+                          showToast('Travel protection consent withdrawn.');
+                        } else {
+                          await api.recordConsent({ userId: user?.id || 'USR-1', purpose: 'travel_insurance', status: 'granted' });
+                          setDpdpConsent(prev => ({ ...prev, travel_insurance: { ...prev.travel_insurance, status: 'granted' } }));
+                          showToast('Travel protection consent granted.');
+                        }
+                        setDpdpLoading(false);
+                      }}
+                    >
+                      {dpdpConsent.travel_insurance?.status === 'granted' ? 'GRANTED' : 'WITHDRAWN'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* 2. Nominee Management (Section 14) */}
+              <div className="dpdp-section-block mb-4 pb-4 border-b">
+                <h4 className="font-semibold text-sm text-slate-800 mb-2 flex items-center gap-2">
+                  <UserPlus size={16} color="#7c3aed" /> Appoint Legal Nominee (Section 14)
+                </h4>
+                <p className="text-xs text-slate-500 mb-3">
+                  Nominate an individual to exercise data protection rights on your behalf in the event of death or incapacity.
+                </p>
+
+                <form
+                  onSubmit={async (e) => {
+                    e.preventDefault();
+                    if (!profileNomineeName.trim() || !profileNomineeEmail.trim()) return;
+                    try {
+                      await api.setNominee({
+                        userId: user?.id || 'USR-1',
+                        nomineeName: profileNomineeName,
+                        relationship: profileNomineeRelation,
+                        email: profileNomineeEmail,
+                        phone: profileNomineePhone
+                      });
+                      setProfileNomineeSaved(true);
+                      showToast(`Nominee '${profileNomineeName}' saved successfully!`);
+                    } catch {
+                      showToast('Failed to save nominee.');
+                    }
+                  }}
+                  className="grid grid-cols-1 md:grid-cols-2 gap-3"
+                >
+                  <div className="form-group">
+                    <label className="text-xs">Nominee Full Name *</label>
+                    <input
+                      type="text"
+                      className="form-control text-sm"
+                      value={profileNomineeName}
+                      onChange={(e) => setProfileNomineeName(e.target.value)}
+                      placeholder="e.g. Ritika Sharma"
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="text-xs">Relationship *</label>
+                    <select
+                      className="form-control text-sm"
+                      value={profileNomineeRelation}
+                      onChange={(e) => setProfileNomineeRelation(e.target.value)}
+                    >
+                      <option value="Spouse">Spouse</option>
+                      <option value="Parent">Parent</option>
+                      <option value="Child">Child</option>
+                      <option value="Sibling">Sibling</option>
+                      <option value="Legal Representative">Legal Representative</option>
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label className="text-xs">Nominee Email Address *</label>
+                    <input
+                      type="email"
+                      className="form-control text-sm"
+                      value={profileNomineeEmail}
+                      onChange={(e) => setProfileNomineeEmail(e.target.value)}
+                      placeholder="nominee@example.com"
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="text-xs">Nominee Phone *</label>
+                    <input
+                      type="tel"
+                      className="form-control text-sm"
+                      value={profileNomineePhone}
+                      onChange={(e) => setProfileNomineePhone(e.target.value)}
+                      placeholder="+91 9876543210"
+                      required
+                    />
+                  </div>
+                  <div className="col-span-full">
+                    <button type="submit" className="primary-btn small">
+                      {profileNomineeSaved ? '✓ Update Nominee Details' : 'Appoint Nominee'}
+                    </button>
+                  </div>
+                </form>
+              </div>
+
+              {/* 3. Right to Erasure (Section 12(3)) */}
+              <div className="dpdp-section-block">
+                <h4 className="font-semibold text-sm text-red-700 mb-2 flex items-center gap-2">
+                  <Trash2 size={16} color="#dc2626" /> Right to Erasure / Account Deletion (Section 12(3))
+                </h4>
+                <p className="text-xs text-slate-500 mb-2">
+                  Request the permanent anonymization of your profile and revocation of authentication credentials. Historical GST tax invoices are retained in a locked statutory archive for 7 years as required by the CGST Act 2017.
+                </p>
+
+                {profileErasureDone ? (
+                  <div className="p-3 bg-red-50 text-red-900 border border-red-200 rounded text-xs">
+                    <strong>✓ Erasure Request Processed (#{profileErasureDone.id})</strong>
+                    <p className="mt-1 mb-0">Your profile has been anonymized and all promotional messaging disabled.</p>
+                  </div>
+                ) : (
+                  <form
+                    onSubmit={async (e) => {
+                      e.preventDefault();
+                      if (!window.confirm('Are you certain you wish to submit an Account Erasure request? This action is permanent.')) return;
+                      try {
+                        const res = await api.requestDataErasure({
+                          userId: user?.id || 'USR-1',
+                          reason: profileErasureReason
+                        });
+                        if (res.ok && res.data?.erasureRecord) {
+                          setProfileErasureDone(res.data.erasureRecord);
+                          showToast('Erasure request submitted successfully.');
+                        }
+                      } catch {
+                        showToast('Failed to submit erasure request.');
+                      }
+                    }}
+                    className="flex items-center gap-2 mt-2"
+                  >
+                    <input
+                      type="text"
+                      className="form-control text-sm"
+                      value={profileErasureReason}
+                      onChange={(e) => setProfileErasureReason(e.target.value)}
+                      placeholder="Reason for deletion"
+                    />
+                    <button type="submit" className="btn-danger btn-sm text-nowrap">
+                      Submit Erasure Request
+                    </button>
+                  </form>
                 )}
               </div>
             </div>

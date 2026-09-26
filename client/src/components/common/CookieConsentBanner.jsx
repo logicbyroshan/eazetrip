@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Cookie, ShieldCheck, Check, X, Settings2, ExternalLink, Lock } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { api } from '../../services/api';
 
 const COOKIE_CONSENT_KEY = 'eazetrip_cookie_consent';
 
@@ -36,10 +37,12 @@ export default function CookieConsentBanner() {
       marketing: true,
       personalization: true,
       timestamp: new Date().toISOString(),
-      version: '1.0'
+      version: 'v2026.1'
     };
     try {
       localStorage.setItem(COOKIE_CONSENT_KEY, JSON.stringify(fullConsent));
+      api.recordConsent({ purpose: 'analytics_telemetry', status: 'granted', source: 'cookie_banner' });
+      api.recordConsent({ purpose: 'promotional_marketing', status: 'granted', source: 'cookie_banner' });
     } catch {}
     setIsVisible(false);
     setShowPreferencesModal(false);
@@ -52,10 +55,12 @@ export default function CookieConsentBanner() {
       marketing: false,
       personalization: false,
       timestamp: new Date().toISOString(),
-      version: '1.0'
+      version: 'v2026.1'
     };
     try {
       localStorage.setItem(COOKIE_CONSENT_KEY, JSON.stringify(essentialOnly));
+      api.recordConsent({ purpose: 'analytics_telemetry', status: 'withdrawn', source: 'cookie_banner' });
+      api.recordConsent({ purpose: 'promotional_marketing', status: 'withdrawn', source: 'cookie_banner' });
     } catch {}
     setIsVisible(false);
     setShowPreferencesModal(false);
@@ -66,10 +71,20 @@ export default function CookieConsentBanner() {
       ...preferences,
       essential: true,
       timestamp: new Date().toISOString(),
-      version: '1.0'
+      version: 'v2026.1'
     };
     try {
       localStorage.setItem(COOKIE_CONSENT_KEY, JSON.stringify(customConsent));
+      api.recordConsent({
+        purpose: 'analytics_telemetry',
+        status: preferences.analytics ? 'granted' : 'withdrawn',
+        source: 'cookie_banner'
+      });
+      api.recordConsent({
+        purpose: 'promotional_marketing',
+        status: preferences.marketing ? 'granted' : 'withdrawn',
+        source: 'cookie_banner'
+      });
     } catch {}
     setIsVisible(false);
     setShowPreferencesModal(false);
@@ -91,17 +106,17 @@ export default function CookieConsentBanner() {
                 <div className="cookie-header-row">
                   <strong>Privacy Preferences & Cookie Policy</strong>
                   <span className="privacy-badge">
-                    <ShieldCheck size={12} /> DPDP & GDPR Compliant
+                    <ShieldCheck size={12} /> DPDP Act 2023 & Rules 2025 Compliant
                   </span>
                 </div>
                 <p>
                   We use essential cookies for secure booking transactions and encrypted payments, along with analytics to deliver personalized travel offers, fare alerts, and faster checkout experiences. By clicking <strong>"Accept All"</strong>, you agree to our{' '}
-                  <Link to="/cancellation-refund" className="cookie-link">
-                    Customer Agreement
+                  <Link to="/terms" className="cookie-link">
+                    Terms of Service
                   </Link>
                   ,{' '}
-                  <Link to="/about" className="cookie-link">
-                    Privacy Policy
+                  <Link to="/privacy" className="cookie-link">
+                    Itemized Privacy Notice
                   </Link>
                   , and cookie usage.
                 </p>

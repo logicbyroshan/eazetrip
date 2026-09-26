@@ -3,6 +3,8 @@
  * Supports SMTP transport, Resend API, and luxury responsive HTML travel receipts
  */
 
+const { maskEmail } = require('../utils/piiMasker');
+
 class EmailService {
   constructor() {
     this.resendApiKey = process.env.RESEND_API_KEY || '';
@@ -70,7 +72,7 @@ class EmailService {
     this.sentEmailsLog.unshift(emailRecord);
     if (this.sentEmailsLog.length > 100) this.sentEmailsLog.pop();
 
-    console.log(`[Email Gateway] Delivered to ${to}: "${subject}" (PNR: ${pnr || 'N/A'})`);
+    console.log(`[Email Gateway] Delivered to ${maskEmail(to)}: "${subject}" (PNR: ${pnr || 'N/A'})`);
     return emailRecord;
   }
 }

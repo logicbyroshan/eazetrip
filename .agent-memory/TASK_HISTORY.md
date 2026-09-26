@@ -706,6 +706,33 @@ This file logs meaningful agent tasks, architectural milestones, and fixes chron
   - Added real-time processing overlay, signature verification, and immediate confirmed E-Ticket view upon successful payment.
 * **Testing Performed**: Verified clean Vite production build (`npm run build`), all 35 automated tests passing (`npm test`), and git tree clean.
 
+---
+
+### Task: DPDP Act 2023 & DPDP Rules 2025 Deep Compliance & Data Governance Implementation
+* **Date**: 2026-09-26
+* **Reason**: Full-stack statutory data governance alignment with India's Digital Personal Data Protection Act, 2023 and DPDP Rules, 2025 across backend, database, security, and client UI.
+* **Branch / PR**: `feature/dpdp-compliance-governance`
+* **Files Affected / Created**:
+  - `DPDP_COMPLIANCE.md` (Statutory compliance specifications & data inventory)
+  - `server/utils/piiMasker.js` (PII masking & log sanitization)
+  - `server/services/dpdpService.js` (Notice taxonomy, verifiable consent, data export, erasure, grievances, nominations, retention)
+  - `server/services/breachService.js` (Incident triage, DPBI board notification generator, principal alerts)
+  - `server/services/smsWhatsappService.js` (PII log sanitization)
+  - `server/services/emailService.js` (PII log sanitization)
+  - `server/services/notificationService.js` (Child & minor traveler targeted ads blocking)
+  - `server/data/db.js` (SQLite schemas for consent, grievances, nominees, breaches, erasure)
+  - `server/index.js` (13 DPDP endpoints with rate limiting & sanitization)
+  - `client/src/pages/PrivacyPage.jsx` (3-mode notice, self-service data rights center, DPO grievance portal)
+  - `client/src/pages/ProfilePage.jsx` (DPDP tab for data archive, consent, nominee, erasure)
+  - `client/src/components/common/CookieConsentBanner.jsx` (Synchronized backend cookie consent)
+  - `client/src/pages/ReviewBookingPage.jsx` (Statutory DPDP & minor traveler disclosures)
+  - `client/src/services/api.js` (DPDP client API SDK)
+  - `client/src/App.css` (Styles for legal taxonomy, rights center, toggle pills, DPO card)
+  - `tests/server.test.js` (Tests 77-89 added for DPDP workflows)
+  - `API.md` / `SECURITY.md` / `CHANGELOG.md` / `.agent-memory/`
+* **Testing Performed**: 89/89 automated tests passing (`npm test`), Vite production build clean (1.07s, 0 errors).
+
+
 
 
 

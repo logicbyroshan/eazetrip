@@ -1,11 +1,11 @@
 # Current Project State: EazeTrip
 
 ## 1. Release Baseline & Status
-* **Status**: Production Ready / Fluid Responsive Scale Adaptation / Enterprise UI/UX / 100% Passing Tests
-* **Version**: `2.4.3`
-* **Test Suite**: 76 / 76 automated tests passing (`npm test`).
+* **Status**: Production Ready / DPDP Act 2023 & DPDP Rules 2025 Verified / Fluid Responsive Scale / Enterprise UI/UX / 100% Passing Tests
+* **Version**: `2.5.0`
+* **Test Suite**: 89 / 89 automated tests passing (`npm test`).
 * **Client Build**: Clean Vite production build (`npm run build`).
-* **Active Branch**: `feature/fluid-responsive-scale-adaptation` (Merging to `main`)
+* **Active Branch**: `feature/dpdp-compliance-governance` (Merging to `main`)
 
 ---
 
@@ -13,6 +13,7 @@
 
 | Domain | Status | Route / Component | Features |
 |---|---|---|---|
+| **DPDP Compliance & Data Governance** | ✅ Complete | `server/services/dpdpService.js`, `breachService.js`, `piiMasker.js`, `PrivacyPage.jsx`, `ProfilePage.jsx` | Full statutory alignment with DPDP Act 2023 & DPDP Rules 2025. Itemized notice taxonomy (v2026.1), verifiable consent recording & withdrawal, self-service Data Rights Center (Data Export, Erasure with CGST retention lock, Nominee appointment), DPO Grievance Redressal (90-day statutory SLA), minor traveler protections (targeted ads blocker), PII log sanitization, and Data Protection Board of India (DPBI) breach reporting. |
 | **Mobile & Cross-Device Responsiveness** | ✅ Complete | `App.css`, all listing pages & checkout | Fluid cross-device adaptation across mobile (320px–480px), tablet (600px–1024px), and desktop (1280px+). Clean card stacking, adaptive pricing bars, and touch-optimized action buttons. |
 | **Infinite Reviews Marquee** | ✅ Complete | `ReviewsSection.jsx`, `App.css` | Dual-row bidirectional infinite streaming marquee (Row 1 left, Row 2 right) with 16 rich verified reviews, CSS edge fade masks, and hover pause. |
 | **Database Persistence** | ✅ Complete | `server/data/db.js` | Native Node SQLite WAL persistent engine with auto-schema migration & JSON fallback. Stores users, bookings, refunds, support tickets, and reviews. |
