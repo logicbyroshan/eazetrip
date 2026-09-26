@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.4.3] - 2026-09-26
+
+### Fluid Responsive Typography, Dynamic Spacing Tokens & Adaptive Corner Radii
+
+#### Master Design System Tokens (`client/src/index.css`)
+- **Fluid Typography Tokens**: Implemented dynamic `clamp()` typography scales across `--text-2xs` to `--text-5xl` that scale continuously with viewport width, eliminating abrupt jumps.
+- **Adaptive Breakpoint Spacing**: Added responsive tokens for container padding (`--container-px`), card padding (`--card-padding`), section gaps, and 8-point grid variables (`--space-*`) scaling down gracefully on tablet, mobile, and ultra-compact screens.
+- **Adaptive Corner Radii**: Configured responsive corner radius scaling (`--radius-xl`, `--radius-lg`, `--radius-md`, `--radius-sm`, `--card-radius`) from 22px on desktop to 14px on mobile and 10px on small screens, preventing card clipping.
+
+#### Component Geometry & Format Shifts (`client/src/App.css`)
+- **Universal Fluid Headings**: Bound `.hero-title`, `.hero-subtitle`, `.section-title`, `.card-section-title`, and travel listing titles to fluid `clamp()` values.
+- **Fluid Container Width**: Converted `.container` to full fluid width with `max-width: 1240px` and dynamic `var(--container-px, 16px)` gutters.
+- **Card Padding Binding**: Bound all 5 travel mediums, search widgets, admin backoffice, profile, and review sections to `var(--card-padding)` and `var(--card-radius)`.
+
+---
+
 ## [2.4.2] - 2026-09-26
 
 ### Mobile & Cross-Device Adaptive Overhaul
