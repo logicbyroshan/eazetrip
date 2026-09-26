@@ -20705,6 +20705,398 @@ input:checked + .slider:before {
   background: rgba(255, 255, 255, 0.1);
 }
 
+/* ==========================================================================
+   MASTER MOBILE & CROSS-DEVICE RESPONSIVE OVERHAUL (EAZE TRIP LUXURY DESIGN)
+   ========================================================================== */
+
+/* Universal Mobile Fixes & Safe Area Adaptation */
+@media screen and (max-width: 1024px) {
+  .listing-content-layout {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+  .listing-sidebar {
+    width: 100% !important;
+    position: static !important;
+    max-height: none !important;
+    margin-bottom: 8px !important;
+  }
+  .filter-sidebar {
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .search-fields-grid.flight-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12px !important;
+  }
+  .search-fields-grid.hotel-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12px !important;
+  }
+  .search-fields-grid.bus-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12px !important;
+  }
+  .search-fields-grid.train-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12px !important;
+  }
+  .search-fields-grid.holiday-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12px !important;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  /* 1. Luxury Flight Cards Responsive Stacking */
+  .flight-card.luxury-flight-card {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+    padding: 18px 20px !important;
+  }
+  .flight-schedule-col {
+    padding: 12px 0 !important;
+    border-top: 1px dashed #e2e8f0 !important;
+    border-bottom: 1px dashed #e2e8f0 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .flight-price-col {
+    border-left: none !important;
+    border-top: 1px solid #f1f5f9 !important;
+    padding-left: 0 !important;
+    padding-top: 14px !important;
+    width: 100% !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    box-sizing: border-box !important;
+  }
+  .flight-price-col .price-box {
+    text-align: left !important;
+  }
+  .flight-price-col .flight-tag-row {
+    justify-content: flex-start !important;
+  }
+  .flight-action-buttons {
+    margin-top: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+  }
+
+  /* 2. Luxury Hotel Cards Responsive Stacking */
+  .hotel-card.luxury-hotel-card {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+    padding: 18px !important;
+  }
+  .hotel-image-wrapper {
+    height: 220px !important;
+    width: 100% !important;
+  }
+  .hotel-pricing-column {
+    border-left: none !important;
+    border-top: 1px solid #f1f5f9 !important;
+    padding-left: 0 !important;
+    padding-top: 14px !important;
+    width: 100% !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    box-sizing: border-box !important;
+  }
+  .hotel-price-breakdown {
+    text-align: left !important;
+  }
+  .luxury-hotel-book-btn {
+    width: auto !important;
+    min-width: 160px !important;
+  }
+
+  /* 3. Luxury Bus Cards Responsive Stacking */
+  .bus-card.luxury-bus-card .bus-card-main-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+  .bus-timeline-column {
+    padding: 12px 0 !important;
+    border-top: 1px dashed #e2e8f0 !important;
+    border-bottom: 1px dashed #e2e8f0 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .bus-action-column {
+    border-left: none !important;
+    border-top: 1px solid #f1f5f9 !important;
+    padding-left: 0 !important;
+    padding-top: 14px !important;
+    width: 100% !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    box-sizing: border-box !important;
+  }
+  .bus-pricing-display {
+    text-align: left !important;
+  }
+  .luxury-bus-select-btn {
+    width: auto !important;
+    min-width: 150px !important;
+  }
+
+  /* 4. Luxury Train Cards Responsive Stacking */
+  .train-schedule-grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+    padding: 12px 0 !important;
+  }
+  .train-bottom-action-bar {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 14px !important;
+  }
+  .train-pricing-cta-wrap {
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    width: 100% !important;
+  }
+
+  /* 5. Luxury Holiday Cards Responsive Stacking */
+  .holiday-card.luxury-holiday-card {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+  .holiday-img-col {
+    height: 220px !important;
+    width: 100% !important;
+  }
+  .holiday-price-col {
+    border-left: none !important;
+    border-top: 1px solid #f1f5f9 !important;
+    padding-left: 0 !important;
+    padding-top: 14px !important;
+    width: 100% !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    box-sizing: border-box !important;
+  }
+  .price-tag-wrap {
+    text-align: left !important;
+  }
+  .holiday-actions {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+  }
+}
+
+/* Smartphone & Compact Screen Polish (max-width: 600px) */
+@media screen and (max-width: 600px) {
+  /* Search Widgets stacked layout on phone */
+  .search-fields-grid.flight-grid,
+  .search-fields-grid.hotel-grid,
+  .search-fields-grid.bus-grid,
+  .search-fields-grid.train-grid,
+  .search-fields-grid.holiday-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  .swap-button {
+    margin: -4px auto !important;
+    transform: rotate(90deg) !important;
+    z-index: 2 !important;
+  }
+  .swap-button:hover {
+    transform: rotate(270deg) !important;
+  }
+
+  .search-widget-box {
+    padding: 16px 14px !important;
+    border-radius: 16px !important;
+  }
+
+  .search-top-bar {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+    margin-bottom: 12px !important;
+  }
+
+  .trip-radio-group {
+    width: 100% !important;
+    display: flex !important;
+    gap: 6px !important;
+    overflow-x: auto !important;
+    padding-bottom: 4px !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .radio-pill {
+    flex: 1 0 auto !important;
+    padding: 6px 10px !important;
+    font-size: 0.8rem !important;
+    justify-content: center !important;
+    white-space: nowrap !important;
+  }
+
+  .field-value-card {
+    min-height: 54px !important;
+    padding: 8px 12px !important;
+  }
+
+  .city-title {
+    font-size: 1.05rem !important;
+  }
+
+  /* Marquee Card Width on Mobile */
+  .review-card-elevated.marquee-card {
+    width: 280px !important;
+    min-width: 280px !important;
+    max-width: 280px !important;
+    padding: 16px !important;
+  }
+  .reviews-marquee-fade-left,
+  .reviews-marquee-fade-right {
+    width: 28px !important;
+  }
+
+  /* Card Action Buttons & Price rows for mobile screen */
+  .flight-price-col,
+  .hotel-pricing-column,
+  .bus-action-column,
+  .holiday-price-col,
+  .train-pricing-cta-wrap {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+  }
+
+  .flight-action-buttons,
+  .holiday-actions {
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+
+  .flight-book-btn,
+  .link-details-btn,
+  .luxury-hotel-book-btn,
+  .luxury-bus-select-btn,
+  .book-train-action-btn,
+  .holiday-book-btn,
+  .holiday-view-btn {
+    width: 100% !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+
+  /* Train Card Mobile Elements */
+  .train-card-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+  }
+  .train-meta-right {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+  }
+  .train-classes-tiles-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+
+  /* Results Header on Mobile */
+  .results-header-bar {
+    padding: 12px 14px !important;
+  }
+  .results-header-bar h2 {
+    font-size: 1.15rem !important;
+  }
+  .results-count {
+    font-size: 0.78rem !important;
+  }
+
+  /* Multi-Step Checkout Responsive Layout */
+  .booking-step-tracker-bar {
+    padding: 8px 10px !important;
+    gap: 4px !important;
+    justify-content: space-between !important;
+  }
+  .step-tracker-node {
+    gap: 4px !important;
+  }
+  .node-icon {
+    width: 26px !important;
+    height: 26px !important;
+    font-size: 0.75rem !important;
+  }
+  .node-text {
+    display: none !important;
+  }
+
+  .flight-route-strip {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+    text-align: center !important;
+  }
+
+  /* Modals Full-Width on Mobile */
+  .modal-container,
+  .flight-details-modal-box,
+  .helpdesk-modal-window {
+    width: calc(100vw - 20px) !important;
+    max-width: calc(100vw - 20px) !important;
+    margin: 10px auto !important;
+    border-radius: 16px !important;
+  }
+
+  /* Cookie Banner Mobile Alignment */
+  .cookie-consent-container {
+    left: 10px !important;
+    right: 10px !important;
+    bottom: 10px !important;
+    max-width: calc(100vw - 20px) !important;
+    padding: 14px !important;
+    border-radius: 14px !important;
+  }
+}
+
+/* Micro-Device Polish (max-width: 400px - iPhone SE, Galaxy S) */
+@media screen and (max-width: 400px) {
+  .brand-logo-img {
+    height: 32px !important;
+  }
+  .brand-name-eaze {
+    font-size: 1.2rem !important;
+  }
+  .brand-tagline {
+    font-size: 0.52rem !important;
+    letter-spacing: 0.04em !important;
+  }
+  .topbar-whatsapp span {
+    display: none !important;
+  }
+  .currency-selector-btn .currency-tag {
+    font-size: 11px !important;
+  }
+  .train-classes-tiles-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .flight-action-buttons,
+  .holiday-actions {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+
 
 
 

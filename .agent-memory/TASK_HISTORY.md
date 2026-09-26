@@ -4,6 +4,23 @@ This file logs meaningful agent tasks, architectural milestones, and fixes chron
 
 ---
 
+### Task: Mobile Responsiveness Audit & Cross-Device Adaptive Layout Polish
+* **Date**: 2026-09-26
+* **Reason**: User requested an in-depth audit of what is completed, what is working, anything broken, and a full check and refinement of UI responsiveness across mobile devices, smartphones, tablets, and desktop displays.
+* **Branch / PR**: `feature/mobile-responsiveness-polish`.
+* **Files Affected**:
+  - `client/src/App.css` (Added master responsive overhaul: card vertical stacking on mobile, responsive pricing & action button bars, mobile search widget grids, centered swap buttons, 28px edge masks for marquee on mobile, touch-friendly 44px targets, safe area spacing)
+  - `CHANGELOG.md`, `.agent-memory/CURRENT_STATE.md`, `.agent-memory/TASK_HISTORY.md`
+* **What Changed**:
+  - Fixed CSS specificity issue where `.luxury-flight-card`, `.luxury-hotel-card`, `.luxury-bus-card`, `.luxury-train-card`, and `.luxury-holiday-card` were retaining 3-column desktop grid layouts on mobile screens (<900px, <600px).
+  - Cards now stack into a vertical responsive layout on mobile screens with dedicated horizontal pricing & CTA rows.
+  - Search fields adapt from 2 columns on tablet (<1024px) to single-column on mobile (<600px) with centered vertical swap buttons.
+  - Reviews marquee edge fade masks adjusted to 28px on mobile to preserve full review readability.
+  - Modals, cookie banner, and checkout step tracker optimized for small screen viewports (320px–390px).
+* **Testing Performed**: 76 / 76 automated tests passing (`npm test`), clean Vite production build in 1.01s (`npm run build`), browser subagent mobile device emulation (390x844).
+
+---
+
 ### Task: Infinite Dual-Row Reviews Marquee with Opposite Directions & Left/Right Fade Masks
 * **Date**: 2026-09-23
 * **Reason**: User requested an overhaul of the 3-card ratings and reviews section into an infinite bidirectional scrolling marquee with 2 opposite rows, many cards, smooth left-to-right fade edges so cards don't cut off abruptly, and luxury styling.

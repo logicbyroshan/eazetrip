@@ -1,11 +1,11 @@
 # Current Project State: EazeTrip
 
 ## 1. Release Baseline & Status
-* **Status**: Production Ready / Infinite Dual-Row Reviews Marquee / Enterprise UI/UX / 100% Passing Tests
-* **Version**: `2.4.1`
+* **Status**: Production Ready / Cross-Device Responsive Overhaul / Enterprise UI/UX / 100% Passing Tests
+* **Version**: `2.4.2`
 * **Test Suite**: 76 / 76 automated tests passing (`npm test`).
 * **Client Build**: Clean Vite production build (`npm run build`).
-* **Active Branch**: `feature/infinite-marquee-reviews` (Merging to `main`)
+* **Active Branch**: `feature/mobile-responsiveness-polish` (Merging to `main`)
 
 ---
 
@@ -13,6 +13,7 @@
 
 | Domain | Status | Route / Component | Features |
 |---|---|---|---|
+| **Mobile & Cross-Device Responsiveness** | ✅ Complete | `App.css`, all listing pages & checkout | Fluid cross-device adaptation across mobile (320px–480px), tablet (600px–1024px), and desktop (1280px+). Clean card stacking, adaptive pricing bars, and touch-optimized action buttons. |
 | **Infinite Reviews Marquee** | ✅ Complete | `ReviewsSection.jsx`, `App.css` | Dual-row bidirectional infinite streaming marquee (Row 1 left, Row 2 right) with 16 rich verified reviews, CSS edge fade masks, and hover pause. |
 | **Database Persistence** | ✅ Complete | `server/data/db.js` | Native Node SQLite WAL persistent engine with auto-schema migration & JSON fallback. Stores users, bookings, refunds, support tickets, and reviews. |
 | **Live Inventory Aggregator** | ✅ Complete | `server/services/inventory/`, `/api/inventory/providers` | Modular provider architecture for Flights (Amadeus/NDC), Hotels (Expedia/Hotelbeds), Trains (IRCTC), and Buses (redBus) with dynamic pricing & cache fallback. |
