@@ -55,10 +55,14 @@
   color: #15803d;
   background: #f0fdf4;
   border: 1px solid #bbf7d0;
-  border-radius: 20px;
-  padding: 4px 12px;
-  font-weight: 600;
+  border-radius: 9999px;
+  padding: 0 12px;
+  height: 32px;
+  min-height: 32px;
+  box-sizing: border-box;
+  font-weight: 700;
   font-size: 0.78rem;
+  line-height: 1;
   transition: all 0.2s ease;
   text-decoration: none;
 }
@@ -70,6 +74,7 @@
 
 .wa-icon, .wa-svg-icon {
   flex-shrink: 0;
+  fill: currentColor;
 }
 
 .topbar-phone {
@@ -79,12 +84,16 @@
   color: #1e293b;
   font-weight: 600;
   font-size: 0.78rem;
-  padding: 4px 10px;
-  border-radius: 6px;
+  padding: 0 10px;
+  height: 32px;
+  min-height: 32px;
+  box-sizing: border-box;
+  border-radius: 9999px;
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   transition: all 0.2s ease;
   text-decoration: none;
+  line-height: 1;
 }
 
 .topbar-phone:hover {
@@ -105,18 +114,22 @@
   font-size: 0.76rem;
   font-weight: 600;
   color: var(--navy, #0a192f);
-  padding: 3px 8px;
-  background: rgba(226, 232, 240, 0.85);
-  border: 1px solid rgba(203, 213, 225, 0.8);
-  border-radius: 6px;
+  padding: 0 10px;
+  height: 32px;
+  min-height: 32px;
+  box-sizing: border-box;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 9999px;
   cursor: pointer;
   transition: all 0.2s ease;
   font-family: inherit;
+  line-height: 1;
 }
 
 .currency-selector-btn:hover,
 .lang-selector-btn:hover {
-  background: #cbd5e1;
+  background: #e2e8f0;
   border-color: #94a3b8;
 }
 
@@ -226,17 +239,50 @@
   background: linear-gradient(135deg, #034ea2 0%, #0077b6 100%);
   color: #ffffff !important;
   border-radius: 9999px;
-  padding: 6px 16px;
-  font-size: 0.82rem;
+  padding: 0 16px;
+  height: 32px;
+  min-height: 32px;
+  box-sizing: border-box;
+  font-size: 0.80rem;
   font-weight: 700;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  gap: 6px;
   border: none;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(3, 78, 162, 0.28);
+  box-shadow: 0 2px 8px rgba(3, 78, 162, 0.25);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  transform: translateZ(0);
+  line-height: 1;
+}
+
+.login-pill-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(3, 78, 162, 0.35);
+}
+
+.user-profile-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  height: 32px;
+  min-height: 32px;
+  box-sizing: border-box;
+  border-radius: 9999px;
+  background: #edf5fc;
+  border: 1px solid #b3d4fc;
+  color: #034ea2;
+  font-weight: 700;
+  font-size: 0.80rem;
+  cursor: pointer;
+  line-height: 1;
+  transition: all 0.2s ease;
+}
+
+.user-profile-btn:hover {
+  background: #dbeafe;
+  border-color: #93c5fd;
 }
 
 .login-pill-btn:hover {
@@ -568,54 +614,121 @@
 
 .hero-search-wrapper {
   background: #ffffff;
-  border-radius: var(--radius-lg);
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.22);
   color: var(--text-main);
   text-align: left;
-  overflow: visible;
+  overflow: visible !important;
   position: relative;
   z-index: 20;
+  margin-bottom: 28px;
 }
 
-/* Hero Assurance Banner */
-.assurance-banner {
+/* ==========================================================================
+   MODERN ASSURANCE STRIP SECTION (Positioned below Travel Categories)
+   ========================================================================== */
+.assurance-strip-section {
+  padding: 36px 0 20px 0;
+  background: #f8fafc;
+}
+
+.assurance-banner-modern {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.75);
-  border-radius: var(--radius-md);
-  padding: 12px 22px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  margin-top: 20px;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
+  overflow: hidden;
 }
 
-.assurance-item {
+.assurance-item-modern {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 14px;
+  padding: 22px 20px;
+  border-right: 1px solid #f1f5f9;
+  transition: background 0.2s ease;
 }
 
-.assurance-icon {
-  font-size: 1.2rem;
+.assurance-item-modern:last-child {
+  border-right: none;
+}
+
+.assurance-item-modern:hover {
+  background: #f8fafc;
+}
+
+.assurance-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
   flex-shrink: 0;
+  transition: transform 0.2s ease;
 }
 
-.assurance-item p {
-  font-size: 0.76rem;
-  font-weight: 600;
-  color: var(--navy);
+.assurance-icon-box.icon-blue { background: #e0f2fe; color: #0284c7; }
+.assurance-icon-box.icon-green { background: #dcfce7; color: #16a34a; }
+.assurance-icon-box.icon-purple { background: #f3e8ff; color: #7c3aed; }
+.assurance-icon-box.icon-amber { background: #fef3c7; color: #d97706; }
+
+.assurance-item-modern:hover .assurance-icon-box {
+  transform: scale(1.08);
+}
+
+.assurance-text-col {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.assurance-title {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.25;
+}
+
+.assurance-desc {
+  font-size: 0.75rem;
+  color: #64748b;
   line-height: 1.35;
   margin: 0;
+}
+
+@media (max-width: 1024px) {
+  .assurance-banner-modern {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .assurance-item-modern:nth-child(2) {
+    border-right: none;
+  }
+  .assurance-item-modern:nth-child(-n+2) {
+    border-bottom: 1px solid #f1f5f9;
+  }
+}
+
+@media (max-width: 600px) {
+  .assurance-banner-modern {
+    grid-template-columns: 1fr;
+  }
+  .assurance-item-modern {
+    border-right: none;
+    border-bottom: 1px solid #f1f5f9;
+    padding: 16px;
+  }
+  .assurance-item-modern:last-child {
+    border-bottom: none;
+  }
 }
 
 .hero-search-tabs {
   display: flex;
   background: #f1f5f9;
-  border-top-left-radius: var(--radius-lg);
-  border-top-right-radius: var(--radius-lg);
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
   border-bottom: 1px solid var(--border);
   overflow-x: auto;
 }
@@ -645,14 +758,18 @@
 }
 
 .hero-search-content {
-  padding: 24px;
+  padding: 16px 20px 24px 20px;
+  position: relative;
+  overflow: visible;
 }
 
 /* Common Search Widget Styles */
 .search-widget-box {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
+  position: relative;
+  overflow: visible;
 }
 
 .search-top-bar {
@@ -7011,30 +7128,7 @@ input[type="radio"]:focus-visible {
   }
 }
 
-/* ==========================================================================
-   5. TOPBAR WHATSAPP SVG ICON
-   ========================================================================== */
-.topbar-whatsapp {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: #16a34a !important;
-  font-weight: 700;
-  padding: 3px 8px;
-  background: #dcfce7;
-  border-radius: 9999px;
-  transition: all 0.2s ease;
-}
 
-.topbar-whatsapp:hover {
-  background: #bbf7d0;
-  transform: translateY(-1px);
-}
-
-.wa-svg-icon {
-  fill: #16a34a;
-  flex-shrink: 0;
-}
 
 /* ==========================================================================
    6. GLASSMORPHIC HERO SEARCH & MODERN CLEAN TABS

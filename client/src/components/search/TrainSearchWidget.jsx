@@ -341,10 +341,10 @@ export default function TrainSearchWidget({ initialValues = {}, onSearch }) {
         </div>
       </div>
 
-      <div className="search-action-wrap">
+      <div className="search-action-wrap-floating">
         <button
           type="button"
-          className="search-submit-hero-btn"
+          className="search-submit-hero-btn modern-floating-btn"
           onClick={handleSearchSubmit}
         >
           SEARCH TRAINS

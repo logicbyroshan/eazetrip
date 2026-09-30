@@ -214,10 +214,10 @@ export default function HolidaySearchWidget({ initialValues = {}, onSearch }) {
       </div>
 
       {/* Action Button */}
-      <div className="search-action-wrap">
+      <div className="search-action-wrap-floating">
         <button
           type="button"
-          className="search-submit-hero-btn holiday-submit-btn"
+          className="search-submit-hero-btn modern-floating-btn"
           onClick={handleSearchSubmit}
         >
           EXPLORE HOLIDAY PACKAGES

@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.5.5] - 2026-10-01
+
+### Topbar Height Harmonization, Reordered Hero Tabs (Flights-Trains-Buses-Hotels-Holidays), Full-Width Offers Marquee & Post-Category Assurance Strip
+
+#### Topbar Visual Alignment (`client/src/App.css`)
+- **Matching Height & Padding**: Standardized WhatsApp Support badge, Phone button, Currency & Language selectors, and Login/Signup button to an exact `32px` uniform height with `line-height: 1` flex centering.
+- **Cleaned Duplicate Style Overrides**: Removed conflicting `.topbar-whatsapp` rule to maintain uniform pill aesthetics across all viewports.
+
+#### Hero Travel Tabs Reordering & Compact Symmetrical Padding (`client/src/pages/HomePage.jsx`, `client/src/App.css`)
+- **Reordered Travel Tabs**: Arranged hero booking medium switcher in the requested logical sequence: **Flights** ➜ **Trains** ➜ **Buses** ➜ **Hotels** ➜ **Holidays**.
+- **Compact Symmetrical 4-Side Padding**: Reduced excessive padding on `.hero-search-content` (`padding: 16px 20px 24px 20px` desktop, `14px 14px 22px 14px` mobile) for balanced, modern spacing.
+- **Consistent Floating Search Buttons**: Integrated `.search-action-wrap-floating` with centered `.modern-floating-btn` (half inside, half outside bottom border) across Trains, Buses, Hotels, and Holidays search widgets.
+
+#### Special Offers Edge-to-Edge Full-Width Marquee (`client/src/components/home/SpecialOffersSection.jsx`, `client/src/App.css`)
+- **Removed Enclosing Card Box**: Removed `.special-offers-main-card` constraint, enabling the infinite single-row auto-scrolling bank offers marquee to stream edge-to-edge across full viewport width like the reviews marquee.
+
+#### Modern Post-Category Assurance Strip (`client/src/pages/HomePage.jsx`, `client/src/App.css`)
+- **Relocated Off Hero Section**: Removed the assurance banner from the hero section to keep the hero clean and focused purely on title, subheadline, and booking search widget.
+- **Modern Post-Category Placement**: Positioned the assurance strip directly below the Tour Categories wave section with 4 clean divided boxes and modern Lucide icons (`Percent`, `CheckCircle2`, `ShieldCheck`, `Headphones`).
+
+---
+
 ## [2.5.4] - 2026-10-01
 
 ### Hero Search Unified Segmented Box & Floating Button, Infinite Special Offers Marquee, Deep Tour Wave Curve, Footer Justification, and Global Scrollbar Hide
