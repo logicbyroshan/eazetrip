@@ -558,7 +558,7 @@
 
 .hero-content {
   text-align: center;
-  max-width: 1120px;
+  max-width: 100%;
   margin: 0 auto;
   width: 100%;
 }
@@ -12705,6 +12705,72 @@ input[type="radio"]:focus-visible {
   object-fit: cover;
   border: 1.5px solid #ffffff;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.google-onetap-avatar-placeholder {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #e0f2fe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: #034ea2;
+  border: 1.5px solid #bae6fd;
+  flex-shrink: 0;
+}
+
+.avatar-letter {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.google-onetap-custom-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.google-custom-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.84rem;
+  color: #1e293b;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.google-custom-input:focus {
+  border-color: #1a73e8;
+  box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.15);
+}
+
+.google-switch-account-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.google-switch-account-btn {
+  background: transparent;
+  border: none;
+  color: #1a73e8;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background 0.15s ease, text-decoration 0.15s ease;
+}
+
+.google-switch-account-btn:hover {
+  background: #f1f5f9;
+  text-decoration: underline;
 }
 
 .google-onetap-user-meta {

@@ -43,6 +43,7 @@ export default function CookieConsentBanner() {
       localStorage.setItem(COOKIE_CONSENT_KEY, JSON.stringify(fullConsent));
       api.recordConsent({ purpose: 'analytics_telemetry', status: 'granted', source: 'cookie_banner' });
       api.recordConsent({ purpose: 'promotional_marketing', status: 'granted', source: 'cookie_banner' });
+      window.dispatchEvent(new CustomEvent('eazetrip-cookie-consent-settled'));
     } catch {}
     setIsVisible(false);
     setShowPreferencesModal(false);
@@ -61,6 +62,7 @@ export default function CookieConsentBanner() {
       localStorage.setItem(COOKIE_CONSENT_KEY, JSON.stringify(essentialOnly));
       api.recordConsent({ purpose: 'analytics_telemetry', status: 'withdrawn', source: 'cookie_banner' });
       api.recordConsent({ purpose: 'promotional_marketing', status: 'withdrawn', source: 'cookie_banner' });
+      window.dispatchEvent(new CustomEvent('eazetrip-cookie-consent-settled'));
     } catch {}
     setIsVisible(false);
     setShowPreferencesModal(false);
@@ -85,6 +87,7 @@ export default function CookieConsentBanner() {
         status: preferences.marketing ? 'granted' : 'withdrawn',
         source: 'cookie_banner'
       });
+      window.dispatchEvent(new CustomEvent('eazetrip-cookie-consent-settled'));
     } catch {}
     setIsVisible(false);
     setShowPreferencesModal(false);

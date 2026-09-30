@@ -1,32 +1,91 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useBooking } from '../../context/BookingContext';
-import { X, ShieldCheck } from 'lucide-react';
+import { X, ShieldCheck, User, Sparkles, Check } from 'lucide-react';
 
 export default function GoogleOneTapPrompt() {
-  const { user, loginWithGoogle, firstName, googleConfig } = useAuth();
+  const { user, loginWithGoogle, rememberedName, googleConfig } = useAuth();
   const { showToast } = useBooking();
 
   const [isVisible, setIsVisible] = useState(false);
   const [isSigningIn, setIsSigningIn] = useState(false);
+  const [isCustomMode, setIsCustomMode] = useState(false);
+
+  // Dynamic user details for Google Sign-in
+  const [customName, setCustomName] = useState(() => {
+    try {
+      return localStorage.getItem('eazetrip_remembered_name') || '';
+    } catch {
+      return '';
+    }
+  });
+
+  const [customEmail, setCustomEmail] = useState(() => {
+    try {
+      return localStorage.getItem('eazetrip_remembered_email') || '';
+    } catch {
+      return '';
+    }
+  });
 
   useEffect(() => {
-    // Do not show if user is already logged in
+    // 1. Do not show if user is already logged in
     if (user) {
       setIsVisible(false);
       return;
     }
 
-    // Trigger floating Google prompt smoothly after 1.2 seconds
-    const timer = setTimeout(() => {
-      setIsVisible(true);
-    }, 1200);
+    // 2. Check if dismissed in this session
+    try {
+      if (sessionStorage.getItem('eazetrip_onetap_dismissed') === 'true') {
+        return;
+      }
+    } catch {}
 
-    return () => clearTimeout(timer);
+    // 3. Check if cookie consent is already settled
+    let isConsentSettled = false;
+    try {
+      isConsentSettled = Boolean(localStorage.getItem('eazetrip_cookie_consent'));
+    } catch {}
+
+    let timer = null;
+
+    if (isConsentSettled) {
+      // If cookie consent is already settled, show Google prompt after a smooth 2.8s delay
+      timer = setTimeout(() => {
+        setIsVisible(true);
+      }, 2800);
+    } else {
+      // If cookie consent is pending (first load), wait for cookie consent interaction or 6.5s delay
+      const handleConsentSettled = () => {
+        timer = setTimeout(() => {
+          setIsVisible(true);
+        }, 1500);
+      };
+
+      window.addEventListener('eazetrip-cookie-consent-settled', handleConsentSettled, { once: true });
+
+      // Fallback timer if user doesn't interact with cookie banner
+      timer = setTimeout(() => {
+        setIsVisible(true);
+      }, 6500);
+
+      return () => {
+        if (timer) clearTimeout(timer);
+        window.removeEventListener('eazetrip-cookie-consent-settled', handleConsentSettled);
+      };
+    }
+
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
   }, [user]);
 
   const handleDismiss = () => {
     setIsVisible(false);
+    try {
+      sessionStorage.setItem('eazetrip_onetap_dismissed', 'true');
+    } catch {}
   };
 
   const handleContinueAsGoogle = async () => {
@@ -35,26 +94,35 @@ export default function GoogleOneTapPrompt() {
       if (window.google?.accounts?.id && googleConfig?.configured) {
         window.google.accounts.id.prompt((notification) => {
           if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-            loginWithGoogle(firstName || 'Priyansh Sharma').then(() => {
+            const resolvedDisplayName = customName.trim() || rememberedName || 'Google Explorer';
+            const resolvedEmailAddress = customEmail.trim() || `${resolvedDisplayName.toLowerCase().replace(/[^a-z0-9]/g, '.')}@gmail.com`;
+            
+            loginWithGoogle({ name: resolvedDisplayName, email: resolvedEmailAddress }).then(() => {
               setIsVisible(false);
-              showToast(`Welcome back, ${firstName || 'Traveler'}! Signed in with Google`);
+              showToast(`Welcome, ${resolvedDisplayName}! Signed in with Google`);
             }).catch(() => {});
           }
         });
       } else {
-        await loginWithGoogle(firstName || 'Priyansh Sharma');
+        const resolvedDisplayName = customName.trim() || rememberedName || 'Google Explorer';
+        const resolvedEmailAddress = customEmail.trim() || `${resolvedDisplayName.toLowerCase().replace(/[^a-z0-9]/g, '.')}@gmail.com`;
+        
+        await loginWithGoogle({ name: resolvedDisplayName, email: resolvedEmailAddress });
         setIsVisible(false);
-        showToast(`Welcome back, ${firstName || 'Traveler'}! Signed in with Google`);
+        showToast(`Welcome, ${resolvedDisplayName}! Signed in with Google`);
       }
     } catch (err) {
       console.error('Google One-Tap Error:', err);
-      showToast('Google Sign-in failed. Please try again.', 'error');
+      showToast('Google Sign-in could not be completed.', 'error');
     } finally {
       setIsSigningIn(false);
     }
   };
 
   if (!isVisible || user) return null;
+
+  const displayAccountName = customName.trim() || rememberedName || 'Your Google Account';
+  const displayAccountEmail = customEmail.trim() || (customName ? `${customName.toLowerCase().replace(/[^a-z0-9]/g, '.')}@gmail.com` : 'Instant 1-Tap Sign In');
 
   return (
     <aside
@@ -66,7 +134,7 @@ export default function GoogleOneTapPrompt() {
         <div className="google-onetap-header">
           <div className="google-brand-row">
             {/* Official 4-color Google G Icon */}
-            <svg viewBox="0 0 24 24" width="20" height="20" className="google-g-svg" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22" className="google-g-svg" aria-hidden="true">
               <path
                 fill="#4285F4"
                 d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -101,20 +169,42 @@ export default function GoogleOneTapPrompt() {
         </div>
 
         {/* Account Selection Tile */}
-        <div className="google-onetap-account-tile" onClick={handleContinueAsGoogle}>
-          <img
-            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80"
-            alt={firstName || 'Traveler'}
-            className="google-onetap-avatar"
-          />
-          <div className="google-onetap-user-meta">
-            <strong className="user-name">{firstName || 'Priyansh Sharma'}</strong>
-            <span className="user-email">{firstName ? `${firstName.toLowerCase()}@gmail.com` : 'priyansh.sharma@gmail.com'}</span>
+        {!isCustomMode ? (
+          <div className="google-onetap-account-tile" onClick={handleContinueAsGoogle}>
+            <div className="google-onetap-avatar-placeholder">
+              {displayAccountName && displayAccountName !== 'Your Google Account' ? (
+                <span className="avatar-letter">{displayAccountName.charAt(0).toUpperCase()}</span>
+              ) : (
+                <User size={18} color="#034ea2" />
+              )}
+            </div>
+            <div className="google-onetap-user-meta">
+              <strong className="user-name">{displayAccountName}</strong>
+              <span className="user-email">{displayAccountEmail}</span>
+            </div>
+            <div className="google-onetap-g-mini">
+              <ShieldCheck size={16} color="#10b981" />
+            </div>
           </div>
-          <div className="google-onetap-g-mini">
-            <ShieldCheck size={14} color="#10b981" />
+        ) : (
+          <div className="google-onetap-custom-inputs">
+            <input
+              type="text"
+              placeholder="Your Full Name (e.g. Roshan Sharma)"
+              className="google-custom-input"
+              value={customName}
+              onChange={(e) => setCustomName(e.target.value)}
+              autoFocus
+            />
+            <input
+              type="email"
+              placeholder="Your Gmail (e.g. roshan@gmail.com)"
+              className="google-custom-input"
+              value={customEmail}
+              onChange={(e) => setCustomEmail(e.target.value)}
+            />
           </div>
-        </div>
+        )}
 
         {/* Primary CTA Button */}
         <div className="google-onetap-actions">
@@ -124,14 +214,32 @@ export default function GoogleOneTapPrompt() {
             onClick={handleContinueAsGoogle}
             disabled={isSigningIn}
           >
-            {isSigningIn ? 'Signing in with Google...' : `Continue as ${firstName || 'Priyansh'}`}
+            {isSigningIn ? (
+              'Signing in with Google...'
+            ) : isCustomMode ? (
+              'Sign In with This Account'
+            ) : displayAccountName !== 'Your Google Account' ? (
+              `Continue as ${displayAccountName.split(' ')[0]}`
+            ) : (
+              'Continue with Google'
+            )}
           </button>
+          
+          <div className="google-switch-account-row">
+            <button
+              type="button"
+              className="google-switch-account-btn"
+              onClick={() => setIsCustomMode(!isCustomMode)}
+            >
+              {isCustomMode ? 'Use default sign-in' : 'Use another account'}
+            </button>
+          </div>
         </div>
 
         {/* Legal Disclaimer Footer */}
         <div className="google-onetap-footer">
           <p>
-            To continue, Google will share your name, email address, and profile picture with EazeTrip.
+            To continue, Google will share your profile name and email with EazeTrip.
             See EazeTrip's{' '}
             <a href="/privacy" onClick={(e) => { e.preventDefault(); handleDismiss(); }}>
               Privacy Policy

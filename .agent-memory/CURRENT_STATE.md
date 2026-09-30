@@ -1,11 +1,11 @@
 # Current Project State: EazeTrip
 
 ## 1. Release Baseline & Status
-* **Status**: Production Ready / DPDP Act 2023 & DPDP Rules 2025 Verified / Fluid Responsive Scale / Enterprise UI/UX / 100% Passing Tests
-* **Version**: `2.5.0`
+* **Status**: Production Ready / Google Auth Real Account Integration / Modal & Cookie Staggering / Full Container Width Hero / 100% Passing Tests
+* **Version**: `2.5.1`
 * **Test Suite**: 89 / 89 automated tests passing (`npm test`).
 * **Client Build**: Clean Vite production build (`npm run build`).
-* **Active Branch**: `feature/dpdp-compliance-governance` (Merging to `main`)
+* **Active Branch**: `fix/auth-cookies-and-hero-width`
 
 ---
 

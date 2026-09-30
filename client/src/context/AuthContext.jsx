@@ -149,19 +149,68 @@ export function AuthProvider({ children }) {
     }
   }, [googleConfig.clientId]);
 
+  const decodeGoogleJwt = (token) => {
+    try {
+      if (!token || typeof token !== 'string') return null;
+      const parts = token.split('.');
+      if (parts.length !== 3) return null;
+      const base64Url = parts[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join('')
+      );
+      return JSON.parse(jsonPayload);
+    } catch {
+      try {
+        const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+        return JSON.parse(atob(base64));
+      } catch {
+        return null;
+      }
+    }
+  };
+
   const loginWithGoogle = async (googleParam) => {
     let loggedInUser = null;
     let authPayload = {};
+    let decodedToken = null;
 
     if (typeof googleParam === 'object' && googleParam !== null) {
-      authPayload = googleParam;
+      if (googleParam.credential) {
+        decodedToken = decodeGoogleJwt(googleParam.credential);
+      }
+      authPayload = { ...googleParam };
+      if (decodedToken) {
+        authPayload.name = authPayload.name || decodedToken.name;
+        authPayload.email = authPayload.email || decodedToken.email;
+        authPayload.avatar = authPayload.avatar || decodedToken.picture;
+        authPayload.googleId = authPayload.googleId || decodedToken.sub;
+      }
     } else if (typeof googleParam === 'string' && googleParam.startsWith('eyJ')) {
-      authPayload = { credential: googleParam };
-    } else {
-      const customName = typeof googleParam === 'string' ? googleParam : 'Priyansh Sharma';
+      decodedToken = decodeGoogleJwt(googleParam);
+      authPayload = {
+        credential: googleParam,
+        name: decodedToken?.name,
+        email: decodedToken?.email,
+        avatar: decodedToken?.picture,
+        googleId: decodedToken?.sub
+      };
+    } else if (typeof googleParam === 'string' && googleParam.trim()) {
+      const customName = googleParam.trim();
+      const sanitizedEmailPrefix = customName.toLowerCase().replace(/[^a-z0-9]/g, '.');
       authPayload = {
         name: customName,
-        email: `${customName.toLowerCase().replace(/\s+/g, '.')}@gmail.com`
+        email: `${sanitizedEmailPrefix}@gmail.com`
+      };
+    } else {
+      const defaultName = rememberedName || 'Google Traveler';
+      const defaultEmail = localStorage.getItem('eazetrip_remembered_email') || `${defaultName.toLowerCase().replace(/[^a-z0-9]/g, '.')}@gmail.com`;
+      authPayload = {
+        name: defaultName,
+        email: defaultEmail
       };
     }
 
@@ -171,15 +220,17 @@ export function AuthProvider({ children }) {
     if (apiRes.ok && apiRes.data?.data) {
       loggedInUser = apiRes.data.data;
     } else {
-      // Robust fallback in case of simulated / offline mode
-      const resolvedName = authPayload.name || 'Priyansh Sharma';
-      const resolvedEmail = authPayload.email || `${resolvedName.toLowerCase().replace(/\s+/g, '.')}@gmail.com`;
+      // Dynamic fallback in case of simulated / offline mode
+      const resolvedName = authPayload.name || decodedToken?.name || rememberedName || 'Google Traveler';
+      const resolvedEmail = authPayload.email || decodedToken?.email || localStorage.getItem('eazetrip_remembered_email') || `${resolvedName.toLowerCase().replace(/[^a-z0-9]/g, '.')}@gmail.com`;
+      const resolvedAvatar = authPayload.avatar || decodedToken?.picture || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80';
+      
       loggedInUser = {
         id: 'USR-' + Math.floor(100000 + Math.random() * 900000),
         name: resolvedName,
         email: resolvedEmail,
         phone: '+91 9876543210',
-        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
+        avatar: resolvedAvatar,
         memberSince: new Date().getFullYear(),
         tier: 'Gold Member',
         authProvider: 'Google'
@@ -191,6 +242,9 @@ export function AuthProvider({ children }) {
       const first = loggedInUser.name.trim().split(' ')[0];
       localStorage.setItem('eazetrip_remembered_name', first);
       setRememberedName(first);
+    }
+    if (loggedInUser.email) {
+      localStorage.setItem('eazetrip_remembered_email', loggedInUser.email);
     }
     setIsLoginModalOpen(false);
     return { success: true, user: loggedInUser };
