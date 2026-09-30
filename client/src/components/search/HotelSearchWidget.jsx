@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { hotelCities } from '../../data/hotelData';
 import { Building2, Calendar, Users, MapPin } from 'lucide-react';
+import { formatDateDisplay } from './FlightSearchWidget';
 
 export default function HotelSearchWidget({ initialValues = {}, onSearch }) {
   const navigate = useNavigate();
@@ -22,6 +23,9 @@ export default function HotelSearchWidget({ initialValues = {}, onSearch }) {
 
   const guestRef = useRef(null);
   const cityRef = useRef(null);
+
+  const checkInDateObj = formatDateDisplay(checkInDate);
+  const checkOutDateObj = formatDateDisplay(checkOutDate);
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -136,31 +140,47 @@ export default function HotelSearchWidget({ initialValues = {}, onSearch }) {
         </div>
 
         {/* Check-in Date */}
-        <div className="search-field-block">
+        <div className="search-field-block date-field-block">
           <label htmlFor="hotel-checkin-date">CHECK-IN</label>
           <div className="field-value-card date-card">
+            <div className="date-display-wrap">
+              <span className="date-day-num">{checkInDateObj.day}</span>
+              <div className="date-month-col">
+                <span className="date-month-year">{checkInDateObj.monthYear}</span>
+                <span className="date-weekday">{checkInDateObj.weekday}</span>
+              </div>
+            </div>
             <input
               id="hotel-checkin-date"
               type="date"
               min={today}
-              className="native-date-input"
+              className="custom-date-overlay-input"
               value={checkInDate}
               onChange={(e) => setCheckInDate(e.target.value)}
+              aria-label="Check-in Date"
             />
           </div>
         </div>
 
         {/* Check-out Date */}
-        <div className="search-field-block">
+        <div className="search-field-block date-field-block">
           <label htmlFor="hotel-checkout-date">CHECK-OUT</label>
           <div className="field-value-card date-card">
+            <div className="date-display-wrap">
+              <span className="date-day-num">{checkOutDateObj.day}</span>
+              <div className="date-month-col">
+                <span className="date-month-year">{checkOutDateObj.monthYear}</span>
+                <span className="date-weekday">{checkOutDateObj.weekday}</span>
+              </div>
+            </div>
             <input
               id="hotel-checkout-date"
               type="date"
               min={checkInDate || today}
-              className="native-date-input"
+              className="custom-date-overlay-input"
               value={checkOutDate}
               onChange={(e) => setCheckOutDate(e.target.value)}
+              aria-label="Check-out Date"
             />
           </div>
         </div>
