@@ -4,6 +4,32 @@ This file logs meaningful agent tasks, architectural milestones, and fixes chron
 
 ---
 
+### Task: Topbar Height Alignment, Hero Tabs Reordering, Full-Width Bank Offers Marquee & Post-Category Assurance Strip
+* **Date**: 2026-10-01
+* **Reason**: User requested:
+  1. Topbar WhatsApp badge and Login/Signup button heights to match identically.
+  2. Hero search tabs reordered to: Flights ➜ Trains ➜ Buses ➜ Hotels ➜ Holidays.
+  3. Special Offers section auto-scroll marquee to take full viewport width (not enclosed in a card box), matching the reviews marquee style.
+  4. Hero booking search card to have balanced, compact symmetrical padding on all 4 sides and responsive behavior.
+  5. Search CTA button to be centered, half on the card and half outside across the bottom border for all search widgets.
+  6. Assurance banner moved off the hero section to directly below the Tour Categories section with clean dividing lines and modern Lucide icons instead of emojis.
+* **Branch / PR**: `feature/hero-tabs-offers-fullwidth-assurance-polish`.
+* **Files Affected**:
+  - `client/src/App.css` (Normalized topbar elements to 32px height, compact symmetrical hero search padding, floating search button styles across widgets, full-width offers marquee viewport, modern post-category assurance strip with dividing borders)
+  - `client/src/pages/HomePage.jsx` (Reordered hero tabs, removed legacy assurance banner from hero, added modern `.assurance-strip-section` below categories with Lucide icons)
+  - `client/src/components/home/SpecialOffersSection.jsx` (Removed enclosing box, full edge-to-edge marquee with gradient masks)
+  - `client/src/components/search/TrainSearchWidget.jsx`, `BusSearchWidget.jsx`, `HotelSearchWidget.jsx`, `HolidaySearchWidget.jsx` (Standardized floating search CTA button)
+  - `CHANGELOG.md`, `.agent-memory/CURRENT_STATE.md`, `.agent-memory/TASK_HISTORY.md`
+* **What Changed**:
+  - Topbar WhatsApp badge, phone link, selectors, and auth buttons now all share a precise uniform 32px height and vertical alignment.
+  - Hero tabs reordered to Flights, Trains, Buses, Hotels, Holidays with synchronized switching.
+  - Special Offers bank discounts marquee flows edge-to-edge across the screen with gradient fade masks.
+  - Hero search card has clean symmetrical padding, and the orange Search CTA sits half-in/half-out in the exact horizontal center across all 5 widgets.
+  - Assurance strip relocated beneath Tour Categories with 4 distinct columns, clean divider lines, and modern Lucide icons.
+* **Testing Performed**: 89 / 89 automated backend tests passing (`npm test`), 0 errors in Vite production build (`npm run build`).
+
+---
+
 ### Task: Fluid Responsive Typography, Adaptive Spacing Tokens & Dynamic Corner Radius System
 * **Date**: 2026-09-26
 * **Reason**: User requested complete responsive adaptation where font sizes, gaps, paddings, corner radiuses, and layout formats dynamically shift according to screen size changes across all devices without disturbing any parallel projects.

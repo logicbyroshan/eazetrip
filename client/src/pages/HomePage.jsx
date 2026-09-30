@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Percent, CheckCircle2, ShieldCheck, Headphones } from 'lucide-react';
 import FlightSearchWidget from '../components/search/FlightSearchWidget';
 import HotelSearchWidget from '../components/search/HotelSearchWidget';
 import BusSearchWidget from '../components/search/BusSearchWidget';
@@ -14,7 +15,7 @@ import { useAuth } from '../context/AuthContext';
 import { HERO_BACKDROPS } from '../data/siteData';
 
 export default function HomePage() {
-  const [activeTab, setActiveTab] = useState('flights'); // flights | hotels | bus | railway | holidays
+  const [activeTab, setActiveTab] = useState('flights'); // flights | railway | bus | hotels | holidays
   const { user, firstName } = useAuth();
 
   const currentHero = HERO_BACKDROPS[activeTab] || HERO_BACKDROPS.flights;
@@ -48,7 +49,7 @@ export default function HomePage() {
 
             {/* Hero Search Box Card - Translucent Glassmorphic Container */}
             <div className="hero-search-wrapper glassmorphic-search-card">
-              {/* Clean Travel Category Switcher Tabs */}
+              {/* Clean Travel Category Switcher Tabs: Flights -> Trains -> Buses -> Hotels -> Holidays */}
               <div className="hero-search-tabs modern-clean-tabs">
                 {/* 1. Flights */}
                 <button
@@ -65,29 +66,7 @@ export default function HomePage() {
                   {activeTab === 'flights' && <div className="tab-active-indicator"></div>}
                 </button>
 
-                {/* 2. Hotels */}
-                <button
-                  type="button"
-                  className={`hero-tab-btn ${activeTab === 'hotels' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('hotels')}
-                >
-                  <div className="tab-icon-circle hotel-bg">
-                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M18 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2Z" fill="#0097a7" stroke="#0097a7" opacity="0.15" />
-                      <path d="M18 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2Z" stroke="#0097a7" />
-                      <path d="M9 16v4" stroke="#0097a7" />
-                      <path d="M15 16v4" stroke="#0097a7" />
-                      <path d="M8 6h2" stroke="#0097a7" />
-                      <path d="M14 6h2" stroke="#0097a7" />
-                      <path d="M8 10h2" stroke="#0097a7" />
-                      <path d="M14 10h2" stroke="#0097a7" />
-                    </svg>
-                  </div>
-                  <span className="tab-label-text">Hotels</span>
-                  {activeTab === 'hotels' && <div className="tab-active-indicator"></div>}
-                </button>
-
-                {/* 3. Trains */}
+                {/* 2. Trains */}
                 <button
                   type="button"
                   className={`hero-tab-btn ${activeTab === 'railway' ? 'active' : ''}`}
@@ -109,7 +88,7 @@ export default function HomePage() {
                   {activeTab === 'railway' && <div className="tab-active-indicator"></div>}
                 </button>
 
-                {/* 4. Buses */}
+                {/* 3. Buses */}
                 <button
                   type="button"
                   className={`hero-tab-btn ${activeTab === 'bus' ? 'active' : ''}`}
@@ -129,6 +108,28 @@ export default function HomePage() {
                   </div>
                   <span className="tab-label-text">Buses</span>
                   {activeTab === 'bus' && <div className="tab-active-indicator"></div>}
+                </button>
+
+                {/* 4. Hotels */}
+                <button
+                  type="button"
+                  className={`hero-tab-btn ${activeTab === 'hotels' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('hotels')}
+                >
+                  <div className="tab-icon-circle hotel-bg">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M18 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2Z" fill="#0097a7" opacity="0.15" />
+                      <path d="M18 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2Z" stroke="#0097a7" />
+                      <path d="M9 16v4" stroke="#0097a7" />
+                      <path d="M15 16v4" stroke="#0097a7" />
+                      <path d="M8 6h2" stroke="#0097a7" />
+                      <path d="M14 6h2" stroke="#0097a7" />
+                      <path d="M8 10h2" stroke="#0097a7" />
+                      <path d="M14 10h2" stroke="#0097a7" />
+                    </svg>
+                  </div>
+                  <span className="tab-label-text">Hotels</span>
+                  {activeTab === 'hotels' && <div className="tab-active-indicator"></div>}
                 </button>
 
                 {/* 5. Holidays */}
@@ -153,33 +154,11 @@ export default function HomePage() {
               {/* Active Tab Search Form */}
               <div className="hero-search-content">
                 {activeTab === 'flights' && <FlightSearchWidget />}
-                {activeTab === 'hotels' && <HotelSearchWidget />}
-                {activeTab === 'bus' && <BusSearchWidget />}
                 {activeTab === 'railway' && <TrainSearchWidget />}
+                {activeTab === 'bus' && <BusSearchWidget />}
+                {activeTab === 'hotels' && <HotelSearchWidget />}
                 {activeTab === 'holidays' && <HolidaySearchWidget />}
               </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Assurance Strip */}
-        <div className="container">
-          <div className="assurance-banner">
-            <div className="assurance-item">
-              <span className="assurance-icon">🌍</span>
-              <p>Get more for less: Affordable travel options at your fingertips.</p>
-            </div>
-            <div className="assurance-item">
-              <span className="assurance-icon">🎟️</span>
-              <p>No hassle, no stress, simple bookings with great savings!</p>
-            </div>
-            <div className="assurance-item">
-              <span className="assurance-icon">🧑‍✈️</span>
-              <p>Your journey, our commitment—reliable service, every time.</p>
-            </div>
-            <div className="assurance-item">
-              <span className="assurance-icon">📱</span>
-              <p>Instant confirmation, e-tickets & 24/7 dedicated support.</p>
             </div>
           </div>
         </div>
@@ -199,6 +178,53 @@ export default function HomePage() {
 
       {/* Travel Categories 5-Card Staggered Wave Section */}
       <TravelCategoriesSection />
+
+      {/* Modern Assurance Strip (Moved below categories with nice dividing lines and luxury icons) */}
+      <section className="section-block assurance-strip-section">
+        <div className="container">
+          <div className="assurance-banner-modern">
+            <div className="assurance-item-modern">
+              <div className="assurance-icon-box icon-blue">
+                <Percent size={20} strokeWidth={2.5} />
+              </div>
+              <div className="assurance-text-col">
+                <span className="assurance-title">Get more for less</span>
+                <p className="assurance-desc">Affordable travel options & exclusive fares at your fingertips.</p>
+              </div>
+            </div>
+
+            <div className="assurance-item-modern">
+              <div className="assurance-icon-box icon-green">
+                <CheckCircle2 size={20} strokeWidth={2.5} />
+              </div>
+              <div className="assurance-text-col">
+                <span className="assurance-title">No hassle, no stress</span>
+                <p className="assurance-desc">Seamless 1-click bookings with transparent pricing & great savings.</p>
+              </div>
+            </div>
+
+            <div className="assurance-item-modern">
+              <div className="assurance-icon-box icon-purple">
+                <ShieldCheck size={20} strokeWidth={2.5} />
+              </div>
+              <div className="assurance-text-col">
+                <span className="assurance-title">Your journey, our commitment</span>
+                <p className="assurance-desc">100% verified carriers, safe payments, and reliable service every time.</p>
+              </div>
+            </div>
+
+            <div className="assurance-item-modern">
+              <div className="assurance-icon-box icon-amber">
+                <Headphones size={20} strokeWidth={2.5} />
+              </div>
+              <div className="assurance-text-col">
+                <span className="assurance-title">Instant confirmation & 24/7 care</span>
+                <p className="assurance-desc">E-Tickets on SMS & WhatsApp with dedicated concierge support.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Why Choose Us Section */}
       <section className="section-block why-choose-section">

@@ -73,92 +73,91 @@ export default function SpecialOffersSection() {
           </div>
         </div>
 
-        {/* Special Offers White Enclosed Card Container */}
-        <div className="special-offers-main-card">
-          {/* Centered Header (No left/right buttons) */}
-          <div className="special-offers-header text-center">
-            <div className="offers-title-group centered-title-group">
-              {firstName && (
-                <div className="vip-personal-tag-strip mb-1">
-                  <span className="vip-personal-badge">
-                    <Sparkles size={13} /> Curated For {firstName}
-                  </span>
+        {/* Section Header & Tabs */}
+        <div className="special-offers-header text-center">
+          <div className="offers-title-group centered-title-group">
+            {firstName && (
+              <div className="vip-personal-tag-strip mb-1">
+                <span className="vip-personal-badge">
+                  <Sparkles size={13} /> Curated For {firstName}
+                </span>
+              </div>
+            )}
+            <h2>{firstName ? `Offers Only For You, ${firstName}` : 'Special Offers'}</h2>
+            <p className="offers-sub-text">
+              {firstName
+                ? `Handpicked bank discounts, card savings, and VIP member vouchers curated exclusively for ${firstName}`
+                : 'Exclusive bank discounts, card savings and instant cashback'}
+            </p>
+          </div>
+        </div>
+
+        {/* Centered Category Filter Tabs */}
+        <div className="special-offers-tabs centered-tabs">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              type="button"
+              className={`offer-filter-tab ${activeCategory === cat ? 'active' : ''}`}
+              onClick={() => setActiveCategory(cat)}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Full-Width Infinite Single-Row Auto-Scrolling Marquee */}
+      <div className="bank-offers-marquee-viewport">
+        <div className="bank-offers-marquee-track">
+          {marqueeOffers.map((offer, idx) => (
+            <div key={`${offer.id}-${idx}`} className="bank-offer-card marquee-offer-card">
+              {/* Left Scenic Image with Curved Cutout */}
+              <div className="bank-card-media">
+                <img src={offer.image} alt={offer.title} loading="lazy" />
+                <div className="bank-pill-badge" style={{ backgroundColor: offer.bankTheme || '#034ea2' }}>
+                  <span>{offer.bank}</span>
                 </div>
-              )}
-              <h2>{firstName ? `Offers Only For You, ${firstName}` : 'Special Offers'}</h2>
-              <p className="offers-sub-text">
-                {firstName
-                  ? `Handpicked bank discounts, card savings, and VIP member vouchers curated exclusively for ${firstName}`
-                  : 'Exclusive bank discounts, card savings and instant cashback'}
-              </p>
-            </div>
-          </div>
+              </div>
 
-          {/* Centered Category Filter Tabs */}
-          <div className="special-offers-tabs centered-tabs">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                type="button"
-                className={`offer-filter-tab ${activeCategory === cat ? 'active' : ''}`}
-                onClick={() => setActiveCategory(cat)}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
+              {/* Right Offer Details */}
+              <div className="bank-card-details">
+                <h4 className="bank-offer-amount">{offer.title}</h4>
+                <p className="bank-offer-category-label">{offer.subtitle}</p>
+                <p className="bank-offer-terms">{offer.terms}</p>
 
-          {/* Infinite Single-Row Auto-Scrolling Marquee */}
-          <div className="bank-offers-marquee-viewport">
-            <div className="bank-offers-marquee-track">
-              {marqueeOffers.map((offer, idx) => (
-                <div key={`${offer.id}-${idx}`} className="bank-offer-card marquee-offer-card">
-                  {/* Left Scenic Image with Curved Cutout */}
-                  <div className="bank-card-media">
-                    <img src={offer.image} alt={offer.title} loading="lazy" />
-                    <div className="bank-pill-badge" style={{ backgroundColor: offer.bankTheme || '#034ea2' }}>
-                      <span>{offer.bank}</span>
-                    </div>
-                  </div>
+                <div className="bank-offer-action-bar">
+                  <button
+                    type="button"
+                    className="bank-code-btn"
+                    onClick={() => handleCopy(offer.code)}
+                    title="Click to copy coupon code"
+                  >
+                    <span>{offer.code}</span>
+                    {copiedCode === offer.code ? (
+                      <Check size={14} className="code-copy-icon success" />
+                    ) : (
+                      <Copy size={14} className="code-copy-icon" />
+                    )}
+                  </button>
 
-                  {/* Right Offer Details */}
-                  <div className="bank-card-details">
-                    <h4 className="bank-offer-amount">{offer.title}</h4>
-                    <p className="bank-offer-category-label">{offer.subtitle}</p>
-                    <p className="bank-offer-terms">{offer.terms}</p>
-
-                    <div className="bank-offer-action-bar">
-                      <button
-                        type="button"
-                        className="bank-code-btn"
-                        onClick={() => handleCopy(offer.code)}
-                        title="Click to copy coupon code"
-                      >
-                        <span>{offer.code}</span>
-                        {copiedCode === offer.code ? (
-                          <Check size={14} className="code-copy-icon success" />
-                        ) : (
-                          <Copy size={14} className="code-copy-icon" />
-                        )}
-                      </button>
-
-                      <Link to={offer.link} className="bank-view-details-link">
-                        View Details &gt;
-                      </Link>
-                    </div>
-                  </div>
+                  <Link to={offer.link} className="bank-view-details-link">
+                    View Details &gt;
+                  </Link>
                 </div>
-              ))}
+              </div>
             </div>
-          </div>
+          ))}
+        </div>
+      </div>
 
-          {/* View All Offers Link at Bottom */}
-          <div className="special-offers-footer">
-            <Link to="/offers" className="view-all-offers-main-btn">
-              <span>View all offers</span>
-              <ArrowRight size={16} />
-            </Link>
-          </div>
+      {/* View All Offers Link at Bottom */}
+      <div className="container">
+        <div className="special-offers-footer">
+          <Link to="/offers" className="view-all-offers-main-btn">
+            <span>View all offers</span>
+            <ArrowRight size={16} />
+          </Link>
         </div>
       </div>
     </section>

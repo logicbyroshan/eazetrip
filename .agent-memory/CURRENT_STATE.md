@@ -1,11 +1,11 @@
 # Current Project State: EazeTrip
 
 ## 1. Release Baseline & Status
-* **Status**: Production Ready / Hero Segmented Booking Grid / Centered Floating SEARCH Button / Special Offers Infinite Marquee / Deep Tour Wave Curve / Justified Footer Directory / Global Scrollbars Removed / 100% Passing Tests
-* **Version**: `2.5.4`
+* **Status**: Production Ready / Topbar Height Harmonization / Reordered Hero Tabs (Flights-Trains-Buses-Hotels-Holidays) / Full-Width Bank Offers Marquee / Symmetrical Compact Hero Padding / Centered Floating SEARCH Button across all mediums / Modern Post-Category Assurance Strip / 100% Passing Tests
+* **Version**: `2.5.5`
 * **Test Suite**: 89 / 89 automated tests passing (`npm test`).
 * **Client Build**: Clean Vite production build (`npm run build`).
-* **Active Branch**: `feature/hero-booking-helpdesk-offers-polish`
+* **Active Branch**: `feature/hero-tabs-offers-fullwidth-assurance-polish`
 
 ---
 
