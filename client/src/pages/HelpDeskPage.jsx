@@ -290,9 +290,7 @@ export default function HelpDeskPage() {
               <div className="helpdesk-hub-tabs-bar">
                 {[
                   { id: 'report', label: '🚨 Report Problem / Ticket', icon: AlertTriangle },
-                  { id: 'whatsapp', label: '💬 Direct WhatsApp', icon: MessageSquare },
                   { id: 'mail', label: '✉️ Direct Mail Us', icon: Mail },
-                  { id: 'callback', label: '📞 5-Min Callback', icon: Phone },
                   { id: 'tickets', label: '📋 Track My Tickets', icon: FileText }
                 ].map((tab) => {
                   const Icon = tab.icon;
@@ -499,51 +497,7 @@ export default function HelpDeskPage() {
                   </div>
                 )}
 
-                {/* TAB 2: INSTANT WHATSAPP CHAT */}
-                {activeTab === 'whatsapp' && (
-                  <div className="whatsapp-connect-card">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="p-3 bg-emerald-100 text-emerald-700 rounded-xl">
-                        <MessageSquare size={32} />
-                      </div>
-                      <div>
-                        <h4 className="font-bold text-slate-900 text-base mb-1">Direct WhatsApp Support Chat</h4>
-                        <p className="text-xs text-slate-600 mb-0">
-                          Connect 1-on-1 with our verified concierge team at <strong>+91 82690 54018</strong> for immediate live travel resolution.
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="whatsapp-template-box mb-4">
-                      <span className="text-xs font-semibold text-emerald-800 mb-1 block">
-                        Pre-Configured Chat Message Template:
-                      </span>
-                      <div className="p-3 bg-white border border-emerald-200 rounded-lg text-xs text-slate-800 font-mono leading-relaxed">
-                        Hello EazeTrip Support Team,<br /><br />
-                        I need urgent assistance with my travel booking.<br />
-                        • <strong>Name:</strong> {passengerName}<br />
-                        • <strong>PNR:</strong> {pnr || 'FL2775'}<br />
-                        • <strong>Issue:</strong> {problemDescription || 'Assistance with web check-in, seat assignment, or date change'}<br /><br />
-                        Please connect with me on WhatsApp.
-                      </div>
-                    </div>
-
-                    <div className="flex gap-3">
-                      <a
-                        href={getWhatsAppPrefillUrl()}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="whatsapp-launch-btn flex-1"
-                      >
-                        <MessageSquare size={18} />
-                        <span>Launch Official WhatsApp Chat</span>
-                        <ExternalLink size={16} className="ml-auto" />
-                      </a>
-                    </div>
-                  </div>
-                )}
-
-                {/* TAB 3: DIRECT EMAIL DISPATCH */}
+                {/* TAB 2: DIRECT EMAIL DISPATCH */}
                 {activeTab === 'mail' && (
                   <div>
                     {mailSent ? (
@@ -612,80 +566,7 @@ export default function HelpDeskPage() {
                   </div>
                 )}
 
-                {/* TAB 4: 5-MINUTE CALLBACK */}
-                {activeTab === 'callback' && (
-                  <div>
-                    {cbSuccess ? (
-                      <div className="contact-success-state text-center py-5">
-                        <Phone size={52} color="#16a34a" className="mx-auto mb-3 animate-bounce" />
-                        <h4 className="text-xl font-bold text-slate-900">Priority Call-Back Scheduled!</h4>
-                        <p className="lead text-sm text-slate-600 mb-2">
-                          Our Senior Travel Specialist is dialing <strong>{cbPhone}</strong>.
-                        </p>
-                        <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-xs text-emerald-800 font-semibold mb-4 inline-block">
-                          ⏳ Estimated Call Time: Within 5 Minutes
-                        </div>
-                        <div>
-                          <button
-                            type="button"
-                            className="secondary-btn small"
-                            onClick={() => setCbSuccess(false)}
-                          >
-                            Request Another Call
-                          </button>
-                        </div>
-                      </div>
-                    ) : (
-                      <form onSubmit={handleRequestCallback} className="stack-form">
-                        <div className="p-3.5 bg-purple-50 border border-purple-200 rounded-lg text-xs text-purple-900 mb-4 flex items-start gap-2.5">
-                          <Clock size={18} className="text-purple-600 flex-shrink-0 mt-0.5" />
-                          <div>
-                            <strong className="block text-sm mb-0.5">5-Minute Priority Call-Back Guarantee:</strong>
-                            <p className="mb-0 text-xs text-purple-700">Enter your phone number below and our specialist will call you directly to handle your booking.</p>
-                          </div>
-                        </div>
-
-                        <div className="form-group mb-3">
-                          <label>Phone Number to Call *</label>
-                          <input
-                            type="tel"
-                            value={cbPhone}
-                            onChange={(e) => setCbPhone(e.target.value)}
-                            className="font-mono"
-                            placeholder="+91 98765 43210"
-                            required
-                          />
-                        </div>
-
-                        <div className="form-group mb-4">
-                          <label>Reason / Topic of Call</label>
-                          <select
-                            value={cbTopic}
-                            onChange={(e) => setCbTopic(e.target.value)}
-                            className="native-select"
-                          >
-                            <option value="Urgent Airport Check-in">🚨 Urgent Airport Assistance</option>
-                            <option value="Flight Date Change & Fare Difference">✈️ Flight Date Change & Fare Difference</option>
-                            <option value="Hotel Booking & Check-in Issue">🏨 Hotel Check-in Assistance</option>
-                            <option value="Refund & Cancellation Status">💳 Refund Status Inquiry</option>
-                            <option value="Custom Holiday Tour Planning">🌴 Custom Holiday Tour Planning</option>
-                          </select>
-                        </div>
-
-                        <button
-                          type="submit"
-                          className="primary-btn full py-3 send-inquiry-btn"
-                          disabled={submitting}
-                        >
-                          <Phone size={16} />
-                          <span>{submitting ? 'Queuing Call Request...' : 'Call Me in 5 Minutes'}</span>
-                        </button>
-                      </form>
-                    )}
-                  </div>
-                )}
-
-                {/* TAB 5: TRACK MY TICKETS */}
+                {/* TAB 3: TRACK MY TICKETS */}
                 {activeTab === 'tickets' && (
                   <div>
                     {loadingTickets ? (

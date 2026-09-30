@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.5.4] - 2026-10-01
+
+### Hero Search Unified Segmented Box & Floating Button, Infinite Special Offers Marquee, Deep Tour Wave Curve, Footer Justification, and Global Scrollbar Hide
+
+#### Hero Search Booking Widget Redesign (`client/src/components/search/FlightSearchWidget.jsx`, `client/src/App.css`)
+- **Segmented Connected Input Container**: Implemented unified connected segmented container (`.unified-segmented-box`) matching reference layout with `From`, `Swap` icon button, `To`, `Departure ∨`, `Return ∨`, `Travellers ∨`, and `Cabin Class ∨` cells.
+- **Trip Type Radios & Feature Badges**: Added custom radio buttons for `One Way`, `Round Trip`, and `Multi City` with dynamic blue dots, plus `Flight + Cab connection` banner with `NEW` badge.
+- **Select a Special Fare Cards**: Integrated subtitle fare cards (`Regular`, `Student`, `Armed Forces`, `Have a GST number ?`, `Senior Citizen`, `Doctor and Nurses`) with active highlight states and discount micro-copy.
+- **Price Drop Protection & Flight Status Strip**: Added bottom protection strip with shield rupee badge and quick-action `Flight Status` ticket pill.
+- **Centered Floating SEARCH Button**: Positioned high-contrast royal blue `SEARCH` button (`.modern-floating-btn`) centered half-inside and half-outside the bottom card edge.
+
+#### Special Offers Section Redesign (`client/src/components/home/SpecialOffersSection.jsx`, `client/src/App.css`)
+- **Centered Header & Filter Tabs**: Centered section title, subtitle, and category pills for harmonious symmetry.
+- **Single-Row Infinite Auto-Scrolling Marquee**: Replaced legacy carousel arrows with continuous smooth marquee track (`.bank-offers-marquee-track`) with hover pause and seamless linear gradient edge masks.
+
+#### Tour Categories Parabolic Wave Offsets (`client/src/App.css`)
+- **Amplified U-Shape Wave Curve**: Elevated outer cards 1 & 5 (`margin-top: -18px`), set middle cards 2 & 4 to `margin-top: 44px`, and lowered center card 3 (`margin-top: 104px`) for dramatic parabolic curvature.
+
+#### Reviews Luxury Cards & Footer Justified Grid (`client/src/App.css`)
+- **Luxury Review Cards**: Upgraded review cards with refined border accents, smooth hover elevation, verified buyer badges, and dual-row infinite marquee.
+- **Justified SEO Footer Directory**: Restructured link groups into an evenly distributed, clean multi-column justified grid (`.seo-links-inline-grid`).
+
+#### Global Scrollbar Removal & Preloader Animation (`client/src/index.css`, `client/src/App.css`)
+- **Hidden Scrollbars**: Applied global scrollbar hiding across all browsers (`scrollbar-width: none !important; ::-webkit-scrollbar { display: none !important; }`) while preserving smooth Lenis wheel scroll.
+- **Preloader Smooth Transition**: Refined initial site preloader with smooth radial fade, scale easing, and soft ambient glow.
+
+#### HelpDesk Hub Tabs Cleanup (`client/src/pages/HelpDeskPage.jsx`)
+- **Cleaned Tab Options**: Removed unused Direct WhatsApp and 5-Min Callback tabs, retaining Report Problem/Ticket, Direct Mail Us, and Track My Tickets.
+
+---
+
 ## [2.5.3] - 2026-10-01
 
 ### Hero Search Formatted Date Display, Segmented Field Grid, Equal Badge 4-Side Padding & HelpDesk Layout Width Polish

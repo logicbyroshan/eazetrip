@@ -1,14 +1,13 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { specialBankOffers } from '../../data/siteData';
-import { ChevronLeft, ChevronRight, Copy, Check, ArrowRight, Tag, Sparkles } from 'lucide-react';
+import { Copy, Check, ArrowRight, Sparkles } from 'lucide-react';
 import { useBooking } from '../../context/BookingContext';
 import { useAuth } from '../../context/AuthContext';
 
 export default function SpecialOffersSection() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [copiedCode, setCopiedCode] = useState(null);
-  const carouselRef = useRef(null);
   const { showToast } = useBooking();
   const { user, firstName } = useAuth();
 
@@ -18,6 +17,9 @@ export default function SpecialOffersSection() {
     ? specialBankOffers
     : specialBankOffers.filter(o => o.category.toLowerCase() === activeCategory.toLowerCase());
 
+  // Triple the array for seamless infinite marquee loop
+  const marqueeOffers = [...filteredOffers, ...filteredOffers, ...filteredOffers];
+
   const handleCopy = (code) => {
     navigator.clipboard.writeText(code);
     setCopiedCode(code);
@@ -25,18 +27,6 @@ export default function SpecialOffersSection() {
     setTimeout(() => {
       setCopiedCode(null);
     }, 2500);
-  };
-
-  const scrollLeft = () => {
-    if (carouselRef.current) {
-      carouselRef.current.scrollBy({ left: -370, behavior: 'smooth' });
-    }
-  };
-
-  const scrollRight = () => {
-    if (carouselRef.current) {
-      carouselRef.current.scrollBy({ left: 370, behavior: 'smooth' });
-    }
   };
 
   return (
@@ -85,9 +75,9 @@ export default function SpecialOffersSection() {
 
         {/* Special Offers White Enclosed Card Container */}
         <div className="special-offers-main-card">
-          {/* Header & Carousel Arrows */}
-          <div className="special-offers-header">
-            <div className="offers-title-group">
+          {/* Centered Header (No left/right buttons) */}
+          <div className="special-offers-header text-center">
+            <div className="offers-title-group centered-title-group">
               {firstName && (
                 <div className="vip-personal-tag-strip mb-1">
                   <span className="vip-personal-badge">
@@ -102,29 +92,10 @@ export default function SpecialOffersSection() {
                   : 'Exclusive bank discounts, card savings and instant cashback'}
               </p>
             </div>
-
-            <div className="offers-controls">
-              <button
-                type="button"
-                className="carousel-arrow-btn"
-                onClick={scrollLeft}
-                aria-label="Previous offers"
-              >
-                <ChevronLeft size={20} />
-              </button>
-              <button
-                type="button"
-                className="carousel-arrow-btn"
-                onClick={scrollRight}
-                aria-label="Next offers"
-              >
-                <ChevronRight size={20} />
-              </button>
-            </div>
           </div>
 
-          {/* Category Filter Tabs */}
-          <div className="special-offers-tabs">
+          {/* Centered Category Filter Tabs */}
+          <div className="special-offers-tabs centered-tabs">
             {categories.map((cat) => (
               <button
                 key={cat}
@@ -137,46 +108,48 @@ export default function SpecialOffersSection() {
             ))}
           </div>
 
-          {/* Bank Offers Horizontal Carousel / Grid */}
-          <div className="bank-offers-carousel" ref={carouselRef}>
-            {filteredOffers.map((offer) => (
-              <div key={offer.id} className="bank-offer-card">
-                {/* Left Scenic Image with Curved Cutout */}
-                <div className="bank-card-media">
-                  <img src={offer.image} alt={offer.title} />
-                  <div className="bank-pill-badge" style={{ backgroundColor: offer.bankTheme || '#034ea2' }}>
-                    <span>{offer.bank}</span>
+          {/* Infinite Single-Row Auto-Scrolling Marquee */}
+          <div className="bank-offers-marquee-viewport">
+            <div className="bank-offers-marquee-track">
+              {marqueeOffers.map((offer, idx) => (
+                <div key={`${offer.id}-${idx}`} className="bank-offer-card marquee-offer-card">
+                  {/* Left Scenic Image with Curved Cutout */}
+                  <div className="bank-card-media">
+                    <img src={offer.image} alt={offer.title} loading="lazy" />
+                    <div className="bank-pill-badge" style={{ backgroundColor: offer.bankTheme || '#034ea2' }}>
+                      <span>{offer.bank}</span>
+                    </div>
+                  </div>
+
+                  {/* Right Offer Details */}
+                  <div className="bank-card-details">
+                    <h4 className="bank-offer-amount">{offer.title}</h4>
+                    <p className="bank-offer-category-label">{offer.subtitle}</p>
+                    <p className="bank-offer-terms">{offer.terms}</p>
+
+                    <div className="bank-offer-action-bar">
+                      <button
+                        type="button"
+                        className="bank-code-btn"
+                        onClick={() => handleCopy(offer.code)}
+                        title="Click to copy coupon code"
+                      >
+                        <span>{offer.code}</span>
+                        {copiedCode === offer.code ? (
+                          <Check size={14} className="code-copy-icon success" />
+                        ) : (
+                          <Copy size={14} className="code-copy-icon" />
+                        )}
+                      </button>
+
+                      <Link to={offer.link} className="bank-view-details-link">
+                        View Details &gt;
+                      </Link>
+                    </div>
                   </div>
                 </div>
-
-                {/* Right Offer Details */}
-                <div className="bank-card-details">
-                  <h4 className="bank-offer-amount">{offer.title}</h4>
-                  <p className="bank-offer-category-label">{offer.subtitle}</p>
-                  <p className="bank-offer-terms">{offer.terms}</p>
-
-                  <div className="bank-offer-action-bar">
-                    <button
-                      type="button"
-                      className="bank-code-btn"
-                      onClick={() => handleCopy(offer.code)}
-                      title="Click to copy coupon code"
-                    >
-                      <span>{offer.code}</span>
-                      {copiedCode === offer.code ? (
-                        <Check size={14} className="code-copy-icon success" />
-                      ) : (
-                        <Copy size={14} className="code-copy-icon" />
-                      )}
-                    </button>
-
-                    <Link to={offer.link} className="bank-view-details-link">
-                      View Details &gt;
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
 
           {/* View All Offers Link at Bottom */}
@@ -191,3 +164,4 @@ export default function SpecialOffersSection() {
     </section>
   );
 }
+

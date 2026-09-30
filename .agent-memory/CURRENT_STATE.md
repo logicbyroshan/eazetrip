@@ -1,11 +1,11 @@
 # Current Project State: EazeTrip
 
 ## 1. Release Baseline & Status
-* **Status**: Production Ready / Hero Search Formatted Date Picker / Segmented Fields Layout / Equal 4-Side Badge Padding / Direct Assistance Sidebar Fit / 100% Passing Tests
-* **Version**: `2.5.3`
+* **Status**: Production Ready / Hero Segmented Booking Grid / Centered Floating SEARCH Button / Special Offers Infinite Marquee / Deep Tour Wave Curve / Justified Footer Directory / Global Scrollbars Removed / 100% Passing Tests
+* **Version**: `2.5.4`
 * **Test Suite**: 89 / 89 automated tests passing (`npm test`).
 * **Client Build**: Clean Vite production build (`npm run build`).
-* **Active Branch**: `feature/hero-search-and-helpdesk-ui-polish`
+* **Active Branch**: `feature/hero-booking-helpdesk-offers-polish`
 
 ---
 
