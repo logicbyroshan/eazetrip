@@ -1238,91 +1238,499 @@
   color: var(--primary);
 }
 
-/* Special Fares Strip */
-.special-fares-strip {
+/* ==========================================================================
+   MODERN UNIFIED SEGMENTED HERO SEARCH WIDGET (Matching Reference Layout)
+   ========================================================================== */
+.modern-ss-widget {
+  position: relative;
+  padding-bottom: 30px;
+  overflow: visible !important;
+}
+
+.modern-ss-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.modern-radio-group {
   display: flex;
   align-items: center;
-  gap: 14px;
-  flex-wrap: wrap;
-  padding: 12px 0 4px;
-  margin-top: 8px;
+  gap: 20px;
 }
 
-.fare-label {
-  font-size: 0.8rem;
-  font-weight: 700;
+.radio-dot-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.radio-dot-option input[type="radio"] {
+  display: none;
+}
+
+.custom-radio-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid #94a3b8;
+  background: #ffffff;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.radio-dot-option.active .custom-radio-dot {
+  border-color: #0075ff;
+  background: #0075ff;
+  box-shadow: inset 0 0 0 3px #ffffff;
+}
+
+.radio-label-text {
+  font-size: 0.88rem;
+  font-weight: 600;
   color: #475569;
+  transition: color 0.2s ease;
 }
 
-.fare-chips {
+.radio-dot-option.active .radio-label-text {
+  color: #0f172a;
+  font-weight: 800;
+}
+
+.top-info-banner-right {
   display: flex;
+  align-items: center;
+  gap: 12px;
   flex-wrap: wrap;
-  gap: 10px;
 }
 
-.fare-chip {
+.top-info-text {
+  font-size: 0.82rem;
+  color: #475569;
+  font-weight: 500;
+}
+
+.flight-cab-highlight-badge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 14px;
-  background: #f8fafc;
-  border: 1px solid #cbd5e1;
-  border-radius: 20px;
+  background: #fef3c7;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid #fde68a;
   font-size: 0.78rem;
+}
+
+.flight-cab-highlight-badge .highlight-lead {
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.flight-cab-highlight-badge .highlight-sub {
   font-weight: 600;
   color: #334155;
+}
+
+.badge-new-pill {
+  background: #10b981;
+  color: #ffffff;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Unified Segmented Box */
+.unified-segmented-box {
+  border: 1.5px solid #e2e8f0;
+  border-radius: 14px;
+  background: #ffffff;
+  display: grid;
+  grid-template-columns: 1.35fr 1.35fr 1.05fr 1.05fr 0.9fr 1.15fr;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  position: relative;
+  overflow: visible;
+}
+
+.search-cell-block {
+  position: relative;
+  border-right: 1px solid #f1f5f9;
+  padding: 12px 16px;
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: background 0.15s ease;
+  cursor: pointer;
+}
+
+.search-cell-block:last-child {
+  border-right: none;
+}
+
+.search-cell-block:hover {
+  background: #f8fafc;
+}
+
+.search-cell-clickable {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.search-cell-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.search-cell-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 2px;
+}
+
+.cell-chevron {
+  color: #0075ff;
+}
+
+.search-cell-main {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.55rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.search-cell-cabin {
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.search-cell-sub {
+  font-size: 0.73rem;
+  color: #64748b;
+  margin: 2px 0 0 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+}
+
+/* Floating Segmented Swap Button */
+.segmented-swap-btn {
+  position: absolute;
+  right: -15px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #0075ff;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.fare-chip:hover {
-  background: #f1f5f9;
+.segmented-swap-btn:hover {
+  background: #eff6ff;
+  border-color: #0075ff;
+  color: #0075ff;
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* Date Cell Formatting */
+.date-headline {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.date-headline .date-number {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.date-headline .date-month-year {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.return-prompt-inner .return-hint-text {
+  font-size: 0.72rem;
+  color: #64748b;
+  line-height: 1.35;
+  margin-top: 3px;
+}
+
+/* Modern Special Fares Row */
+.modern-special-fares-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.special-fare-heading-col {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+  min-width: 85px;
+}
+
+.special-fare-lead {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.special-fare-strong {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.modern-fare-cards-grid {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.modern-fare-card {
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 6px 12px;
+  background: #ffffff;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: all 0.15s ease;
+  min-width: 105px;
+}
+
+.modern-fare-card:hover {
+  border-color: #94a3b8;
+  background: #f8fafc;
+}
+
+.modern-fare-card.active {
+  border-color: #0075ff;
+  background: #f0f7ff;
+  box-shadow: 0 0 0 1px #0075ff;
+}
+
+.fare-card-title-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.fare-card-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.modern-fare-card.active .fare-card-title {
+  color: #0075ff;
+}
+
+.fare-mini-badge {
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: #ec4899;
+  background: #fdf2f8;
+  border-radius: 4px;
+  padding: 0 4px;
+  border: 1px solid #fbcfe8;
+}
+
+.fare-card-sub {
+  font-size: 0.68rem;
+  color: #64748b;
+  margin-top: 1px;
+  white-space: nowrap;
+}
+
+/* Price Drop Protection & Flight Status Strip */
+.price-drop-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 14px;
+  padding: 10px 16px;
+  background: linear-gradient(90deg, #f8fafc 0%, #f0f9ff 65%, #e0f2fe 100%);
+  border: 1px solid #e0f2fe;
+  border-radius: 10px;
+}
+
+.price-drop-checkbox-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  flex: 1;
+}
+
+.price-drop-checkbox-box input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #0075ff;
+  cursor: pointer;
+}
+
+.price-drop-text-block {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: #334155;
+  flex-wrap: wrap;
+}
+
+.price-drop-text-block strong {
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.price-drop-link {
+  color: #0075ff;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.price-drop-link:hover {
+  text-decoration: underline;
+}
+
+.price-drop-icon-shield {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #0075ff;
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 0.82rem;
+  margin-left: auto;
+}
+
+.flight-status-cta-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #0f172a;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.flight-status-cta-pill:hover {
+  background: #f8fafc;
   border-color: #94a3b8;
 }
 
-.fare-chip input {
-  display: none;
+/* Floating Center Search CTA Button (Half inside, half outside) */
+.search-action-wrap-floating {
+  position: absolute;
+  bottom: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 30;
 }
 
-.fare-chip.active {
-  background: #eff6ff;
-  border-color: #034ea2;
-  color: #034ea2;
-  font-weight: 700;
-  box-shadow: 0 0 0 1px #034ea2;
-}
-
-/* Search Hero CTA Button */
-.search-action-wrap {
-  display: flex;
-  justify-content: center;
-  margin-top: 18px;
-  padding-top: 18px;
-  border-top: 1px solid #f1f5f9;
-}
-
-.search-submit-hero-btn {
-  background: linear-gradient(135deg, #034ea2 0%, #0077b6 100%);
+.modern-floating-btn {
+  background: linear-gradient(135deg, #0075ff 0%, #0052cc 100%);
   color: #ffffff;
   font-family: 'Outfit', sans-serif;
-  font-size: 1.05rem;
+  font-size: 1.35rem;
   font-weight: 800;
-  letter-spacing: 0.05em;
-  padding: 15px 54px;
+  letter-spacing: 0.5px;
+  padding: 12px 64px;
   border-radius: 9999px;
   border: none;
+  box-shadow: 0 10px 28px rgba(0, 117, 255, 0.45);
   cursor: pointer;
-  box-shadow: 0 8px 24px rgba(3, 78, 162, 0.38);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  white-space: nowrap;
 }
 
-.search-submit-hero-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 30px rgba(3, 78, 162, 0.5);
-  background: linear-gradient(135deg, #023d80 0%, #005f92 100%);
+.modern-floating-btn:hover {
+  transform: scale(1.04);
+  box-shadow: 0 14px 34px rgba(0, 117, 255, 0.55);
+  background: linear-gradient(135deg, #006ae6 0%, #0047b3 100%);
+}
+
+.modern-floating-btn:active {
+  transform: scale(0.98);
+}
+
+@media (max-width: 1024px) {
+  .unified-segmented-box {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .segmented-swap-btn {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .unified-segmented-box {
+    grid-template-columns: 1fr 1fr;
+  }
+  .top-info-banner-right {
+    display: none;
+  }
+}
+
+@media (max-width: 540px) {
+  .unified-segmented-box {
+    grid-template-columns: 1fr;
+  }
+  .price-drop-status-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
 }
 
 /* Assurance Banner */
@@ -5832,17 +6240,17 @@ input[type="radio"]:focus-visible {
 }
 
 /* ==========================================================================
-   1. ULTRA-SLEEK BRAND PRELOADER (Image 1 Style - Minimal Logo Only)
+   1. ULTRA-SLEEK BRAND PRELOADER (Smooth Fade & Easing)
    ========================================================================== */
 .site-preloader-overlay {
   position: fixed;
   inset: 0;
   z-index: 999999;
-  background: #ffffff;
+  background: radial-gradient(circle at center, #ffffff 0%, #f8fafc 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.5s ease;
+  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.6s ease, transform 0.6s ease;
   pointer-events: all;
 }
 
@@ -5850,31 +6258,32 @@ input[type="radio"]:focus-visible {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
+  transform: scale(1.03);
 }
 
 .preloader-content-minimal {
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: preloaderPureLogoFade 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: preloaderPureLogoFade 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .preloader-pure-logo {
-  width: 160px;
+  width: 170px;
   height: auto;
   object-fit: contain;
-  filter: drop-shadow(0 8px 24px rgba(3, 78, 162, 0.2));
+  filter: drop-shadow(0 10px 30px rgba(3, 78, 162, 0.22));
 }
 
 @keyframes preloaderPureLogoFade {
-  0% { transform: scale(0.92); opacity: 0; }
-  25% { transform: scale(1); opacity: 1; }
-  80% { transform: scale(1.02); opacity: 1; }
+  0% { transform: scale(0.88); opacity: 0; filter: blur(4px); }
+  35% { transform: scale(1); opacity: 1; filter: blur(0); }
+  85% { transform: scale(1.02); opacity: 1; }
   100% { transform: scale(1.04); opacity: 0.95; }
 }
 
 /* ==========================================================================
-   2. SPECIAL OFFERS & CAMPAIGN BANNER (Image 2 Style)
+   2. SPECIAL OFFERS & CAMPAIGN BANNER (Single-Row Infinite Marquee)
    ========================================================================== */
 .special-offers-block {
   padding: 40px 0 32px 0;
@@ -6009,76 +6418,55 @@ input[type="radio"]:focus-visible {
   background: #ffffff;
   border: 1px solid var(--border);
   border-radius: var(--radius-xl);
-  padding: 28px;
+  padding: 32px 28px 24px 28px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
 .special-offers-header {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  text-align: center;
   margin-bottom: 20px;
 }
 
+.offers-title-group {
+  text-align: center;
+  margin: 0 auto;
+}
+
 .offers-title-group h2 {
-  font-size: 1.6rem;
+  font-size: 1.85rem;
   font-weight: 800;
   color: var(--text-main);
-  margin: 0 0 4px 0;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.3px;
 }
 
 .offers-sub-text {
-  font-size: 0.88rem;
+  font-size: 0.92rem;
   color: var(--text-muted);
   margin: 0;
 }
 
-.offers-controls {
-  display: flex;
-  gap: 8px;
-}
-
-.carousel-arrow-btn {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: #ffffff;
-  border: 1.5px solid #cbd5e1;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-  color: var(--navy);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-.carousel-arrow-btn:hover {
-  background: var(--primary);
-  color: #ffffff;
-  border-color: var(--primary);
-  transform: scale(1.08);
-  box-shadow: 0 4px 14px rgba(3, 78, 162, 0.3);
-}
-
-.carousel-arrow-btn:active {
-  transform: scale(0.95);
-}
-
-/* Category Filter Tabs */
+/* Category Filter Tabs Centered */
 .special-offers-tabs {
   display: flex;
+  justify-content: center;
+  align-items: center;
   gap: 10px;
   margin-bottom: 24px;
   overflow-x: auto;
   padding-bottom: 4px;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
 }
 
 .special-offers-tabs::-webkit-scrollbar {
-  display: none;
-  width: 0;
-  height: 0;
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 .offer-filter-tab {
@@ -6106,48 +6494,62 @@ input[type="radio"]:focus-visible {
   font-weight: 700;
 }
 
-/* Bank Offer Cards Carousel - Scrollbar Completely Hidden */
-.bank-offers-carousel {
-  display: flex;
-  gap: 20px;
-  overflow-x: scroll;
-  scroll-behavior: smooth;
-  padding: 6px 2px 14px 2px;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none !important; /* Firefox */
-  -ms-overflow-style: none !important; /* IE and Edge */
+/* Bank Offer Cards Infinite Single-Row Marquee */
+.bank-offers-marquee-viewport {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  padding: 10px 0 20px 0;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 3%, black 97%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, black 3%, black 97%, transparent 100%);
 }
 
-.bank-offers-carousel::-webkit-scrollbar {
-  display: none !important;
-  width: 0 !important;
-  height: 0 !important;
+.bank-offers-marquee-track {
+  display: flex;
+  gap: 20px;
+  width: max-content;
+  will-change: transform;
+  animation: specialOffersMarquee 42s linear infinite;
+}
+
+@keyframes specialOffersMarquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-100% / 3));
+  }
+}
+
+.bank-offers-marquee-viewport:hover .bank-offers-marquee-track {
+  animation-play-state: paused;
 }
 
 .bank-offer-card {
-  flex: 0 0 340px;
-  max-width: 340px;
+  flex: 0 0 350px;
+  width: 350px;
+  max-width: 350px;
+  min-height: 375px;
   background: #ffffff;
   border: 1px solid #e2e8f0;
-  border-radius: var(--radius-lg);
+  border-radius: 18px;
   overflow: hidden;
   box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
-  scroll-snap-align: start;
+  text-align: left;
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.2s ease;
 }
 
 .bank-offer-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-5px);
   border-color: #cbd5e1;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
 }
 
 .bank-card-media {
   position: relative;
-  height: 140px;
+  height: 160px;
   width: 100%;
   overflow: hidden;
 }
@@ -6178,14 +6580,14 @@ input[type="radio"]:focus-visible {
 }
 
 .bank-card-details {
-  padding: 16px;
+  padding: 18px;
   display: flex;
   flex-direction: column;
   flex: 1;
 }
 
 .bank-offer-amount {
-  font-size: 1.15rem;
+  font-size: 1.25rem;
   font-weight: 800;
   color: var(--text-main);
   margin: 0 0 4px 0;
@@ -6199,7 +6601,7 @@ input[type="radio"]:focus-visible {
 }
 
 .bank-offer-terms {
-  font-size: 0.74rem;
+  font-size: 0.76rem;
   color: var(--text-muted);
   line-height: 1.4;
   margin: 0 0 16px 0;
@@ -6253,7 +6655,7 @@ input[type="radio"]:focus-visible {
 
 .special-offers-footer {
   text-align: center;
-  margin-top: 24px;
+  margin-top: 20px;
   padding-top: 16px;
   border-top: 1px solid #f1f5f9;
 }
@@ -6538,24 +6940,34 @@ input[type="radio"]:focus-visible {
 }
 
 .seo-links-inline-grid {
-  display: flex;
-  flex-wrap: wrap;
-  column-gap: 18px;
-  row-gap: 8px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 8px 20px;
   font-size: 0.78rem;
   line-height: 1.5;
+  width: 100%;
+}
+
+.seo-links-inline-grid.products-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .seo-dir-link {
   color: #94a3b8;
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition: all 0.2s ease;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
 }
 
 .seo-dir-link:hover {
   color: #38bdf8;
-  text-decoration: underline;
+  text-decoration: none;
+  transform: translateX(2px);
 }
 
 .products-row .product-pill {
@@ -7072,15 +7484,15 @@ input[type="radio"]:focus-visible {
 }
 
 .category-arc-card.offset-step-1 {
-  margin-top: 0px;
+  margin-top: -18px;
 }
 
 .category-arc-card.offset-step-2 {
-  margin-top: 36px;
+  margin-top: 44px;
 }
 
 .category-arc-card.offset-step-3 {
-  margin-top: 64px;
+  margin-top: 104px;
 }
 
 .cat-photo-frame {

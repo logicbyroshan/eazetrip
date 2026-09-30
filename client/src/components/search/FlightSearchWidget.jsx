@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { airports } from '../../data/flightData';
-import { ArrowLeftRight } from 'lucide-react';
+import { ArrowLeftRight, ChevronDown, ShieldCheck, Ticket, Sparkles } from 'lucide-react';
 
 export const formatDateDisplay = (dateStr) => {
   if (!dateStr) return { day: '--', monthYear: '--', weekday: '--' };
@@ -17,7 +17,7 @@ export const formatDateDisplay = (dateStr) => {
       const yearShort = String(d.getFullYear()).slice(-2);
       const weekday = d.toLocaleString('en-US', { weekday: 'long' });
       return {
-        day: String(day).padStart(2, '0'),
+        day: String(day),
         monthYear: `${monthShort}'${yearShort}`,
         weekday
       };
@@ -25,7 +25,7 @@ export const formatDateDisplay = (dateStr) => {
   } catch (e) {
     // fallback
   }
-  return { day: '22', monthYear: "Sep'26", weekday: 'Tuesday' };
+  return { day: '2', monthYear: "Oct'26", weekday: 'Friday' };
 };
 
 export default function FlightSearchWidget({ initialValues = {}, onSearch }) {
@@ -35,11 +35,12 @@ export default function FlightSearchWidget({ initialValues = {}, onSearch }) {
 
   const [tripType, setTripType] = useState(initialValues.tripType || 'oneWay');
   const [fromAirport, setFromAirport] = useState(initialValues.from || 'BOM');
-  const [toAirport, setToAirport] = useState(initialValues.to || 'DEL');
-  const [departureDate, setDepartureDate] = useState(initialValues.departureDate || '2026-09-22');
-  const [returnDate, setReturnDate] = useState(initialValues.returnDate || '2026-09-28');
+  const [toAirport, setToAirport] = useState(initialValues.to || 'BHO');
+  const [departureDate, setDepartureDate] = useState(initialValues.departureDate || '2026-10-02');
+  const [returnDate, setReturnDate] = useState(initialValues.returnDate || '2026-10-08');
   const [nonStopOnly, setNonStopOnly] = useState(initialValues.nonStopOnly || false);
   const [specialFare, setSpecialFare] = useState(initialValues.specialFare || 'regular');
+  const [priceDropProtection, setPriceDropProtection] = useState(false);
 
   // Travellers & Class
   const [adults, setAdults] = useState(initialValues.adults || 1);
@@ -47,6 +48,7 @@ export default function FlightSearchWidget({ initialValues = {}, onSearch }) {
   const [infants, setInfants] = useState(initialValues.infants || 0);
   const [cabinClass, setCabinClass] = useState(initialValues.cabinClass || 'Economy');
   const [travellerMenuOpen, setTravellerMenuOpen] = useState(false);
+  const [classMenuOpen, setClassMenuOpen] = useState(false);
 
   // Dropdowns
   const [fromSearchOpen, setFromSearchOpen] = useState(false);
@@ -55,6 +57,7 @@ export default function FlightSearchWidget({ initialValues = {}, onSearch }) {
   const [toQuery, setToQuery] = useState('');
 
   const travellerRef = useRef(null);
+  const classRef = useRef(null);
   const fromFieldRef = useRef(null);
   const toFieldRef = useRef(null);
 
@@ -62,6 +65,9 @@ export default function FlightSearchWidget({ initialValues = {}, onSearch }) {
     function handleClickOutside(e) {
       if (travellerRef.current && !travellerRef.current.contains(e.target)) {
         setTravellerMenuOpen(false);
+      }
+      if (classRef.current && !classRef.current.contains(e.target)) {
+        setClassMenuOpen(false);
       }
       if (fromFieldRef.current && !fromFieldRef.current.contains(e.target)) {
         setFromSearchOpen(false);
@@ -73,6 +79,7 @@ export default function FlightSearchWidget({ initialValues = {}, onSearch }) {
     function handleKeyDown(e) {
       if (e.key === 'Escape') {
         setTravellerMenuOpen(false);
+        setClassMenuOpen(false);
         setFromSearchOpen(false);
         setToSearchOpen(false);
       }
@@ -94,7 +101,8 @@ export default function FlightSearchWidget({ initialValues = {}, onSearch }) {
 
   const getAirport = (code) => airports.find((a) => a.code === code) || airports[0];
 
-  const handleSwapAirports = () => {
+  const handleSwapAirports = (e) => {
+    if (e) e.stopPropagation();
     const temp = fromAirport;
     setFromAirport(toAirport);
     setToAirport(temp);
@@ -113,7 +121,8 @@ export default function FlightSearchWidget({ initialValues = {}, onSearch }) {
       infants,
       cabinClass,
       nonStopOnly,
-      specialFare
+      specialFare,
+      priceDropProtection
     };
 
     if (onSearch) {
@@ -141,76 +150,86 @@ export default function FlightSearchWidget({ initialValues = {}, onSearch }) {
   );
 
   const totalPassengers = adults + children + infants;
-
   const depDateObj = formatDateDisplay(departureDate);
   const retDateObj = formatDateDisplay(returnDate);
 
   return (
-    <div className="search-widget-box flight-widget">
+    <div className="search-widget-box flight-widget modern-ss-widget">
       {/* Top Options Bar */}
-      <div className="search-top-bar">
-        <div className="trip-radio-group">
-          <label className={`radio-pill ${tripType === 'oneWay' ? 'active' : ''}`}>
+      <div className="search-top-bar modern-ss-topbar">
+        <div className="trip-radio-group modern-radio-group">
+          <label className={`radio-dot-option ${tripType === 'oneWay' ? 'active' : ''}`}>
             <input
               type="radio"
               name="tripType"
               checked={tripType === 'oneWay'}
               onChange={() => setTripType('oneWay')}
             />
-            <span>One Way</span>
+            <span className="custom-radio-dot" />
+            <span className="radio-label-text">One Way</span>
           </label>
-          <label className={`radio-pill ${tripType === 'roundTrip' ? 'active' : ''}`}>
+          <label className={`radio-dot-option ${tripType === 'roundTrip' ? 'active' : ''}`}>
             <input
               type="radio"
               name="tripType"
               checked={tripType === 'roundTrip'}
               onChange={() => setTripType('roundTrip')}
             />
-            <span>Round Trip</span>
+            <span className="custom-radio-dot" />
+            <span className="radio-label-text">Round Trip</span>
           </label>
-          <label className={`radio-pill ${tripType === 'multiCity' ? 'active' : ''}`}>
+          <label className={`radio-dot-option ${tripType === 'multiCity' ? 'active' : ''}`}>
             <input
               type="radio"
               name="tripType"
               checked={tripType === 'multiCity'}
               onChange={() => setTripType('multiCity')}
             />
-            <span>Multi City</span>
+            <span className="custom-radio-dot" />
+            <span className="radio-label-text">Multi City</span>
           </label>
         </div>
 
-        <div className="top-filter-right">
-          <label className="checkbox-pill nonstop-toggle">
-            <input
-              type="checkbox"
-              checked={nonStopOnly}
-              onChange={(e) => setNonStopOnly(e.target.checked)}
-            />
-            <span>Direct Flights Only</span>
-          </label>
+        <div className="top-info-banner-right">
+          <span className="top-info-text">Book International and Domestic Flights</span>
+          <div className="flight-cab-highlight-badge">
+            <span className="highlight-lead">Flight + Cab connection :</span>
+            <span className="highlight-sub">Reach anywhere in India</span>
+            <span className="badge-new-pill">NEW</span>
+          </div>
         </div>
       </div>
 
-      {/* Main Input Grid */}
-      <div className="search-fields-grid flight-grid">
-        {/* FROM Field */}
-        <div className="search-field-block" ref={fromFieldRef}>
-          <label id="flight-from-label">FROM</label>
+      {/* Main Unified Segmented Input Grid */}
+      <div className="unified-segmented-box flight-unified-box">
+        {/* 1. FROM Field */}
+        <div className="search-cell-block cell-from" ref={fromFieldRef}>
           <div
-            className="field-value-card"
+            className="search-cell-clickable"
             onClick={() => {
               setFromSearchOpen(!fromSearchOpen);
               setToSearchOpen(false);
             }}
             tabIndex={0}
             role="button"
-            aria-labelledby="flight-from-label"
           >
-            <span className="city-title">{fromAirportObj.city}</span>
-            <span className="code-sub">
-              [{fromAirportObj.code}] {fromAirportObj.name.slice(0, 22)}...
-            </span>
+            <span className="search-cell-label">From</span>
+            <h3 className="search-cell-main">{fromAirportObj.city}</h3>
+            <p className="search-cell-sub">
+              {fromAirportObj.code}, {fromAirportObj.name.slice(0, 24)}...
+            </p>
           </div>
+
+          {/* Floating Swap Button */}
+          <button
+            type="button"
+            className="segmented-swap-btn"
+            onClick={handleSwapAirports}
+            title="Swap origin and destination"
+            aria-label="Swap origin and destination airports"
+          >
+            <ArrowLeftRight size={13} />
+          </button>
 
           {fromSearchOpen && (
             <div className="airport-dropdown">
@@ -244,34 +263,22 @@ export default function FlightSearchWidget({ initialValues = {}, onSearch }) {
           )}
         </div>
 
-        {/* Swap Button */}
-        <button
-          type="button"
-          className="swap-button"
-          onClick={handleSwapAirports}
-          title="Swap origin and destination"
-          aria-label="Swap origin and destination airports"
-        >
-          <ArrowLeftRight size={16} />
-        </button>
-
-        {/* TO Field */}
-        <div className="search-field-block" ref={toFieldRef}>
-          <label id="flight-to-label">TO</label>
+        {/* 2. TO Field */}
+        <div className="search-cell-block cell-to" ref={toFieldRef}>
           <div
-            className="field-value-card"
+            className="search-cell-clickable"
             onClick={() => {
               setToSearchOpen(!toSearchOpen);
               setFromSearchOpen(false);
             }}
             tabIndex={0}
             role="button"
-            aria-labelledby="flight-to-label"
           >
-            <span className="city-title">{toAirportObj.city}</span>
-            <span className="code-sub">
-              [{toAirportObj.code}] {toAirportObj.name.slice(0, 22)}...
-            </span>
+            <span className="search-cell-label">To</span>
+            <h3 className="search-cell-main">{toAirportObj.city}</h3>
+            <p className="search-cell-sub">
+              {toAirportObj.code}, {toAirportObj.name.slice(0, 24)}...
+            </p>
           </div>
 
           {toSearchOpen && (
@@ -306,82 +313,96 @@ export default function FlightSearchWidget({ initialValues = {}, onSearch }) {
           )}
         </div>
 
-        {/* DEPARTURE DATE */}
-        <div className="search-field-block date-field-block">
-          <label htmlFor="flight-dep-date">DEPARTURE</label>
-          <div className="field-value-card date-card">
-            <div className="date-display-wrap">
-              <span className="date-day-num">{depDateObj.day}</span>
-              <div className="date-month-col">
-                <span className="date-month-year">{depDateObj.monthYear}</span>
-                <span className="date-weekday">{depDateObj.weekday}</span>
-              </div>
+        {/* 3. DEPARTURE DATE */}
+        <div className="search-cell-block cell-departure date-cell-block">
+          <div className="search-cell-clickable">
+            <div className="search-cell-label-row">
+              <span className="search-cell-label">Departure</span>
+              <ChevronDown size={13} className="cell-chevron text-blue-500" />
             </div>
-            <input
-              id="flight-dep-date"
-              type="date"
-              min={today}
-              className="custom-date-overlay-input"
-              value={departureDate}
-              onChange={(e) => setDepartureDate(e.target.value)}
-              aria-label="Departure Date"
-            />
+            <div className="search-cell-main date-headline">
+              <span className="date-number">{depDateObj.day}</span>
+              <span className="date-month-year">{depDateObj.monthYear}</span>
+            </div>
+            <p className="search-cell-sub">{depDateObj.weekday}</p>
           </div>
+          <input
+            id="flight-dep-date"
+            type="date"
+            min={today}
+            className="custom-date-overlay-input"
+            value={departureDate}
+            onChange={(e) => setDepartureDate(e.target.value)}
+            aria-label="Departure Date"
+          />
         </div>
 
-        {/* RETURN DATE */}
-        <div className={`search-field-block date-field-block ${tripType !== 'roundTrip' ? 'disabled-return-field' : ''}`}>
-          <label htmlFor={tripType === 'roundTrip' ? 'flight-ret-date' : undefined}>RETURN</label>
-          <div className={`field-value-card date-card ${tripType !== 'roundTrip' ? 'disabled-return-card' : ''}`}>
-            {tripType === 'roundTrip' ? (
-              <>
-                <div className="date-display-wrap">
-                  <span className="date-day-num">{retDateObj.day}</span>
-                  <div className="date-month-col">
-                    <span className="date-month-year">{retDateObj.monthYear}</span>
-                    <span className="date-weekday">{retDateObj.weekday}</span>
-                  </div>
+        {/* 4. RETURN DATE */}
+        <div className={`search-cell-block cell-return date-cell-block ${tripType !== 'roundTrip' ? 'empty-return-cell' : ''}`}>
+          {tripType === 'roundTrip' ? (
+            <>
+              <div className="search-cell-clickable">
+                <div className="search-cell-label-row">
+                  <span className="search-cell-label">Return</span>
+                  <ChevronDown size={13} className="cell-chevron text-blue-500" />
                 </div>
-                <input
-                  id="flight-ret-date"
-                  type="date"
-                  min={departureDate || today}
-                  className="custom-date-overlay-input"
-                  value={returnDate}
-                  onChange={(e) => setReturnDate(e.target.value)}
-                  aria-label="Return Date"
-                />
-              </>
-            ) : (
-              <div
-                className="disabled-return-inner"
-                onClick={() => setTripType('roundTrip')}
-                role="button"
-                tabIndex={0}
-              >
-                <span className="disabled-return-title">+ Add Return</span>
-                <span className="disabled-return-sub">Save more on round trip</span>
+                <div className="search-cell-main date-headline">
+                  <span className="date-number">{retDateObj.day}</span>
+                  <span className="date-month-year">{retDateObj.monthYear}</span>
+                </div>
+                <p className="search-cell-sub">{retDateObj.weekday}</p>
               </div>
-            )}
-          </div>
+              <input
+                id="flight-ret-date"
+                type="date"
+                min={departureDate || today}
+                className="custom-date-overlay-input"
+                value={returnDate}
+                onChange={(e) => setReturnDate(e.target.value)}
+                aria-label="Return Date"
+              />
+            </>
+          ) : (
+            <div
+              className="search-cell-clickable return-prompt-inner"
+              onClick={() => setTripType('roundTrip')}
+              role="button"
+              tabIndex={0}
+            >
+              <div className="search-cell-label-row">
+                <span className="search-cell-label">Return</span>
+                <ChevronDown size={13} className="cell-chevron text-blue-500" />
+              </div>
+              <p className="return-hint-text">
+                Tap to add a return date for bigger discounts
+              </p>
+            </div>
+          )}
         </div>
 
-        {/* TRAVELLERS & CLASS */}
-        <div className="search-field-block" ref={travellerRef}>
-          <label id="flight-traveller-label">TRAVELLERS & CLASS</label>
+        {/* 5. TRAVELLERS */}
+        <div className="search-cell-block cell-travellers" ref={travellerRef}>
           <div
-            className="field-value-card traveller-card"
-            onClick={() => setTravellerMenuOpen(!travellerMenuOpen)}
+            className="search-cell-clickable"
+            onClick={() => {
+              setTravellerMenuOpen(!travellerMenuOpen);
+              setClassMenuOpen(false);
+            }}
             tabIndex={0}
             role="button"
-            aria-labelledby="flight-traveller-label"
           >
-            <span className="city-title">{totalPassengers} Traveller{totalPassengers > 1 ? 's' : ''}</span>
-            <span className="code-sub">{cabinClass}</span>
+            <div className="search-cell-label-row">
+              <span className="search-cell-label">Travellers</span>
+              <ChevronDown size={13} className="cell-chevron text-blue-500" />
+            </div>
+            <h3 className="search-cell-main">{totalPassengers}</h3>
+            <p className="search-cell-sub">
+              {totalPassengers === 1 ? 'Adult' : `${adults} Adults${children ? `, ${children} Ch` : ''}`}
+            </p>
           </div>
 
           {travellerMenuOpen && (
-            <div className="traveller-popup">
+            <div className="traveller-popup modern-traveller-dropdown">
               <div className="popup-section">
                 <div className="counter-row">
                   <div>
@@ -462,71 +483,137 @@ export default function FlightSearchWidget({ initialValues = {}, onSearch }) {
                 </div>
               </div>
 
+              <button
+                type="button"
+                className="primary-btn full small mt-2"
+                onClick={() => setTravellerMenuOpen(false)}
+              >
+                Apply Travellers
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* 6. CABIN CLASS */}
+        <div className="search-cell-block cell-cabin-class" ref={classRef}>
+          <div
+            className="search-cell-clickable"
+            onClick={() => {
+              setClassMenuOpen(!classMenuOpen);
+              setTravellerMenuOpen(false);
+            }}
+            tabIndex={0}
+            role="button"
+          >
+            <div className="search-cell-label-row">
+              <span className="search-cell-label">Cabin Class</span>
+              <ChevronDown size={13} className="cell-chevron text-blue-500" />
+            </div>
+            <h3 className="search-cell-main search-cell-cabin">
+              {cabinClass === 'Economy' ? 'Economy/ Premium...' : cabinClass}
+            </h3>
+            <p className="search-cell-sub">
+              {cabinClass === 'Economy' ? 'Best value fare' : 'Premium comfort'}
+            </p>
+          </div>
+
+          {classMenuOpen && (
+            <div className="traveller-popup modern-class-dropdown">
               <div className="popup-section class-section">
-                <strong>Travel Class</strong>
-                <div className="class-pills">
+                <strong>Select Cabin Class</strong>
+                <div className="class-pills-list mt-2">
                   {['Economy', 'Premium Economy', 'Business', 'First Class'].map((c) => (
                     <button
                       key={c}
                       type="button"
-                      className={`class-pill ${cabinClass === c ? 'active' : ''}`}
-                      onClick={() => setCabinClass(c)}
+                      className={`class-option-btn ${cabinClass === c ? 'active' : ''}`}
+                      onClick={() => {
+                        setCabinClass(c);
+                        setClassMenuOpen(false);
+                      }}
                     >
-                      {c}
+                      <span>{c}</span>
                     </button>
                   ))}
                 </div>
               </div>
-
-              <button
-                type="button"
-                className="primary-btn full small"
-                onClick={() => setTravellerMenuOpen(false)}
-              >
-                Apply
-              </button>
             </div>
           )}
         </div>
       </div>
 
-      {/* Special Fares Strip */}
-      <div className="special-fares-strip">
-        <span className="fare-label">Special Fares (Optional):</span>
-        <div className="fare-chips">
+      {/* Select a special fare Row (Matching Screenshot) */}
+      <div className="modern-special-fares-row">
+        <div className="special-fare-heading-col">
+          <span className="special-fare-lead">Select a</span>
+          <strong className="special-fare-strong">special fare</strong>
+        </div>
+
+        <div className="modern-fare-cards-grid">
           {[
-            { id: 'regular', label: 'Regular Fare' },
-            { id: 'student', label: 'Student (+ Extra Baggage)' },
-            { id: 'senior', label: 'Senior Citizen' },
-            { id: 'armed', label: 'Armed Forces' },
-            { id: 'doctor', label: 'Doctors & Nurses' }
+            { id: 'regular', title: 'Regular', subtitle: 'Regular fares' },
+            { id: 'student', title: 'Student', subtitle: 'Extra discounts/baggage' },
+            { id: 'armed', title: 'Armed Forces', subtitle: 'Up to ₹ 600 off' },
+            { id: 'gst', title: 'Have a GST number ?', badge: 'new', subtitle: 'Lower cancellation charges' },
+            { id: 'senior', title: 'Senior Citizen', subtitle: 'Up to ₹ 600 off' },
+            { id: 'doctor', title: 'Doctor and Nurses', subtitle: 'Up to ₹ 600 off' }
           ].map((fare) => (
-            <label
+            <div
               key={fare.id}
-              className={`fare-chip ${specialFare === fare.id ? 'active' : ''}`}
+              className={`modern-fare-card ${specialFare === fare.id ? 'active' : ''}`}
+              onClick={() => setSpecialFare(fare.id)}
+              role="button"
+              tabIndex={0}
             >
-              <input
-                type="radio"
-                name="specialFare"
-                checked={specialFare === fare.id}
-                onChange={() => setSpecialFare(fare.id)}
-              />
-              <span>{fare.label}</span>
-            </label>
+              <div className="fare-card-title-row">
+                <span className="fare-card-title">{fare.title}</span>
+                {fare.badge && <span className="fare-mini-badge">{fare.badge}</span>}
+              </div>
+              <span className="fare-card-sub">{fare.subtitle}</span>
+            </div>
           ))}
         </div>
       </div>
 
-      {/* Floating Action Button */}
-      <div className="search-action-wrap">
+      {/* Price Drop Protection & Flight Status Strip (Matching Screenshot) */}
+      <div className="price-drop-status-row">
+        <label className="price-drop-checkbox-box">
+          <input
+            type="checkbox"
+            checked={priceDropProtection}
+            onChange={(e) => setPriceDropProtection(e.target.checked)}
+          />
+          <div className="price-drop-text-block">
+            <strong>Add Price Drop Protection</strong>
+            <span>Price drops, we'll refund the difference.</span>
+            <a href="#view-details" onClick={(e) => e.preventDefault()} className="price-drop-link">View Details</a>
+          </div>
+          <div className="price-drop-icon-shield" title="Price Drop Protection Active">
+            <span className="shield-symbol">₹</span>
+          </div>
+        </label>
+
         <button
           type="button"
-          className="search-submit-hero-btn"
+          className="flight-status-cta-pill"
+          onClick={() => navigate('/flight-booking')}
+        >
+          <span className="ticket-icon">🎟️</span>
+          <span>Flight Status</span>
+        </button>
+      </div>
+
+      {/* Floating SEARCH Button (Centered Half-Inside, Half-Outside bottom edge) */}
+      <div className="search-action-wrap-floating">
+        <button
+          type="button"
+          className="search-submit-hero-btn modern-floating-btn"
           onClick={handleSearchSubmit}
         >
-          SEARCH FLIGHTS
+          SEARCH
         </button>
       </div>
     </div>
   );
 }
+
