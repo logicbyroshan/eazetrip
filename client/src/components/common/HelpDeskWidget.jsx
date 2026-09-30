@@ -1,7 +1,14 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Headphones } from 'lucide-react';
 
 export default function HelpDeskWidget() {
+  const location = useLocation();
+
+  // Hide the floating hub when the user is already on the dedicated HelpDesk page
+  if (location.pathname === '/helpdesk') {
+    return null;
+  }
+
   return (
     <div className="helpdesk-floating-hub">
       <Link
@@ -20,3 +27,4 @@ export default function HelpDeskWidget() {
     </div>
   );
 }
+

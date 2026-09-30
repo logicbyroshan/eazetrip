@@ -2,10 +2,12 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { busCities } from '../../data/busData';
 import { Bus, ArrowLeftRight, Calendar, MapPin } from 'lucide-react';
+import { formatDateDisplay } from './FlightSearchWidget';
 
 export default function BusSearchWidget({ initialValues = {}, onSearch }) {
   const navigate = useNavigate();
 
+  const today = new Date().toISOString().split('T')[0];
   const [fromCity, setFromCity] = useState(initialValues.from || 'Pune');
   const [toCity, setToCity] = useState(initialValues.to || 'Mumbai');
   const [journeyDate, setJourneyDate] = useState(initialValues.journeyDate || '2026-09-28');
@@ -17,6 +19,8 @@ export default function BusSearchWidget({ initialValues = {}, onSearch }) {
 
   const fromRef = useRef(null);
   const toRef = useRef(null);
+
+  const journeyDateObj = formatDateDisplay(journeyDate);
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -174,14 +178,24 @@ export default function BusSearchWidget({ initialValues = {}, onSearch }) {
         </div>
 
         {/* Journey Date */}
-        <div className="search-field-block">
-          <label>JOURNEY DATE</label>
+        <div className="search-field-block date-field-block">
+          <label htmlFor="bus-journey-date">JOURNEY DATE</label>
           <div className="field-value-card date-card">
+            <div className="date-display-wrap">
+              <span className="date-day-num">{journeyDateObj.day}</span>
+              <div className="date-month-col">
+                <span className="date-month-year">{journeyDateObj.monthYear}</span>
+                <span className="date-weekday">{journeyDateObj.weekday}</span>
+              </div>
+            </div>
             <input
+              id="bus-journey-date"
               type="date"
-              className="native-date-input"
+              min={today}
+              className="custom-date-overlay-input"
               value={journeyDate}
               onChange={(e) => setJourneyDate(e.target.value)}
+              aria-label="Journey Date"
             />
           </div>
         </div>

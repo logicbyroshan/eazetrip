@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.5.3] - 2026-10-01
+
+### Hero Search Formatted Date Display, Segmented Field Grid, Equal Badge 4-Side Padding & HelpDesk Layout Width Polish
+
+#### Hero Search Booking Widgets & Formatted Date Cards (`client/src/components/search/*`, `client/src/App.css`)
+- **Luxury Formatted Date Display**: Replaced raw native browser `<input type="date">` boxes with luxury MakeMyTrip/Skyscanner-style travel cards featuring bold day number (e.g. `22`), month and year (`Sep'26`), and weekday (`Tuesday`).
+- **Invisible Overlay Datepicker**: Integrated full-card invisible date inputs (`.custom-date-overlay-input`) with native calendar picker trigger for instant, frictionless date selection on both desktop and mobile.
+- **Dynamic Return Trip Toggle Card**: Implemented interactive `+ Add Return / Save more on round trip` dashed card in `FlightSearchWidget.jsx` that smoothly switches to Round Trip mode with active return date selection.
+- **Symmetrical Grid & Field Cards**: Standardized `min-height: 68px`, 14px border radius, crisp typography, and vertically centered rotating swap button across Flights, Hotels, Buses, Trains, and Holidays widgets.
+
+#### Trending Destinations City Badges Equal Padding (`client/src/App.css`)
+- **Uniform 4-Side Padding**: Updated `.trending-city-badge` and inner `.city-flag` to equal top, right, bottom, and left padding (`padding: 8px 8px;` and `padding: 4px 4px;`) with strict `line-height: 1` flex centering.
+
+#### Help Desk Page Layout & Direct Assistance Sidebar Alignment (`client/src/components/common/HelpDeskWidget.jsx`, `client/src/App.css`)
+- **Contextual Launcher Visibility**: Automatically hides the floating `24/7 Help Desk` launcher widget when viewing the dedicated `/helpdesk` page (`location.pathname === '/helpdesk'`).
+- **Full Width Grid Alignment**: Refined `.helpdesk-page-grid` (`1fr 360px`), `.helpdesk-sidebar-col`, and `.contact-box-item` to align flush with the page container and hero banner.
+
+---
+
 ## [2.5.2] - 2026-10-01
 
 ### Topbar Cleanliness, Portrait Destination Cards, Hover Zoom, White Badges, Marquee Shadow Fix & Direct HelpDesk Routing

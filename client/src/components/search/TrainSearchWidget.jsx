@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { railwayStations } from '../../data/trainData';
 import { Train, ArrowLeftRight, Calendar, MapPin, ChevronDown, Check } from 'lucide-react';
+import { formatDateDisplay } from './FlightSearchWidget';
 
 const QUOTA_OPTIONS = [
   { code: 'GN', label: 'General Quota (GN)' },
@@ -22,6 +23,7 @@ const CLASS_OPTIONS = [
 export default function TrainSearchWidget({ initialValues = {}, onSearch }) {
   const navigate = useNavigate();
 
+  const today = new Date().toISOString().split('T')[0];
   const [fromStation, setFromStation] = useState(initialValues.from || 'NDLS');
   const [toStation, setToStation] = useState(initialValues.to || 'BCT');
   const [travelDate, setTravelDate] = useState(initialValues.travelDate || '2026-09-25');
@@ -40,6 +42,8 @@ export default function TrainSearchWidget({ initialValues = {}, onSearch }) {
   const toRef = useRef(null);
   const quotaRef = useRef(null);
   const classRef = useRef(null);
+
+  const travelDateObj = formatDateDisplay(travelDate);
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -273,14 +277,24 @@ export default function TrainSearchWidget({ initialValues = {}, onSearch }) {
         </div>
 
         {/* Travel Date */}
-        <div className="search-field-block">
-          <label>TRAVEL DATE</label>
+        <div className="search-field-block date-field-block">
+          <label htmlFor="train-travel-date">TRAVEL DATE</label>
           <div className="field-value-card date-card">
+            <div className="date-display-wrap">
+              <span className="date-day-num">{travelDateObj.day}</span>
+              <div className="date-month-col">
+                <span className="date-month-year">{travelDateObj.monthYear}</span>
+                <span className="date-weekday">{travelDateObj.weekday}</span>
+              </div>
+            </div>
             <input
+              id="train-travel-date"
               type="date"
-              className="native-date-input"
+              min={today}
+              className="custom-date-overlay-input"
               value={travelDate}
               onChange={(e) => setTravelDate(e.target.value)}
+              aria-label="Travel Date"
             />
           </div>
         </div>

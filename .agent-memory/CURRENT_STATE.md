@@ -1,11 +1,11 @@
 # Current Project State: EazeTrip
 
 ## 1. Release Baseline & Status
-* **Status**: Production Ready / Topbar Streamlined / Portrait Destination & Category Cards / Image Zoom Hover / High-Contrast Badges / Clean Reviews Mask / Direct HelpDesk Page Navigation / 100% Passing Tests
-* **Version**: `2.5.2`
+* **Status**: Production Ready / Hero Search Formatted Date Picker / Segmented Fields Layout / Equal 4-Side Badge Padding / Direct Assistance Sidebar Fit / 100% Passing Tests
+* **Version**: `2.5.3`
 * **Test Suite**: 89 / 89 automated tests passing (`npm test`).
 * **Client Build**: Clean Vite production build (`npm run build`).
-* **Active Branch**: `feature/ui-polish-topbar-cards-reviews-helpdesk`
+* **Active Branch**: `feature/hero-search-and-helpdesk-ui-polish`
 
 ---
 

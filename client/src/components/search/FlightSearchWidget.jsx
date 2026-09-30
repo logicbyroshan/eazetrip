@@ -3,6 +3,31 @@ import { useNavigate } from 'react-router-dom';
 import { airports } from '../../data/flightData';
 import { ArrowLeftRight } from 'lucide-react';
 
+export const formatDateDisplay = (dateStr) => {
+  if (!dateStr) return { day: '--', monthYear: '--', weekday: '--' };
+  try {
+    const parts = dateStr.split('-');
+    if (parts.length === 3) {
+      const year = parseInt(parts[0], 10);
+      const month = parseInt(parts[1], 10) - 1;
+      const dayNum = parseInt(parts[2], 10);
+      const d = new Date(year, month, dayNum);
+      const day = d.getDate();
+      const monthShort = d.toLocaleString('en-US', { month: 'short' });
+      const yearShort = String(d.getFullYear()).slice(-2);
+      const weekday = d.toLocaleString('en-US', { weekday: 'long' });
+      return {
+        day: String(day).padStart(2, '0'),
+        monthYear: `${monthShort}'${yearShort}`,
+        weekday
+      };
+    }
+  } catch (e) {
+    // fallback
+  }
+  return { day: '22', monthYear: "Sep'26", weekday: 'Tuesday' };
+};
+
 export default function FlightSearchWidget({ initialValues = {}, onSearch }) {
   const navigate = useNavigate();
 
@@ -116,6 +141,9 @@ export default function FlightSearchWidget({ initialValues = {}, onSearch }) {
   );
 
   const totalPassengers = adults + children + infants;
+
+  const depDateObj = formatDateDisplay(departureDate);
+  const retDateObj = formatDateDisplay(returnDate);
 
   return (
     <div className="search-widget-box flight-widget">
@@ -279,36 +307,60 @@ export default function FlightSearchWidget({ initialValues = {}, onSearch }) {
         </div>
 
         {/* DEPARTURE DATE */}
-        <div className="search-field-block">
+        <div className="search-field-block date-field-block">
           <label htmlFor="flight-dep-date">DEPARTURE</label>
           <div className="field-value-card date-card">
+            <div className="date-display-wrap">
+              <span className="date-day-num">{depDateObj.day}</span>
+              <div className="date-month-col">
+                <span className="date-month-year">{depDateObj.monthYear}</span>
+                <span className="date-weekday">{depDateObj.weekday}</span>
+              </div>
+            </div>
             <input
               id="flight-dep-date"
               type="date"
               min={today}
-              className="native-date-input"
+              className="custom-date-overlay-input"
               value={departureDate}
               onChange={(e) => setDepartureDate(e.target.value)}
+              aria-label="Departure Date"
             />
           </div>
         </div>
 
         {/* RETURN DATE */}
-        <div className={`search-field-block ${tripType !== 'roundTrip' ? 'disabled' : ''}`}>
-          <label htmlFor="flight-ret-date">RETURN</label>
-          <div className="field-value-card date-card">
+        <div className={`search-field-block date-field-block ${tripType !== 'roundTrip' ? 'disabled-return-field' : ''}`}>
+          <label htmlFor={tripType === 'roundTrip' ? 'flight-ret-date' : undefined}>RETURN</label>
+          <div className={`field-value-card date-card ${tripType !== 'roundTrip' ? 'disabled-return-card' : ''}`}>
             {tripType === 'roundTrip' ? (
-              <input
-                id="flight-ret-date"
-                type="date"
-                min={departureDate || today}
-                className="native-date-input"
-                value={returnDate}
-                onChange={(e) => setReturnDate(e.target.value)}
-              />
+              <>
+                <div className="date-display-wrap">
+                  <span className="date-day-num">{retDateObj.day}</span>
+                  <div className="date-month-col">
+                    <span className="date-month-year">{retDateObj.monthYear}</span>
+                    <span className="date-weekday">{retDateObj.weekday}</span>
+                  </div>
+                </div>
+                <input
+                  id="flight-ret-date"
+                  type="date"
+                  min={departureDate || today}
+                  className="custom-date-overlay-input"
+                  value={returnDate}
+                  onChange={(e) => setReturnDate(e.target.value)}
+                  aria-label="Return Date"
+                />
+              </>
             ) : (
-              <div className="disabled-return" onClick={() => setTripType('roundTrip')}>
-                <span>Click to add return trip</span>
+              <div
+                className="disabled-return-inner"
+                onClick={() => setTripType('roundTrip')}
+                role="button"
+                tabIndex={0}
+              >
+                <span className="disabled-return-title">+ Add Return</span>
+                <span className="disabled-return-sub">Save more on round trip</span>
               </div>
             )}
           </div>
