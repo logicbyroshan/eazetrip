@@ -1,11 +1,11 @@
 # Current Project State: EazeTrip
 
 ## 1. Release Baseline & Status
-* **Status**: Production Ready / Topbar Height Harmonization / Reordered Hero Tabs (Flights-Trains-Buses-Hotels-Holidays) / Full-Width Bank Offers Marquee / Symmetrical Compact Hero Padding / Centered Floating SEARCH Button across all mediums / Modern Post-Category Assurance Strip / 100% Passing Tests
-* **Version**: `2.5.5`
+* **Status**: Production Ready / 50% Floating Search CTA Protrusion / Horizontal Baseline Input Alignment / Single-Row Infinite Reviews Stream / Site-Wide Minimal Hover Polish / 100% Passing Tests
+* **Version**: `2.5.6`
 * **Test Suite**: 89 / 89 automated tests passing (`npm test`).
 * **Client Build**: Clean Vite production build (`npm run build`).
-* **Active Branch**: `feature/hero-tabs-offers-fullwidth-assurance-polish`
+* **Active Branch**: `feature/minimal-interactions-hero-search-single-reviews-polish`
 
 ---
 

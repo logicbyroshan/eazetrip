@@ -4,6 +4,28 @@ This file logs meaningful agent tasks, architectural milestones, and fixes chron
 
 ---
 
+### Task: Precise 50% Floating Search CTA Protrusion, Horizontal Baseline Input Alignment, Single-Row Reviews Stream & Site-Wide Minimal Hover Polish
+* **Date**: 2026-10-01
+* **Reason**: User requested:
+  1. The Hero Search CTA button to be positioned exactly 50% on the card and 50% below the bottom border.
+  2. The booking search fields to have reduced compact padding, synchronized label and icon baselines, and properly aligned chevrons and calendar inputs.
+  3. The reviews section to have a single infinite scrolling row with polished cards and clean typography.
+  4. Excessive hover zoom and aggressive interactions across the website to be toned down to minimal, subtle micro-interactions.
+* **Branch / PR**: `feature/minimal-interactions-hero-search-single-reviews-polish`.
+* **Files Affected**:
+  - `client/src/App.css` (Positioned floating search CTA at `bottom: -44px`, unified segmented input grid and cells with standard `search-cell-label-row`, tightened hero search padding, single-row reviews marquee track `.track-single-marquee`, toned down hover transforms and scales site-wide)
+  - `client/src/components/search/FlightSearchWidget.jsx` (Standardized label row structure across all 6 columns)
+  - `client/src/components/home/ReviewsSection.jsx` (Converted to single-row infinite marquee loop with all 16 reviews)
+  - `CHANGELOG.md`, `.agent-memory/CURRENT_STATE.md`, `.agent-memory/TASK_HISTORY.md`
+* **What Changed**:
+  - Search CTA button now sits exactly 50% inside and 50% outside across the bottom border of the hero search card.
+  - Segmented input grid columns align perfectly on identical horizontal text and icon baselines.
+  - Reviews marquee now streams a single smooth infinite row with rich verified traveler cards.
+  - Hover interactions across the entire site are now subtle and minimal without aggressive scaling or abrupt jumps.
+* **Testing Performed**: 89 / 89 automated backend tests passing (`npm test`), 0 errors in Vite production build (`npm run build`), visual browser subagent verification.
+
+---
+
 ### Task: Topbar Height Alignment, Hero Tabs Reordering, Full-Width Bank Offers Marquee & Post-Category Assurance Strip
 * **Date**: 2026-10-01
 * **Reason**: User requested:

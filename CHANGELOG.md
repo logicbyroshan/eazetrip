@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.5.6] - 2026-10-01
+
+### Precise 50% Floating Search CTA Protrusion, Horizontal Baseline Alignment for Input Cells, Single-Row Reviews Stream & Site-Wide Minimal Hover Polish
+
+#### Hero Booking Search Widget Alignment & Floating Button (`client/src/App.css`, `client/src/components/search/FlightSearchWidget.jsx`)
+- **Precise 50% In / 50% Out Protrusion**: Positioned the blue `SEARCH` button wrapper at `bottom: -44px` on `.search-action-wrap-floating` with button height `48px`, placing exactly 24px inside the search wrapper and 24px protruding outside across the bottom border. Added `margin-bottom: 42px` on `.hero-search-wrapper` for clean breathing clearance.
+- **Horizontal Baseline Synchronization**: Unified all 6 segmented columns (`From`, `To`, `Departure`, `Return`, `Travellers`, `Cabin Class`) with identical `.search-cell-label-row` containers (height `16px`), aligning all text labels, chevrons, date numerals, and subtitles on the exact same horizontal baseline across all columns.
+- **Compact Symmetrical Internal Padding**: Tightened `.hero-search-content` to `12px 18px 20px 18px` and `.search-cell-block` to `8px 12px; min-height: 72px;` for a compact, modern luxury appearance.
+- **Invisible Full-Cell Date Picker Overlay**: Configured `.custom-date-overlay-input` to invisibly cover the entire date card (`inset: 0; opacity: 0; cursor: pointer;`) for seamless calendar triggers.
+
+#### Single-Row Infinite Reviews Stream (`client/src/components/home/ReviewsSection.jsx`, `client/src/App.css`)
+- **Single Marquee Stream**: Converted dual-row marquee to a single continuous infinite marquee track (`.track-single-marquee`) with all 16 verified traveler reviews looping smoothly left-to-right.
+- **Polished Card Geometry & High Contrast**: Set card width to `360px`, `border-radius: 16px`, `padding: 18px 20px`, crisp `#0f172a` typography, amber `#d97706` rating badges, and soft border `#e2e8f0`.
+
+#### Site-Wide Minimal Hover Interaction Audit (`client/src/App.css`)
+- **Removed Excessive Scale & Jumping**: Toned down hover transforms across the entire application (replaced heavy `scale(1.08)` to `scale(1.15)` and `translateY(-8px)` with subtle `translateY(-1px)` to `translateY(-2px)` and gentle `scale(1.02)` image expansions).
+- **Soft Border Shifts**: Replaced harsh thick hover outlines with gentle `#cbd5e1` / `#0284c7` border transitions.
+
+---
+
 ## [2.5.5] - 2026-10-01
 
 ### Topbar Height Harmonization, Reordered Hero Tabs (Flights-Trains-Buses-Hotels-Holidays), Full-Width Offers Marquee & Post-Category Assurance Strip
