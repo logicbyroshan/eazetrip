@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.5.1] - 2026-09-30
+
+### Google Auth Real Account Integration, Cookie & One-Tap Staggering, and Hero Search Full Width
+
+#### Google Authentication & Real Account Resolution (`client/src/context/AuthContext.jsx`, `client/src/components/auth/GoogleOneTapPrompt.jsx`)
+- **Real Google Identity Services Decoding**: Enhanced client-side Google OAuth handling with safe JWT base64url decoding to automatically extract traveler real name, email, avatar photo, and Google ID token.
+- **Dynamic Account Selector & Sandbox Mode**: Replaced static hardcoded mock profile ("Priyansh Sharma") with dynamic remembered user details (`eazetrip_remembered_name`, `eazetrip_remembered_email`) and an interactive account switch/edit mode.
+- **Session Dismissal Persistence**: Google One-Tap dismiss action persists in `sessionStorage` (`eazetrip_onetap_dismissed`) to prevent repeated prompts during active sessions.
+
+#### Cookie Consent & Google One-Tap Prompt Staggering (`client/src/components/common/CookieConsentBanner.jsx`, `client/src/components/auth/GoogleOneTapPrompt.jsx`)
+- **Staggered Modal Entrances**: Resolved simultaneous modal collision by decoupling prompt appearance timers.
+  - *First-time Visitors*: Cookie Consent Banner appears first at 1.2s; Google One-Tap waits for the `eazetrip-cookie-consent-settled` custom event (or 6.5s fallback delay).
+  - *Returning Visitors (Consent Settled)*: Google One-Tap prompt appears smoothly after 2.8s.
+- **Custom Event Synchronization**: Dispatched `eazetrip-cookie-consent-settled` on all consent decision buttons (Accept All, Essential Only, Save Preferences).
+
+#### Hero Booking Widget Full-Width Alignment (`client/src/App.css`)
+- **Container Full Width**: Updated `.hero-content` from `max-width: 1120px` to `max-width: 100%`, allowing the search widget to span the full 1240px container width symmetrically with the navbar and assurance banner.
+- **Refined Styling & Typography**: Added dedicated styles for Google One-Tap avatar placeholders, custom account inputs, and switch buttons.
+
+---
+
 ## [2.5.0] - 2026-09-26
 
 ### Digital Personal Data Protection Act, 2023 & DPDP Rules, 2025 Full-Stack Implementation
