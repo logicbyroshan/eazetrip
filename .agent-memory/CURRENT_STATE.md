@@ -1,11 +1,11 @@
 # Current Project State: EazeTrip
 
 ## 1. Release Baseline & Status
-* **Status**: Production Ready / Google Auth Real Account Integration / Modal & Cookie Staggering / Full Container Width Hero / 100% Passing Tests
-* **Version**: `2.5.1`
+* **Status**: Production Ready / Topbar Streamlined / Portrait Destination & Category Cards / Image Zoom Hover / High-Contrast Badges / Clean Reviews Mask / Direct HelpDesk Page Navigation / 100% Passing Tests
+* **Version**: `2.5.2`
 * **Test Suite**: 89 / 89 automated tests passing (`npm test`).
 * **Client Build**: Clean Vite production build (`npm run build`).
-* **Active Branch**: `fix/auth-cookies-and-hero-width`
+* **Active Branch**: `feature/ui-polish-topbar-cards-reviews-helpdesk`
 
 ---
 

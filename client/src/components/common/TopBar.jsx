@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useCurrency } from '../../context/CurrencyContext';
-import { Phone, Home, User, LogOut, ShieldCheck, CreditCard, ChevronDown, Globe } from 'lucide-react';
+import { Phone, User, LogOut, ShieldCheck, CreditCard, ChevronDown, Globe } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import NotificationCenter from './NotificationCenter';
 
@@ -48,9 +48,6 @@ export default function TopBar() {
     <div className="topbar">
       <div className="container topbar-inner">
         <div className="topbar-left">
-          <Link to="/" title="Home" className="topbar-home-btn">
-            <Home size={16} />
-          </Link>
           <a
             href="https://wa.me/918269054018"
             target="_blank"
@@ -147,12 +144,6 @@ export default function TopBar() {
                 </button>
               </div>
             )}
-          </div>
-
-          <div className="topbar-links">
-            <Link to="/offers" className="topbar-sublink">{t('offers', 'Offers')}</Link>
-            <Link to="/manage-bookings" className="topbar-sublink">{t('manageBookings', 'Manage Bookings')}</Link>
-            <Link to="/payment" className="topbar-sublink">{t('makePayment', 'Make Payment')}</Link>
           </div>
 
           <NotificationCenter />

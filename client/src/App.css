@@ -26,37 +26,26 @@
   border-bottom: 1px solid #e2e8f0;
   font-size: 0.8rem;
   color: #475569;
-  padding: 2px 0;
+  height: 44px;
+  display: flex;
+  align-items: center;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  position: relative;
+  z-index: 100;
 }
 
 .topbar-inner {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  min-height: 42px;
+  height: 44px;
   gap: 20px;
 }
 
 .topbar-left, .topbar-right {
   display: flex;
   align-items: center;
-  gap: 14px;
-}
-
-.topbar-home-btn {
-  color: #034ea2;
-  display: inline-flex;
-  align-items: center;
-  padding: 5px 8px;
-  border-radius: 6px;
-  background: #f1f5f9;
-  transition: all 0.2s ease;
-}
-
-.topbar-home-btn:hover {
-  background: #e2e8f0;
-  color: #023670;
+  gap: 12px;
 }
 
 .topbar-whatsapp {
@@ -6283,24 +6272,24 @@ input[type="radio"]:focus-visible {
 
 .trending-card {
   position: relative;
-  border-radius: 16px;
+  border-radius: 20px;
   overflow: hidden;
   cursor: pointer;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
 }
 
 .trending-card-large {
-  height: 280px;
+  height: 380px;
 }
 
 .trending-card-medium {
-  height: 240px;
+  height: 340px;
 }
 
 .trending-card:hover {
-  transform: none; /* Keep card container exact same size without shrinking or jumping */
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 36px rgba(3, 78, 162, 0.22);
 }
 
 .trending-img-container {
@@ -6313,23 +6302,23 @@ input[type="radio"]:focus-visible {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transform: scale(1.05); /* slightly expanded initially */
-  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease;
+  transform: scale(1);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease;
 }
 
 .trending-card:hover .trending-img-container img {
-  transform: scale(0.96); /* Inside image becomes smaller on hover */
+  transform: scale(1.08); /* Gently expands and zooms in on hover */
 }
 
 .trending-card-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(15, 23, 42, 0.1) 0%, rgba(15, 23, 42, 0.4) 50%, rgba(15, 23, 42, 0.88) 100%);
+  background: linear-gradient(180deg, rgba(10, 25, 47, 0.1) 0%, rgba(10, 25, 47, 0.35) 45%, rgba(10, 25, 47, 0.92) 100%);
   transition: background 0.3s ease;
 }
 
 .trending-card:hover .trending-card-overlay {
-  background: linear-gradient(180deg, rgba(15, 23, 42, 0.15) 0%, rgba(15, 23, 42, 0.45) 45%, rgba(15, 23, 42, 0.92) 100%);
+  background: linear-gradient(180deg, rgba(10, 25, 47, 0.05) 0%, rgba(10, 25, 47, 0.3) 40%, rgba(10, 25, 47, 0.95) 100%);
 }
 
 .trending-city-badge {
@@ -6339,16 +6328,37 @@ input[type="radio"]:focus-visible {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: rgba(15, 23, 42, 0.65);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #ffffff;
+  background: rgba(10, 25, 47, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #ffffff !important;
   padding: 6px 14px;
-  border-radius: 10px;
-  font-size: 1.05rem;
+  border-radius: 12px;
+  font-size: 0.92rem;
   font-weight: 800;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+  z-index: 3;
+}
+
+.trending-city-badge .city-name {
+  color: #ffffff !important;
+  font-size: 0.92rem !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.01em;
+  display: inline !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.trending-city-badge .city-flag {
+  color: #ffffff !important;
+  font-size: 0.82rem !important;
+  font-weight: 700 !important;
+  background: rgba(255, 255, 255, 0.22);
+  padding: 2px 7px;
+  border-radius: 6px;
+  display: inline-flex !important;
+  align-items: center;
 }
 
 .trending-card-meta {
@@ -6356,33 +6366,35 @@ input[type="radio"]:focus-visible {
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 20px;
+  padding: 22px;
   color: #ffffff;
   z-index: 2;
 }
 
 .meta-tag {
   display: block;
-  font-size: 0.82rem;
+  font-size: 0.84rem;
   font-weight: 700;
   color: #38bdf8;
-  margin-bottom: 2px;
+  margin-bottom: 3px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .meta-places {
-  font-size: 0.78rem;
-  color: #cbd5e1;
-  margin: 0 0 8px 0;
+  font-size: 0.8rem;
+  color: #e2e8f0;
+  margin: 0 0 10px 0;
+  line-height: 1.4;
 }
 
 .explore-hover-btn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   font-weight: 800;
   color: #fef08a;
-  opacity: 0.9;
+  opacity: 0.95;
   transform: translateY(2px);
   transition: all 0.2s ease;
 }
@@ -6968,35 +6980,36 @@ input[type="radio"]:focus-visible {
 
 .cat-photo-frame {
   width: 100%;
-  aspect-ratio: 1 / 1.05;
-  border-radius: 22px;
+  aspect-ratio: 4 / 5;
+  border-radius: 24px;
   overflow: hidden;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
   position: relative;
   background: #f1f5f9;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
 }
 
 .cat-photo-frame img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .cat-photo-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 55%, rgba(15, 23, 42, 0.35) 100%);
+  background: linear-gradient(180deg, transparent 50%, rgba(10, 25, 47, 0.4) 100%);
+  transition: background 0.3s ease;
 }
 
 .category-arc-card:hover .cat-photo-frame {
   transform: translateY(-8px);
-  box-shadow: 0 18px 40px rgba(3, 78, 162, 0.2);
+  box-shadow: 0 20px 42px rgba(3, 78, 162, 0.22);
 }
 
 .category-arc-card:hover .cat-photo-frame img {
-  transform: scale(1.1);
+  transform: scale(1.08);
 }
 
 .cat-title-caption {
@@ -7073,12 +7086,12 @@ input[type="radio"]:focus-visible {
    10. REVIEWS & TRUST SECTION (INFINITE DUAL-ROW MARQUEE)
    ========================================================================== */
 .reviews-experience-block {
-  padding: 80px 0 70px 0;
-  background: radial-gradient(circle at 50% 0%, rgba(3, 78, 162, 0.04) 0%, #f8fafc 70%);
+  padding: 72px 0 64px 0;
+  background: #f8fafc;
   position: relative;
   overflow: hidden;
-  border-top: 1px solid rgba(226, 232, 240, 0.7);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.7);
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .reviews-header-center {
@@ -7120,7 +7133,7 @@ input[type="radio"]:focus-visible {
   margin: 0;
 }
 
-/* Infinite Marquee Viewport & Left/Right Fade Gradients */
+/* Infinite Marquee Viewport with Clean Edge Fades */
 .reviews-marquee-viewport {
   position: relative;
   width: 100%;
@@ -7129,29 +7142,13 @@ input[type="radio"]:focus-visible {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 7%, black 93%, transparent 100%);
-  mask-image: linear-gradient(to right, transparent 0%, black 7%, black 93%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
 }
 
-/* Edge Overlays for Ultra-Smooth Browser Fade */
 .reviews-marquee-fade-left,
 .reviews-marquee-fade-right {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 160px;
-  pointer-events: none;
-  z-index: 10;
-}
-
-.reviews-marquee-fade-left {
-  left: 0;
-  background: linear-gradient(to right, #f8fafc 0%, rgba(248, 250, 252, 0.8) 40%, rgba(248, 250, 252, 0) 100%);
-}
-
-.reviews-marquee-fade-right {
-  right: 0;
-  background: linear-gradient(to left, #f8fafc 0%, rgba(248, 250, 252, 0.8) 40%, rgba(248, 250, 252, 0) 100%);
+  display: none !important;
 }
 
 /* Marquee Row & Track */
@@ -7209,10 +7206,10 @@ input[type="radio"]:focus-visible {
   max-width: 380px;
   flex-shrink: 0;
   background: #ffffff;
-  border: 1px solid rgba(226, 232, 240, 0.85);
-  border-radius: 20px;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
   padding: 22px 24px;
-  box-shadow: 0 4px 20px rgba(10, 25, 47, 0.05);
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -7221,8 +7218,8 @@ input[type="radio"]:focus-visible {
 }
 
 .review-card-elevated.marquee-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 16px 36px rgba(3, 78, 162, 0.12);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(3, 78, 162, 0.1);
   border-color: #93c5fd;
 }
 
