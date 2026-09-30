@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.5.2] - 2026-10-01
+
+### Topbar Cleanliness, Portrait Destination Cards, Hover Zoom, White Badges, Marquee Shadow Fix & Direct HelpDesk Routing
+
+#### Topbar Refinements (`client/src/components/common/TopBar.jsx`, `client/src/App.css`)
+- **Streamlined Navigation Elements**: Removed the redundant home icon button and redundant links (`Offers`, `Manage Bookings`, `Make Payment`) from the topbar.
+- **Consistent Height & Vertical Alignment**: Locked topbar and container to a uniform `44px` height with clean flex centering and responsive spacing across all screen sizes.
+
+#### Trending Destinations & Tour Categories Visual Polish (`client/src/App.css`)
+- **Portrait Card Aspect Ratios**: Expanded destination card heights (`.trending-card-large: 380px`, `.trending-card-medium: 340px`) and tour category frames (`aspect-ratio: 4 / 5`) to tall, immersive portrait orientations.
+- **Image Hover Zoom**: Replaced shrinking hover transition (`scale(0.96)`) with a gentle, smooth zoom-in expansion (`scale(1.08)`).
+- **High-Contrast White Badge Text**: Fixed dark/unreadable text by enforcing crystal-clear `#ffffff` text and glowing semi-transparent badges (`.trending-city-badge`).
+
+#### Reviews Marquee Shadow Remediation (`client/src/App.css`)
+- **Eliminated Dirty Edge Shadow Blocks**: Removed conflicting absolute gradient block overlays (`.reviews-marquee-fade-left`, `.reviews-marquee-fade-right`) that created dark bands behind scrolling cards.
+- **Refined CSS Gradient Masking**: Replaced overlay blocks with a smooth, native CSS linear-gradient edge mask on `.reviews-marquee-viewport` for seamless infinite streaming.
+
+#### Direct Help Desk Navigation (`client/src/components/common/HelpDeskWidget.jsx`)
+- **Direct Page Routing**: Replaced the bulky popup modal/drawer launcher with a fast, lightweight launcher that links directly to the full `/helpdesk` hub page.
+
+---
+
 ## [2.5.1] - 2026-09-30
 
 ### Google Auth Real Account Integration, Cookie & One-Tap Staggering, and Hero Search Full Width
