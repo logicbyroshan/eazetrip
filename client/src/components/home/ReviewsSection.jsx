@@ -332,29 +332,14 @@ export default function ReviewsSection() {
         </div>
       </div>
 
-      {/* Infinite Dual-Row Marquee Container with Left & Right Gradient Fades */}
+      {/* Single Infinite Marquee Track (Left to Right Smooth Stream) */}
       <div className="reviews-marquee-viewport">
-        {/* Edge Gradient Mask Overlays */}
-        <div className="reviews-marquee-fade-left" aria-hidden="true" />
-        <div className="reviews-marquee-fade-right" aria-hidden="true" />
-
-        {/* Row 1: Scrolling Left */}
-        <div className="reviews-marquee-row">
-          <div className="reviews-marquee-track track-left">
-            {/* First Set */}
-            {row1Reviews.map((rev) => renderCard(rev, 'r1-a'))}
+        <div className="reviews-marquee-row single-row">
+          <div className="reviews-marquee-track track-single-marquee">
+            {/* All 16 Reviews */}
+            {[...row1Reviews, ...row2Reviews].map((rev) => renderCard(rev, 'rev-a'))}
             {/* Duplicate Set for Seamless Infinite Loop */}
-            {row1Reviews.map((rev) => renderCard(rev, 'r1-b'))}
-          </div>
-        </div>
-
-        {/* Row 2: Scrolling Right (Opposite Direction) */}
-        <div className="reviews-marquee-row">
-          <div className="reviews-marquee-track track-right">
-            {/* First Set */}
-            {row2Reviews.map((rev) => renderCard(rev, 'r2-a'))}
-            {/* Duplicate Set for Seamless Infinite Loop */}
-            {row2Reviews.map((rev) => renderCard(rev, 'r2-b'))}
+            {[...row1Reviews, ...row2Reviews].map((rev) => renderCard(rev, 'rev-b'))}
           </div>
         </div>
       </div>

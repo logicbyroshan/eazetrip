@@ -213,7 +213,9 @@ export default function FlightSearchWidget({ initialValues = {}, onSearch }) {
             tabIndex={0}
             role="button"
           >
-            <span className="search-cell-label">From</span>
+            <div className="search-cell-label-row">
+              <span className="search-cell-label">From</span>
+            </div>
             <h3 className="search-cell-main">{fromAirportObj.city}</h3>
             <p className="search-cell-sub">
               {fromAirportObj.code}, {fromAirportObj.name.slice(0, 24)}...
@@ -274,7 +276,9 @@ export default function FlightSearchWidget({ initialValues = {}, onSearch }) {
             tabIndex={0}
             role="button"
           >
-            <span className="search-cell-label">To</span>
+            <div className="search-cell-label-row">
+              <span className="search-cell-label">To</span>
+            </div>
             <h3 className="search-cell-main">{toAirportObj.city}</h3>
             <p className="search-cell-sub">
               {toAirportObj.code}, {toAirportObj.name.slice(0, 24)}...
