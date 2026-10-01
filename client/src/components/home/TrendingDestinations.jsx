@@ -12,7 +12,6 @@ export default function TrendingDestinations() {
   const list = trendingDestinations[activeTab] || trendingDestinations.india;
   const heroItems = list.slice(0, 2);
   const secondaryItems = list.slice(2, 5);
-  const extraItems = list.slice(5, 8);
 
   const handleDestinationClick = (item) => {
     if (item.query) {
@@ -91,7 +90,7 @@ export default function TrendingDestinations() {
           ))}
         </div>
 
-        {/* 3-Cards Middle Row */}
+        {/* 3-Cards Bottom Row (Total 5 Destinations) */}
         <div className="trending-grid-triplet">
           {secondaryItems.map((item) => (
             <div
@@ -122,40 +121,6 @@ export default function TrendingDestinations() {
             </div>
           ))}
         </div>
-
-        {/* Extra Trending Hotspots Row */}
-        {extraItems.length > 0 && (
-          <div className="trending-grid-triplet extra-row">
-            {extraItems.map((item) => (
-              <div
-                key={item.id}
-                className="trending-card trending-card-medium"
-                onClick={() => handleDestinationClick(item)}
-                role="button"
-                tabIndex={0}
-              >
-                <div className="trending-img-container">
-                  <img src={item.image} alt={item.name} loading="lazy" />
-                  <div className="trending-card-overlay"></div>
-                </div>
-
-                <div className="trending-city-badge">
-                  <span className="city-name">{item.name}</span>
-                  <span className="city-flag">{item.flag}</span>
-                </div>
-
-                <div className="trending-card-meta">
-                  <span className="meta-tag">{item.tag}</span>
-                  <p className="meta-places">{item.places}</p>
-                  <div className="explore-hover-btn">
-                    <span>Explore Route</span>
-                    <ArrowRight size={14} />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
       </div>
     </section>
   );

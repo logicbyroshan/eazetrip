@@ -1,11 +1,11 @@
 # Current Project State: EazeTrip
 
 ## 1. Release Baseline & Status
-* **Status**: Production Ready / Unified Connected Segmented Search Container & Domain Customizations across All 5 Travel Mediums / 50% Floating Search CTA Protrusion / 100% Passing Tests
-* **Version**: `2.5.7`
+* **Status**: Production Ready / 5-Card Trending Destinations / Popular Trains Locomotive Strip / Trending Train Routes Grid / 100% Passing Tests
+* **Version**: `2.5.8`
 * **Test Suite**: 89 / 89 automated tests passing (`npm test`).
 * **Client Build**: Clean Vite production build (`npm run build`).
-* **Active Branch**: `feature/unified-segmented-search-all-mediums`
+* **Active Branch**: `feature/trending-destinations-5-and-popular-trains-routes`
 
 ---
 

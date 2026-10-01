@@ -187,48 +187,15 @@ export const trendingDestinations = {
       query: { from: 'BOM', to: 'DEL', fromCity: 'Mumbai', toCity: 'New Delhi' }
     },
     {
-      id: 'bangalore',
-      name: 'Bangalore',
-      flag: '🇮🇳',
-      tag: 'Garden City & Tech Hub',
-      places: '980+ properties & express rails',
-      image: 'https://images.unsplash.com/photo-1596176530529-78163a4f7af2?w=700&auto=format&fit=crop&q=80',
-      hero: true,
-      flightCode: 'BLR',
-      query: { from: 'DEL', to: 'BLR', fromCity: 'New Delhi', toCity: 'Bengaluru' }
-    },
-    {
       id: 'mumbai',
       name: 'Mumbai',
       flag: '🇮🇳',
       tag: 'Marine Drive & Glamour',
       places: '1,650+ stays & non-stop flights',
-      image: 'https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=600&auto=format&fit=crop&q=80',
-      hero: false,
+      image: 'https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=700&auto=format&fit=crop&q=80',
+      hero: true,
       flightCode: 'BOM',
       query: { from: 'DEL', to: 'BOM', fromCity: 'New Delhi', toCity: 'Mumbai' }
-    },
-    {
-      id: 'chennai',
-      name: 'Chennai',
-      flag: '🇮🇳',
-      tag: 'Temples & Marina Beach',
-      places: '740+ properties & rail junction',
-      image: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=600&auto=format&fit=crop&q=80',
-      hero: false,
-      flightCode: 'MAA',
-      query: { from: 'DEL', to: 'MAA', fromCity: 'New Delhi', toCity: 'Chennai' }
-    },
-    {
-      id: 'hyderabad',
-      name: 'Hyderabad',
-      flag: '🇮🇳',
-      tag: 'Charminar & Royal Biryani',
-      places: '830+ stays & express routes',
-      image: 'https://images.unsplash.com/photo-1605649487212-47bdab064df7?w=600&auto=format&fit=crop&q=80',
-      hero: false,
-      flightCode: 'HYD',
-      query: { from: 'DEL', to: 'HYD', fromCity: 'New Delhi', toCity: 'Hyderabad' }
     },
     {
       id: 'goa',
@@ -242,6 +209,17 @@ export const trendingDestinations = {
       query: { from: 'DEL', to: 'GOI', fromCity: 'New Delhi', toCity: 'Goa' }
     },
     {
+      id: 'bangalore',
+      name: 'Bangalore',
+      flag: '🇮🇳',
+      tag: 'Garden City & Tech Hub',
+      places: '980+ properties & express rails',
+      image: 'https://images.unsplash.com/photo-1596176530529-78163a4f7af2?w=600&auto=format&fit=crop&q=80',
+      hero: false,
+      flightCode: 'BLR',
+      query: { from: 'DEL', to: 'BLR', fromCity: 'New Delhi', toCity: 'Bengaluru' }
+    },
+    {
       id: 'jaipur',
       name: 'Jaipur',
       flag: '🇮🇳',
@@ -251,17 +229,6 @@ export const trendingDestinations = {
       hero: false,
       flightCode: 'JAI',
       query: { from: 'DEL', to: 'JAI', fromCity: 'New Delhi', toCity: 'Jaipur' }
-    },
-    {
-      id: 'srinagar',
-      name: 'Kashmir (Srinagar)',
-      flag: '🇮🇳',
-      tag: 'Dal Lake Houseboats & Snow Peaks',
-      places: '510+ mountain retreats',
-      image: 'https://images.unsplash.com/photo-1598091383021-15ddea10925d?w=600&auto=format&fit=crop&q=80',
-      hero: false,
-      flightCode: 'SXR',
-      query: { from: 'DEL', to: 'SXR', fromCity: 'New Delhi', toCity: 'Srinagar' }
     }
   ],
   international: [
@@ -903,6 +870,444 @@ export const trendingFlightRoutesGrid = {
       toCode: 'JFK',
       image: 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=300&auto=format&fit=crop&q=80',
       price: '₹54,500'
+    }
+  ]
+};
+
+export const popularTrains = {
+  premier: [
+    {
+      id: 'vandebharat',
+      name: 'Vande Bharat Express',
+      tag: 'Semi High-Speed (160 km/h)',
+      type: 'Executive & AC Chair Car',
+      color: '#004b87',
+      routes: '25+ Intercity Routes',
+      badge: 'High Speed',
+      trainNo: '22436',
+      iconType: 'vandebharat'
+    },
+    {
+      id: 'rajdhani',
+      name: 'Rajdhani Express',
+      tag: 'Premier AC Sleeper Network',
+      type: '1A / 2A / 3A Full AC',
+      color: '#b91c1c',
+      routes: 'Metros to Capital',
+      badge: 'Superfast AC',
+      trainNo: '12952',
+      iconType: 'rajdhani'
+    },
+    {
+      id: 'shatabdi',
+      name: 'Shatabdi Express',
+      tag: 'Same-Day Fast Return Express',
+      type: 'Executive & AC Chair Car',
+      color: '#0284c7',
+      routes: 'Short-Haul Metros',
+      badge: 'Day Express',
+      trainNo: '12005',
+      iconType: 'shatabdi'
+    },
+    {
+      id: 'tejas',
+      name: 'Tejas Express',
+      tag: 'Smart Luxury & Wi-Fi Trains',
+      type: 'Executive & Smart Coach',
+      color: '#ea580c',
+      routes: 'Delhi, Lucknow, Mumbai',
+      badge: 'Ultra Modern',
+      trainNo: '82501',
+      iconType: 'tejas'
+    },
+    {
+      id: 'gatimaan',
+      name: 'Gatimaan Express',
+      tag: 'India First High-Speed (160 km/h)',
+      type: 'Executive Class & Hostess',
+      color: '#7c3aed',
+      routes: 'Delhi ⇄ Agra ⇄ Gwalior',
+      badge: '160 km/h',
+      trainNo: '12050',
+      iconType: 'gatimaan'
+    }
+  ],
+  express: [
+    {
+      id: 'duronto',
+      name: 'Duronto Express',
+      tag: 'Point-to-Point Non-Stop Sleeper',
+      type: '1A, 2A, 3A & Sleeper',
+      color: '#16a34a',
+      routes: 'Intercity Non-Stop',
+      badge: 'Non-Stop',
+      trainNo: '12260',
+      iconType: 'duronto'
+    },
+    {
+      id: 'humsafar',
+      name: 'Humsafar Express',
+      tag: 'All-3-Tier AC Modern Fleet',
+      type: 'Modern 3-Tier AC',
+      color: '#0d9488',
+      routes: 'Long Distance AC',
+      badge: 'Comfort AC',
+      trainNo: '22913',
+      iconType: 'humsafar'
+    },
+    {
+      id: 'amritbharat',
+      name: 'Amrit Bharat Express',
+      tag: 'Push-Pull High-Speed Non-AC',
+      type: 'Sleeper & General Reserved',
+      color: '#d97706',
+      routes: 'Affordable Superfast',
+      badge: 'Push-Pull',
+      trainNo: '15557',
+      iconType: 'amritbharat'
+    },
+    {
+      id: 'garibrath',
+      name: 'Garib Rath Express',
+      tag: 'Affordable 3AC Economy Express',
+      type: '3AC Economy Sleeper',
+      color: '#15803d',
+      routes: 'Major Metro Hubs',
+      badge: 'Economy 3AC',
+      trainNo: '12909',
+      iconType: 'garibrath'
+    },
+    {
+      id: 'palaceonwheels',
+      name: 'Palace on Wheels',
+      tag: 'Royal Luxury Heritage Tourist Train',
+      type: 'Ultra Luxury Suite Coaches',
+      color: '#9333ea',
+      routes: 'Royal Rajasthan Circuit',
+      badge: 'Royal Heritage',
+      trainNo: '00001',
+      iconType: 'heritage'
+    }
+  ]
+};
+
+export const trendingTrainRoutesGrid = {
+  vandeBharat: [
+    {
+      id: 'ndls-bsb-vb',
+      from: 'New Delhi',
+      to: 'Varanasi',
+      fromCode: 'NDLS',
+      toCode: 'BSB',
+      trainName: 'Vande Bharat Express (22436)',
+      duration: '8h 00m',
+      speed: '130 km/h',
+      price: '₹1,750',
+      image: 'https://images.unsplash.com/photo-1561361066-4b95f190c681?w=400&auto=format&fit=crop&q=80',
+      badge: 'High Speed'
+    },
+    {
+      id: 'ndls-svdk-vb',
+      from: 'New Delhi',
+      to: 'Katra (SVDK)',
+      fromCode: 'NDLS',
+      toCode: 'SVDK',
+      trainName: 'Vande Bharat Express (22439)',
+      duration: '8h 00m',
+      speed: '130 km/h',
+      price: '₹1,665',
+      image: 'https://images.unsplash.com/photo-1598091383021-15ddea10925d?w=400&auto=format&fit=crop&q=80',
+      badge: 'Pilgrimage'
+    },
+    {
+      id: 'csmt-goa-vb',
+      from: 'Mumbai CSMT',
+      to: 'Madgaon (Goa)',
+      fromCode: 'CSMT',
+      toCode: 'MAO',
+      trainName: 'Vande Bharat Express (22229)',
+      duration: '7h 45m',
+      speed: 'Scenic Konkan',
+      price: '₹1,815',
+      image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=400&auto=format&fit=crop&q=80',
+      badge: 'Scenic Coast'
+    },
+    {
+      id: 'mas-sbc-vb',
+      from: 'Chennai Central',
+      to: 'Bengaluru (SBC)',
+      fromCode: 'MAS',
+      toCode: 'SBC',
+      trainName: 'Vande Bharat Express (20607)',
+      duration: '4h 25m',
+      speed: '130 km/h',
+      price: '₹995',
+      image: 'https://images.unsplash.com/photo-1596176530529-78163a4f7af2?w=400&auto=format&fit=crop&q=80',
+      badge: 'Same-Day'
+    },
+    {
+      id: 'hwh-puri-vb',
+      from: 'Howrah (Kolkata)',
+      to: 'Puri',
+      fromCode: 'HWH',
+      toCode: 'PURI',
+      trainName: 'Vande Bharat Express (22895)',
+      duration: '6h 25m',
+      speed: '130 km/h',
+      price: '₹1,265',
+      image: 'https://images.unsplash.com/photo-1609766857041-ed402ea8069a?w=400&auto=format&fit=crop&q=80',
+      badge: 'Coastal'
+    },
+    {
+      id: 'ndls-asr-vb',
+      from: 'New Delhi',
+      to: 'Amritsar',
+      fromCode: 'NDLS',
+      toCode: 'ASR',
+      trainName: 'Vande Bharat Express (22487)',
+      duration: '5h 30m',
+      speed: '130 km/h',
+      price: '₹1,320',
+      image: 'https://images.unsplash.com/photo-1605649487212-47bdab064df7?w=400&auto=format&fit=crop&q=80',
+      badge: 'Heritage'
+    },
+    {
+      id: 'adi-bct-vb',
+      from: 'Ahmedabad',
+      to: 'Mumbai Central',
+      fromCode: 'ADI',
+      toCode: 'BCT',
+      trainName: 'Vande Bharat Express (22962)',
+      duration: '5h 15m',
+      speed: '130 km/h',
+      price: '₹1,200',
+      image: 'https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=400&auto=format&fit=crop&q=80',
+      badge: 'Business Fast'
+    },
+    {
+      id: 'sc-tpty-vb',
+      from: 'Secunderabad',
+      to: 'Tirupati',
+      fromCode: 'HYB',
+      toCode: 'TPTY',
+      trainName: 'Vande Bharat Express (20701)',
+      duration: '8h 30m',
+      speed: '130 km/h',
+      price: '₹1,680',
+      image: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=400&auto=format&fit=crop&q=80',
+      badge: 'Temple Fast'
+    }
+  ],
+  rajdhaniShatabdi: [
+    {
+      id: 'ndls-bct-raj',
+      from: 'New Delhi',
+      to: 'Mumbai Central',
+      fromCode: 'NDLS',
+      toCode: 'BCT',
+      trainName: 'Mumbai Rajdhani (12952)',
+      duration: '15h 40m',
+      speed: 'Premier AC Sleeper',
+      price: '₹2,050',
+      image: 'https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=400&auto=format&fit=crop&q=80',
+      badge: 'Meals Incl.'
+    },
+    {
+      id: 'ndls-hwh-raj',
+      from: 'New Delhi',
+      to: 'Howrah Junction',
+      fromCode: 'NDLS',
+      toCode: 'HWH',
+      trainName: 'Howrah Rajdhani (12302)',
+      duration: '17h 05m',
+      speed: 'Fast AC Sleeper',
+      price: '₹2,190',
+      image: 'https://images.unsplash.com/photo-1558431382-27e303142255?w=400&auto=format&fit=crop&q=80',
+      badge: 'Legendary'
+    },
+    {
+      id: 'ndls-cdg-shat',
+      from: 'New Delhi',
+      to: 'Chandigarh',
+      fromCode: 'NDLS',
+      toCode: 'CDG',
+      trainName: 'Kalka Shatabdi (12005)',
+      duration: '3h 20m',
+      speed: 'Express Chair Car',
+      price: '₹685',
+      image: 'https://images.unsplash.com/photo-1587474260584-136574528ed5?w=400&auto=format&fit=crop&q=80',
+      badge: 'Fast Connect'
+    },
+    {
+      id: 'ndls-lko-tejas',
+      from: 'New Delhi',
+      to: 'Lucknow Charbagh',
+      fromCode: 'NDLS',
+      toCode: 'LKO',
+      trainName: 'Lucknow Tejas (82502)',
+      duration: '6h 15m',
+      speed: 'Smart Corporate',
+      price: '₹1,165',
+      image: 'https://images.unsplash.com/photo-1477587458883-47145ed94245?w=400&auto=format&fit=crop&q=80',
+      badge: 'Smart Coach'
+    },
+    {
+      id: 'ndls-sbc-raj',
+      from: 'New Delhi',
+      to: 'Bengaluru (SBC)',
+      fromCode: 'NDLS',
+      toCode: 'SBC',
+      trainName: 'Bengaluru Rajdhani (22692)',
+      duration: '33h 40m',
+      speed: 'Cross-Country AC',
+      price: '₹3,450',
+      image: 'https://images.unsplash.com/photo-1596176530529-78163a4f7af2?w=400&auto=format&fit=crop&q=80',
+      badge: 'Full AC'
+    },
+    {
+      id: 'bct-adi-shat',
+      from: 'Mumbai Central',
+      to: 'Ahmedabad',
+      fromCode: 'BCT',
+      toCode: 'ADI',
+      trainName: 'Karnavati Shatabdi (12009)',
+      duration: '6h 20m',
+      speed: 'Executive Chair Car',
+      price: '₹920',
+      image: 'https://images.unsplash.com/photo-1609766857041-ed402ea8069a?w=400&auto=format&fit=crop&q=80',
+      badge: 'Executive'
+    },
+    {
+      id: 'ndls-mas-raj',
+      from: 'New Delhi',
+      to: 'Chennai Central',
+      fromCode: 'NDLS',
+      toCode: 'MAS',
+      trainName: 'Chennai Rajdhani (12434)',
+      duration: '28h 15m',
+      speed: 'Superfast AC Express',
+      price: '₹3,180',
+      image: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=400&auto=format&fit=crop&q=80',
+      badge: 'Comfort Plus'
+    },
+    {
+      id: 'ndls-jp-shat',
+      from: 'New Delhi',
+      to: 'Jaipur Junction',
+      fromCode: 'NDLS',
+      toCode: 'JP',
+      trainName: 'Ajmer Shatabdi (12015)',
+      duration: '4h 30m',
+      speed: 'Same-Day Return',
+      price: '₹710',
+      image: 'https://images.unsplash.com/photo-1477587458883-47145ed94245?w=400&auto=format&fit=crop&q=80',
+      badge: 'Weekend Getaway'
+    }
+  ],
+  intercity: [
+    {
+      id: 'bct-pune-deccan',
+      from: 'Mumbai CSMT',
+      to: 'Pune Junction',
+      fromCode: 'CSMT',
+      toCode: 'PUNE',
+      trainName: 'Deccan Queen Superfast (12124)',
+      duration: '3h 10m',
+      speed: 'Khandala Ghats',
+      price: '₹385',
+      image: 'https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=400&auto=format&fit=crop&q=80',
+      badge: 'Heritage'
+    },
+    {
+      id: 'ndls-agr-gatimaan',
+      from: 'Hazrat Nizamuddin',
+      to: 'Agra Cantt',
+      fromCode: 'NDLS',
+      toCode: 'AGC',
+      trainName: 'Gatimaan Express (12050)',
+      duration: '1h 40m',
+      speed: '160 km/h',
+      price: '₹755',
+      image: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=400&auto=format&fit=crop&q=80',
+      badge: 'Super Fast'
+    },
+    {
+      id: 'hwh-pnbe-duronto',
+      from: 'Howrah Junction',
+      to: 'Patna Junction',
+      fromCode: 'HWH',
+      toCode: 'PNBE',
+      trainName: 'Patna Jan Shatabdi (12024)',
+      duration: '7h 15m',
+      speed: 'Intercity Express',
+      price: '₹590',
+      image: 'https://images.unsplash.com/photo-1558431382-27e303142255?w=400&auto=format&fit=crop&q=80',
+      badge: 'Daily'
+    },
+    {
+      id: 'sbc-mas-intercity',
+      from: 'Bengaluru (SBC)',
+      to: 'Chennai Central',
+      fromCode: 'SBC',
+      toCode: 'MAS',
+      trainName: 'Brindavan Express (12640)',
+      duration: '5h 45m',
+      speed: 'Superfast Intercity',
+      price: '₹420',
+      image: 'https://images.unsplash.com/photo-1596176530529-78163a4f7af2?w=400&auto=format&fit=crop&q=80',
+      badge: 'Popular'
+    },
+    {
+      id: 'ndls-lko-shat',
+      from: 'New Delhi',
+      to: 'Lucknow Charbagh',
+      fromCode: 'NDLS',
+      toCode: 'LKO',
+      trainName: 'Lucknow Swarna Shatabdi (12004)',
+      duration: '6h 30m',
+      speed: 'Executive AC',
+      price: '₹895',
+      image: 'https://images.unsplash.com/photo-1477587458883-47145ed94245?w=400&auto=format&fit=crop&q=80',
+      badge: 'Executive'
+    },
+    {
+      id: 'csmt-surat-flying',
+      from: 'Mumbai Central',
+      to: 'Surat',
+      fromCode: 'BCT',
+      toCode: 'ST',
+      trainName: 'Flying Ranee Superfast (12921)',
+      duration: '3h 50m',
+      speed: 'Double Decker / SF',
+      price: '₹340',
+      image: 'https://images.unsplash.com/photo-1609766857041-ed402ea8069a?w=400&auto=format&fit=crop&q=80',
+      badge: 'Frequent'
+    },
+    {
+      id: 'ndls-gkp-humsafar',
+      from: 'Anand Vihar (DEL)',
+      to: 'Gorakhpur Junction',
+      fromCode: 'NDLS',
+      toCode: 'GKP',
+      trainName: 'Humsafar Express (12572)',
+      duration: '11h 20m',
+      speed: 'All 3-Tier AC',
+      price: '₹1,240',
+      image: 'https://images.unsplash.com/photo-1561361066-4b95f190c681?w=400&auto=format&fit=crop&q=80',
+      badge: 'All 3AC'
+    },
+    {
+      id: 'hyb-vskp-godavari',
+      from: 'Hyderabad Deccan',
+      to: 'Visakhapatnam',
+      fromCode: 'HYB',
+      toCode: 'VSKP',
+      trainName: 'Godavari Superfast (12728)',
+      duration: '11h 55m',
+      speed: 'Overnight Superfast',
+      price: '₹480',
+      image: 'https://images.unsplash.com/photo-1605649487212-47bdab064df7?w=400&auto=format&fit=crop&q=80',
+      badge: 'Overnight'
     }
   ]
 };
