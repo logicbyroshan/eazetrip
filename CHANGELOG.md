@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.6.3] - 2026-10-01
+
+### Search CTA Clearance, Unified Clean Filter Sidebar & Luxury Listing Cards Redesign
+
+#### Search Floating Button Clearance & Card Padding (`client/src/App.css`)
+- **Centered Half-In / Half-Out Alignment**: Updated `.search-action-wrap-floating` bottom position to `bottom: -24px` for a balanced 50/50 overlap across the search card's bottom border.
+- **Card Breathing Room**: Increased bottom padding on `.listing-search-card-wrapper` and `.hero-search-wrapper` to `padding: 24px 28px 36px 28px`, and set `.listing-top-search-banner { padding: 36px 0 46px; margin-bottom: 36px; }` to give the CTA button generous clearance above and below.
+
+#### Unified Single-Card Filter Sidebar Layout (`client/src/App.css`, `client/src/components/holidays/HolidayFilters.jsx`)
+- **Eliminated Nested Waste Space**: Replaced nested card boxes in Holiday filters with the standard single-card `.filter-sidebar` container.
+- **Custom Pixel-Perfect Checkboxes & Radios**: Introduced lightweight custom CSS radio and checkbox controls (`.filter-checkbox-row input`) with smooth checkmark and dot states, eliminating double icons, weird misalignment, and oversized native circles.
+- **Tidy Category Pills & 2x2 Time Slot Grid**: Standardized pill chips and departure time slot cards with uniform padding, clean active states, and centered typography.
+
+#### Luxury Listing Cards Redesign (`client/src/App.css`, `client/src/components/holidays/HolidayCard.jsx`, `client/src/components/flights/FlightCard.jsx`)
+- **Holiday Tour Cards**: Redesigned to a clean 3-column luxury travel format (`280px 1fr 220px`) with duration/discount overlay badges, star ratings with review counts, verified tour badges, neat inclusions chips, bold price with taxes inclusion note, and dual action buttons (`View Itinerary` + `BOOK PACKAGE →`).
+- **Flight, Train, Bus & Hotel Cards**: Polished typography, badge alignment, pricing hierarchy, and tactile CTA buttons across all booking mediums.
+
+---
+
 ## [2.6.2] - 2026-10-01
 
 ### Why Choose Us Spacing Alignment, 2-Tab Route Grid Containment, Standardized Micro-Animations & Page Transitions
