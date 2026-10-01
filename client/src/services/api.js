@@ -178,6 +178,22 @@ export const api = {
     return null;
   },
 
+  updateBooking: async (id, updateData) => {
+    const res = await request(`/api/bookings/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(updateData)
+    });
+    if (res.ok && res.data?.data) return res.data.data;
+    return null;
+  },
+
+  deleteBooking: async (id) => {
+    const res = await request(`/api/bookings/${id}`, {
+      method: 'DELETE'
+    });
+    return res;
+  },
+
   cancelBooking: async (id, reason) => {
     const res = await request(`/api/bookings/${id}/cancel`, {
       method: 'POST',
@@ -187,7 +203,7 @@ export const api = {
     return null;
   },
 
-  // Auth
+  // Auth & User Profile
   login: async (credentials) => {
     const res = await request('/api/auth/login', {
       method: 'POST',
@@ -202,6 +218,16 @@ export const api = {
       body: JSON.stringify(userData)
     });
     return res;
+  },
+
+  getProfile: async (userId, email) => {
+    const params = new URLSearchParams();
+    if (userId) params.append('userId', userId);
+    if (email) params.append('email', email);
+    const query = params.toString();
+    const res = await request(`/api/auth/profile${query ? `?${query}` : ''}`);
+    if (res.ok && res.data?.data) return res.data.data;
+    return null;
   },
 
   googleAuth: async (authPayload) => {
@@ -229,6 +255,45 @@ export const api = {
     const res = await request('/api/auth/profile', {
       method: 'PUT',
       body: JSON.stringify(profileData)
+    });
+    return res;
+  },
+
+  // B2B Partner Portal
+  partnerRegister: async (partnerData) => {
+    const res = await request('/api/partner/register', {
+      method: 'POST',
+      body: JSON.stringify(partnerData)
+    });
+    return res;
+  },
+
+  partnerLogin: async (credentials) => {
+    const res = await request('/api/partner/login', {
+      method: 'POST',
+      body: JSON.stringify(credentials)
+    });
+    return res;
+  },
+
+  // Saved Co-Travelers
+  getSavedTravellers: async (userId = 'USR-1') => {
+    const res = await request(`/api/users/${encodeURIComponent(userId)}/travellers`);
+    if (res.ok && Array.isArray(res.data?.data)) return res.data.data;
+    return [];
+  },
+
+  saveTraveller: async (userId = 'USR-1', travellerData = {}) => {
+    const res = await request(`/api/users/${encodeURIComponent(userId)}/travellers`, {
+      method: 'POST',
+      body: JSON.stringify(travellerData)
+    });
+    return res;
+  },
+
+  deleteTraveller: async (userId = 'USR-1', travellerId = '') => {
+    const res = await request(`/api/users/${encodeURIComponent(userId)}/travellers/${encodeURIComponent(travellerId)}`, {
+      method: 'DELETE'
     });
     return res;
   },
@@ -396,6 +461,14 @@ export const api = {
     const res = await request(`/api/support/tickets/${ticketId}/message`, {
       method: 'POST',
       body: JSON.stringify(messagePayload)
+    });
+    return res;
+  },
+
+  updateTicketStatus: async (ticketId, status, assignedTo) => {
+    const res = await request(`/api/support/tickets/${ticketId}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status, assignedTo })
     });
     return res;
   },

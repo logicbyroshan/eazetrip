@@ -510,6 +510,35 @@ app.post('/api/bookings/:id/cancel', (req, res) => {
   });
 });
 
+app.put('/api/bookings/:id', (req, res) => {
+  const { id } = req.params;
+  const updates = req.body || {};
+  const booking = db.getBookingByIdOrPnr(id);
+
+  if (!booking) {
+    return res.status(404).json({ success: false, error: 'Booking not found' });
+  }
+
+  const updatedBooking = db.updateBooking(id, updates);
+  res.json({
+    success: true,
+    message: 'Booking updated successfully',
+    data: updatedBooking
+  });
+});
+
+app.delete('/api/bookings/:id', (req, res) => {
+  const { id } = req.params;
+  const deleted = db.deleteBooking(id);
+  if (!deleted) {
+    return res.status(404).json({ success: false, error: 'Booking not found' });
+  }
+  res.json({
+    success: true,
+    message: `Booking #${id} deleted successfully`
+  });
+});
+
 // AUTH API
 app.post('/api/auth/login', sensitiveLimiter, validateLogin, (req, res) => {
   const { identifier, method } = req.body;
@@ -652,6 +681,122 @@ app.put('/api/auth/profile', sensitiveLimiter, (req, res) => {
     message: 'Profile updated successfully',
     data: updatedUser
   });
+});
+
+app.get('/api/auth/profile', (req, res) => {
+  const userId = toStr(req.query.userId) || toStr(req.query.id);
+  const email = toStr(req.query.email);
+  let user = (userId && db.findUserById(userId)) || (email && db.findUserByEmailOrPhone(email));
+
+  if (!user && (userId === 'USR-1' || !userId)) {
+    user = db.findUserById('USR-1') || {
+      id: 'USR-1',
+      name: 'Priyansh Sharma',
+      email: 'priyansh.sharma@gmail.com',
+      phone: '+91 98765 43210',
+      tier: 'Platinum Voyager',
+      walletBalance: 4850
+    };
+  }
+
+  if (!user) {
+    return res.status(404).json({ success: false, error: 'User profile not found' });
+  }
+
+  res.json({
+    success: true,
+    data: user
+  });
+});
+
+app.get('/api/auth/me', (req, res) => {
+  const user = db.findUserById('USR-1') || {
+    id: 'USR-1',
+    name: 'Priyansh Sharma',
+    email: 'priyansh.sharma@gmail.com',
+    phone: '+91 98765 43210',
+    tier: 'Platinum Voyager',
+    walletBalance: 4850
+  };
+  res.json({
+    success: true,
+    data: user
+  });
+});
+
+// Partner & Corporate B2B API
+app.post('/api/partner/register', sensitiveLimiter, (req, res) => {
+  const { agencyName, contactPerson, email, phone, gstNumber } = req.body || {};
+  if (!agencyName || !email) {
+    return res.status(400).json({ success: false, error: 'Agency name and valid email are required' });
+  }
+
+  const partnerId = `PTR-${Math.floor(10000 + Math.random() * 90000)}`;
+  const partnerUser = db.upsertUser({
+    id: partnerId,
+    name: contactPerson || agencyName,
+    agencyName,
+    email,
+    phone: phone || '+91 9876543210',
+    gstNumber: gstNumber || '',
+    tier: 'B2B Certified Partner',
+    token: crypto.randomBytes(32).toString('hex')
+  });
+
+  res.status(201).json({
+    success: true,
+    message: 'Partner registration application approved and registered successfully',
+    data: partnerUser
+  });
+});
+
+app.post('/api/partner/login', sensitiveLimiter, (req, res) => {
+  const { email } = req.body || {};
+  if (!email) {
+    return res.status(400).json({ success: false, error: 'Email is required for partner login' });
+  }
+
+  let partner = db.findUserByEmailOrPhone(email);
+  if (!partner) {
+    partner = db.upsertUser({
+      id: `PTR-${Math.floor(10000 + Math.random() * 90000)}`,
+      name: email.split('@')[0],
+      agencyName: `${email.split('@')[0]} Travel Agency`,
+      email,
+      phone: '+91 9876543210',
+      tier: 'B2B Certified Partner',
+      token: crypto.randomBytes(32).toString('hex')
+    });
+  }
+
+  res.json({
+    success: true,
+    message: 'B2B Partner login successful',
+    data: partner
+  });
+});
+
+// Saved Co-Travelers API
+app.get('/api/users/:id/travellers', (req, res) => {
+  const travellers = db.getSavedTravellers(req.params.id);
+  res.json({ success: true, count: travellers.length, data: travellers });
+});
+
+app.post('/api/users/:id/travellers', (req, res) => {
+  const { name, gender, dob, relation } = req.body || {};
+  if (!name || String(name).trim().length === 0) {
+    return res.status(400).json({ success: false, error: 'Traveller full name is required' });
+  }
+  const saved = db.saveTraveller(req.params.id, { name, gender, dob, relation });
+  if (!saved) {
+    return res.status(404).json({ success: false, error: 'User not found' });
+  }
+  res.status(201).json({ success: true, message: 'Co-traveller saved successfully', data: saved });
+});
+
+app.delete('/api/users/:id/travellers/:travellerId', (req, res) => {
+  const deleted = db.deleteTraveller(req.params.id, req.params.travellerId);
+  res.json({ success: true, message: 'Co-traveller removed successfully' });
 });
 
 // ==========================================
@@ -1159,6 +1304,23 @@ app.post('/api/support/tickets/:id/message', (req, res) => {
     success: true,
     message: 'Message added to ticket conversation',
     data: newMsg
+  });
+});
+
+// Update support ticket status / concierge assignment
+app.patch('/api/support/tickets/:id/status', (req, res) => {
+  const { id } = req.params;
+  const { status, assignedTo } = req.body || {};
+  const updated = supportService.updateTicketStatus(id, status, assignedTo);
+
+  if (!updated) {
+    return res.status(404).json({ success: false, error: 'Support ticket not found' });
+  }
+
+  res.json({
+    success: true,
+    message: `Support ticket #${id} status updated to '${status || updated.status}'`,
+    data: updated
   });
 });
 
