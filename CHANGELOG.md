@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.5.8] - 2026-10-01
+
+### 5-Card Trending Destinations Layout, Popular Trains Section & Trending Train Routes Grid Above Travel Categories
+
+#### Trending Destinations Section (`client/src/components/home/TrendingDestinations.jsx`, `client/src/data/siteData.js`)
+- **Streamlined to 5 Handpicked Cards**: Removed the third bottom row of 3 cards, leaving a clean 2-card top hero row (*New Delhi*, *Mumbai*) and 3-card bottom row (*Goa*, *Bangalore*, *Jaipur* for Domestic; *Bangkok*, *Bali*, *London* for International).
+
+#### Popular Trains Section (`client/src/components/home/PopularTrains.jsx`, `client/src/data/siteData.js`, `client/src/App.css`)
+- **Premier & Express Locomotive Strip**: Added dedicated train carrier strip modeled after Popular Airlines with two interactive scope tabs:
+  - `Premier & High-Speed`: *Vande Bharat Express* (Semi High-Speed 160 km/h), *Rajdhani Express* (Superfast AC Sleeper), *Shatabdi Express* (Day Express), *Tejas Express* (Smart Luxury), *Gatimaan Express* (160 km/h).
+  - `Express & Heritage`: *Duronto Express* (Non-Stop), *Humsafar Express* (Comfort 3AC), *Amrit Bharat Express* (Push-Pull Superfast), *Garib Rath Express* (Economy 3AC), *Palace on Wheels* (Royal Heritage).
+- **Direct Route Linking**: Clicking any train badge navigates directly to `/railways` with pre-filled train specifications.
+
+#### Trending Train Routes Section (`client/src/components/home/TrendingTrainRoutes.jsx`, `client/src/data/siteData.js`, `client/src/pages/HomePage.jsx`, `client/src/App.css`)
+- **Section Placement**: Positioned directly below Popular Trains and immediately above the Travel Categories section.
+- **Scope Toggle Filters**:
+  - `VANDE BHARAT`: Top high-speed corridors (*New Delhi ⇄ Varanasi*, *New Delhi ⇄ Katra*, *Mumbai CSMT ⇄ Goa*, *Chennai Central ⇄ Bengaluru*, *Howrah ⇄ Puri*, etc.).
+  - `RAJDHANI & SHATABDI`: Premier AC metro connections (*Mumbai Rajdhani*, *Howrah Rajdhani*, *Kalka Shatabdi*, *Lucknow Tejas*, etc.).
+  - `SUPERFAST INTERCITY`: High-frequency superfast routes (*Deccan Queen*, *Gatimaan Express*, *Patna Jan Shatabdi*, *Brindavan Express*, etc.).
+- **Rich Route Cards**: Features landmark photography, origin/destination bidirectional arrows, train names, duration, and starting fare badges.
+
+---
+
 ## [2.5.7] - 2026-10-01
 
 ### Unified Connected Segmented Search Container & Domain Customizations across All 5 Mediums (Flights, Trains, Buses, Hotels, Holidays)

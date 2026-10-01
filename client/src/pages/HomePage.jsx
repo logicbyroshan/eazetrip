@@ -9,6 +9,8 @@ import SpecialOffersSection from '../components/home/SpecialOffersSection';
 import PopularAirlines from '../components/home/PopularAirlines';
 import TrendingFlightRoutes from '../components/home/TrendingFlightRoutes';
 import TrendingDestinations from '../components/home/TrendingDestinations';
+import PopularTrains from '../components/home/PopularTrains';
+import TrendingTrainRoutes from '../components/home/TrendingTrainRoutes';
 import TravelCategoriesSection from '../components/home/TravelCategoriesSection';
 import ReviewsSection from '../components/home/ReviewsSection';
 import { useAuth } from '../context/AuthContext';
@@ -173,8 +175,14 @@ export default function HomePage() {
       {/* Trending Flight Routes Grid */}
       <TrendingFlightRoutes />
 
-      {/* Trending Destinations with India & International Tabs */}
+      {/* Trending Destinations with India & International Tabs (5 Handpicked destinations) */}
       <TrendingDestinations />
+
+      {/* Popular Trains Strip with Premier & Express Categories */}
+      <PopularTrains />
+
+      {/* Trending Train Routes Grid (Vande Bharat, Rajdhani, Superfast) */}
+      <TrendingTrainRoutes />
 
       {/* Travel Categories 5-Card Staggered Wave Section */}
       <TravelCategoriesSection />

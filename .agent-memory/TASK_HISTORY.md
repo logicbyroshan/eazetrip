@@ -4,6 +4,29 @@ This file logs meaningful agent tasks, architectural milestones, and fixes chron
 
 ---
 
+### Task: 5-Card Trending Destinations Layout, Popular Trains Section & Trending Train Routes Grid Above Travel Categories
+* **Date**: 2026-10-01
+* **Reason**: User requested:
+  1. Trending destinations section to show a total of 5 destinations (removing the bottom row of 3 cards).
+  2. A new Popular Trains section modeled after Popular Airlines placed above the Categories section.
+  3. A new Trending Train Routes section placed below Popular Trains and directly above the Categories section.
+* **Branch / PR**: `feature/trending-destinations-5-and-popular-trains-routes`.
+* **Files Affected**:
+  - `client/src/components/home/TrendingDestinations.jsx` (Removed third row of 3 cards, keeping 2 hero + 3 medium)
+  - `client/src/components/home/PopularTrains.jsx` (New component: Premier & High-Speed + Express & Heritage tabs, custom locomotive badges, and train details)
+  - `client/src/components/home/TrendingTrainRoutes.jsx` (New component: Vande Bharat, Rajdhani & Shatabdi, Superfast Intercity scope filters, route cards with duration and prices)
+  - `client/src/data/siteData.js` (5 curated domestic & 5 international destinations, popularTrains and trendingTrainRoutesGrid datasets)
+  - `client/src/pages/HomePage.jsx` (Integrated PopularTrains and TrendingTrainRoutes above TravelCategoriesSection)
+  - `client/src/App.css` (Styles for popular trains, train badges, train routes grid, route cards, duration and price tags)
+  - `CHANGELOG.md`, `.agent-memory/CURRENT_STATE.md`, `.agent-memory/TASK_HISTORY.md`
+* **What Changed**:
+  - Trending destinations now cleanly shows exactly 5 items across domestic and international views.
+  - Added rich Popular Trains locomotive showcase with instant filtering.
+  - Added 4-column responsive Trending Train Routes grid positioned right above Travel Categories.
+* **Testing Performed**: 89 / 89 automated backend tests passing (`npm test`), 0 errors in Vite production build (`npm run build`), comprehensive multi-tab browser subagent inspection with screenshots.
+
+---
+
 ### Task: Unified Connected Segmented Search Container & Domain Customizations across All 5 Mediums (Flights, Trains, Buses, Hotels, Holidays)
 * **Date**: 2026-10-01
 * **Reason**: User requested:
