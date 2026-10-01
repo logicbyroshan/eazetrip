@@ -4,6 +4,21 @@ This file logs meaningful agent tasks, architectural milestones, and fixes chron
 
 ---
 
+### Task: Integrated 4-Pillar Assurance Strip Inside Why Choose EazeTrip Section
+* **Date**: 2026-10-01
+* **Reason**: User requested:
+  - The 4-pillar assurance card (*Get more for less*, *No hassle no stress*, *Your journey our commitment*, *Instant confirmation & 24/7 care*) to be made part of the Why Choose EazeTrip section, positioned directly below the 3 feature cards while keeping its UI styling identical.
+* **Branch / PR**: `feature/move-assurance-strip-inside-why-choose`.
+* **Files Affected**:
+  - `client/src/pages/HomePage.jsx` (Integrated assurance-banner-modern inside why-choose-section below features-grid, removed separate assurance-strip-section)
+  - `client/src/App.css` (Added margin-top: 32px on assurance-banner-modern for optimal breathing space)
+  - `CHANGELOG.md`, `.agent-memory/CURRENT_STATE.md`, `.agent-memory/TASK_HISTORY.md`
+* **What Changed**:
+  - The 4-pillar assurance strip now lives cleanly inside the Why Choose EazeTrip section container below the 3 feature cards.
+* **Testing Performed**: 89 / 89 automated backend tests passing (`npm test`), 0 errors in Vite production build (`npm run build`), visual browser subagent verification.
+
+---
+
 ### Task: 5-Card Trending Destinations Layout, Popular Trains Section & Trending Train Routes Grid Above Travel Categories
 * **Date**: 2026-10-01
 * **Reason**: User requested:

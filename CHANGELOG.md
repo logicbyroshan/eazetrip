@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.5.9] - 2026-10-01
+
+### Integrated 4-Pillar Assurance Strip Inside Why Choose EazeTrip Section
+
+#### Why Choose EazeTrip Section Layout (`client/src/pages/HomePage.jsx`, `client/src/App.css`)
+- **Integrated Assurance Strip**: Relocated the 4-item assurance card (*Get more for less*, *No hassle no stress*, *Your journey our commitment*, *Instant confirmation & 24/7 care*) from a standalone section directly into `<section className="section-block why-choose-section">` positioned beneath the 3 core feature cards (*Best Price Guarantee*, *Fast & Easy Booking*, *100% Safe & Secure*).
+- **Preserved Design System & Spacing**: Maintained identical modern 4-column divided card geometry, soft vertical dividing borders, pastel icon badges, and applied `margin-top: 32px` for clean proportional breathing space.
+
+---
+
 ## [2.5.8] - 2026-10-01
 
 ### 5-Card Trending Destinations Layout, Popular Trains Section & Trending Train Routes Grid Above Travel Categories
