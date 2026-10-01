@@ -96,8 +96,8 @@ const allowedOrigins = rawOrigins.includes(',')
 app.use(
   cors({
     origin: allowedOrigins,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Razorpay-Signature']
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Razorpay-Signature', 'X-Admin-PIN']
   })
 );
 app.use(express.json({ limit: '100kb' }));
@@ -227,89 +227,129 @@ app.get('/api/inventory/providers', (req, res) => {
 });
 
 // FLIGHTS API
-app.get('/api/flights', async (req, res) => {
-  const from = toStr(req.query.from);
-  const to = toStr(req.query.to);
-  const airline = toStr(req.query.airline);
-  const maxPrice = toStr(req.query.maxPrice);
-  const results = await inventoryManager.flights.searchFlights({ from, to, airline, maxPrice });
-  res.json(applyListFiltersAndPagination(results, req.query));
+app.get('/api/flights', async (req, res, next) => {
+  try {
+    const from = toStr(req.query.from);
+    const to = toStr(req.query.to);
+    const airline = toStr(req.query.airline);
+    const maxPrice = toStr(req.query.maxPrice);
+    const results = await inventoryManager.flights.searchFlights({ from, to, airline, maxPrice });
+    res.json(applyListFiltersAndPagination(results, req.query));
+  } catch (err) {
+    next(err);
+  }
 });
 
-app.get('/api/flights/:id', async (req, res) => {
-  const flight = await inventoryManager.flights.getFlightById(req.params.id);
-  if (!flight) {
-    return res.status(404).json({ success: false, error: 'Flight not found' });
+app.get('/api/flights/:id', async (req, res, next) => {
+  try {
+    const flight = await inventoryManager.flights.getFlightById(req.params.id);
+    if (!flight) {
+      return res.status(404).json({ success: false, error: 'Flight not found' });
+    }
+    res.json({ success: true, data: flight });
+  } catch (err) {
+    next(err);
   }
-  res.json({ success: true, data: flight });
 });
 
 // HOTELS API
-app.get('/api/hotels', async (req, res) => {
-  const city = toStr(req.query.city);
-  const stars = toStr(req.query.stars);
-  const maxPrice = toStr(req.query.maxPrice);
-  const results = await inventoryManager.hotels.searchHotels({ city, stars, maxPrice });
-  res.json(applyListFiltersAndPagination(results, req.query));
+app.get('/api/hotels', async (req, res, next) => {
+  try {
+    const city = toStr(req.query.city);
+    const stars = toStr(req.query.stars);
+    const maxPrice = toStr(req.query.maxPrice);
+    const results = await inventoryManager.hotels.searchHotels({ city, stars, maxPrice });
+    res.json(applyListFiltersAndPagination(results, req.query));
+  } catch (err) {
+    next(err);
+  }
 });
 
-app.get('/api/hotels/:id', async (req, res) => {
-  const hotel = await inventoryManager.hotels.getHotelById(req.params.id);
-  if (!hotel) {
-    return res.status(404).json({ success: false, error: 'Hotel not found' });
+app.get('/api/hotels/:id', async (req, res, next) => {
+  try {
+    const hotel = await inventoryManager.hotels.getHotelById(req.params.id);
+    if (!hotel) {
+      return res.status(404).json({ success: false, error: 'Hotel not found' });
+    }
+    res.json({ success: true, data: hotel });
+  } catch (err) {
+    next(err);
   }
-  res.json({ success: true, data: hotel });
 });
 
 // BUSES API
-app.get('/api/buses', async (req, res) => {
-  const from = toStr(req.query.from);
-  const to = toStr(req.query.to);
-  const operator = toStr(req.query.operator);
-  const results = await inventoryManager.buses.searchBuses({ from, to, operator });
-  res.json(applyListFiltersAndPagination(results, req.query));
+app.get('/api/buses', async (req, res, next) => {
+  try {
+    const from = toStr(req.query.from);
+    const to = toStr(req.query.to);
+    const operator = toStr(req.query.operator);
+    const results = await inventoryManager.buses.searchBuses({ from, to, operator });
+    res.json(applyListFiltersAndPagination(results, req.query));
+  } catch (err) {
+    next(err);
+  }
 });
 
-app.get('/api/buses/:id', async (req, res) => {
-  const bus = await inventoryManager.buses.getBusById(req.params.id);
-  if (!bus) {
-    return res.status(404).json({ success: false, error: 'Bus not found' });
+app.get('/api/buses/:id', async (req, res, next) => {
+  try {
+    const bus = await inventoryManager.buses.getBusById(req.params.id);
+    if (!bus) {
+      return res.status(404).json({ success: false, error: 'Bus not found' });
+    }
+    res.json({ success: true, data: bus });
+  } catch (err) {
+    next(err);
   }
-  res.json({ success: true, data: bus });
 });
 
 // RAILWAYS API
-app.get('/api/railways', async (req, res) => {
-  const from = toStr(req.query.from);
-  const to = toStr(req.query.to);
-  const results = await inventoryManager.trains.searchTrains({ from, to });
-  res.json(applyListFiltersAndPagination(results, req.query));
+app.get('/api/railways', async (req, res, next) => {
+  try {
+    const from = toStr(req.query.from);
+    const to = toStr(req.query.to);
+    const results = await inventoryManager.trains.searchTrains({ from, to });
+    res.json(applyListFiltersAndPagination(results, req.query));
+  } catch (err) {
+    next(err);
+  }
 });
 
-app.get('/api/railways/:id', async (req, res) => {
-  const train = await inventoryManager.trains.getTrainById(req.params.id);
-  if (!train) {
-    return res.status(404).json({ success: false, error: 'Train not found' });
+app.get('/api/railways/:id', async (req, res, next) => {
+  try {
+    const train = await inventoryManager.trains.getTrainById(req.params.id);
+    if (!train) {
+      return res.status(404).json({ success: false, error: 'Train not found' });
+    }
+    res.json({ success: true, data: train });
+  } catch (err) {
+    next(err);
   }
-  res.json({ success: true, data: train });
 });
 
 // HOLIDAYS & TOUR PACKAGES API
-app.get('/api/holidays', async (req, res) => {
-  const destination = toStr(req.query.destination);
-  const theme = toStr(req.query.theme);
-  const category = toStr(req.query.category);
-  const maxPrice = toStr(req.query.maxPrice);
-  const results = await inventoryManager.searchHolidays({ destination, theme, category, maxPrice });
-  res.json(applyListFiltersAndPagination(results, req.query));
+app.get('/api/holidays', async (req, res, next) => {
+  try {
+    const destination = toStr(req.query.destination);
+    const theme = toStr(req.query.theme);
+    const category = toStr(req.query.category);
+    const maxPrice = toStr(req.query.maxPrice);
+    const results = await inventoryManager.searchHolidays({ destination, theme, category, maxPrice });
+    res.json(applyListFiltersAndPagination(results, req.query));
+  } catch (err) {
+    next(err);
+  }
 });
 
-app.get('/api/holidays/:id', async (req, res) => {
-  const holiday = await inventoryManager.getHolidayById(req.params.id);
-  if (!holiday) {
-    return res.status(404).json({ success: false, error: 'Holiday package not found' });
+app.get('/api/holidays/:id', async (req, res, next) => {
+  try {
+    const holiday = await inventoryManager.getHolidayById(req.params.id);
+    if (!holiday) {
+      return res.status(404).json({ success: false, error: 'Holiday package not found' });
+    }
+    res.json({ success: true, data: holiday });
+  } catch (err) {
+    next(err);
   }
-  res.json({ success: true, data: holiday });
 });
 
 // OFFERS & FAQS API
