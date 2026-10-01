@@ -4,6 +4,7 @@ import BusSearchWidget from '../components/search/BusSearchWidget';
 import BusCard from '../components/buses/BusCard';
 import BusFilters from '../components/buses/BusFilters';
 import BusSeatPickerModal from '../components/buses/BusSeatPickerModal';
+import ReviewSection from '../components/reviews/ReviewSection';
 import { mockBuses } from '../data/busData';
 import { HERO_BACKDROPS } from '../data/siteData';
 import { useBooking } from '../context/BookingContext';
@@ -157,6 +158,12 @@ export default function BusBookingPage() {
               ))}
             </div>
           )}
+
+          <ReviewSection
+            serviceType="Bus"
+            serviceId="BUS-INTERCITY-PREMIUM"
+            serviceName={`${searchState.from || 'Origin'} to ${searchState.to || 'Destination'} Intercity Express Buses`}
+          />
         </main>
       </div>
 

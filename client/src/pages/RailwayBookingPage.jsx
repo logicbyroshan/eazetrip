@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import TrainSearchWidget from '../components/search/TrainSearchWidget';
 import TrainCard from '../components/trains/TrainCard';
 import TrainFilters from '../components/trains/TrainFilters';
+import ReviewSection from '../components/reviews/ReviewSection';
 import { mockTrains } from '../data/trainData';
 import { HERO_BACKDROPS } from '../data/siteData';
 import { useBooking } from '../context/BookingContext';
@@ -158,6 +159,12 @@ export default function RailwayBookingPage() {
               ))}
             </div>
           )}
+
+          <ReviewSection
+            serviceType="Train"
+            serviceId="TRAIN-IRCTC-PREMIUM"
+            serviceName={`${searchState.from || 'Origin'} to ${searchState.to || 'Destination'} Express & Superfast Trains`}
+          />
         </main>
       </div>
     </div>

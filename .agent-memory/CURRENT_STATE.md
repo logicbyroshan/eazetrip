@@ -1,11 +1,11 @@
 # Current Project State: EazeTrip
 
 ## 1. Release Baseline & Status
-* **Status**: Production Ready / Universal Currency-Aware Formatting / Site-Wide UI Consistency / 100% Passing Tests
-* **Version**: `2.6.6`
-* **Test Suite**: 89 / 89 automated tests passing (`npm test`).
-* **Client Build**: Clean Vite production build (`npm run build`).
-* **Active Branch**: `feature/site-wide-ui-consistency-and-code-simplification`
+* **Status**: Production Ready / Full-Stack Deep Dive Audit & Enhancements / Centralized Promo Engine / Universal Reviews / 100% Passing Tests
+* **Version**: `2.6.7`
+* **Test Suite**: 93 / 93 automated tests passing (`npm test`).
+* **Client Build**: Clean Vite production build (`npm run build` in ~2.7s).
+* **Active Branch**: `feature/full-stack-deep-dive-audit-and-enhancements`
 
 ---
 

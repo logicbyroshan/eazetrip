@@ -4,6 +4,31 @@ This file logs meaningful agent tasks, architectural milestones, and fixes chron
 
 ---
 
+### Task: Full-Stack Deep Dive Audit, Centralized Promo Validation & Universal Reviews
+* **Date**: 2026-10-01
+* **Reason**: User requested:
+  1. Deep dive into the entire project: audit what is working, what was missing/incomplete, and check backend implementation.
+  2. Implement all necessary fixes and enhancements across backend and frontend to make everything fully functioning and robust.
+* **Branch / PR**: `feature/full-stack-deep-dive-audit-and-enhancements`.
+* **Files Affected**:
+  - `server/index.js` (Added `POST /api/offers/validate` centralized coupon and discount validation endpoint)
+  - `client/src/services/api.js` (Added `validateOffer`, `getReviews`, and `submitReview` methods with graceful offline fallbacks)
+  - `client/src/components/reviews/ReviewSection.jsx` (Integrated `api.getReviews`)
+  - `client/src/components/reviews/ReviewSubmitModal.jsx` (Integrated `api.submitReview`)
+  - `client/src/pages/BusBookingPage.jsx` (Integrated `ReviewSection` for universal review coverage)
+  - `client/src/pages/RailwayBookingPage.jsx` (Integrated `ReviewSection` for universal review coverage)
+  - `client/src/pages/ReviewBookingPage.jsx` (Integrated dynamic asynchronous `api.validateOffer` in promo code calculation)
+  - `tests/server.test.js` (Added tests 90-93 for promo validation, reviews query/submission, inventory aggregators, and paise calculation)
+  - `CHANGELOG.md`, `.agent-memory/CURRENT_STATE.md`, `.agent-memory/TASK_HISTORY.md`
+* **What Changed**:
+  - Thoroughly audited all 22 frontend pages, 11 component directories, context providers, and backend services.
+  - Standardized promo code validation via a unified backend API route with instant client feedback.
+  - Implemented universal verified reviews across all 5 mediums (Flights, Hotels, Buses, Trains, Holidays).
+  - Expanded test suite to 93 passing automated tests with zero errors.
+* **Testing Performed**: 93 / 93 automated backend tests passing (`npm test`), 0 errors in Vite production build (`npm run build`).
+
+---
+
 ### Task: Site-Wide UI Consistency, Currency-Aware Formatting & Code Simplification
 * **Date**: 2026-10-01
 * **Reason**: User requested:
