@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { trendingTrainRoutesGrid } from '../../data/siteData';
-import { ArrowLeftRight, Clock, Zap, TrainTrack, ChevronRight } from 'lucide-react';
+import { ArrowLeftRight } from 'lucide-react';
 
 export default function TrendingTrainRoutes() {
   const [tab, setTab] = useState('vandeBharat'); // 'vandeBharat' | 'rajdhaniShatabdi' | 'intercity'
@@ -19,47 +19,43 @@ export default function TrendingTrainRoutes() {
         {/* Header with Title and Scope Toggle Buttons */}
         <div className="trending-routes-header">
           <div>
-            <div className="section-tag-pill train-tag-pill">
-              <TrainTrack size={14} />
-              <span>POPULAR RAILWAY CORRIDORS</span>
-            </div>
             <h2 className="routes-main-title">
               Trending <span className="routes-highlight-purple">TRAIN ROUTES</span>
             </h2>
-            <p className="routes-sub-desc">Quick view of top booked Vande Bharat, Rajdhani & Superfast train routes</p>
+            <p className="routes-sub-desc">Quick view of top booked Vande Bharat, Rajdhani & Superfast rail routes</p>
           </div>
 
-          <div className="routes-toggle-group train-toggle-group">
+          <div className="routes-toggle-group">
             <button
               type="button"
-              className={`routes-toggle-btn train-btn ${tab === 'vandeBharat' ? 'active' : ''}`}
+              className={`routes-toggle-btn ${tab === 'vandeBharat' ? 'active' : ''}`}
               onClick={() => setTab('vandeBharat')}
             >
               VANDE BHARAT
             </button>
             <button
               type="button"
-              className={`routes-toggle-btn train-btn ${tab === 'rajdhaniShatabdi' ? 'active' : ''}`}
+              className={`routes-toggle-btn ${tab === 'rajdhaniShatabdi' ? 'active' : ''}`}
               onClick={() => setTab('rajdhaniShatabdi')}
             >
               RAJDHANI & SHATABDI
             </button>
             <button
               type="button"
-              className={`routes-toggle-btn train-btn ${tab === 'intercity' ? 'active' : ''}`}
+              className={`routes-toggle-btn ${tab === 'intercity' ? 'active' : ''}`}
               onClick={() => setTab('intercity')}
             >
-              SUPERFAST INTERCITY
+              SUPERFAST
             </button>
           </div>
         </div>
 
         {/* 4-Column Grid of Train Route Cards */}
-        <div className="routes-cards-grid train-routes-cards-grid">
+        <div className="routes-cards-grid">
           {routes.map((r) => (
             <div
               key={r.id}
-              className="route-item-card train-route-card"
+              className="route-item-card"
               onClick={() => handleRouteClick(r)}
               role="button"
               tabIndex={0}
@@ -67,29 +63,20 @@ export default function TrendingTrainRoutes() {
               {/* Landmark Image */}
               <div className="route-thumb-box">
                 <img src={r.image} alt={`${r.from} to ${r.to}`} loading="lazy" />
-                <span className="train-route-thumb-badge">{r.badge}</span>
               </div>
 
               {/* Route Details & Train Info */}
-              <div className="train-route-details-box">
-                <div className="train-route-cities-row">
+              <div className="route-details-box">
+                <div className="route-cities-row">
                   <span className="route-city-name">{r.from}</span>
-                  <div className="route-arrow-icon-wrap train-arrow">
+                  <div className="route-arrow-icon-wrap">
                     <ArrowLeftRight size={12} />
                   </div>
                   <span className="route-city-name">{r.to}</span>
                 </div>
-
-                <div className="train-route-name-text" title={r.trainName}>
-                  {r.trainName}
-                </div>
-
-                <div className="train-route-meta-row">
-                  <span className="train-duration-pill">
-                    <Clock size={11} />
-                    {r.duration}
-                  </span>
-                  <span className="train-price-tag">{r.price}</span>
+                <div className="route-meta-sub">
+                  <span className="route-sub-name">{r.trainName ? r.trainName.split('(')[0].trim() : ''}</span>
+                  <span className="route-sub-price">{r.price}</span>
                 </div>
               </div>
             </div>

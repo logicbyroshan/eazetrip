@@ -4,6 +4,30 @@ This file logs meaningful agent tasks, architectural milestones, and fixes chron
 
 ---
 
+### Task: Navbar Service Reordering, Search Swap Spacing Fix & Streamlined Train & Bus Showcase UI
+* **Date**: 2026-10-01
+* **Reason**: User requested:
+  1. Synchronize navbar links order to: Flights, Trains, Buses, Hotels, Holidays.
+  2. Fix search widget From / To swap icon so it does not touch/overlap the destination cell text.
+  3. Streamline Popular Trains and Popular Bus Operators to match the clean, simple, minimalist design of Popular Airlines (removing extra boxes, noisy tags, and verbose badge stacks).
+  4. Streamline Trending Train Routes and Trending Bus Routes into clean, modern luxury horizontal route cards matching Trending Flight Routes.
+  5. Check site-wide UI components, border radii, and responsive layout across all breakpoints.
+* **Branch / PR**: `feature/navbar-order-search-swap-gap-and-clean-train-bus-ui`.
+* **Files Affected**:
+  - `client/src/components/common/Header.jsx` (Synchronized services order to [flights, trains, buses, hotels, holidays])
+  - `client/src/components/home/PopularTrains.jsx` (Clean minimalist design matching PopularAirlines with 44x44 brand monogram, bold title, and single subtitle)
+  - `client/src/components/home/PopularBusOperators.jsx` (Clean minimalist design matching PopularAirlines with clean brand monogram, title, and rating subtitle)
+  - `client/src/components/home/TrendingTrainRoutes.jsx` (Clean horizontal cards with thumbnail, cities pair, train tag, and starting fare badge)
+  - `client/src/components/home/TrendingBusRoutes.jsx` (Clean horizontal cards with thumbnail, cities pair, bus tag, and starting fare badge)
+  - `client/src/components/home/TrendingFlightRoutes.jsx` (Harmonized with unified route-cities-row and route-meta-sub)
+  - `client/src/App.css` (Search cell padding for swap button clearance, unified card and route styling, theme accent toggle states)
+  - `CHANGELOG.md`, `.agent-memory/CURRENT_STATE.md`, `.agent-memory/TASK_HISTORY.md`
+* **What Changed**:
+  - Perfect navigation ordering, smooth search widget swap button separation with clean padding, ultra-clean Popular Trains and Bus Operators showcases matching Popular Airlines, and unified high-contrast Trending Route cards.
+* **Testing Performed**: 89 / 89 automated backend tests passing (`npm test`), 0 errors in Vite production build (`npm run build`).
+
+---
+
 ### Task: Popular Bus Operators & Trending Bus Routes Sections Below Travel Categories
 * **Date**: 2026-10-01
 * **Reason**: User requested:

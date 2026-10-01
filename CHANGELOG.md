@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.6.1] - 2026-10-01
+
+### Navbar Service Reordering, Search Swap Spacing Fix & Streamlined Train & Bus Showcase UI
+
+#### Header Navigation Service Order (`client/src/components/common/Header.jsx`)
+- **Synchronized Order**: Updated the navigation services array on both desktop and mobile drawer navigation to match the hero search tab switcher: **Flights** ➜ **Trains** ➜ **Buses** ➜ **Hotels** ➜ **Holidays**.
+
+#### Search Widget Swap Spacing Fix (`client/src/App.css`)
+- **From / To Gap Separation**: Added dedicated padding rules (`.search-cell-block.cell-from { padding-right: 20px; }` and `.search-cell-block.cell-to { padding-left: 24px; }`) ensuring the floating circular swap button centers between cells with clean breathing space without colliding with or overlapping origin or destination text.
+
+#### Popular Trains & Popular Bus Operators UI Polish (`client/src/components/home/PopularTrains.jsx`, `client/src/components/home/PopularBusOperators.jsx`, `client/src/App.css`)
+- **Minimalist Luxury Layout**: Streamlined both sections to match the clean visual grammar of `PopularAirlines.jsx`.
+- **Eliminated Visual Clutter**: Removed bulky nested colored frames, extra section tag pills, and redundant multi-line badge stacks.
+- **Clean Monogram + Title + Subtitle**: Standardized on clean 44x44px brand monograms, bold operator/locomotive names, and concise single-line subtitles (`Semi High-Speed`, `Premier AC Sleeper`, `Volvo 9600 • 4.9 ★`).
+
+#### Trending Train Routes & Trending Bus Routes Grid Polish (`client/src/components/home/TrendingTrainRoutes.jsx`, `client/src/components/home/TrendingBusRoutes.jsx`, `client/src/components/home/TrendingFlightRoutes.jsx`, `client/src/App.css`)
+- **Unified Card Geometry**: Standardized 4-column route cards with clean thumbnail photography, bidirectional city pairs (`.route-cities-row`), subtle carrier/train tags, and crisp starting price badges (`.route-sub-price`).
+- **Clean Thematic Filters**: Minimalist scope toggle buttons with dedicated theme accents (Purple for Trains, Emerald Green for Buses, Sky Blue / Crimson for Flights).
+
+---
+
 ## [2.6.0] - 2026-10-01
 
 ### Popular Bus Operators & Trending Bus Routes Sections Below Travel Categories

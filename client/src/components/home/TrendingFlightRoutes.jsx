@@ -43,7 +43,7 @@ export default function TrendingFlightRoutes() {
           </div>
         </div>
 
-        {/* 4-Column Grid of Route Cards (Matching Screenshot 3) */}
+        {/* 4-Column Grid of Route Cards */}
         <div className="routes-cards-grid">
           {routes.map((r) => (
             <div
@@ -60,11 +60,19 @@ export default function TrendingFlightRoutes() {
 
               {/* Right Route Cities & Arrow */}
               <div className="route-details-box">
-                <span className="route-city-name">{r.from}</span>
-                <div className="route-arrow-icon-wrap">
-                  <ArrowLeftRight size={13} />
+                <div className="route-cities-row">
+                  <span className="route-city-name">{r.from}</span>
+                  <div className="route-arrow-icon-wrap">
+                    <ArrowLeftRight size={12} />
+                  </div>
+                  <span className="route-city-name">{r.to}</span>
                 </div>
-                <span className="route-city-name">{r.to}</span>
+                {r.price && (
+                  <div className="route-meta-sub">
+                    <span className="route-sub-name">{tab === 'domestic' ? 'Direct Flights' : 'Intl Flights'}</span>
+                    <span className="route-sub-price">{r.price}</span>
+                  </div>
+                )}
               </div>
             </div>
           ))}

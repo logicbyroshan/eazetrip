@@ -27,9 +27,9 @@ export default function Header() {
 
   const services = [
     { key: 'flights', label: t('flights', 'Flights'), path: '/flight-booking', icon: Plane },
-    { key: 'hotels', label: t('hotels', 'Hotels'), path: '/hotel-booking', icon: Building2 },
-    { key: 'buses', label: t('buses', 'Buses'), path: '/bus-booking', icon: Bus },
     { key: 'trains', label: t('trains', 'Trains'), path: '/railway', icon: Train },
+    { key: 'buses', label: t('buses', 'Buses'), path: '/bus-booking', icon: Bus },
+    { key: 'hotels', label: t('hotels', 'Hotels'), path: '/hotel-booking', icon: Building2 },
     { key: 'holidays', label: t('holidays', 'Holidays'), path: '/holiday-booking', icon: Palmtree }
   ];
 

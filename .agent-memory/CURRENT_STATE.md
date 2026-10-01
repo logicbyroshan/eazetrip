@@ -1,11 +1,11 @@
 # Current Project State: EazeTrip
 
 ## 1. Release Baseline & Status
-* **Status**: Production Ready / Popular Bus Operators Strip / Trending Bus Routes Grid / Integrated Why Choose Us Assurance Strip / 100% Passing Tests
-* **Version**: `2.6.0`
+* **Status**: Production Ready / Navbar Synchronized / Search Swap Gap Spacing / Clean Minimalist Train & Bus Showcases / 100% Passing Tests
+* **Version**: `2.6.1`
 * **Test Suite**: 89 / 89 automated tests passing (`npm test`).
 * **Client Build**: Clean Vite production build (`npm run build`).
-* **Active Branch**: `feature/popular-bus-operators-and-trending-bus-routes`
+* **Active Branch**: `feature/navbar-order-search-swap-gap-and-clean-train-bus-ui`
 
 ---
 
