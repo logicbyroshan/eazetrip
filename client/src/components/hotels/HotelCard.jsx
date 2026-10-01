@@ -1,6 +1,8 @@
 import { Star, MapPin, Check, Wifi, Coffee, Waves, Wind, ShieldCheck, Sparkles, Building2 } from 'lucide-react';
+import { useCurrency } from '../../context/CurrencyContext';
 
 export default function HotelCard({ hotel, onBook }) {
+  const { formatPrice } = useCurrency();
   const getAmenityIcon = (amenity) => {
     if (amenity.toLowerCase().includes('wifi')) return <Wifi size={13} />;
     if (amenity.toLowerCase().includes('breakfast') || amenity.toLowerCase().includes('dining')) return <Coffee size={13} />;
@@ -84,14 +86,13 @@ export default function HotelCard({ hotel, onBook }) {
       <div className="hotel-pricing-column">
         <div className="hotel-price-breakdown">
           {hotel.originalPrice && (
-            <span className="hotel-original-price">₹{hotel.originalPrice.toLocaleString('en-IN')}</span>
+            <span className="hotel-original-price">{formatPrice(hotel.originalPrice)}</span>
           )}
           <div className="hotel-nightly-price-row">
-            <span className="hotel-currency">₹</span>
-            <strong className="hotel-amount">{hotel.pricePerNight.toLocaleString('en-IN')}</strong>
+            <strong className="hotel-amount">{formatPrice(hotel.pricePerNight)}</strong>
             <span className="hotel-per-night-lbl">/ night</span>
           </div>
-          <span className="hotel-taxes-note">+ ₹{hotel.taxes || 450} taxes & service fee</span>
+          <span className="hotel-taxes-note">+ {formatPrice(hotel.taxes || 450)} taxes & service fee</span>
           <span className="hotel-zero-convenience">Zero convenience charges</span>
         </div>
 

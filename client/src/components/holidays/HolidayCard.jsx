@@ -1,6 +1,8 @@
 import { MapPin, Clock, Star, Sparkles, Check, ArrowRight, ShieldCheck, Utensils, Plane, Building2, Eye } from 'lucide-react';
+import { useCurrency } from '../../context/CurrencyContext';
 
 export default function HolidayCard({ pkg, onBook, onViewDetails }) {
+  const { formatPrice } = useCurrency();
   return (
     <div className="holiday-card luxury-holiday-card">
       {/* Image Block */}
@@ -64,11 +66,10 @@ export default function HolidayCard({ pkg, onBook, onViewDetails }) {
       <div className="holiday-price-col">
         <div className="price-tag-wrap">
           {pkg.originalPrice && (
-            <span className="orig-price">₹{pkg.originalPrice.toLocaleString('en-IN')}</span>
+            <span className="orig-price">{formatPrice(pkg.originalPrice)}</span>
           )}
           <div className="main-price">
-            <span className="curr">₹</span>
-            <strong>{pkg.price.toLocaleString('en-IN')}</strong>
+            <strong>{formatPrice(pkg.price)}</strong>
             <span className="pax-text">/ person</span>
           </div>
           <span className="tax-inclusive">Includes GST & All Stays</span>

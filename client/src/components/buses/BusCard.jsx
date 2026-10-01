@@ -1,6 +1,8 @@
 import { Bus, Star, MapPin, ShieldCheck, ChevronRight, Armchair, Wifi, Zap, Wind, Navigation, Sparkles, Clock } from 'lucide-react';
+import { useCurrency } from '../../context/CurrencyContext';
 
 export default function BusCard({ bus, onSelectSeats }) {
+  const { formatPrice } = useCurrency();
   const getAmenityIcon = (amenity) => {
     if (amenity.toLowerCase().includes('wifi')) return <Wifi size={13} />;
     if (amenity.toLowerCase().includes('charg') || amenity.toLowerCase().includes('port')) return <Zap size={13} />;
@@ -90,11 +92,10 @@ export default function BusCard({ bus, onSelectSeats }) {
         <div className="bus-action-column">
           <div className="bus-pricing-display">
             {bus.originalPrice && (
-              <span className="bus-strikethrough-price">₹{bus.originalPrice}</span>
+              <span className="bus-strikethrough-price">{formatPrice(bus.originalPrice)}</span>
             )}
             <div className="bus-current-price-row">
-              <span className="currency-sign">₹</span>
-              <strong className="price-bold">{bus.price}</strong>
+              <strong className="price-bold">{formatPrice(bus.price)}</strong>
               <span className="per-seat-lbl">/ seat</span>
             </div>
             <div className={`bus-seats-urgency ${isLowSeats ? 'urgency-high' : 'urgency-normal'}`}>

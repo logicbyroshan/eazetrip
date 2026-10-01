@@ -4,6 +4,29 @@ This file logs meaningful agent tasks, architectural milestones, and fixes chron
 
 ---
 
+### Task: Site-Wide UI Consistency, Currency-Aware Formatting & Code Simplification
+* **Date**: 2026-10-01
+* **Reason**: User requested:
+  1. Deep dive into every component and section across the project to resolve UI consistency issues.
+  2. Simplify code, remove redundant rules, and ensure standardized styling and behavior across all 5 booking mediums.
+* **Branch / PR**: `feature/site-wide-ui-consistency-and-code-simplification`.
+* **Files Affected**:
+  - `client/src/components/hotels/HotelFilters.jsx` (Integrated useCurrency formatPrice)
+  - `client/src/components/trains/TrainFilters.jsx` (Integrated useCurrency formatPrice)
+  - `client/src/components/buses/BusFilters.jsx` (Integrated useCurrency formatPrice)
+  - `client/src/components/holidays/HolidayFilters.jsx` (Integrated useCurrency formatPrice)
+  - `client/src/components/hotels/HotelCard.jsx` (Integrated useCurrency formatPrice)
+  - `client/src/components/trains/TrainCard.jsx` (Integrated useCurrency formatPrice)
+  - `client/src/components/buses/BusCard.jsx` (Integrated useCurrency formatPrice)
+  - `client/src/components/holidays/HolidayCard.jsx` (Integrated useCurrency formatPrice)
+  - `CHANGELOG.md`, `.agent-memory/CURRENT_STATE.md`, `.agent-memory/TASK_HISTORY.md`
+* **What Changed**:
+  - Unified dynamic multi-currency formatting across all 5 filter sidebars and listing cards.
+  - Standardized clean typography, badges, and card boundaries with simplified codebase.
+* **Testing Performed**: 89 / 89 automated backend tests passing (`npm test`), 0 errors in Vite production build (`npm run build`).
+
+---
+
 ### Task: 50% Floating Search CTA Alignment, Centered Vehicle Dashed Journey Track, Price Filter Priority & Double Outline Elimination
 * **Date**: 2026-10-01
 * **Reason**: User requested:

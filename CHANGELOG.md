@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.6.6] - 2026-10-01
+
+### Site-Wide UI Consistency, Currency-Aware Formatting & Code Simplification
+
+#### Universal Currency Formatting Across All Filters & Cards (`client/src/components/`)
+- **Global Context Integration**: Integrated `useCurrency()` and `formatPrice()` across all 5 domain filters (`FlightFilters.jsx`, `HotelFilters.jsx`, `TrainFilters.jsx`, `BusFilters.jsx`, `HolidayFilters.jsx`) and listing cards (`FlightCard.jsx`, `HotelCard.jsx`, `TrainCard.jsx`, `BusCard.jsx`, `HolidayCard.jsx`).
+- **Dynamic Multi-Currency Support**: All max prices, nightly rates, base fares, ticket costs, packages, and taxes dynamically adapt with accurate conversion rates and currency symbols (`INR ₹`, `USD $`, `EUR €`, `GBP £`, `AED د.إ`).
+
+#### Cohesive Design Tokens & Code Simplification (`client/src/App.css`)
+- **Standardized Border Radii & Shadows**: Cleaned up card containers to uniform 16px radius with subtle `#e2e8f0` borders and 0 2px 10px shadows across all medium listings.
+- **Unified Journey Timelines**: Consolidated track styles with centered medium badges for flights, trains, and buses.
+
+---
+
 ## [2.6.5] - 2026-10-01
 
 ### 50% Floating Search CTA Alignment, Centered Vehicle Dashed Journey Track, Price Filter Priority & Double Outline Elimination

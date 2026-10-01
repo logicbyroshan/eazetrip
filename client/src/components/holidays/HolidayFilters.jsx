@@ -1,4 +1,5 @@
 import { Filter, RotateCcw, Palmtree, MapPin, Compass, Check } from 'lucide-react';
+import { useCurrency } from '../../context/CurrencyContext';
 import { holidayThemes } from '../../data/holidayData';
 
 export default function HolidayFilters({
@@ -13,6 +14,8 @@ export default function HolidayFilters({
   onChangeMaxPrice,
   onResetFilters
 }) {
+  const { formatPrice } = useCurrency();
+
   return (
     <div className="filter-sidebar">
       <div className="filter-header">
@@ -32,7 +35,7 @@ export default function HolidayFilters({
 
       {/* 1. Budget Slider (Price on Top) */}
       <div className="filter-group">
-        <h4>Budget per Person: ₹{currentMaxPrice.toLocaleString('en-IN')}</h4>
+        <h4>Budget per Person: {formatPrice(currentMaxPrice)}</h4>
         <input
           type="range"
           min={10000}
@@ -43,8 +46,8 @@ export default function HolidayFilters({
           className="price-range-slider"
         />
         <div className="slider-labels">
-          <span>₹10,000</span>
-          <span>₹{(maxPrice || 60000).toLocaleString('en-IN')}</span>
+          <span>{formatPrice(10000)}</span>
+          <span>{formatPrice(maxPrice || 60000)}</span>
         </div>
       </div>
 

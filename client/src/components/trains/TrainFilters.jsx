@@ -1,4 +1,5 @@
 import { Filter, RotateCcw, Sunrise, Sun, Sunset, Moon, Train } from 'lucide-react';
+import { useCurrency } from '../../context/CurrencyContext';
 
 export default function TrainFilters({
   selectedClasses = [],
@@ -12,6 +13,7 @@ export default function TrainFilters({
   onChangeMaxPrice,
   onResetFilters
 }) {
+  const { formatPrice } = useCurrency();
   const timeSlots = [
     { id: 'earlyMorning', label: 'Before 6 AM', sub: '00:00 - 06:00', icon: Sunrise },
     { id: 'morning', label: '6 AM - 12 PM', sub: '06:00 - 12:00', icon: Sun },
@@ -53,7 +55,7 @@ export default function TrainFilters({
 
       {/* Max Fare Range */}
       <div className="filter-group">
-        <h4>Max Base Fare: ₹{currentMaxPrice.toLocaleString('en-IN')}</h4>
+        <h4>Max Base Fare: {formatPrice(currentMaxPrice)}</h4>
         <input
           type="range"
           min="500"
@@ -64,8 +66,8 @@ export default function TrainFilters({
           className="price-range-slider"
         />
         <div className="slider-labels">
-          <span>₹500</span>
-          <span>₹{maxPrice.toLocaleString('en-IN')}</span>
+          <span>{formatPrice(500)}</span>
+          <span>{formatPrice(maxPrice)}</span>
         </div>
       </div>
 

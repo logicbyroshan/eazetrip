@@ -1,4 +1,5 @@
 import { Filter, RotateCcw, Sunrise, Sun, Sunset, Moon, Bus } from 'lucide-react';
+import { useCurrency } from '../../context/CurrencyContext';
 
 export default function BusFilters({
   selectedOperators = [],
@@ -14,6 +15,7 @@ export default function BusFilters({
   onChangeMaxPrice,
   onResetFilters
 }) {
+  const { formatPrice } = useCurrency();
   const timeSlots = [
     { id: 'earlyMorning', label: 'Before 6 AM', sub: '00:00 - 06:00', icon: Sunrise },
     { id: 'morning', label: '6 AM - 12 PM', sub: '06:00 - 12:00', icon: Sun },
@@ -45,7 +47,7 @@ export default function BusFilters({
 
       {/* Max Price Slider */}
       <div className="filter-group">
-        <h4>Max Ticket Price: ₹{currentMaxPrice.toLocaleString('en-IN')}</h4>
+        <h4>Max Ticket Price: {formatPrice(currentMaxPrice)}</h4>
         <input
           type="range"
           min="400"
@@ -56,8 +58,8 @@ export default function BusFilters({
           className="price-range-slider"
         />
         <div className="slider-labels">
-          <span>₹400</span>
-          <span>₹{maxPrice.toLocaleString('en-IN')}</span>
+          <span>{formatPrice(400)}</span>
+          <span>{formatPrice(maxPrice)}</span>
         </div>
       </div>
 
