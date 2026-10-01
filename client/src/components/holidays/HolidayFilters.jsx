@@ -14,24 +14,24 @@ export default function HolidayFilters({
   onResetFilters
 }) {
   return (
-    <div className="filters-card holiday-filters-card">
-      <div className="filters-header">
-        <div className="title-with-icon">
-          <Filter size={18} color="#034ea2" />
+    <div className="filter-sidebar">
+      <div className="filter-header">
+        <div className="filter-title">
+          <Filter size={18} />
           <h3>Filter Packages</h3>
         </div>
         <button
           type="button"
-          className="reset-filters-btn"
+          className="reset-btn"
           onClick={onResetFilters}
           title="Reset all filters"
         >
-          <RotateCcw size={14} /> Reset
+          <RotateCcw size={13} /> Reset
         </button>
       </div>
 
-      {/* 1. Destination Type */}
-      <div className="filter-section">
+      {/* 1. Destination Category */}
+      <div className="filter-group">
         <h4>Destination Category</h4>
         <div className="filter-pills-row">
           {['All', 'Domestic', 'International'].map((cat) => (
@@ -48,21 +48,20 @@ export default function HolidayFilters({
       </div>
 
       {/* 2. Package Themes */}
-      <div className="filter-section">
+      <div className="filter-group">
         <h4>Holiday Theme</h4>
         <div className="checkbox-stack">
           {holidayThemes.map((theme) => {
             const isSelected = selectedTheme === theme;
             return (
-              <label key={theme} className="custom-checkbox-row">
+              <label key={theme} className="filter-checkbox-row">
                 <input
                   type="radio"
                   name="themeFilter"
                   checked={isSelected}
                   onChange={() => onSelectTheme(theme)}
                 />
-                <span className="checkbox-box">{isSelected && <Check size={12} />}</span>
-                <span className="checkbox-label">{theme}</span>
+                <span>{theme}</span>
               </label>
             );
           })}
@@ -70,7 +69,7 @@ export default function HolidayFilters({
       </div>
 
       {/* 3. Duration */}
-      <div className="filter-section">
+      <div className="filter-group">
         <h4>Trip Duration</h4>
         <div className="checkbox-stack">
           {[
@@ -81,15 +80,14 @@ export default function HolidayFilters({
           ].map((dur) => {
             const isSelected = selectedDuration === dur.id;
             return (
-              <label key={dur.id} className="custom-checkbox-row">
+              <label key={dur.id} className="filter-checkbox-row">
                 <input
                   type="radio"
                   name="durationFilter"
                   checked={isSelected}
                   onChange={() => onSelectDuration(dur.id)}
                 />
-                <span className="checkbox-box">{isSelected && <Check size={12} />}</span>
-                <span className="checkbox-label">{dur.label}</span>
+                <span>{dur.label}</span>
               </label>
             );
           })}
@@ -97,23 +95,20 @@ export default function HolidayFilters({
       </div>
 
       {/* 4. Budget Slider */}
-      <div className="filter-section">
-        <div className="slider-header">
-          <h4>Budget per Person</h4>
-          <strong>₹{currentMaxPrice.toLocaleString('en-IN')}</strong>
-        </div>
+      <div className="filter-group">
+        <h4>Budget per Person: ₹{currentMaxPrice.toLocaleString('en-IN')}</h4>
         <input
           type="range"
           min={10000}
-          max={maxPrice}
+          max={maxPrice || 60000}
           step={2000}
           value={currentMaxPrice}
           onChange={(e) => onChangeMaxPrice(Number(e.target.value))}
-          className="budget-range-slider"
+          className="price-range-slider"
         />
-        <div className="slider-limits">
+        <div className="slider-labels">
           <span>₹10,000</span>
-          <span>₹{maxPrice.toLocaleString('en-IN')}</span>
+          <span>₹{(maxPrice || 60000).toLocaleString('en-IN')}</span>
         </div>
       </div>
     </div>
