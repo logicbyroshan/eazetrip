@@ -169,7 +169,6 @@ export default function TrainSearchWidget({ initialValues = {}, onSearch }) {
         </div>
 
         <div className="top-info-banner-right">
-          <span className="top-info-text">IRCTC Authorized Partner</span>
           <div className="flight-cab-highlight-badge">
             <span className="highlight-lead">Zero PG Charges :</span>
             <span className="highlight-sub">Instant Refund on UPI</span>

@@ -2276,7 +2276,7 @@
   border-radius: 20px;
   box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
   border: 1px solid var(--border);
-  padding: 24px 28px 36px 28px;
+  padding: 20px 24px 18px 24px;
   color: var(--text-main);
   position: relative;
   z-index: 20;
@@ -2300,23 +2300,29 @@
   top: 96px; /* Generous breathing gap below 68px sticky header */
   max-height: calc(100vh - 116px);
   overflow-y: auto;
+  overflow-x: hidden;
   scrollbar-width: thin;
-  scrollbar-color: rgba(3, 78, 162, 0.2) transparent;
+  scrollbar-color: rgba(3, 78, 162, 0.28) #f1f5f9;
   z-index: 20;
-  padding-right: 4px;
+  padding-right: 8px;
 }
 
 .listing-sidebar::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 
 .listing-sidebar::-webkit-scrollbar-thumb {
-  background: rgba(3, 78, 162, 0.2);
-  border-radius: 4px;
+  background: rgba(3, 78, 162, 0.28);
+  border-radius: 9999px;
+}
+
+.listing-sidebar::-webkit-scrollbar-thumb:hover {
+  background: rgba(3, 78, 162, 0.5);
 }
 
 .listing-sidebar::-webkit-scrollbar-track {
-  background: transparent;
+  background: #f8fafc;
+  border-radius: 9999px;
 }
 
 .filter-sidebar {
@@ -2649,9 +2655,10 @@
 }
 
 .flight-card.luxury-flight-card.selected {
-  border-color: var(--primary);
-  background: #fbfdff;
-  box-shadow: 0 0 0 2px rgba(3, 78, 162, 0.25), 0 12px 28px -4px rgba(3, 78, 162, 0.12);
+  border-color: var(--primary) !important;
+  background: #fbfdff !important;
+  box-shadow: 0 4px 16px -2px rgba(3, 78, 162, 0.18) !important;
+  outline: none !important;
 }
 
 .airline-badge {
@@ -2759,28 +2766,66 @@
   gap: 4px;
 }
 
-.flight-path-line {
+/* Unified Journey Dashed Timeline & Vehicle Center Icon */
+.journey-track-row {
   display: flex;
   align-items: center;
-  gap: 4px;
-  color: #94a3b8;
+  justify-content: center;
+  width: 100%;
+  max-width: 170px;
+  gap: 5px;
+  margin: 4px auto;
+  position: relative;
 }
 
-.path-track-line {
-  width: 60px;
-  height: 2px;
-  background: #cbd5e1;
+.journey-dashed-line {
+  flex: 1;
+  height: 0;
+  border-top: 2px dashed #cbd5e1;
 }
 
-.path-plane {
-  color: var(--primary);
-}
-
-.path-dot {
-  width: 5px;
-  height: 5px;
+.journey-dot {
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: #94a3b8;
+  flex-shrink: 0;
+}
+
+.journey-center-icon-wrap {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.journey-center-icon-wrap.flight-icon-wrap {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #034ea2;
+}
+
+.journey-center-icon-wrap.train-icon-wrap {
+  background: #faf5ff;
+  border: 1px solid #e9d5ff;
+  color: #7e22ce;
+}
+
+.journey-center-icon-wrap.bus-icon-wrap {
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #059669;
+}
+
+.flight-card:hover .journey-center-icon-wrap,
+.train-card:hover .journey-center-icon-wrap,
+.bus-card:hover .journey-center-icon-wrap {
+  transform: scale(1.12);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .stops-badge {
@@ -3941,6 +3986,12 @@
   flex-direction: column;
   gap: 4px;
   position: relative;
+  outline: none;
+}
+
+.train-class-card:focus,
+.train-class-card:focus-visible {
+  outline: none !important;
 }
 
 .train-class-card:hover {
@@ -3950,9 +4001,10 @@
 }
 
 .train-class-card.is-selected {
-  border-color: var(--primary);
-  background: #eff6ff;
-  box-shadow: 0 0 0 2px rgba(3, 78, 162, 0.25), 0 4px 12px rgba(3, 78, 162, 0.1);
+  border-color: #034ea2 !important;
+  background: #eff6ff !important;
+  box-shadow: 0 4px 14px rgba(3, 78, 162, 0.15) !important;
+  outline: none !important;
 }
 
 .class-card-top {

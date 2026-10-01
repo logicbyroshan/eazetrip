@@ -4,6 +4,33 @@ This file logs meaningful agent tasks, architectural milestones, and fixes chron
 
 ---
 
+### Task: 50% Floating Search CTA Alignment, Centered Vehicle Dashed Journey Track, Price Filter Priority & Double Outline Elimination
+* **Date**: 2026-10-01
+* **Reason**: User requested:
+  1. Fix the search CTA button to sit nicely 50% inside and 50% outside across the search card's bottom border.
+  2. Remove the "IRCTC Authorized" banner/text from the top of train booking.
+  3. Change the journey timeline line to a dashed track with the medium-specific icon in the center (Plane for flight, Train for train, Bus for bus).
+  4. Ensure the Price filter is #1 on top across all filters, with smooth scrolling inside the filter sidebar.
+  5. Fix the double outline / focus ring visible on train class cards, flight cards, and buttons.
+* **Branch / PR**: `feature/search-cta-timeline-icons-filters-refinement`.
+* **Files Affected**:
+  - `client/src/App.css` (Adjusted .listing-search-card-wrapper padding for 50/50 floating CTA overlap; added .journey-track-row and medium-specific .journey-center-icon-wrap; styled sleek .listing-sidebar scrollbar; removed redundant outlines on .train-class-card and .flight-card)
+  - `client/src/components/flights/FlightCard.jsx` (Updated timeline to dashed track with centered plane icon badge)
+  - `client/src/components/trains/TrainCard.jsx` (Updated timeline to dashed track with centered train icon badge)
+  - `client/src/components/buses/BusCard.jsx` (Updated timeline to dashed track with centered bus icon badge)
+  - `client/src/components/holidays/HolidayFilters.jsx` (Moved Budget per Person slider to top #1)
+  - `client/src/pages/RailwayBookingPage.jsx` (Removed IRCTC partner banner strip)
+  - `client/src/components/search/TrainSearchWidget.jsx` (Removed IRCTC authorized text)
+  - `CHANGELOG.md`, `.agent-memory/CURRENT_STATE.md`, `.agent-memory/TASK_HISTORY.md`
+* **What Changed**:
+  - Search buttons sit with a balanced 50/50 overlap across card bottom edges.
+  - Travel cards feature vehicle-specific centered icons on dashed timeline tracks.
+  - Price filter is consistently #1 on top across all medium filters with smooth scrollbar.
+  - Eliminated all double outlines on focus/active selection states.
+* **Testing Performed**: 89 / 89 automated backend tests passing (`npm test`), 0 errors in Vite production build (`npm run build`).
+
+---
+
 ### Task: Borderless Filter Pane & Premium Listing Cards Refinement
 * **Date**: 2026-10-01
 * **Reason**: User requested:

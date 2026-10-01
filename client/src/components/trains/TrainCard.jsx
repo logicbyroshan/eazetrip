@@ -88,13 +88,14 @@ export default function TrainCard({ train, onBookClass }) {
           <span className="journey-duration-text">
             <Clock size={13} /> {train.duration}
           </span>
-          <div className="journey-route-track">
-            <span className="route-endpoint start"></span>
-            <div className="route-line-animated">
-              <span className="pulse-train-dot"></span>
+          <div className="journey-track-row">
+            <span className="journey-dot start"></span>
+            <div className="journey-dashed-line"></div>
+            <div className="journey-center-icon-wrap train-icon-wrap" title="Direct Railway Line">
+              <Train size={14} className="journey-icon" />
             </div>
-            <ArrowRight size={14} className="route-arrow-icon" />
-            <span className="route-endpoint end"></span>
+            <div className="journey-dashed-line"></div>
+            <span className="journey-dot end"></span>
           </div>
           <span className="journey-stops-text">Direct Superfast Route</span>
         </div>

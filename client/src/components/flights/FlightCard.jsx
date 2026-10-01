@@ -45,11 +45,14 @@ export default function FlightCard({
           <span className="duration-text">
             <Clock size={12} /> {flight.duration}
           </span>
-          <div className="flight-path-line">
-            <span className="path-dot"></span>
-            <div className="path-track-line"></div>
-            <Plane size={14} className="path-plane" />
-            <span className="path-dot"></span>
+          <div className="journey-track-row">
+            <span className="journey-dot start"></span>
+            <div className="journey-dashed-line"></div>
+            <div className="journey-center-icon-wrap flight-icon-wrap" title="Direct Flight">
+              <Plane size={14} className="journey-icon" />
+            </div>
+            <div className="journey-dashed-line"></div>
+            <span className="journey-dot end"></span>
           </div>
           <span className="stops-badge">{flight.stopText || 'Non-stop · Direct'}</span>
         </div>
