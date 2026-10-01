@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.6.2] - 2026-10-01
+
+### Why Choose Us Spacing Alignment, 2-Tab Route Grid Containment, Standardized Micro-Animations & Page Transitions
+
+#### Why Choose EazeTrip Spacing & Border Radius Alignment (`client/src/App.css`)
+- **Equalized Vertical Spacing**: Adjusted `.assurance-banner-modern` top margin to `margin-top: 24px` to match the exact 24px horizontal and vertical `gap` of `.features-grid`.
+- **Harmonized Corner Radius**: Standardized corner radius to `border-radius: 16px` across both `.feature-card` and `.assurance-banner-modern`.
+
+#### Trending Train & Bus Routes 2-Tab Consistency & Grid Containment (`client/src/components/home/TrendingTrainRoutes.jsx`, `client/src/components/home/TrendingBusRoutes.jsx`, `client/src/data/siteData.js`, `client/src/App.css`)
+- **2-Tab Switcher Standardization**: Streamlined tab selectors across all trending routes sections (Flights: Domestic / International, Trains: Vande Bharat & Premier / Superfast & Express, Buses: Volvo & AC Sleeper / Express & Intercity) for a unified 2-option UX pattern.
+- **Strict Grid Width Containment**: Configured `.routes-cards-grid` with `grid-template-columns: repeat(4, minmax(0, 1fr))` and set `.route-item-card { min-width: 0; overflow: hidden; }` with ellipsis truncation on `.route-city-name` and `.route-sub-name`, preventing layout expansion or viewport overflow.
+- **Fixed Photography Assets**: Replaced broken Varanasi ghat image URL with a verified high-resolution landmark photograph (`photo-1571536802807-30451e3955d8`).
+
+#### Refined 5-Pattern Global Luxury Micro-Animations & Hover Effects (`client/src/App.css`)
+- **Card Subtle Lift (`.hover-lift`)**: Smooth hardware-accelerated `-3px` Y-lift with layered ambient depth shadow on listing cards, deal cards, and feature boxes.
+- **Button Micro-Press (`.btn-scale`)**: Tactile `-1.5px` hover lift and `0.985` active push scale on CTAs and search buttons.
+- **Arrow Slide (`.hover-arrow-slide`)**: Smooth `+3px` X-translation on navigational trigger icons.
+- **Soft Border Glow (`.hover-glow`)**: Soft focus ring and primary border tint on search input cells and selectors.
+- **Ambient Micro-Pulse (`.micro-pulse`)**: Gentle breathing pulse on live tracking status pills and verified badges.
+
+#### Smooth Page Route Transitions (`client/src/App.jsx`, `client/src/App.css`)
+- **Keyed View Transitions**: Wrapped active `<Routes location={location}>` in `<div key={location.pathname} className="page-route-transition">` triggering a lightweight 0.28s cubic-bezier fade-and-rise entry animation upon route changes and search submissions.
+
+---
+
 ## [2.6.1] - 2026-10-01
 
 ### Navbar Service Reordering, Search Swap Spacing Fix & Streamlined Train & Bus Showcase UI

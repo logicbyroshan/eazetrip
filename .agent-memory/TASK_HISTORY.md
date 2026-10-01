@@ -4,6 +4,27 @@ This file logs meaningful agent tasks, architectural milestones, and fixes chron
 
 ---
 
+### Task: Why Choose Us Spacing Alignment, 2-Tab Route Grid Containment, Standardized Micro-Animations & Page Transitions
+* **Date**: 2026-10-01
+* **Reason**: User requested:
+  1. Fix the gap between the 3 feature cards and the 4-pillar assurance strip below them so horizontal and vertical spacing is completely identical.
+  2. Fix Trending Train Routes exceeding width limits, broken Varanasi image, and standardize both train and bus route tabs to 2 clean options (matching flight routes).
+  3. Standardize site-wide hover effects and micro-animations to 4–5 subtle, non-intrusive luxury patterns.
+  4. Add smooth page transitions when navigating or clicking search buttons from home to booking pages.
+* **Branch / PR**: `feature/spacing-train-routes-and-micro-animations-page-transition`.
+* **Files Affected**:
+  - `client/src/App.css` (Equalized Why Choose Us margin-top to 24px and border-radius to 16px; strictly contained routes-cards-grid and route-item-card with minmax(0, 1fr) and ellipsis truncation; declared 5 standardized global micro-animation patterns; added page-route-transition keyframe animation)
+  - `client/src/App.jsx` (Wrapped active Routes in keyed div `<div key={location.pathname} className="page-route-transition">`)
+  - `client/src/components/home/TrendingTrainRoutes.jsx` (2 clean tabs: Vande Bharat & Premier / Superfast & Express; title tooltips on cities and train names)
+  - `client/src/components/home/TrendingBusRoutes.jsx` (2 clean tabs: Volvo & AC Sleeper / Express & Intercity; title tooltips on cities and bus names)
+  - `client/src/data/siteData.js` (Clean 2-tab datasets for train and bus routes, fixed high-res Varanasi ghats landmark image URL)
+  - `CHANGELOG.md`, `.agent-memory/CURRENT_STATE.md`, `.agent-memory/TASK_HISTORY.md`
+* **What Changed**:
+  - Perfectly symmetrical spacing in Why Choose Us, strict zero-overflow width containment on route cards with 2 clean tabs across all mediums, curated 5-pattern luxury micro-interaction system, and smooth hardware-accelerated page transitions.
+* **Testing Performed**: 89 / 89 automated backend tests passing (`npm test`), 0 errors in Vite production build (`npm run build`).
+
+---
+
 ### Task: Navbar Service Reordering, Search Swap Spacing Fix & Streamlined Train & Bus Showcase UI
 * **Date**: 2026-10-01
 * **Reason**: User requested:

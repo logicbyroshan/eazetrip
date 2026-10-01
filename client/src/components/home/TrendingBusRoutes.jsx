@@ -4,10 +4,10 @@ import { trendingBusRoutesGrid } from '../../data/siteData';
 import { ArrowLeftRight } from 'lucide-react';
 
 export default function TrendingBusRoutes() {
-  const [tab, setTab] = useState('volvoSleeper'); // 'volvoSleeper' | 'electricEV' | 'popularIntercity'
+  const [tab, setTab] = useState('premier'); // 'premier' | 'intercity'
   const navigate = useNavigate();
 
-  const routes = trendingBusRoutesGrid[tab] || trendingBusRoutesGrid.volvoSleeper;
+  const routes = trendingBusRoutesGrid[tab] || trendingBusRoutesGrid.premier;
 
   const handleRouteClick = (route) => {
     navigate(`/bus-booking?from=${encodeURIComponent(route.fromCity || route.from)}&to=${encodeURIComponent(route.toCity || route.to)}`);
@@ -28,24 +28,17 @@ export default function TrendingBusRoutes() {
           <div className="routes-toggle-group">
             <button
               type="button"
-              className={`routes-toggle-btn ${tab === 'volvoSleeper' ? 'active' : ''}`}
-              onClick={() => setTab('volvoSleeper')}
+              className={`routes-toggle-btn ${tab === 'premier' ? 'active' : ''}`}
+              onClick={() => setTab('premier')}
             >
-              VOLVO & SLEEPER
+              VOLVO & AC SLEEPER
             </button>
             <button
               type="button"
-              className={`routes-toggle-btn ${tab === 'electricEV' ? 'active' : ''}`}
-              onClick={() => setTab('electricEV')}
+              className={`routes-toggle-btn ${tab === 'intercity' ? 'active' : ''}`}
+              onClick={() => setTab('intercity')}
             >
-              ELECTRIC & GREEN EV
-            </button>
-            <button
-              type="button"
-              className={`routes-toggle-btn ${tab === 'popularIntercity' ? 'active' : ''}`}
-              onClick={() => setTab('popularIntercity')}
-            >
-              INTERCITY
+              EXPRESS & INTERCITY
             </button>
           </div>
         </div>
@@ -68,14 +61,14 @@ export default function TrendingBusRoutes() {
               {/* Route Details & Bus Info */}
               <div className="route-details-box">
                 <div className="route-cities-row">
-                  <span className="route-city-name">{r.from}</span>
+                  <span className="route-city-name" title={r.from}>{r.from}</span>
                   <div className="route-arrow-icon-wrap">
                     <ArrowLeftRight size={12} />
                   </div>
-                  <span className="route-city-name">{r.to}</span>
+                  <span className="route-city-name" title={r.to}>{r.to}</span>
                 </div>
                 <div className="route-meta-sub">
-                  <span className="route-sub-name">{r.busName ? r.busName.split('(')[0].trim() : ''}</span>
+                  <span className="route-sub-name" title={r.busName}>{r.busName ? r.busName.split('(')[0].trim() : ''}</span>
                   <span className="route-sub-price">{r.price}</span>
                 </div>
               </div>
