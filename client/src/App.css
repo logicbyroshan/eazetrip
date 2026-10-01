@@ -1476,6 +1476,23 @@
   overflow: visible;
 }
 
+.unified-segmented-box.flight-unified-box {
+  grid-template-columns: 1.35fr 1.35fr 1.05fr 1.05fr 0.9fr 1.15fr;
+}
+
+.unified-segmented-box.train-unified-box,
+.unified-segmented-box.bus-unified-box {
+  grid-template-columns: 1.4fr 1.4fr 1.1fr 1.1fr 1fr;
+}
+
+.unified-segmented-box.hotel-unified-box {
+  grid-template-columns: 1.55fr 1.1fr 1.1fr 1.25fr 1.15fr;
+}
+
+.unified-segmented-box.holiday-unified-box {
+  grid-template-columns: 1.45fr 1.15fr 1.1fr 1.2fr 1.1fr;
+}
+
 .search-cell-block {
   position: relative;
   border-right: 1px solid #f1f5f9;

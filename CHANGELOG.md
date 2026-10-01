@@ -7,6 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.5.7] - 2026-10-01
+
+### Unified Connected Segmented Search Container & Domain Customizations across All 5 Mediums (Flights, Trains, Buses, Hotels, Holidays)
+
+#### Train Search Widget (`client/src/components/search/TrainSearchWidget.jsx`, `client/src/App.css`)
+- **Connected 5-Column Segmented Grid**: Replaced disconnected legacy card layout with `.unified-segmented-box.train-unified-box` (From Station, To Station, Travel Date, Class, Quota) with synchronized label rows, swap button, and integrated date picker overlay.
+- **Top Mode Selectors**: Added top radio selectors (`Book Train Tickets`, `Check PNR Status`, `Live Train Tracking`) with active pill indicators and `Zero PG Charges` badge.
+- **Custom Train Quotas**: Integrated 6 interactive train quota chips (`General`, `Tatkal (TQ)`, `Ladies Quota`, `Senior Citizen`, `Divyangjan`, `Duty Pass`).
+- **Assurance & Protection Strip**: Added bottom assurance bar featuring `Free Train Cancellation (Zero Charge)`, instant UPI refund badge, and `PNR Enquiry & Live Train` CTA.
+
+#### Bus Search Widget (`client/src/components/search/BusSearchWidget.jsx`, `client/src/App.css`)
+- **Connected 5-Column Segmented Grid**: Upgraded to `.unified-segmented-box.bus-unified-box` (From City, To City, Journey Date, Bus Type, Seats) with passenger seat counter dropdown overlay.
+- **Top Category Radios**: Added `All Intercity Buses`, `AC Sleeper Coaches`, and `Primo / Luxury EV` with `Live GPS Tracking` badge.
+- **Bus Preference Deal Chips**: Integrated 6 interactive deal chips (`Regular`, `Primo Certified`, `AC Sleeper`, `EV Green Bus`, `Women Exclusive`, `Round Trip Saver`).
+- **Delay Assurance Strip**: Added bottom assurance bar featuring `Bus On-Time & Delay Assurance`, instant refund badge, and `Live Bus Tracker` CTA.
+
+#### Hotel Search Widget (`client/src/components/search/HotelSearchWidget.jsx`, `client/src/App.css`)
+- **Connected 5-Column Segmented Grid**: Upgraded to `.unified-segmented-box.hotel-unified-box` (Destination/Hotel, Check-In, Check-Out, Rooms & Guests, Property Type) with interactive counter popup for adults, children, and rooms.
+- **Top Category Radios**: Added `Hotels & Resorts`, `Homestays & Villas`, and `Luxury 5-Star Palaces` with `Couple & Family Friendly` badge.
+- **Hotel Deal Chips**: Integrated 6 interactive stay chips (`Best Rate`, `Free Breakfast`, `Couple Friendly`, `Beach & Pool`, `Business Travel`, `Private Villa`).
+- **Guaranteed Check-in Strip**: Added bottom assurance bar with `Guaranteed Check-in (2x Refund Shield)` and `Last-Minute Hotel Deals` CTA.
+
+#### Holiday Search Widget (`client/src/components/search/HolidaySearchWidget.jsx`, `client/src/App.css`)
+- **Connected 5-Column Segmented Grid**: Upgraded to `.unified-segmented-box.holiday-unified-box` (Destination/Package, Starting From, Travel Month, Tour Theme, Travellers) with travellers popup counter.
+- **Top Package Radios**: Added `All Tour Packages`, `Domestic Wonders`, and `International Escapes` with `Flights & Hotels Included` badge.
+- **Holiday Theme Deal Chips**: Integrated 6 interactive holiday deal chips (`All-Inclusive`, `Honeymoon Special`, `Family Vacation`, `Adventure & Trek`, `Luxury Resorts`, `Budget Escape`).
+- **Customizable Itinerary Strip**: Added bottom assurance bar with `100% Customizable Itinerary Option` and `Tour Expert Callback` CTA.
+
+---
+
 ## [2.5.6] - 2026-10-01
 
 ### Precise 50% Floating Search CTA Protrusion, Horizontal Baseline Alignment for Input Cells, Single-Row Reviews Stream & Site-Wide Minimal Hover Polish

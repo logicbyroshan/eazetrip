@@ -4,6 +4,28 @@ This file logs meaningful agent tasks, architectural milestones, and fixes chron
 
 ---
 
+### Task: Unified Connected Segmented Search Container & Domain Customizations across All 5 Mediums (Flights, Trains, Buses, Hotels, Holidays)
+* **Date**: 2026-10-01
+* **Reason**: User requested:
+  1. The modern unified connected segmented hero search container to be implemented not just for Flights, but across all other travel mediums (Trains, Buses, Hotels, Holidays).
+  2. The custom deals / special fare customization row (e.g. Tatkal/Ladies/Senior for trains, Primo/EV/AC for buses, Free Breakfast/Couple for hotels, Honeymoon/All-Inclusive for holidays) and domain protection strips to be added to all widgets.
+  3. Floating centered Search CTA button with 50% protrusion across the bottom edge.
+* **Branch / PR**: `feature/unified-segmented-search-all-mediums`.
+* **Files Affected**:
+  - `client/src/components/search/TrainSearchWidget.jsx` (5-column segmented grid, top mode selector, 6 train quota chips, Free Cancellation & Live PNR strip)
+  - `client/src/components/search/BusSearchWidget.jsx` (5-column segmented grid, top category radios, 6 bus deal chips, passenger seat counter popup, Delay Assurance strip)
+  - `client/src/components/search/HotelSearchWidget.jsx` (5-column segmented grid, top stay radios, 6 hotel stay chips, rooms & guests counter popup, Guaranteed Check-in strip)
+  - `client/src/components/search/HolidaySearchWidget.jsx` (5-column segmented grid, top package radios, 6 tour theme chips, travellers counter popup, 100% Customizable Itinerary strip)
+  - `client/src/App.css` (Segmented grid templates for `.train-unified-box`, `.bus-unified-box`, `.hotel-unified-box`, `.holiday-unified-box`, counter popups and responsive grid rules)
+  - `CHANGELOG.md`, `.agent-memory/CURRENT_STATE.md`, `.agent-memory/TASK_HISTORY.md`
+* **What Changed**:
+  - All 5 travel booking mediums now share the unified connected luxury segmented search container.
+  - Each medium has tailored top mode/category selectors, interactive customization deal chips, and protection/assurance feature strips.
+  - Floating 50% protruding centered Search CTA button is consistently positioned across all 5 widgets.
+* **Testing Performed**: 89 / 89 automated backend tests passing (`npm test`), 0 errors in Vite production build (`npm run build`), comprehensive multi-tab browser subagent verification.
+
+---
+
 ### Task: Precise 50% Floating Search CTA Protrusion, Horizontal Baseline Input Alignment, Single-Row Reviews Stream & Site-Wide Minimal Hover Polish
 * **Date**: 2026-10-01
 * **Reason**: User requested:
