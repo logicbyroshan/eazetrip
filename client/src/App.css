@@ -2320,11 +2320,11 @@
 }
 
 .filter-sidebar {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 16px;
-  padding: 20px;
-  box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.04);
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0 8px 16px 0;
+  box-shadow: none;
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -2334,8 +2334,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 14px;
+  border-bottom: 1.5px solid #e2e8f0;
 }
 
 .filter-title {
@@ -2377,9 +2377,9 @@
 .filter-group {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid #f8fafc;
+  gap: 11px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .filter-group:last-child {
@@ -11473,17 +11473,7 @@ input[type="radio"]:focus-visible {
   gap: 20px;
 }
 
-.luxury-holiday-card {
-  display: grid;
-  grid-template-columns: 300px 1fr 240px;
-  background: #ffffff;
-  border-radius: 16px;
-  border: 1px solid #e2e8f0;
-  overflow: hidden;
-  box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.04);
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease;
-}
-
+.holiday-card.luxury-holiday-card,
 .luxury-holiday-card {
   display: grid;
   grid-template-columns: 280px 1fr 220px;
@@ -11491,14 +11481,15 @@ input[type="radio"]:focus-visible {
   border-radius: 16px;
   border: 1px solid #e2e8f0;
   overflow: hidden;
-  box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
+.holiday-card.luxury-holiday-card:hover,
 .luxury-holiday-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 28px -4px rgba(15, 23, 42, 0.08);
-  border-color: #fed7aa;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px -4px rgba(3, 78, 162, 0.12);
+  border-color: #cbd5e1;
 }
 
 .holiday-img-col {
@@ -21999,7 +21990,6 @@ input:checked + .slider:before {
 .content-card,
 .dashboard-card,
 .search-widget-box,
-.filter-sidebar,
 .flight-card.luxury-flight-card,
 .hotel-card.luxury-hotel-card,
 .bus-card.luxury-bus-card,
@@ -22024,6 +22014,10 @@ input:checked + .slider:before {
   }
   .filter-sidebar {
     width: 100% !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 0 16px 0 !important;
     box-sizing: border-box !important;
   }
   .search-fields-grid.flight-grid,

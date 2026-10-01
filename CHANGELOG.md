@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.6.4] - 2026-10-01
+
+### Borderless Filter Pane & Premium Listing Cards Refinement
+
+#### Borderless Filter Sidebar (`client/src/App.css`)
+- **Eliminated Outer Card Box**: Removed background color, borders, and box shadows from `.filter-sidebar` across all medium listing pages (Flights, Hotels, Trains, Buses, Holidays).
+- **Clean Sectional Dividers**: Filter groups and headers now sit seamlessly directly on the layout with crisp `1px solid #e2e8f0` horizontal separation lines, maximizing screen space and eliminating nested container clutter.
+- **Fluid & Responsive Alignment**: Maintained borderless presentation across both desktop and tablet/mobile viewports (`@media screen and (max-width: 1024px)`).
+
+#### Luxury Listing Cards Refinement (`client/src/App.css`)
+- **Consolidated Clean Luxury Cards**: Harmonized `.flight-card`, `.hotel-card`, `.bus-card`, `.train-card`, and `.holiday-card` styling with consistent `16px` border radii, subtle `#e2e8f0` borders, balanced padding, and gentle hover elevations.
+- **Optimized Holiday Card Format**: Streamlined `.luxury-holiday-card` to a balanced 3-column format (`280px 1fr 220px`) with high-contrast duration/discount overlay badges, clear inclusion chips, bold per-person pricing with tax notes, and dual itinerary/booking CTAs.
+
+---
+
 ## [2.6.3] - 2026-10-01
 
 ### Search CTA Clearance, Unified Clean Filter Sidebar & Luxury Listing Cards Redesign
