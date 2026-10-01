@@ -1,11 +1,11 @@
 # Current Project State: EazeTrip
 
 ## 1. Release Baseline & Status
-* **Status**: Production Ready / 50% Floating Search CTA Alignment / Centered Vehicle Dashed Tracks / Price Filter Priority / 100% Passing Tests
-* **Version**: `2.6.5`
+* **Status**: Production Ready / Universal Currency-Aware Formatting / Site-Wide UI Consistency / 100% Passing Tests
+* **Version**: `2.6.6`
 * **Test Suite**: 89 / 89 automated tests passing (`npm test`).
 * **Client Build**: Clean Vite production build (`npm run build`).
-* **Active Branch**: `feature/search-cta-timeline-icons-filters-refinement`
+* **Active Branch**: `feature/site-wide-ui-consistency-and-code-simplification`
 
 ---
 

@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { Train, Clock, ArrowRight, Utensils, CheckCircle2, AlertCircle, ShieldCheck, Zap, Sparkles } from 'lucide-react';
+import { useCurrency } from '../../context/CurrencyContext';
 
 export default function TrainCard({ train, onBookClass }) {
+  const { formatPrice } = useCurrency();
   const [selectedClassCode, setSelectedClassCode] = useState(train.classes?.[0]?.code || '3A');
 
   const activeClassObj = train.classes?.find((c) => c.code === selectedClassCode) || train.classes?.[0];
@@ -130,7 +132,7 @@ export default function TrainCard({ train, onBookClass }) {
               >
                 <div className="class-card-top">
                   <span className="class-code-text">{cls.code}</span>
-                  <span className="class-price-tag">₹{cls.price.toLocaleString('en-IN')}</span>
+                  <span className="class-price-tag">{formatPrice(cls.price)}</span>
                 </div>
                 <div className="class-full-name">{cls.name}</div>
                 <div
@@ -165,8 +167,7 @@ export default function TrainCard({ train, onBookClass }) {
             <div className="train-fare-box">
               <span className="fare-label">Total Fare per passenger:</span>
               <div className="fare-amount">
-                <span className="currency">₹</span>
-                <strong>{activeClassObj?.price?.toLocaleString('en-IN')}</strong>
+                <strong>{formatPrice(activeClassObj?.price || 0)}</strong>
               </div>
             </div>
 

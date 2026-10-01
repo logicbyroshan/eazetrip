@@ -1,4 +1,5 @@
 import { Filter, RotateCcw, Star } from 'lucide-react';
+import { useCurrency } from '../../context/CurrencyContext';
 
 export default function HotelFilters({
   selectedStars,
@@ -12,6 +13,8 @@ export default function HotelFilters({
   onChangeMaxPrice,
   onResetFilters
 }) {
+  const { formatPrice } = useCurrency();
+
   return (
     <div className="filter-sidebar">
       <div className="filter-header">
@@ -26,7 +29,7 @@ export default function HotelFilters({
 
       {/* Max Price */}
       <div className="filter-group">
-        <h4>Max Price per Night: ₹{currentMaxPrice.toLocaleString('en-IN')}</h4>
+        <h4>Max Price per Night: {formatPrice(currentMaxPrice)}</h4>
         <input
           type="range"
           min="2000"
@@ -37,8 +40,8 @@ export default function HotelFilters({
           className="price-range-slider"
         />
         <div className="slider-labels">
-          <span>₹2,000</span>
-          <span>₹{(maxPrice || 20000).toLocaleString('en-IN')}</span>
+          <span>{formatPrice(2000)}</span>
+          <span>{formatPrice(maxPrice || 20000)}</span>
         </div>
       </div>
 
