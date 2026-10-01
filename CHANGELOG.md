@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.6.9] - 2026-10-01
+
+### Backend Robustness, CORS Hardening & Comprehensive Zero-Error Verification (102/102 Tests Passing)
+
+#### Backend Architecture & Route Hardening (`server/index.js`, `tests/server.test.js`)
+- **CORS Full Method & Header Support**: Configured CORS middleware to explicitly allow `PATCH` methods and custom security headers (`X-Admin-PIN`, `X-Razorpay-Signature`).
+- **Resilient Async Route Error Forwarding**: Wrapped all async inventory search and detail routes (`/api/flights`, `/api/hotels`, `/api/buses`, `/api/railways`, `/api/holidays`) with `try/catch` and `next(err)` to prevent unhandled promise rejections.
+- **Defensive Error Handling**: Guaranteed clean 404 JSON responses for nonexistent entity queries across all travel mediums without server-side uncaught exceptions.
+- **Automated Test Suite Expansion**: Added tests 99 through 102 covering CORS header verification, nonexistent medium ID handling, promo minimum order edge cases, and partner registration validation (**102 / 102 tests passing**).
+
+---
+
 ## [2.6.8] - 2026-10-01
 
 ### Backend Gaps Resolution & Full-Stack Hardening (98/98 Tests Passing)

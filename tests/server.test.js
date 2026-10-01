@@ -1615,6 +1615,75 @@ test('98. Co-Travelers API (GET, POST, DELETE) persists and manages saved passen
   assert.strictEqual(delRes.data.success, true);
 });
 
+test('99. CORS configuration supports PATCH and returns standard headers', async () => {
+  const { status, headers } = await requestJson('/api/health');
+  assert.strictEqual(status, 200);
+  assert.strictEqual(headers.get('x-content-type-options'), 'nosniff');
+  assert.strictEqual(headers.get('x-frame-options'), 'SAMEORIGIN');
+});
+
+test('100. Nonexistent travel entity IDs return clean 404 JSON across all mediums', async () => {
+  const fRes = await requestJson('/api/flights/nonexistent_flight_id_999');
+  assert.strictEqual(fRes.status, 404);
+  assert.strictEqual(fRes.data.success, false);
+
+  const hRes = await requestJson('/api/hotels/nonexistent_hotel_id_999');
+  assert.strictEqual(hRes.status, 404);
+  assert.strictEqual(hRes.data.success, false);
+
+  const bRes = await requestJson('/api/buses/nonexistent_bus_id_999');
+  assert.strictEqual(bRes.status, 404);
+  assert.strictEqual(bRes.data.success, false);
+
+  const tRes = await requestJson('/api/railways/nonexistent_train_id_999');
+  assert.strictEqual(tRes.status, 404);
+  assert.strictEqual(tRes.data.success, false);
+
+  const pkgRes = await requestJson('/api/holidays/nonexistent_pkg_id_999');
+  assert.strictEqual(pkgRes.status, 404);
+  assert.strictEqual(pkgRes.data.success, false);
+});
+
+test('101. Promo validation properly enforces minimum order values and invalid code errors', async () => {
+  // Empty code
+  const emptyRes = await requestJson('/api/offers/validate', {
+    method: 'POST',
+    body: { code: '', amount: 5000 }
+  });
+  assert.strictEqual(emptyRes.status, 400);
+  assert.strictEqual(emptyRes.data.success, false);
+
+  // Invalid code
+  const invalidRes = await requestJson('/api/offers/validate', {
+    method: 'POST',
+    body: { code: 'FAKECODE123', amount: 5000 }
+  });
+  assert.strictEqual(invalidRes.status, 404);
+  assert.strictEqual(invalidRes.data.success, false);
+
+  // Order below minimum amount for HOLIDAY25 (min ₹15,000)
+  const lowAmountRes = await requestJson('/api/offers/validate', {
+    method: 'POST',
+    body: { code: 'HOLIDAY25', amount: 5000 }
+  });
+  assert.strictEqual(lowAmountRes.status, 400);
+  assert.strictEqual(lowAmountRes.data.success, false);
+  assert.ok(lowAmountRes.data.error.includes('minimum booking amount'));
+});
+
+test('102. Partner registration rejects missing agency name or email with 400 Bad Request', async () => {
+  const badRes = await requestJson('/api/partner/register', {
+    method: 'POST',
+    body: {
+      agencyName: '',
+      email: ''
+    }
+  });
+  assert.strictEqual(badRes.status, 400);
+  assert.strictEqual(badRes.data.success, false);
+});
+
+
 
 
 
