@@ -30,7 +30,25 @@ export default function HolidayFilters({
         </button>
       </div>
 
-      {/* 1. Destination Category */}
+      {/* 1. Budget Slider (Price on Top) */}
+      <div className="filter-group">
+        <h4>Budget per Person: ₹{currentMaxPrice.toLocaleString('en-IN')}</h4>
+        <input
+          type="range"
+          min={10000}
+          max={maxPrice || 60000}
+          step={2000}
+          value={currentMaxPrice}
+          onChange={(e) => onChangeMaxPrice(Number(e.target.value))}
+          className="price-range-slider"
+        />
+        <div className="slider-labels">
+          <span>₹10,000</span>
+          <span>₹{(maxPrice || 60000).toLocaleString('en-IN')}</span>
+        </div>
+      </div>
+
+      {/* 2. Destination Category */}
       <div className="filter-group">
         <h4>Destination Category</h4>
         <div className="filter-pills-row">
@@ -47,7 +65,7 @@ export default function HolidayFilters({
         </div>
       </div>
 
-      {/* 2. Package Themes */}
+      {/* 3. Package Themes */}
       <div className="filter-group">
         <h4>Holiday Theme</h4>
         <div className="checkbox-stack">
@@ -68,7 +86,7 @@ export default function HolidayFilters({
         </div>
       </div>
 
-      {/* 3. Duration */}
+      {/* 4. Duration */}
       <div className="filter-group">
         <h4>Trip Duration</h4>
         <div className="checkbox-stack">
@@ -91,24 +109,6 @@ export default function HolidayFilters({
               </label>
             );
           })}
-        </div>
-      </div>
-
-      {/* 4. Budget Slider */}
-      <div className="filter-group">
-        <h4>Budget per Person: ₹{currentMaxPrice.toLocaleString('en-IN')}</h4>
-        <input
-          type="range"
-          min={10000}
-          max={maxPrice || 60000}
-          step={2000}
-          value={currentMaxPrice}
-          onChange={(e) => onChangeMaxPrice(Number(e.target.value))}
-          className="price-range-slider"
-        />
-        <div className="slider-labels">
-          <span>₹10,000</span>
-          <span>₹{(maxPrice || 60000).toLocaleString('en-IN')}</span>
         </div>
       </div>
     </div>

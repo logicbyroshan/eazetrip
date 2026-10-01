@@ -123,14 +123,6 @@ export default function RailwayBookingPage() {
 
         {/* Right Search Results */}
         <main className="listing-results-col">
-          <div className="irctc-partner-strip mb-3">
-            <div className="partner-badge">
-              <CheckCircle2 size={18} color="#16a34a" />
-              <strong>IRCTC Authorized Train Booking Partner</strong>
-            </div>
-            <p>Instant refund on Tatkal cancellations • Zero payment gateway charges via Razorpay & UPI</p>
-          </div>
-
           <div className="results-header-bar">
             <div>
               <h2>{firstName ? `IRCTC Train Schedules for ${firstName}` : `Trains between ${searchState.from || 'New Delhi'} and ${searchState.to || 'Mumbai'}`}</h2>

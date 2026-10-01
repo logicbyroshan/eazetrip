@@ -1,11 +1,11 @@
 # Current Project State: EazeTrip
 
 ## 1. Release Baseline & Status
-* **Status**: Production Ready / Borderless Filter Pane / Luxury Listing Cards Refinement / 100% Passing Tests
-* **Version**: `2.6.4`
+* **Status**: Production Ready / 50% Floating Search CTA Alignment / Centered Vehicle Dashed Tracks / Price Filter Priority / 100% Passing Tests
+* **Version**: `2.6.5`
 * **Test Suite**: 89 / 89 automated tests passing (`npm test`).
 * **Client Build**: Clean Vite production build (`npm run build`).
-* **Active Branch**: `feature/borderless-filters-and-premium-cards-redesign`
+* **Active Branch**: `feature/search-cta-timeline-icons-filters-refinement`
 
 ---
 

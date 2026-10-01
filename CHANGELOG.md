@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.6.5] - 2026-10-01
+
+### 50% Floating Search CTA Alignment, Centered Vehicle Dashed Journey Track, Price Filter Priority & Double Outline Elimination
+
+#### 50% Floating Search CTA Alignment (`client/src/App.css`)
+- **Pixel-Perfect 50% Overlap**: Re-adjusted `.listing-search-card-wrapper` padding to `padding: 20px 24px 18px 24px;` and `.search-action-wrap-floating` with `bottom: -24px` so the floating search CTA button sits with an exact 50% overlap across the bottom border of the card on both Home and listing search widgets.
+
+#### Centered Vehicle Dashed Journey Track (`client/src/components/flights/FlightCard.jsx`, `client/src/components/trains/TrainCard.jsx`, `client/src/components/buses/BusCard.jsx`, `client/src/App.css`)
+- **Medium-Specific Vehicle Center Icons**: Replaced timeline lines with a sleek dashed track line (`--- [Icon] ---`) featuring a centered vehicle badge:
+  - Flights: Centered blue Plane badge (`Plane`) on dashed track.
+  - Trains: Centered purple Train badge (`Train`) on dashed track.
+  - Buses: Centered emerald Bus badge (`Bus`) on dashed track.
+
+#### Removed IRCTC Partner Strips (`client/src/pages/RailwayBookingPage.jsx`, `client/src/components/search/TrainSearchWidget.jsx`)
+- **Direct Clean Layout**: Removed the IRCTC authorized banner strip from the top of the train booking results page and the header text from `TrainSearchWidget`.
+
+#### Top-Positioned Price Filters & Smooth Sidebar Scrollbar (`client/src/components/holidays/HolidayFilters.jsx`, `client/src/App.css`)
+- **Price Filter Priority #1**: Reordered filters in `HolidayFilters.jsx` so the Budget per Person slider is positioned at the very top, creating a unified standard where Price is the #1 filter across all 5 booking mediums.
+- **Enhanced Sidebar Scrolling**: Styled `.listing-sidebar` with smooth scrolling, sleek 5px scrollbar thumb, rounded track, and clean right padding.
+
+#### Double Outline & Focus Ring Elimination (`client/src/App.css`)
+- **Eliminated Conflicting Outline Rings**: Removed redundant browser focus rings and double box-shadow rings on `.train-class-card.is-selected`, `.flight-card.selected`, time slot buttons, and filter pills, providing crisp single-border active states.
+
+---
+
 ## [2.6.4] - 2026-10-01
 
 ### Borderless Filter Pane & Premium Listing Cards Refinement

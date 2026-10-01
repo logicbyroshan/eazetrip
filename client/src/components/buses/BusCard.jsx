@@ -1,4 +1,4 @@
-import { Bus, Star, MapPin, ShieldCheck, ChevronRight, Armchair, Wifi, Zap, Wind, Navigation, Sparkles } from 'lucide-react';
+import { Bus, Star, MapPin, ShieldCheck, ChevronRight, Armchair, Wifi, Zap, Wind, Navigation, Sparkles, Clock } from 'lucide-react';
 
 export default function BusCard({ bus, onSelectSeats }) {
   const getAmenityIcon = (amenity) => {
@@ -54,17 +54,25 @@ export default function BusCard({ bus, onSelectSeats }) {
           </div>
 
           <div className="bus-duration-track">
-            <span className="bus-duration-badge">{bus.duration}</span>
-            <div className="bus-track-line">
-              <span className="track-point start"></span>
-              <div className="track-dashed-line"></div>
-              <span className="track-point end"></span>
+            <span className="bus-duration-badge">
+              <Clock size={12} /> {bus.duration}
+            </span>
+            <div className="journey-track-row">
+              <span className="journey-dot start"></span>
+              <div className="journey-dashed-line"></div>
+              <div className="journey-center-icon-wrap bus-icon-wrap" title="Direct Highway Route">
+                <Bus size={14} className="journey-icon" />
+              </div>
+              <div className="journey-dashed-line"></div>
+              <span className="journey-dot end"></span>
             </div>
-            {bus.liveTracking && (
+            {bus.liveTracking ? (
               <span className="bus-live-gps-badge">
                 <span className="live-pulse-dot"></span>
                 <span>Live GPS Tracking</span>
               </span>
+            ) : (
+              <span className="stops-badge">Direct Express</span>
             )}
           </div>
 
