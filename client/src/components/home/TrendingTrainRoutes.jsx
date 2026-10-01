@@ -4,10 +4,10 @@ import { trendingTrainRoutesGrid } from '../../data/siteData';
 import { ArrowLeftRight } from 'lucide-react';
 
 export default function TrendingTrainRoutes() {
-  const [tab, setTab] = useState('vandeBharat'); // 'vandeBharat' | 'rajdhaniShatabdi' | 'intercity'
+  const [tab, setTab] = useState('premier'); // 'premier' | 'express'
   const navigate = useNavigate();
 
-  const routes = trendingTrainRoutesGrid[tab] || trendingTrainRoutesGrid.vandeBharat;
+  const routes = trendingTrainRoutesGrid[tab] || trendingTrainRoutesGrid.premier;
 
   const handleRouteClick = (route) => {
     navigate(`/railways?from=${route.fromCode}&to=${route.toCode}&fromStation=${encodeURIComponent(route.from)}&toStation=${encodeURIComponent(route.to)}`);
@@ -16,7 +16,7 @@ export default function TrendingTrainRoutes() {
   return (
     <section className="section-block trending-train-routes-block">
       <div className="container">
-        {/* Header with Title and Scope Toggle Buttons */}
+        {/* Header with Title and 2 Scope Toggle Buttons */}
         <div className="trending-routes-header">
           <div>
             <h2 className="routes-main-title">
@@ -28,24 +28,17 @@ export default function TrendingTrainRoutes() {
           <div className="routes-toggle-group">
             <button
               type="button"
-              className={`routes-toggle-btn ${tab === 'vandeBharat' ? 'active' : ''}`}
-              onClick={() => setTab('vandeBharat')}
+              className={`routes-toggle-btn ${tab === 'premier' ? 'active' : ''}`}
+              onClick={() => setTab('premier')}
             >
-              VANDE BHARAT
+              VANDE BHARAT & PREMIER
             </button>
             <button
               type="button"
-              className={`routes-toggle-btn ${tab === 'rajdhaniShatabdi' ? 'active' : ''}`}
-              onClick={() => setTab('rajdhaniShatabdi')}
+              className={`routes-toggle-btn ${tab === 'express' ? 'active' : ''}`}
+              onClick={() => setTab('express')}
             >
-              RAJDHANI & SHATABDI
-            </button>
-            <button
-              type="button"
-              className={`routes-toggle-btn ${tab === 'intercity' ? 'active' : ''}`}
-              onClick={() => setTab('intercity')}
-            >
-              SUPERFAST
+              SUPERFAST & EXPRESS
             </button>
           </div>
         </div>
@@ -68,14 +61,14 @@ export default function TrendingTrainRoutes() {
               {/* Route Details & Train Info */}
               <div className="route-details-box">
                 <div className="route-cities-row">
-                  <span className="route-city-name">{r.from}</span>
+                  <span className="route-city-name" title={r.from}>{r.from}</span>
                   <div className="route-arrow-icon-wrap">
                     <ArrowLeftRight size={12} />
                   </div>
-                  <span className="route-city-name">{r.to}</span>
+                  <span className="route-city-name" title={r.to}>{r.to}</span>
                 </div>
                 <div className="route-meta-sub">
-                  <span className="route-sub-name">{r.trainName ? r.trainName.split('(')[0].trim() : ''}</span>
+                  <span className="route-sub-name" title={r.trainName}>{r.trainName ? r.trainName.split('(')[0].trim() : ''}</span>
                   <span className="route-sub-price">{r.price}</span>
                 </div>
               </div>

@@ -636,11 +636,11 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   background: #ffffff;
-  border: 1.5px solid #e2e8f0;
-  border-radius: 20px;
-  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow-sm);
   overflow: hidden;
-  margin-top: 32px;
+  margin-top: 24px;
 }
 
 .assurance-item-modern {
@@ -2147,9 +2147,16 @@
 .feature-card {
   background: #ffffff;
   padding: 28px;
-  border-radius: var(--radius-md);
+  border-radius: 16px;
   border: 1px solid var(--border);
   box-shadow: var(--shadow-sm);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: #cbd5e1;
 }
 
 .feature-badge {
@@ -7437,19 +7444,21 @@ input[type="radio"]:focus-visible {
 /* 4-Column Grid for Route Cards */
 .routes-cards-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 @media (max-width: 1100px) {
   .routes-cards-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 600px) {
   .routes-cards-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -7457,11 +7466,15 @@ input[type="radio"]:focus-visible {
   background: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
-  padding: 10px 14px;
+  padding: 10px 12px;
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
   cursor: pointer;
+  min-width: 0;
+  width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
   transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
 }
@@ -7473,8 +7486,8 @@ input[type="radio"]:focus-visible {
 }
 
 .route-thumb-box {
-  width: 60px;
-  height: 48px;
+  width: 52px;
+  height: 44px;
   border-radius: 8px;
   overflow: hidden;
   flex-shrink: 0;
@@ -7498,22 +7511,30 @@ input[type="radio"]:focus-visible {
   gap: 3px;
   flex: 1;
   min-width: 0;
+  overflow: hidden;
 }
 
 .route-cities-row {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
+  min-width: 0;
+  width: 100%;
 }
 
 .route-city-name {
-  font-size: 0.88rem;
+  font-size: 0.82rem;
   font-weight: 700;
   color: var(--text-main);
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  flex: 1;
 }
 
 .route-arrow-icon-wrap {
+  flex-shrink: 0;
   color: #64748b;
   display: grid;
   place-items: center;
@@ -7530,26 +7551,30 @@ input[type="radio"]:focus-visible {
   justify-content: space-between;
   width: 100%;
   margin-top: 1px;
+  min-width: 0;
+  gap: 4px;
 }
 
 .route-sub-name {
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 600;
   color: #64748b;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 110px;
+  flex: 1;
+  min-width: 0;
 }
 
 .route-sub-price {
-  font-size: 0.76rem;
+  font-size: 0.74rem;
   font-weight: 800;
   color: #0f172a;
   background: #f8fafc;
-  padding: 1px 6px;
+  padding: 1px 5px;
   border-radius: 4px;
   border: 1px solid #e2e8f0;
+  flex-shrink: 0;
 }
 
 /* ==========================================================================
@@ -22443,6 +22468,141 @@ input:checked + .slider:before {
     align-items: stretch;
   }
 }
+
+/* ==========================================================================
+   GLOBAL PAGE ROUTE TRANSITION (Smooth Hardware-Accelerated View Entry)
+   ========================================================================== */
+@keyframes pageFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-route-transition {
+  animation: pageFadeIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  width: 100%;
+  min-height: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-route-transition {
+    animation: none !important;
+  }
+}
+
+/* ==========================================================================
+   GLOBAL LUXURY MICRO-ANIMATIONS & HOVER SYSTEM (5 Refined Standardized Patterns)
+   ========================================================================== */
+
+/* 1. Subtle Card Lift (Used across all page listing cards, feature boxes, deal cards) */
+.hover-lift,
+.feature-card,
+.bank-offer-card,
+.popular-destination-card,
+.hotel-card,
+.flight-card,
+.bus-item-card,
+.holiday-card,
+.review-card,
+.helpdesk-feature-card {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease !important;
+}
+
+.hover-lift:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 10px 24px -4px rgba(15, 23, 42, 0.08), 0 4px 8px -2px rgba(15, 23, 42, 0.04) !important;
+}
+
+/* 2. Tactile Button Micro-Press & Gentle Lift (Primary buttons, search CTA, booking CTAs) */
+.btn-scale,
+.search-btn,
+.search-submit-btn,
+.btn-primary,
+.action-btn-primary,
+.book-now-btn {
+  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, filter 0.2s ease, background-color 0.2s ease !important;
+}
+
+.btn-scale:hover,
+.search-btn:hover,
+.search-submit-btn:hover,
+.btn-primary:hover,
+.action-btn-primary:hover,
+.book-now-btn:hover {
+  transform: translateY(-1.5px) !important;
+  filter: brightness(1.03) !important;
+}
+
+.btn-scale:active,
+.search-btn:active,
+.search-submit-btn:active,
+.btn-primary:active,
+.action-btn-primary:active,
+.book-now-btn:active {
+  transform: translateY(0.5px) scale(0.985) !important;
+}
+
+/* 3. Subtle Arrow / Icon Slide (Action triggers, "View Details", "Read More" links) */
+.hover-arrow-slide {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hover-arrow-slide svg,
+.hover-arrow-slide .arrow-icon,
+.cat-link-text svg,
+.action-link svg {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.hover-arrow-slide:hover svg,
+.hover-arrow-slide:hover .arrow-icon,
+.cat-item-card:hover .cat-link-text svg,
+.action-link:hover svg {
+  transform: translateX(3px) !important;
+}
+
+/* 4. Soft Border Glow Accent (Search input cards, date selectors, filter pills) */
+.hover-glow,
+.search-input-group,
+.date-picker-trigger,
+.traveller-selector-trigger {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease !important;
+}
+
+.hover-glow:hover,
+.hover-glow:focus-within,
+.search-input-group:hover,
+.date-picker-trigger:hover,
+.traveller-selector-trigger:hover {
+  border-color: rgba(3, 78, 162, 0.35) !important;
+  box-shadow: 0 0 0 3px rgba(3, 78, 162, 0.05) !important;
+}
+
+/* 5. Ambient Micro-Pulse (Live GPS chips, primo status, top deals) */
+@keyframes microPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.88;
+    transform: scale(1.02);
+  }
+}
+
+.micro-pulse,
+.live-status-dot,
+.primo-certified-badge {
+  animation: microPulse 3.2s ease-in-out infinite;
+}
+
 
 
 

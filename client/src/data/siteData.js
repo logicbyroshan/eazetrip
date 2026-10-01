@@ -992,7 +992,7 @@ export const popularTrains = {
 };
 
 export const trendingTrainRoutesGrid = {
-  vandeBharat: [
+  premier: [
     {
       id: 'ndls-bsb-vb',
       from: 'New Delhi',
@@ -1003,7 +1003,7 @@ export const trendingTrainRoutesGrid = {
       duration: '8h 00m',
       speed: '130 km/h',
       price: '₹1,750',
-      image: 'https://images.unsplash.com/photo-1561361066-4b95f190c681?w=400&auto=format&fit=crop&q=80',
+      image: 'https://images.unsplash.com/photo-1571536802807-30451e3955d8?w=400&auto=format&fit=crop&q=80',
       badge: 'High Speed'
     },
     {
@@ -1098,7 +1098,7 @@ export const trendingTrainRoutesGrid = {
       badge: 'Temple Fast'
     }
   ],
-  rajdhaniShatabdi: [
+  express: [
     {
       id: 'ndls-bct-raj',
       from: 'New Delhi',
@@ -1152,60 +1152,6 @@ export const trendingTrainRoutesGrid = {
       badge: 'Smart Coach'
     },
     {
-      id: 'ndls-sbc-raj',
-      from: 'New Delhi',
-      to: 'Bengaluru (SBC)',
-      fromCode: 'NDLS',
-      toCode: 'SBC',
-      trainName: 'Bengaluru Rajdhani (22692)',
-      duration: '33h 40m',
-      speed: 'Cross-Country AC',
-      price: '₹3,450',
-      image: 'https://images.unsplash.com/photo-1596176530529-78163a4f7af2?w=400&auto=format&fit=crop&q=80',
-      badge: 'Full AC'
-    },
-    {
-      id: 'bct-adi-shat',
-      from: 'Mumbai Central',
-      to: 'Ahmedabad',
-      fromCode: 'BCT',
-      toCode: 'ADI',
-      trainName: 'Karnavati Shatabdi (12009)',
-      duration: '6h 20m',
-      speed: 'Executive Chair Car',
-      price: '₹920',
-      image: 'https://images.unsplash.com/photo-1609766857041-ed402ea8069a?w=400&auto=format&fit=crop&q=80',
-      badge: 'Executive'
-    },
-    {
-      id: 'ndls-mas-raj',
-      from: 'New Delhi',
-      to: 'Chennai Central',
-      fromCode: 'NDLS',
-      toCode: 'MAS',
-      trainName: 'Chennai Rajdhani (12434)',
-      duration: '28h 15m',
-      speed: 'Superfast AC Express',
-      price: '₹3,180',
-      image: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=400&auto=format&fit=crop&q=80',
-      badge: 'Comfort Plus'
-    },
-    {
-      id: 'ndls-jp-shat',
-      from: 'New Delhi',
-      to: 'Jaipur Junction',
-      fromCode: 'NDLS',
-      toCode: 'JP',
-      trainName: 'Ajmer Shatabdi (12015)',
-      duration: '4h 30m',
-      speed: 'Same-Day Return',
-      price: '₹710',
-      image: 'https://images.unsplash.com/photo-1477587458883-47145ed94245?w=400&auto=format&fit=crop&q=80',
-      badge: 'Weekend Getaway'
-    }
-  ],
-  intercity: [
-    {
       id: 'bct-pune-deccan',
       from: 'Mumbai CSMT',
       to: 'Pune Junction',
@@ -1232,19 +1178,6 @@ export const trendingTrainRoutesGrid = {
       badge: 'Super Fast'
     },
     {
-      id: 'hwh-pnbe-duronto',
-      from: 'Howrah Junction',
-      to: 'Patna Junction',
-      fromCode: 'HWH',
-      toCode: 'PNBE',
-      trainName: 'Patna Jan Shatabdi (12024)',
-      duration: '7h 15m',
-      speed: 'Intercity Express',
-      price: '₹590',
-      image: 'https://images.unsplash.com/photo-1558431382-27e303142255?w=400&auto=format&fit=crop&q=80',
-      badge: 'Daily'
-    },
-    {
       id: 'sbc-mas-intercity',
       from: 'Bengaluru (SBC)',
       to: 'Chennai Central',
@@ -1258,56 +1191,17 @@ export const trendingTrainRoutesGrid = {
       badge: 'Popular'
     },
     {
-      id: 'ndls-lko-shat',
+      id: 'ndls-jp-shat',
       from: 'New Delhi',
-      to: 'Lucknow Charbagh',
+      to: 'Jaipur Junction',
       fromCode: 'NDLS',
-      toCode: 'LKO',
-      trainName: 'Lucknow Swarna Shatabdi (12004)',
-      duration: '6h 30m',
-      speed: 'Executive AC',
-      price: '₹895',
+      toCode: 'JP',
+      trainName: 'Ajmer Shatabdi (12015)',
+      duration: '4h 30m',
+      speed: 'Same-Day Return',
+      price: '₹710',
       image: 'https://images.unsplash.com/photo-1477587458883-47145ed94245?w=400&auto=format&fit=crop&q=80',
-      badge: 'Executive'
-    },
-    {
-      id: 'csmt-surat-flying',
-      from: 'Mumbai Central',
-      to: 'Surat',
-      fromCode: 'BCT',
-      toCode: 'ST',
-      trainName: 'Flying Ranee Superfast (12921)',
-      duration: '3h 50m',
-      speed: 'Double Decker / SF',
-      price: '₹340',
-      image: 'https://images.unsplash.com/photo-1609766857041-ed402ea8069a?w=400&auto=format&fit=crop&q=80',
-      badge: 'Frequent'
-    },
-    {
-      id: 'ndls-gkp-humsafar',
-      from: 'Anand Vihar (DEL)',
-      to: 'Gorakhpur Junction',
-      fromCode: 'NDLS',
-      toCode: 'GKP',
-      trainName: 'Humsafar Express (12572)',
-      duration: '11h 20m',
-      speed: 'All 3-Tier AC',
-      price: '₹1,240',
-      image: 'https://images.unsplash.com/photo-1561361066-4b95f190c681?w=400&auto=format&fit=crop&q=80',
-      badge: 'All 3AC'
-    },
-    {
-      id: 'hyb-vskp-godavari',
-      from: 'Hyderabad Deccan',
-      to: 'Visakhapatnam',
-      fromCode: 'HYB',
-      toCode: 'VSKP',
-      trainName: 'Godavari Superfast (12728)',
-      duration: '11h 55m',
-      speed: 'Overnight Superfast',
-      price: '₹480',
-      image: 'https://images.unsplash.com/photo-1605649487212-47bdab064df7?w=400&auto=format&fit=crop&q=80',
-      badge: 'Overnight'
+      badge: 'Weekend Getaway'
     }
   ]
 };
@@ -1430,7 +1324,7 @@ export const popularBusOperators = {
 };
 
 export const trendingBusRoutesGrid = {
-  volvoSleeper: [
+  premier: [
     {
       id: 'blr-hyd-bus',
       from: 'Bengaluru',
@@ -1536,7 +1430,7 @@ export const trendingBusRoutesGrid = {
       badge: 'Frequent'
     }
   ],
-  electricEV: [
+  intercity: [
     {
       id: 'del-agr-ev',
       from: 'Delhi',
@@ -1616,34 +1510,6 @@ export const trendingBusRoutesGrid = {
       badge: 'Expressway'
     },
     {
-      id: 'ind-bho-ev',
-      from: 'Indore',
-      to: 'Bhopal',
-      fromCity: 'Indore',
-      toCity: 'Bhopal',
-      busName: 'NueGo (Smart MP Electric Corridor)',
-      duration: '3h 30m',
-      type: '100% Electric AC',
-      price: '₹350',
-      image: 'https://images.unsplash.com/photo-1609766857041-ed402ea8069a?w=400&auto=format&fit=crop&q=80',
-      badge: 'Green Ride'
-    },
-    {
-      id: 'bom-pune-eshiv',
-      from: 'Mumbai',
-      to: 'Pune',
-      fromCity: 'Mumbai',
-      toCity: 'Pune',
-      busName: 'E-Shivneri (MSRTC Electric AC Volvo)',
-      duration: '3h 15m',
-      type: '100% Electric AC',
-      price: '₹380',
-      image: 'https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=400&auto=format&fit=crop&q=80',
-      badge: 'Zero Emission'
-    }
-  ],
-  popularIntercity: [
-    {
       id: 'del-shimla-bus',
       from: 'Delhi',
       to: 'Shimla',
@@ -1657,95 +1523,17 @@ export const trendingBusRoutesGrid = {
       badge: 'Hill Station'
     },
     {
-      id: 'blr-ooty-bus',
-      from: 'Bengaluru',
-      to: 'Ooty',
-      fromCity: 'Bengaluru',
-      toCity: 'Ooty',
-      busName: 'KSRTC Airavat (Club Class Luxury)',
-      duration: '7h 30m',
-      type: 'Premium Mountain Volvo',
-      price: '₹720',
-      image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&auto=format&fit=crop&q=80',
-      badge: 'Weekend Getaway'
-    },
-    {
-      id: 'jai-udaipur-bus',
-      from: 'Jaipur',
-      to: 'Udaipur',
-      fromCity: 'Jaipur',
-      toCity: 'Udaipur',
-      busName: 'RSRTC Gold Line (AC Sleeper / Seater)',
-      duration: '6h 30m',
-      type: 'Heritage Highway',
-      price: '₹480',
-      image: 'https://images.unsplash.com/photo-1477587458883-47145ed94245?w=400&auto=format&fit=crop&q=80',
-      badge: 'Heritage'
-    },
-    {
-      id: 'ccu-digha-bus',
-      from: 'Kolkata',
-      to: 'Digha',
-      fromCity: 'Kolkata',
-      toCity: 'Digha',
-      busName: 'SBSTC (AC Superfast Beach Express)',
-      duration: '4h 00m',
-      type: 'Express AC Seater',
-      price: '₹290',
-      image: 'https://images.unsplash.com/photo-1558431382-27e303142255?w=400&auto=format&fit=crop&q=80',
-      badge: 'Beach Express'
-    },
-    {
-      id: 'del-rsh-bus',
-      from: 'Delhi',
-      to: 'Rishikesh',
-      fromCity: 'Delhi',
-      toCity: 'Rishikesh',
-      busName: 'Zingbus (AC Sleeper / Seater 2+1)',
-      duration: '5h 15m',
-      type: 'Clean Lounge AC',
-      price: '₹499',
-      image: 'https://images.unsplash.com/photo-1561361066-4b95f190c681?w=400&auto=format&fit=crop&q=80',
-      badge: 'Yoga Capital'
-    },
-    {
-      id: 'pune-kop-bus',
-      from: 'Pune',
-      to: 'Kolhapur',
-      fromCity: 'Pune',
-      toCity: 'Kolhapur',
-      busName: 'MSRTC Shivshahi (Air-Conditioned)',
-      duration: '4h 30m',
-      type: 'State AC Network',
-      price: '₹390',
+      id: 'bom-pune-eshiv',
+      from: 'Mumbai',
+      to: 'Pune',
+      fromCity: 'Mumbai',
+      toCity: 'Pune',
+      busName: 'E-Shivneri (MSRTC Electric AC Volvo)',
+      duration: '3h 15m',
+      type: '100% Electric AC',
+      price: '₹380',
       image: 'https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=400&auto=format&fit=crop&q=80',
-      badge: 'Highway AC'
-    },
-    {
-      id: 'hyd-vskp-bus',
-      from: 'Hyderabad',
-      to: 'Visakhapatnam',
-      fromCity: 'Hyderabad',
-      toCity: 'Visakhapatnam',
-      busName: 'Kaveri Travels (Multi-Axle AC Sleeper)',
-      duration: '11h 00m',
-      type: 'Full AC Sleeper',
-      price: '₹990',
-      image: 'https://images.unsplash.com/photo-1605649487212-47bdab064df7?w=400&auto=format&fit=crop&q=80',
-      badge: 'Overnight'
-    },
-    {
-      id: 'amd-udr-bus',
-      from: 'Ahmedabad',
-      to: 'Udaipur',
-      fromCity: 'Ahmedabad',
-      toCity: 'Udaipur',
-      busName: 'Shreenath Travels (Bharat Benz AC)',
-      duration: '4h 45m',
-      type: 'Interstate AC',
-      price: '₹410',
-      image: 'https://images.unsplash.com/photo-1609766857041-ed402ea8069a?w=400&auto=format&fit=crop&q=80',
-      badge: 'Daily'
+      badge: 'Zero Emission'
     }
   ]
 };

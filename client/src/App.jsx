@@ -128,72 +128,74 @@ function AppContent() {
         
         <main className={isAuthIsolatedPage ? 'auth-isolated-viewport' : 'main-viewport'}>
           <Suspense fallback={<RouteLoadingFallback />}>
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/flight-booking" element={<FlightBookingPage />} />
-              <Route path="/flights" element={<FlightBookingPage />} />
-              <Route path="/hotel-booking" element={<HotelBookingPage />} />
-              <Route path="/hotels" element={<HotelBookingPage />} />
-              <Route path="/bus-booking" element={<BusBookingPage />} />
-              <Route path="/buses" element={<BusBookingPage />} />
-              <Route path="/railway" element={<RailwayBookingPage />} />
-              <Route path="/railway-booking" element={<RailwayBookingPage />} />
-              <Route path="/railways" element={<RailwayBookingPage />} />
-              <Route path="/trains" element={<RailwayBookingPage />} />
-              <Route path="/holiday-booking" element={<HolidayBookingPage />} />
-              <Route path="/holidays" element={<HolidayBookingPage />} />
-              <Route path="/holiday-packages" element={<HolidayBookingPage />} />
+            <div key={location.pathname} className="page-route-transition">
+              <Routes location={location}>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/flight-booking" element={<FlightBookingPage />} />
+                <Route path="/flights" element={<FlightBookingPage />} />
+                <Route path="/hotel-booking" element={<HotelBookingPage />} />
+                <Route path="/hotels" element={<HotelBookingPage />} />
+                <Route path="/bus-booking" element={<BusBookingPage />} />
+                <Route path="/buses" element={<BusBookingPage />} />
+                <Route path="/railway" element={<RailwayBookingPage />} />
+                <Route path="/railway-booking" element={<RailwayBookingPage />} />
+                <Route path="/railways" element={<RailwayBookingPage />} />
+                <Route path="/trains" element={<RailwayBookingPage />} />
+                <Route path="/holiday-booking" element={<HolidayBookingPage />} />
+                <Route path="/holidays" element={<HolidayBookingPage />} />
+                <Route path="/holiday-packages" element={<HolidayBookingPage />} />
 
-              {/* Dedicated Multi-Step Booking & Payment Flow */}
-              <Route path="/review-booking" element={<ReviewBookingPage />} />
-              <Route path="/booking-review" element={<ReviewBookingPage />} />
-              <Route path="/booking" element={<ReviewBookingPage />} />
-              <Route path="/booking-payment" element={<BookingPaymentPage />} />
+                {/* Dedicated Multi-Step Booking & Payment Flow */}
+                <Route path="/review-booking" element={<ReviewBookingPage />} />
+                <Route path="/booking-review" element={<ReviewBookingPage />} />
+                <Route path="/booking" element={<ReviewBookingPage />} />
+                <Route path="/booking-payment" element={<BookingPaymentPage />} />
 
-              <Route path="/manage-bookings" element={<ManageBookingsPage />} />
-              <Route path="/profile" element={<ProfilePage />} />
-              <Route path="/my-profile" element={<ProfilePage />} />
-              <Route path="/payment" element={<PaymentPage />} />
-              
-              {/* User Auth Routes */}
-              <Route path="/user-login" element={<AuthPage mode="login" />} />
-              <Route path="/login" element={<AuthPage mode="login" />} />
-              <Route path="/user-register" element={<AuthPage mode="register" />} />
-              <Route path="/signup" element={<AuthPage mode="register" />} />
-              <Route path="/register" element={<AuthPage mode="register" />} />
-              <Route path="/create-account" element={<AuthPage mode="register" />} />
+                <Route path="/manage-bookings" element={<ManageBookingsPage />} />
+                <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/my-profile" element={<ProfilePage />} />
+                <Route path="/payment" element={<PaymentPage />} />
+                
+                {/* User Auth Routes */}
+                <Route path="/user-login" element={<AuthPage mode="login" />} />
+                <Route path="/login" element={<AuthPage mode="login" />} />
+                <Route path="/user-register" element={<AuthPage mode="register" />} />
+                <Route path="/signup" element={<AuthPage mode="register" />} />
+                <Route path="/register" element={<AuthPage mode="register" />} />
+                <Route path="/create-account" element={<AuthPage mode="register" />} />
 
-              {/* Partner & B2B Routes */}
-              <Route path="/partner" element={<PartnerPage />} />
-              <Route path="/become-partner" element={<PartnerPage />} />
-              <Route path="/partnerLogin" element={<PartnerPage mode="login" />} />
-              <Route path="/partner-registration" element={<PartnerPage mode="register" />} />
-              <Route path="/corporate-login" element={<PartnerPage mode="login" />} />
-              
-              {/* Informational & Support Pages */}
-              <Route path="/offers" element={<OffersPage />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="/about-us" element={<AboutPage />} />
-              <Route path="/contact" element={<ContactPage />} />
-              <Route path="/helpdesk" element={<HelpDeskPage />} />
-              <Route path="/help-desk" element={<HelpDeskPage />} />
-              <Route path="/support" element={<HelpDeskPage />} />
-              <Route path="/help" element={<HelpDeskPage />} />
-              <Route path="/faq" element={<FaqPage />} />
-              <Route path="/terms" element={<TermsPage />} />
-              <Route path="/user-agreement" element={<TermsPage title="User Agreement" />} />
-              <Route path="/privacy" element={<PrivacyPage />} />
-              <Route path="/cancellation-refund" element={<CancellationRefundPage />} />
-              
-              {/* Operations & Backoffice Admin Portal */}
-              <Route path="/admin" element={<AdminDashboardPage />} />
-              <Route path="/admin-dashboard" element={<AdminDashboardPage />} />
-              <Route path="/admin/bookings" element={<AdminDashboardPage />} />
-              <Route path="/admin/refunds" element={<AdminDashboardPage />} />
-              <Route path="/admin/support" element={<AdminDashboardPage />} />
-              
-              <Route path="*" element={<HomePage />} />
-            </Routes>
+                {/* Partner & B2B Routes */}
+                <Route path="/partner" element={<PartnerPage />} />
+                <Route path="/become-partner" element={<PartnerPage />} />
+                <Route path="/partnerLogin" element={<PartnerPage mode="login" />} />
+                <Route path="/partner-registration" element={<PartnerPage mode="register" />} />
+                <Route path="/corporate-login" element={<PartnerPage mode="login" />} />
+                
+                {/* Informational & Support Pages */}
+                <Route path="/offers" element={<OffersPage />} />
+                <Route path="/about" element={<AboutPage />} />
+                <Route path="/about-us" element={<AboutPage />} />
+                <Route path="/contact" element={<ContactPage />} />
+                <Route path="/helpdesk" element={<HelpDeskPage />} />
+                <Route path="/help-desk" element={<HelpDeskPage />} />
+                <Route path="/support" element={<HelpDeskPage />} />
+                <Route path="/help" element={<HelpDeskPage />} />
+                <Route path="/faq" element={<FaqPage />} />
+                <Route path="/terms" element={<TermsPage />} />
+                <Route path="/user-agreement" element={<TermsPage title="User Agreement" />} />
+                <Route path="/privacy" element={<PrivacyPage />} />
+                <Route path="/cancellation-refund" element={<CancellationRefundPage />} />
+                
+                {/* Operations & Backoffice Admin Portal */}
+                <Route path="/admin" element={<AdminDashboardPage />} />
+                <Route path="/admin-dashboard" element={<AdminDashboardPage />} />
+                <Route path="/admin/bookings" element={<AdminDashboardPage />} />
+                <Route path="/admin/refunds" element={<AdminDashboardPage />} />
+                <Route path="/admin/support" element={<AdminDashboardPage />} />
+                
+                <Route path="*" element={<HomePage />} />
+              </Routes>
+            </div>
           </Suspense>
         </main>
 
