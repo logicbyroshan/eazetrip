@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.6.7] - 2026-10-01
+
+### Full-Stack Deep Dive Audit, Centralized Promo Validation, Verified Reviews & Test Expansion (93/93 Passing)
+
+#### Backend Enhancements (`server/index.js`, `tests/server.test.js`)
+- **Centralized Promo / Offer Validation API (`POST /api/offers/validate`)**: Added backend promo code calculation engine supporting flat and percentage-based discounts (`EAZETRIP`, `EXPLOREEAZ`, `EAZETRIP500`, `STAYEAZY`, `BUSEAZ`, `TRAINEAZ`, `FLYHIGH`, `HOLIDAY25`, `EAZETRIP1000`) with minimum booking threshold enforcement and service-specific validation.
+- **Test Suite Expansion**: Added 4 new end-to-end automated tests (tests 90-93) verifying promo validation, verified traveler reviews, live inventory aggregators, and paise amount calculations, bringing total passing tests to 93/93.
+
+#### Client Service & Review Consistency (`client/src/services/api.js`, `client/src/components/reviews/`, `client/src/pages/`)
+- **API Client Abstraction**: Added `validateOffer`, `getReviews`, and `submitReview` methods to `api.js` for centralized error handling and offline fallback.
+- **Universal Verified Reviews Across All 5 Mediums**: Integrated `ReviewSection` component into `BusBookingPage.jsx` and `RailwayBookingPage.jsx` alongside existing flights, hotels, and holidays.
+- **Dynamic Asynchronous Promo Validation**: Updated `ReviewBookingPage.jsx` to dynamically validate coupons with `api.validateOffer` and provide instant feedback with offline safety.
+
+---
+
 ## [2.6.6] - 2026-10-01
 
 ### Site-Wide UI Consistency, Currency-Aware Formatting & Code Simplification

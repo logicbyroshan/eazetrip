@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Star, ShieldCheck, Camera, MessageSquarePlus, Image as ImageIcon, X } from 'lucide-react';
 import ReviewSubmitModal from './ReviewSubmitModal';
+import { api } from '../../services/api';
 
 export default function ReviewSection({
   serviceType = 'Flight',
@@ -16,10 +17,9 @@ export default function ReviewSection({
   const fetchReviews = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`/api/reviews?serviceType=${encodeURIComponent(serviceType)}&serviceId=${encodeURIComponent(serviceId || '')}`);
-      const data = await res.json();
-      if (data.success && Array.isArray(data.data) && data.data.length > 0) {
-        setReviews(data.data);
+      const data = await api.getReviews(serviceType, serviceId || '');
+      if (Array.isArray(data) && data.length > 0) {
+        setReviews(data);
       } else {
         // High quality default verified reviews for realistic demonstration
         setReviews([

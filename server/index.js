@@ -317,6 +317,120 @@ app.get('/api/offers', (req, res) => {
   res.json({ success: true, count: mockStore.offers.length, data: mockStore.offers });
 });
 
+// Validate Coupon / Promo Code
+app.post('/api/offers/validate', (req, res) => {
+  const { code = '', amount = 0, serviceType = '' } = req.body || {};
+  const cleanCode = String(code).trim().toUpperCase();
+  const gross = Number(amount) || 0;
+
+  if (!cleanCode) {
+    return res.status(400).json({ success: false, error: 'Promo code is required' });
+  }
+
+  const promoList = [
+    {
+      code: 'EAZETRIP',
+      discount: 500,
+      type: 'flat',
+      description: '₹500 Instant Discount on all travel bookings',
+      minAmount: 1000
+    },
+    {
+      code: 'EXPLOREEAZ',
+      discount: 500,
+      type: 'flat',
+      description: '₹500 Instant Discount for explore members',
+      minAmount: 1000
+    },
+    {
+      code: 'EAZETRIP500',
+      discount: 500,
+      type: 'flat',
+      description: '₹500 Instant Welcome Discount',
+      minAmount: 1000
+    },
+    {
+      code: 'STAYEAZY',
+      discountPercent: 10,
+      maxDiscount: 600,
+      type: 'percent',
+      serviceType: 'hotel',
+      description: '10% OFF up to ₹600 on luxury hotels & stays',
+      minAmount: 1500
+    },
+    {
+      code: 'BUSEAZ',
+      discountPercent: 10,
+      maxDiscount: 300,
+      type: 'percent',
+      serviceType: 'bus',
+      description: '10% OFF up to ₹300 on intercity buses',
+      minAmount: 500
+    },
+    {
+      code: 'TRAINEAZ',
+      discountPercent: 10,
+      maxDiscount: 250,
+      type: 'percent',
+      serviceType: 'train',
+      description: '10% OFF up to ₹250 on IRCTC train bookings',
+      minAmount: 500
+    },
+    {
+      code: 'FLYHIGH',
+      discountPercent: 8,
+      maxDiscount: 750,
+      type: 'percent',
+      serviceType: 'flight',
+      description: '8% OFF up to ₹750 on domestic flights',
+      minAmount: 2500
+    },
+    {
+      code: 'HOLIDAY25',
+      discount: 1000,
+      type: 'flat',
+      serviceType: 'holiday',
+      description: '₹1,000 Mega Discount on holiday packages',
+      minAmount: 15000
+    },
+    {
+      code: 'EAZETRIP1000',
+      discount: 1000,
+      type: 'flat',
+      description: '₹1,000 Mega Discount on bookings above ₹15,000',
+      minAmount: 15000
+    }
+  ];
+
+  const matched = promoList.find((p) => p.code === cleanCode);
+  if (!matched) {
+    return res.status(404).json({ success: false, error: `Invalid promo code '${cleanCode}'. Try EAZETRIP` });
+  }
+
+  if (gross > 0 && matched.minAmount && gross < matched.minAmount) {
+    return res.status(400).json({
+      success: false,
+      error: `Promo ${cleanCode} requires a minimum booking amount of ₹${matched.minAmount.toLocaleString('en-IN')}`
+    });
+  }
+
+  let discountAmount = 0;
+  if (matched.type === 'flat') {
+    discountAmount = matched.discount;
+  } else if (matched.type === 'percent') {
+    discountAmount = Math.min(matched.maxDiscount, Math.round(gross * (matched.discountPercent / 100)));
+    if (discountAmount <= 0) discountAmount = matched.maxDiscount;
+  }
+
+  res.status(200).json({
+    success: true,
+    code: matched.code,
+    discount: discountAmount,
+    description: matched.description,
+    message: `Promo ${matched.code} applied: ₹${discountAmount.toLocaleString('en-IN')} Instant Discount`
+  });
+});
+
 app.get('/api/faqs', (req, res) => {
   res.json({ success: true, data: mockStore.faqs });
 });

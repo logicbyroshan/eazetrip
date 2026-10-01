@@ -1396,6 +1396,91 @@ test('89. POST /api/dpdp/retention/run-cleanup executes automated retention engi
   assert.ok(data.retentionPolicyApplied);
 });
 
+test('90. POST /api/offers/validate validates promo codes, calculates discounts, and checks minimum order values', async () => {
+  // 1. Valid flat coupon
+  const flatRes = await requestJson('/api/offers/validate', {
+    method: 'POST',
+    body: { code: 'EAZETRIP', amount: 5000 }
+  });
+  assert.strictEqual(flatRes.status, 200);
+  assert.strictEqual(flatRes.data.success, true);
+  assert.strictEqual(flatRes.data.discount, 500);
+
+  // 2. Percentage coupon
+  const pctRes = await requestJson('/api/offers/validate', {
+    method: 'POST',
+    body: { code: 'STAYEAZY', amount: 5000, serviceType: 'hotel' }
+  });
+  assert.strictEqual(pctRes.status, 200);
+  assert.strictEqual(pctRes.data.success, true);
+  assert.strictEqual(pctRes.data.discount, 500); // 10% of 5000
+
+  // 3. Minimum amount violation
+  const minRes = await requestJson('/api/offers/validate', {
+    method: 'POST',
+    body: { code: 'EAZETRIP1000', amount: 8000 }
+  });
+  assert.strictEqual(minRes.status, 400);
+  assert.strictEqual(minRes.data.success, false);
+
+  // 4. Invalid coupon
+  const invalidRes = await requestJson('/api/offers/validate', {
+    method: 'POST',
+    body: { code: 'INVALID_COUPON' }
+  });
+  assert.strictEqual(invalidRes.status, 404);
+  assert.strictEqual(invalidRes.data.success, false);
+});
+
+test('91. POST /api/reviews creates verified review and GET /api/reviews retrieves reviews by service', async () => {
+  const submitRes = await requestJson('/api/reviews', {
+    method: 'POST',
+    body: {
+      serviceType: 'Flight',
+      serviceId: 'FL-601',
+      userId: 'USR-TEST-1',
+      userName: 'Deep Dive Traveler',
+      rating: 5,
+      comment: 'Super fast check-in and smooth landing. Excellent travel experience!'
+    }
+  });
+  assert.strictEqual(submitRes.status, 201);
+  assert.strictEqual(submitRes.data.success, true);
+  assert.strictEqual(submitRes.data.data.userName, 'Deep Dive Traveler');
+
+  const getRes = await requestJson('/api/reviews?serviceType=Flight&serviceId=FL-601');
+  assert.strictEqual(getRes.status, 200);
+  assert.strictEqual(getRes.data.success, true);
+  assert.ok(Array.isArray(getRes.data.data));
+  assert.ok(getRes.data.data.some((r) => r.userName === 'Deep Dive Traveler'));
+});
+
+test('92. GET /api/inventory/providers returns all 4 multi-modal aggregator configs', async () => {
+  const { status, data } = await requestJson('/api/inventory/providers');
+  assert.strictEqual(status, 200);
+  assert.strictEqual(data.success, true);
+  assert.ok(data.providers.flights);
+  assert.ok(data.providers.hotels);
+  assert.ok(data.providers.trains);
+  assert.ok(data.providers.buses);
+});
+
+test('93. POST /api/payment/create-order creates order with correct paise calculation', async () => {
+  const { status, data } = await requestJson('/api/payment/create-order', {
+    method: 'POST',
+    body: {
+      amount: 4999,
+      currency: 'INR',
+      receipt: 'rcpt_test_93'
+    }
+  });
+  assert.strictEqual(status, 201);
+  assert.strictEqual(data.success, true);
+  assert.strictEqual(data.amount, 499900); // 4999 * 100 paise
+  assert.strictEqual(data.currency, 'INR');
+});
+
+
 
 
 

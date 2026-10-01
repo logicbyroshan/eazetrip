@@ -141,6 +141,14 @@ export const api = {
     return siteOffers;
   },
 
+  validateOffer: async (code, amount = 0, serviceType = '') => {
+    const res = await request('/api/offers/validate', {
+      method: 'POST',
+      body: JSON.stringify({ code, amount, serviceType })
+    });
+    return res;
+  },
+
   getFaqs: async () => {
     const res = await request('/api/faqs');
     if (res.ok && res.data?.data) return res.data.data;
@@ -518,5 +526,24 @@ export const api = {
     const res = await request('/api/dpdp/security-audit');
     if (res.ok && res.data) return res.data;
     return null;
+  },
+
+  // Verified Traveler Reviews & Ratings
+  getReviews: async (serviceType = '', serviceId = '') => {
+    const params = new URLSearchParams();
+    if (serviceType) params.append('serviceType', serviceType);
+    if (serviceId) params.append('serviceId', serviceId);
+    const query = params.toString();
+    const res = await request(`/api/reviews${query ? `?${query}` : ''}`);
+    if (res.ok && res.data?.data) return res.data.data;
+    return [];
+  },
+
+  submitReview: async (reviewPayload) => {
+    const res = await request('/api/reviews', {
+      method: 'POST',
+      body: JSON.stringify(reviewPayload)
+    });
+    return res;
   }
 };

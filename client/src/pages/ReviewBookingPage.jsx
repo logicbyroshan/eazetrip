@@ -184,9 +184,30 @@ export default function ReviewBookingPage() {
   };
 
   // Handle Coupon Selection
-  const applyPromo = (code) => {
-    const cleanCode = code.toUpperCase().trim();
+  const applyPromo = async (code) => {
+    const cleanCode = (code || '').toUpperCase().trim();
+    if (!cleanCode) {
+      showToast('Please enter a valid coupon code', 'error');
+      return;
+    }
     setCouponCode(cleanCode);
+
+    try {
+      const res = await api.validateOffer(cleanCode, basePrice, type);
+      if (res.ok && res.data?.success) {
+        const disc = res.data.discount;
+        setAppliedDiscount(disc);
+        setAppliedCoupon(cleanCode);
+        setCouponSuccess(res.data.message || `Promo ${cleanCode} applied: ₹${disc} Instant Discount`);
+        showToast(res.data.message || `Promo ${cleanCode} applied! Saved ₹${disc}`);
+        return;
+      } else if (res.data?.error) {
+        showToast(res.data.error, 'error');
+        return;
+      }
+    } catch {
+      // Graceful local fallback if offline
+    }
 
     if (cleanCode === 'EAZETRIP' || cleanCode === 'EXPLOREEAZ' || cleanCode === 'EAZETRIP500') {
       setAppliedDiscount(500);
@@ -199,9 +220,9 @@ export default function ReviewBookingPage() {
       setAppliedCoupon(cleanCode);
       setCouponSuccess(`Promo ${cleanCode} applied: ₹${disc} Instant Savings`);
       showToast(`Promo ${cleanCode} applied! Saved ₹${disc}`);
-    } else if (cleanCode === 'EAZETRIP1000') {
+    } else if (cleanCode === 'EAZETRIP1000' || cleanCode === 'HOLIDAY25') {
       if (basePrice < 15000) {
-        showToast('EAZETRIP1000 requires minimum booking of ₹15,000', 'error');
+        showToast(`${cleanCode} requires minimum booking of ₹15,000`, 'error');
         return;
       }
       setAppliedDiscount(1000);
