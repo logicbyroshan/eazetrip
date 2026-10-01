@@ -1312,3 +1312,442 @@ export const trendingTrainRoutesGrid = {
   ]
 };
 
+export const popularBusOperators = {
+  premium: [
+    {
+      id: 'intrcity',
+      name: 'IntrCity SmartBus',
+      tag: 'Smart AC Lounges & Live Tracking',
+      type: 'Volvo 9600 & AC Sleeper',
+      rating: '4.9 ★',
+      badge: 'Primo Certified',
+      color: '#0284c7',
+      routes: '350+ Daily Routes',
+      iconType: 'smartbus'
+    },
+    {
+      id: 'zingbus',
+      name: 'Zingbus Plus',
+      tag: 'Free High-Speed Wi-Fi & Lounge Access',
+      type: 'Premium Volvo Multi-Axle',
+      rating: '4.8 ★',
+      badge: 'Live GPS',
+      color: '#16a34a',
+      routes: '500+ Cities Connected',
+      iconType: 'zingbus'
+    },
+    {
+      id: 'nuego',
+      name: 'NueGo Electric',
+      tag: '100% Electric & Silent Luxury Ride',
+      type: 'Green EV Air-Conditioned',
+      rating: '4.8 ★',
+      badge: '100% Electric EV',
+      color: '#059669',
+      routes: 'Intercity EV Corridors',
+      iconType: 'electric'
+    },
+    {
+      id: 'vrltravels',
+      name: 'VRL Travels',
+      tag: 'India Largest Multi-Axle Volvo Fleet',
+      type: 'I-Shift Multi-Axle AC Sleeper',
+      rating: '4.7 ★',
+      badge: 'Super Luxury',
+      color: '#d97706',
+      routes: 'South & West Corridors',
+      iconType: 'volvo'
+    },
+    {
+      id: 'srstravels',
+      name: 'SRS Travels',
+      tag: 'Punctual & Ultra Comfortable Sleeper',
+      type: 'Scania & Volvo 2+1 Sleeper',
+      rating: '4.6 ★',
+      badge: 'Top Rated',
+      color: '#7c3aed',
+      routes: 'Bangalore, Goa, Kerala',
+      iconType: 'scania'
+    }
+  ],
+  express: [
+    {
+      id: 'ksrtc',
+      name: 'KSRTC (Airavat Club Class)',
+      tag: 'Karnataka State Premier Volvo Fleet',
+      type: 'Airavat Diamond & Club Class',
+      rating: '4.9 ★',
+      badge: 'State Premier',
+      color: '#dc2626',
+      routes: 'Bangalore, Goa, Mysore, Chennai',
+      iconType: 'ksrtc'
+    },
+    {
+      id: 'orangetravels',
+      name: 'Orange Tours & Travels',
+      tag: 'Premium Luxury & On-Time Guarantee',
+      type: 'Bharat Benz Multi-Axle AC',
+      rating: '4.8 ★',
+      badge: 'On-Time Guaranteed',
+      color: '#ea580c',
+      routes: 'Hyderabad, Pune, Mumbai, Bangalore',
+      iconType: 'orange'
+    },
+    {
+      id: 'upsrtc',
+      name: 'UPSRTC (Janrath / Shatabdi)',
+      tag: 'Uttar Pradesh AC Superfast Network',
+      type: 'Janrath 2+2 AC Low Fare',
+      rating: '4.5 ★',
+      badge: 'Govt. Certified',
+      color: '#2563eb',
+      routes: 'Delhi, Lucknow, Varanasi, Agra',
+      iconType: 'upsrtc'
+    },
+    {
+      id: 'msrtc',
+      name: 'MSRTC (Shivneri / Shivshahi)',
+      tag: 'Maharashtra Scania AC Express Hub',
+      type: 'Shivneri Multi-Axle AC',
+      rating: '4.7 ★',
+      badge: 'Expressway Direct',
+      color: '#0891b2',
+      routes: 'Mumbai, Pune, Nashik, Kolhapur',
+      iconType: 'msrtc'
+    },
+    {
+      id: 'hrtc',
+      name: 'HRTC (Himgaurav / Himsuta)',
+      tag: 'Himachal High-Deck Mountain Volvo',
+      type: 'Himsuta Mountain Master Volvo',
+      rating: '4.8 ★',
+      badge: 'Hill Master',
+      color: '#4f46e5',
+      routes: 'Delhi, Manali, Shimla, Dharamshala',
+      iconType: 'hrtc'
+    }
+  ]
+};
+
+export const trendingBusRoutesGrid = {
+  volvoSleeper: [
+    {
+      id: 'blr-hyd-bus',
+      from: 'Bengaluru',
+      to: 'Hyderabad',
+      fromCity: 'Bengaluru',
+      toCity: 'Hyderabad',
+      busName: 'IntrCity SmartBus (Volvo 9600 Multi-Axle)',
+      duration: '8h 30m',
+      type: 'AC Sleeper 2+1',
+      price: '₹799',
+      image: 'https://images.unsplash.com/photo-1596176530529-78163a4f7af2?w=400&auto=format&fit=crop&q=80',
+      badge: 'Primo Certified'
+    },
+    {
+      id: 'del-manali-bus',
+      from: 'Delhi',
+      to: 'Manali',
+      fromCity: 'Delhi',
+      toCity: 'Manali',
+      busName: 'Zingbus Plus (Volvo 9600 High-Deck)',
+      duration: '12h 00m',
+      type: 'Premium Sleeper',
+      price: '₹1,099',
+      image: 'https://images.unsplash.com/photo-1598091383021-15ddea10925d?w=400&auto=format&fit=crop&q=80',
+      badge: 'Hill Station'
+    },
+    {
+      id: 'bom-goa-bus',
+      from: 'Mumbai',
+      to: 'Goa (Madgaon)',
+      fromCity: 'Mumbai',
+      toCity: 'Goa',
+      busName: 'Orange Travels (Bharat Benz AC Sleeper)',
+      duration: '11h 30m',
+      type: 'Luxury AC Sleeper',
+      price: '₹950',
+      image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=400&auto=format&fit=crop&q=80',
+      badge: 'Beach Route'
+    },
+    {
+      id: 'pune-bom-bus',
+      from: 'Pune',
+      to: 'Mumbai',
+      fromCity: 'Pune',
+      toCity: 'Mumbai',
+      busName: 'MSRTC Shivneri (Scania AC Multi-Axle)',
+      duration: '3h 45m',
+      type: 'Expressway Direct',
+      price: '₹485',
+      image: 'https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=400&auto=format&fit=crop&q=80',
+      badge: 'Every 30 Mins'
+    },
+    {
+      id: 'maa-blr-bus',
+      from: 'Chennai',
+      to: 'Bengaluru',
+      fromCity: 'Chennai',
+      toCity: 'Bengaluru',
+      busName: 'VRL Travels (Multi-Axle I-Shift Sleeper)',
+      duration: '5h 45m',
+      type: 'AC Sleeper 2+1',
+      price: '₹599',
+      image: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=400&auto=format&fit=crop&q=80',
+      badge: 'Fast Corridors'
+    },
+    {
+      id: 'del-jai-bus',
+      from: 'Delhi',
+      to: 'Jaipur',
+      fromCity: 'Delhi',
+      toCity: 'Jaipur',
+      busName: 'IntrCity SmartBus (Volvo AC Seater/Sleeper)',
+      duration: '5h 00m',
+      type: 'Express Highway',
+      price: '₹449',
+      image: 'https://images.unsplash.com/photo-1477587458883-47145ed94245?w=400&auto=format&fit=crop&q=80',
+      badge: 'Top Rated'
+    },
+    {
+      id: 'amd-bom-bus',
+      from: 'Ahmedabad',
+      to: 'Mumbai',
+      fromCity: 'Ahmedabad',
+      toCity: 'Mumbai',
+      busName: 'Eagle Falcon (Volvo Multi-Axle Sleeper)',
+      duration: '8h 30m',
+      type: 'Overnight AC',
+      price: '₹850',
+      image: 'https://images.unsplash.com/photo-1609766857041-ed402ea8069a?w=400&auto=format&fit=crop&q=80',
+      badge: 'Business Express'
+    },
+    {
+      id: 'hyd-vij-bus',
+      from: 'Hyderabad',
+      to: 'Vijayawada',
+      fromCity: 'Hyderabad',
+      toCity: 'Vijayawada',
+      busName: 'Orange Travels (Multi-Axle Super Sleeper)',
+      duration: '5h 15m',
+      type: 'Fast Highway AC',
+      price: '₹540',
+      image: 'https://images.unsplash.com/photo-1605649487212-47bdab064df7?w=400&auto=format&fit=crop&q=80',
+      badge: 'Frequent'
+    }
+  ],
+  electricEV: [
+    {
+      id: 'del-agr-ev',
+      from: 'Delhi',
+      to: 'Agra',
+      fromCity: 'Delhi',
+      toCity: 'Agra',
+      busName: 'NueGo (100% Electric Luxury AC Coach)',
+      duration: '3h 15m',
+      type: 'Zero Emission EV',
+      price: '₹399',
+      image: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=400&auto=format&fit=crop&q=80',
+      badge: 'Green EV'
+    },
+    {
+      id: 'blr-tpty-ev',
+      from: 'Bengaluru',
+      to: 'Tirupati',
+      fromCity: 'Bengaluru',
+      toCity: 'Tirupati',
+      busName: 'NueGo Electric (Luxury Silent AC)',
+      duration: '5h 00m',
+      type: '100% Electric Coach',
+      price: '₹549',
+      image: 'https://images.unsplash.com/photo-1596176530529-78163a4f7af2?w=400&auto=format&fit=crop&q=80',
+      badge: 'Pilgrimage EV'
+    },
+    {
+      id: 'maa-pondy-ev',
+      from: 'Chennai',
+      to: 'Pondicherry',
+      fromCity: 'Chennai',
+      toCity: 'Puducherry',
+      busName: 'NueGo EV (Scenic ECR Ocean Line)',
+      duration: '3h 15m',
+      type: 'Electric Coast Coach',
+      price: '₹340',
+      image: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=400&auto=format&fit=crop&q=80',
+      badge: 'Coastal Line'
+    },
+    {
+      id: 'hyd-wgl-ev',
+      from: 'Hyderabad',
+      to: 'Warangal',
+      fromCity: 'Hyderabad',
+      toCity: 'Warangal',
+      busName: 'GreenCell Mobility (EV Intercity Shuttle)',
+      duration: '2h 45m',
+      type: '100% Electric Express',
+      price: '₹299',
+      image: 'https://images.unsplash.com/photo-1605649487212-47bdab064df7?w=400&auto=format&fit=crop&q=80',
+      badge: 'Express EV'
+    },
+    {
+      id: 'del-cdg-ev',
+      from: 'Delhi',
+      to: 'Chandigarh',
+      fromCity: 'Delhi',
+      toCity: 'Chandigarh',
+      busName: 'NueGo (EV Grand Trunk Highway)',
+      duration: '4h 30m',
+      type: 'Smart Electric AC',
+      price: '₹499',
+      image: 'https://images.unsplash.com/photo-1587474260584-136574528ed5?w=400&auto=format&fit=crop&q=80',
+      badge: 'Top Green'
+    },
+    {
+      id: 'blr-mys-ev',
+      from: 'Bengaluru',
+      to: 'Mysore',
+      fromCity: 'Bengaluru',
+      toCity: 'Mysore',
+      busName: 'EV Green Express (Mysore Expressway)',
+      duration: '2h 30m',
+      type: 'Rapid Electric Line',
+      price: '₹280',
+      image: 'https://images.unsplash.com/photo-1596176530529-78163a4f7af2?w=400&auto=format&fit=crop&q=80',
+      badge: 'Expressway'
+    },
+    {
+      id: 'ind-bho-ev',
+      from: 'Indore',
+      to: 'Bhopal',
+      fromCity: 'Indore',
+      toCity: 'Bhopal',
+      busName: 'NueGo (Smart MP Electric Corridor)',
+      duration: '3h 30m',
+      type: '100% Electric AC',
+      price: '₹350',
+      image: 'https://images.unsplash.com/photo-1609766857041-ed402ea8069a?w=400&auto=format&fit=crop&q=80',
+      badge: 'Green Ride'
+    },
+    {
+      id: 'bom-pune-eshiv',
+      from: 'Mumbai',
+      to: 'Pune',
+      fromCity: 'Mumbai',
+      toCity: 'Pune',
+      busName: 'E-Shivneri (MSRTC Electric AC Volvo)',
+      duration: '3h 15m',
+      type: '100% Electric AC',
+      price: '₹380',
+      image: 'https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=400&auto=format&fit=crop&q=80',
+      badge: 'Zero Emission'
+    }
+  ],
+  popularIntercity: [
+    {
+      id: 'del-shimla-bus',
+      from: 'Delhi',
+      to: 'Shimla',
+      fromCity: 'Delhi',
+      toCity: 'Shimla',
+      busName: 'HRTC Himsuta (High-Deck Mountain Volvo)',
+      duration: '8h 45m',
+      type: 'Superfast Mountain AC',
+      price: '₹750',
+      image: 'https://images.unsplash.com/photo-1598091383021-15ddea10925d?w=400&auto=format&fit=crop&q=80',
+      badge: 'Hill Station'
+    },
+    {
+      id: 'blr-ooty-bus',
+      from: 'Bengaluru',
+      to: 'Ooty',
+      fromCity: 'Bengaluru',
+      toCity: 'Ooty',
+      busName: 'KSRTC Airavat (Club Class Luxury)',
+      duration: '7h 30m',
+      type: 'Premium Mountain Volvo',
+      price: '₹720',
+      image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&auto=format&fit=crop&q=80',
+      badge: 'Weekend Getaway'
+    },
+    {
+      id: 'jai-udaipur-bus',
+      from: 'Jaipur',
+      to: 'Udaipur',
+      fromCity: 'Jaipur',
+      toCity: 'Udaipur',
+      busName: 'RSRTC Gold Line (AC Sleeper / Seater)',
+      duration: '6h 30m',
+      type: 'Heritage Highway',
+      price: '₹480',
+      image: 'https://images.unsplash.com/photo-1477587458883-47145ed94245?w=400&auto=format&fit=crop&q=80',
+      badge: 'Heritage'
+    },
+    {
+      id: 'ccu-digha-bus',
+      from: 'Kolkata',
+      to: 'Digha',
+      fromCity: 'Kolkata',
+      toCity: 'Digha',
+      busName: 'SBSTC (AC Superfast Beach Express)',
+      duration: '4h 00m',
+      type: 'Express AC Seater',
+      price: '₹290',
+      image: 'https://images.unsplash.com/photo-1558431382-27e303142255?w=400&auto=format&fit=crop&q=80',
+      badge: 'Beach Express'
+    },
+    {
+      id: 'del-rsh-bus',
+      from: 'Delhi',
+      to: 'Rishikesh',
+      fromCity: 'Delhi',
+      toCity: 'Rishikesh',
+      busName: 'Zingbus (AC Sleeper / Seater 2+1)',
+      duration: '5h 15m',
+      type: 'Clean Lounge AC',
+      price: '₹499',
+      image: 'https://images.unsplash.com/photo-1561361066-4b95f190c681?w=400&auto=format&fit=crop&q=80',
+      badge: 'Yoga Capital'
+    },
+    {
+      id: 'pune-kop-bus',
+      from: 'Pune',
+      to: 'Kolhapur',
+      fromCity: 'Pune',
+      toCity: 'Kolhapur',
+      busName: 'MSRTC Shivshahi (Air-Conditioned)',
+      duration: '4h 30m',
+      type: 'State AC Network',
+      price: '₹390',
+      image: 'https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=400&auto=format&fit=crop&q=80',
+      badge: 'Highway AC'
+    },
+    {
+      id: 'hyd-vskp-bus',
+      from: 'Hyderabad',
+      to: 'Visakhapatnam',
+      fromCity: 'Hyderabad',
+      toCity: 'Visakhapatnam',
+      busName: 'Kaveri Travels (Multi-Axle AC Sleeper)',
+      duration: '11h 00m',
+      type: 'Full AC Sleeper',
+      price: '₹990',
+      image: 'https://images.unsplash.com/photo-1605649487212-47bdab064df7?w=400&auto=format&fit=crop&q=80',
+      badge: 'Overnight'
+    },
+    {
+      id: 'amd-udr-bus',
+      from: 'Ahmedabad',
+      to: 'Udaipur',
+      fromCity: 'Ahmedabad',
+      toCity: 'Udaipur',
+      busName: 'Shreenath Travels (Bharat Benz AC)',
+      duration: '4h 45m',
+      type: 'Interstate AC',
+      price: '₹410',
+      image: 'https://images.unsplash.com/photo-1609766857041-ed402ea8069a?w=400&auto=format&fit=crop&q=80',
+      badge: 'Daily'
+    }
+  ]
+};
+
+

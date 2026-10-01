@@ -4,6 +4,25 @@ This file logs meaningful agent tasks, architectural milestones, and fixes chron
 
 ---
 
+### Task: Popular Bus Operators & Trending Bus Routes Sections Below Travel Categories
+* **Date**: 2026-10-01
+* **Reason**: User requested:
+  1. A Popular Bus Operators section modeled after Popular Airlines placed directly below the Travel Categories section.
+  2. A Trending Bus Routes section placed below Popular Bus Operators and above Why Choose EazeTrip.
+* **Branch / PR**: `feature/popular-bus-operators-and-trending-bus-routes`.
+* **Files Affected**:
+  - `client/src/components/home/PopularBusOperators.jsx` (New component: Premier & Luxury Volvo + State RTC & Superfast tabs, custom SVG bus badges, ratings, and route counts)
+  - `client/src/components/home/TrendingBusRoutes.jsx` (New component: Volvo & AC Sleeper, Electric & Green Bus, Popular Intercity filter tabs, 4-column route cards with landmark images, duration, and prices)
+  - `client/src/data/siteData.js` (popularBusOperators and trendingBusRoutesGrid datasets)
+  - `client/src/pages/HomePage.jsx` (Integrated PopularBusOperators and TrendingBusRoutes below TravelCategoriesSection)
+  - `client/src/App.css` (Styles for popular bus operators, bus icon badges, bus routes grid, duration and pricing pills)
+  - `CHANGELOG.md`, `.agent-memory/CURRENT_STATE.md`, `.agent-memory/TASK_HISTORY.md`
+* **What Changed**:
+  - Added rich intercity bus operator showcase and 4-column trending bus routes grid below Travel Categories.
+* **Testing Performed**: 89 / 89 automated backend tests passing (`npm test`), 0 errors in Vite production build (`npm run build`), comprehensive multi-tab browser subagent inspection with screenshots.
+
+---
+
 ### Task: Integrated 4-Pillar Assurance Strip Inside Why Choose EazeTrip Section
 * **Date**: 2026-10-01
 * **Reason**: User requested:

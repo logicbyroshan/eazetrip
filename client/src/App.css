@@ -8028,6 +8028,342 @@ input[type="radio"]:focus-visible {
   }
 }
 
+/* ==========================================================================
+   POPULAR BUS OPERATORS SECTION
+   ========================================================================== */
+.popular-bus-block {
+  padding: 48px 0 20px 0;
+  background: #f8fafc;
+  border-top: 1px solid #f1f5f9;
+}
+
+.popular-bus-header-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.bus-tag-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f0fdf4;
+  color: #16a34a;
+  border: 1px solid #bbf7d0;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-bottom: 8px;
+}
+
+.popular-bus-title {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin: 0 0 4px 0;
+}
+
+.popular-bus-sub {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.bus-scope-tabs {
+  display: flex;
+  gap: 6px;
+  background: #e2e8f0;
+  padding: 4px;
+  border-radius: 10px;
+}
+
+.bus-tab-btn {
+  background: transparent;
+  border: none;
+  padding: 7px 18px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #64748b;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.bus-tab-btn.active {
+  background: #ffffff;
+  color: #16a34a;
+  box-shadow: 0 2px 6px rgba(22, 163, 74, 0.15);
+}
+
+.popular-bus-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px 24px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+.bus-grid-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 1100px) {
+  .bus-grid-row {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 680px) {
+  .bus-grid-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .bus-grid-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.bus-item-btn {
+  background: #f8fafc;
+  border: 1px solid #f1f5f9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 16px 14px;
+  border-radius: 14px;
+  transition: all 0.2s ease;
+}
+
+.bus-item-btn:hover {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.bus-icon-badge {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  border: 1px solid transparent;
+  display: grid;
+  place-items: center;
+  transition: transform 0.2s ease;
+}
+
+.bus-item-btn:hover .bus-icon-badge {
+  transform: scale(1.04);
+}
+
+.bus-text-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  width: 100%;
+}
+
+.bus-name-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.bus-name-text {
+  font-size: 0.88rem;
+  font-weight: 800;
+  letter-spacing: -0.2px;
+}
+
+.bus-rating-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  background: #f0fdf4;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+  border-radius: 4px;
+}
+
+.bus-tag-text {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #475569;
+  line-height: 1.2;
+}
+
+.bus-routes-text {
+  font-size: 0.7rem;
+  color: #94a3b8;
+  margin-top: 2px;
+}
+
+/* ==========================================================================
+   TRENDING BUS ROUTES SECTION
+   ========================================================================== */
+.trending-bus-routes-block {
+  padding: 20px 0 54px 0;
+  background: #f8fafc;
+}
+
+.routes-highlight-green {
+  color: #16a34a;
+}
+
+.bus-toggle-group .bus-btn {
+  border-color: #16a34a;
+  color: #16a34a;
+}
+
+.bus-toggle-group .bus-btn.active {
+  background: #16a34a;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(22, 163, 74, 0.3);
+}
+
+.bus-toggle-group .bus-btn:hover:not(.active) {
+  background: #f0fdf4;
+}
+
+.bus-routes-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 1100px) {
+  .bus-routes-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .bus-routes-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.bus-route-card {
+  position: relative;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+.bus-route-card:hover {
+  transform: translateY(-2px);
+  border-color: #16a34a;
+  box-shadow: 0 6px 18px rgba(22, 163, 74, 0.12);
+}
+
+.bus-route-card .route-thumb-box {
+  position: relative;
+  width: 66px;
+  height: 54px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.bus-route-thumb-badge {
+  position: absolute;
+  bottom: 3px;
+  left: 3px;
+  right: 3px;
+  background: rgba(15, 23, 42, 0.78);
+  backdrop-filter: blur(4px);
+  color: #ffffff;
+  font-size: 0.58rem;
+  font-weight: 700;
+  padding: 1px 4px;
+  border-radius: 3px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bus-route-details-box {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  min-width: 0;
+}
+
+.bus-route-cities-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.bus-arrow {
+  color: #16a34a;
+}
+
+.bus-route-card:hover .bus-arrow {
+  transform: scale(1.1);
+}
+
+.bus-route-name-text {
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bus-route-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2px;
+}
+
+.bus-duration-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.bus-price-tag {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #0f172a;
+  background: #f8fafc;
+  padding: 1px 6px;
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+}
+
 /* Enhanced Bank Offer Card Dimensions (Screenshot 2) */
 .bank-offer-card {
   flex: 0 0 350px !important;

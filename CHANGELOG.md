@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.6.0] - 2026-10-01
+
+### Popular Bus Operators & Trending Bus Routes Sections Below Travel Categories
+
+#### Popular Bus Operators Section (`client/src/components/home/PopularBusOperators.jsx`, `client/src/data/siteData.js`, `client/src/App.css`)
+- **Carrier Strip Below Categories**: Added a dedicated intercity bus operator showcase modeled after Popular Airlines with two interactive scope tabs:
+  - `Premier & Luxury Volvo`: *IntrCity SmartBus* (`4.9 ★`, Primo Certified), *Zingbus Plus* (`4.8 ★`, Live GPS), *NueGo Electric* (`4.8 ★`, 100% Electric EV), *VRL Travels* (`4.7 ★`, Super Luxury Multi-Axle), and *SRS Travels* (`4.6 ★`, Top Rated Scania).
+  - `State RTC & Superfast`: *KSRTC Airavat* (`4.9 ★`, State Premier), *Orange Tours & Travels* (`4.8 ★`, On-Time Guaranteed), *UPSRTC Janrath* (`4.5 ★`, Govt. Certified), *MSRTC Shivneri* (`4.7 ★`, Scania AC), and *HRTC Himsuta* (`4.8 ★`, Hill Master Volvo).
+- **1-Click Search Routing**: Direct navigation to `/bus-booking?operator=...` upon clicking any operator badge.
+
+#### Trending Bus Routes Section (`client/src/components/home/TrendingBusRoutes.jsx`, `client/src/data/siteData.js`, `client/src/pages/HomePage.jsx`, `client/src/App.css`)
+- **Positioning**: Positioned directly below Popular Bus Operators and above Why Choose EazeTrip.
+- **Scope Filters**:
+  - `VOLVO & AC SLEEPER`: High-demand intercity sleeper routes (*Bengaluru ⇄ Hyderabad*, *Delhi ⇄ Manali*, *Mumbai ⇄ Goa*, *Pune ⇄ Mumbai*, *Chennai ⇄ Bengaluru*, *Delhi ⇄ Jaipur*, etc.).
+  - `ELECTRIC & GREEN BUS`: Zero-emission EV corridors (*Delhi ⇄ Agra*, *Bengaluru ⇄ Tirupati*, *Chennai ⇄ Pondicherry*, *Hyderabad ⇄ Warangal*, *Delhi ⇄ Chandigarh*, *Bengaluru ⇄ Mysore*, etc.).
+  - `POPULAR INTERCITY`: Classic superfast bus connections (*Delhi ⇄ Shimla*, *Bengaluru ⇄ Ooty*, *Jaipur ⇄ Udaipur*, *Kolkata ⇄ Digha*, *Delhi ⇄ Rishikesh*, *Pune ⇄ Kolhapur*, etc.).
+- **Rich 4-Column Grid**: Features landmark photos, bus model/operator names, duration pills, and starting price badges.
+
+---
+
 ## [2.5.9] - 2026-10-01
 
 ### Integrated 4-Pillar Assurance Strip Inside Why Choose EazeTrip Section

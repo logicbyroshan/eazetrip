@@ -1,11 +1,11 @@
 # Current Project State: EazeTrip
 
 ## 1. Release Baseline & Status
-* **Status**: Production Ready / 4-Pillar Assurance Card Integrated Inside Why Choose Us / 100% Passing Tests
-* **Version**: `2.5.9`
+* **Status**: Production Ready / Popular Bus Operators Strip / Trending Bus Routes Grid / Integrated Why Choose Us Assurance Strip / 100% Passing Tests
+* **Version**: `2.6.0`
 * **Test Suite**: 89 / 89 automated tests passing (`npm test`).
 * **Client Build**: Clean Vite production build (`npm run build`).
-* **Active Branch**: `feature/move-assurance-strip-inside-why-choose`
+* **Active Branch**: `feature/popular-bus-operators-and-trending-bus-routes`
 
 ---
 

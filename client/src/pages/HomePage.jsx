@@ -12,6 +12,8 @@ import TrendingDestinations from '../components/home/TrendingDestinations';
 import PopularTrains from '../components/home/PopularTrains';
 import TrendingTrainRoutes from '../components/home/TrendingTrainRoutes';
 import TravelCategoriesSection from '../components/home/TravelCategoriesSection';
+import PopularBusOperators from '../components/home/PopularBusOperators';
+import TrendingBusRoutes from '../components/home/TrendingBusRoutes';
 import ReviewsSection from '../components/home/ReviewsSection';
 import { useAuth } from '../context/AuthContext';
 import { HERO_BACKDROPS } from '../data/siteData';
@@ -186,6 +188,12 @@ export default function HomePage() {
 
       {/* Travel Categories 5-Card Staggered Wave Section */}
       <TravelCategoriesSection />
+
+      {/* Popular Bus Operators Strip with Premier & State RTC Categories */}
+      <PopularBusOperators />
+
+      {/* Trending Bus Routes Grid (Volvo, Electric EV, Intercity) */}
+      <TrendingBusRoutes />
 
       {/* Why Choose Us Section with 3 Feature Cards & Integrated 4-Pillar Assurance Strip */}
       <section className="section-block why-choose-section">
