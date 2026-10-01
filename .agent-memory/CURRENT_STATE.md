@@ -1,11 +1,11 @@
 # Current Project State: EazeTrip
 
 ## 1. Release Baseline & Status
-* **Status**: Production Ready / 5-Card Trending Destinations / Popular Trains Locomotive Strip / Trending Train Routes Grid / 100% Passing Tests
-* **Version**: `2.5.8`
+* **Status**: Production Ready / 4-Pillar Assurance Card Integrated Inside Why Choose Us / 100% Passing Tests
+* **Version**: `2.5.9`
 * **Test Suite**: 89 / 89 automated tests passing (`npm test`).
 * **Client Build**: Clean Vite production build (`npm run build`).
-* **Active Branch**: `feature/trending-destinations-5-and-popular-trains-routes`
+* **Active Branch**: `feature/move-assurance-strip-inside-why-choose`
 
 ---
 

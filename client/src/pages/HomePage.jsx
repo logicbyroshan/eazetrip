@@ -187,9 +187,40 @@ export default function HomePage() {
       {/* Travel Categories 5-Card Staggered Wave Section */}
       <TravelCategoriesSection />
 
-      {/* Modern Assurance Strip (Moved below categories with nice dividing lines and luxury icons) */}
-      <section className="section-block assurance-strip-section">
+      {/* Why Choose Us Section with 3 Feature Cards & Integrated 4-Pillar Assurance Strip */}
+      <section className="section-block why-choose-section">
         <div className="container">
+          <div className="section-header center">
+            <span className="section-tag">WHY US</span>
+            <h2>{firstName ? `Why ${firstName} & 500,000+ Travellers Choose EazeTrip` : 'Why Choose EazeTrip'}</h2>
+            <p>{firstName ? `Exclusive discounts, 0 convenience fee cancellation shield, and dedicated 24/7 concierge for ${firstName}.` : 'We combine cutting-edge travel technology with exceptional customer care'}</p>
+          </div>
+
+          <div className="features-grid">
+            <div className="feature-card">
+              <div className="feature-badge">✓</div>
+              <h3>Best Price Guarantee</h3>
+              <p>
+                Transparent pricing with zero hidden charges. Get access to exclusive discounts and special fares.
+              </p>
+            </div>
+            <div className="feature-card">
+              <div className="feature-badge">⚡</div>
+              <h3>Fast & Easy Booking</h3>
+              <p>
+                Intuitive search, smart filters, real-time seat selection, and instant e-ticket issuance.
+              </p>
+            </div>
+            <div className="feature-card">
+              <div className="feature-badge">🛡️</div>
+              <h3>100% Safe & Secure</h3>
+              <p>
+                Encrypted payment gateways supporting UPI, Cards, Net Banking, and zero cancellation convenience fee.
+              </p>
+            </div>
+          </div>
+
+          {/* Integrated 4-Pillar Assurance Card Strip */}
           <div className="assurance-banner-modern">
             <div className="assurance-item-modern">
               <div className="assurance-icon-box icon-blue">
@@ -229,41 +260,6 @@ export default function HomePage() {
                 <span className="assurance-title">Instant confirmation & 24/7 care</span>
                 <p className="assurance-desc">E-Tickets on SMS & WhatsApp with dedicated concierge support.</p>
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Why Choose Us Section */}
-      <section className="section-block why-choose-section">
-        <div className="container">
-          <div className="section-header center">
-            <span className="section-tag">WHY US</span>
-            <h2>{firstName ? `Why ${firstName} & 500,000+ Travellers Choose EazeTrip` : 'Why Choose EazeTrip'}</h2>
-            <p>{firstName ? `Exclusive discounts, 0 convenience fee cancellation shield, and dedicated 24/7 concierge for ${firstName}.` : 'We combine cutting-edge travel technology with exceptional customer care'}</p>
-          </div>
-
-          <div className="features-grid">
-            <div className="feature-card">
-              <div className="feature-badge">✓</div>
-              <h3>Best Price Guarantee</h3>
-              <p>
-                Transparent pricing with zero hidden charges. Get access to exclusive discounts and special fares.
-              </p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-badge">⚡</div>
-              <h3>Fast & Easy Booking</h3>
-              <p>
-                Intuitive search, smart filters, real-time seat selection, and instant e-ticket issuance.
-              </p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-badge">🛡️</div>
-              <h3>100% Safe & Secure</h3>
-              <p>
-                Encrypted payment gateways supporting UPI, Cards, Net Banking, and zero cancellation convenience fee.
-              </p>
             </div>
           </div>
         </div>

@@ -640,6 +640,7 @@
   border-radius: 20px;
   box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
   overflow: hidden;
+  margin-top: 32px;
 }
 
 .assurance-item-modern {
