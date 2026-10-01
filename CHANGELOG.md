@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.6.8] - 2026-10-01
+
+### Backend Gaps Resolution & Full-Stack Hardening (98/98 Tests Passing)
+
+#### Backend Enhancements (`server/index.js`, `server/data/db.js`, `server/services/supportService.js`, `tests/server.test.js`)
+- **Profile & Me Endpoints (`GET /api/auth/profile`, `GET /api/auth/me`)**: Added session profile retrieval endpoints supporting `userId`, `email`, and Bearer token resolution with fallback safety.
+- **Booking Lifecycle CRUD (`PUT /api/bookings/:id`, `DELETE /api/bookings/:id`)**: Implemented modification and deletion endpoints with database persistence in SQLite WAL.
+- **B2B Partner & Corporate API (`POST /api/partner/register`, `POST /api/partner/login`)**: Added full-stack endpoints for travel agent onboarding and corporate session authentication.
+- **Saved Co-Travelers API (`GET`, `POST`, `DELETE /api/users/:id/travellers`)**: Added persistent co-traveler profile storage and deletion in SQLite database.
+- **Support Ticket Status Workflow (`PATCH /api/support/tickets/:id/status`)**: Added concierge agent assignment and status progression (`'Open'`, `'In Progress'`, `'Resolved'`, `'Closed'`).
+- **Test Suite Expansion**: Added 5 new automated tests (tests 94-98), achieving 98/98 tests passing cleanly.
+
+#### Frontend Client Integration (`client/src/services/api.js`, `client/src/pages/PartnerPage.jsx`)
+- **Client API Methods**: Added `getProfile`, `updateBooking`, `deleteBooking`, `partnerRegister`, `partnerLogin`, `getSavedTravellers`, `saveTraveller`, `deleteTraveller`, and `updateTicketStatus`.
+- **Active Partner Portal**: Wired `api.partnerRegister` and `api.partnerLogin` into `PartnerPage.jsx` with real-time feedback and state management.
+
+---
+
 ## [2.6.7] - 2026-10-01
 
 ### Full-Stack Deep Dive Audit, Centralized Promo Validation, Verified Reviews & Test Expansion (93/93 Passing)

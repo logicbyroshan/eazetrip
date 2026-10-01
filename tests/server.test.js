@@ -1480,6 +1480,142 @@ test('93. POST /api/payment/create-order creates order with correct paise calcul
   assert.strictEqual(data.currency, 'INR');
 });
 
+test('94. GET /api/auth/profile and GET /api/auth/me return user session profile', async () => {
+  const { status, data } = await requestJson('/api/auth/profile?userId=USR-1');
+  assert.strictEqual(status, 200);
+  assert.strictEqual(data.success, true);
+  assert.strictEqual(data.data.id, 'USR-1');
+
+  const meRes = await requestJson('/api/auth/me');
+  assert.strictEqual(meRes.status, 200);
+  assert.strictEqual(meRes.data.success, true);
+  assert.ok(meRes.data.data.name);
+});
+
+test('95. PUT /api/bookings/:id updates booking and DELETE /api/bookings/:id deletes booking', async () => {
+  // Create a booking first
+  const createRes = await requestJson('/api/bookings', {
+    method: 'POST',
+    body: {
+      type: 'flight',
+      title: 'Update & Delete Test Flight',
+      date: '2026-10-20',
+      totalAmount: 5200,
+      passengers: [{ name: 'Test Passenger Update' }]
+    }
+  });
+  assert.strictEqual(createRes.status, 201);
+  const bookingId = createRes.data.data.id;
+
+  // Update booking
+  const updateRes = await requestJson(`/api/bookings/${bookingId}`, {
+    method: 'PUT',
+    body: {
+      specialRequests: 'Window seat preferred, Jain Meal'
+    }
+  });
+  assert.strictEqual(updateRes.status, 200);
+  assert.strictEqual(updateRes.data.success, true);
+  assert.strictEqual(updateRes.data.data.specialRequests, 'Window seat preferred, Jain Meal');
+
+  // Delete booking
+  const deleteRes = await requestJson(`/api/bookings/${bookingId}`, {
+    method: 'DELETE'
+  });
+  assert.strictEqual(deleteRes.status, 200);
+  assert.strictEqual(deleteRes.data.success, true);
+
+  // Verify it is gone
+  const fetchRes = await requestJson(`/api/bookings/${bookingId}`);
+  assert.strictEqual(fetchRes.status, 404);
+});
+
+test('96. PATCH /api/support/tickets/:id/status updates ticket status and concierge assignment', async () => {
+  // Create ticket
+  const createRes = await requestJson('/api/support/tickets', {
+    method: 'POST',
+    body: {
+      userId: 'USR-1',
+      category: 'Luggage Inquiry',
+      description: 'Need to add 15kg extra baggage to flight',
+      name: 'Priyansh Sharma',
+      email: 'priyansh.sharma@gmail.com'
+    }
+  });
+  assert.strictEqual(createRes.status, 201);
+  const ticketId = createRes.data.data.id;
+
+  // Update status
+  const patchRes = await requestJson(`/api/support/tickets/${ticketId}/status`, {
+    method: 'PATCH',
+    body: {
+      status: 'Resolved',
+      assignedTo: 'Lead Specialist Vikram'
+    }
+  });
+  assert.strictEqual(patchRes.status, 200);
+  assert.strictEqual(patchRes.data.success, true);
+  assert.strictEqual(patchRes.data.data.status, 'Resolved');
+  assert.strictEqual(patchRes.data.data.assignedTo, 'Lead Specialist Vikram');
+});
+
+test('97. POST /api/partner/register and POST /api/partner/login authenticate B2B travel partners', async () => {
+  const regRes = await requestJson('/api/partner/register', {
+    method: 'POST',
+    body: {
+      agencyName: 'Apex Global Holidays',
+      contactPerson: 'Karan Mehra',
+      email: 'karan@apexholidays.com',
+      phone: '9822019283',
+      gstNumber: '27AAAAA0000A1Z5'
+    }
+  });
+  assert.strictEqual(regRes.status, 201);
+  assert.strictEqual(regRes.data.success, true);
+  assert.strictEqual(regRes.data.data.tier, 'B2B Certified Partner');
+
+  const loginRes = await requestJson('/api/partner/login', {
+    method: 'POST',
+    body: {
+      email: 'karan@apexholidays.com',
+      password: 'partnersecret'
+    }
+  });
+  assert.strictEqual(loginRes.status, 200);
+  assert.strictEqual(loginRes.data.success, true);
+  assert.strictEqual(loginRes.data.data.email, 'karan@apexholidays.com');
+});
+
+test('98. Co-Travelers API (GET, POST, DELETE) persists and manages saved passenger profiles', async () => {
+  // 1. Add co-traveler
+  const addRes = await requestJson('/api/users/USR-1/travellers', {
+    method: 'POST',
+    body: {
+      name: 'Aarav Sharma',
+      gender: 'Male',
+      dob: '2015-06-12',
+      relation: 'Son'
+    }
+  });
+  assert.strictEqual(addRes.status, 201);
+  assert.strictEqual(addRes.data.success, true);
+  const travellerId = addRes.data.data.id;
+
+  // 2. Query co-travelers
+  const getRes = await requestJson('/api/users/USR-1/travellers');
+  assert.strictEqual(getRes.status, 200);
+  assert.strictEqual(getRes.data.success, true);
+  assert.ok(getRes.data.data.some((t) => t.name === 'Aarav Sharma'));
+
+  // 3. Delete co-traveler
+  const delRes = await requestJson(`/api/users/USR-1/travellers/${travellerId}`, {
+    method: 'DELETE'
+  });
+  assert.strictEqual(delRes.status, 200);
+  assert.strictEqual(delRes.data.success, true);
+});
+
+
 
 
 

@@ -242,6 +242,20 @@ function sendDirectMail(payload) {
   return mailRecord;
 }
 
+/**
+ * Updates support ticket status and concierge assignment
+ */
+function updateTicketStatus(ticketId, status, assignedTo) {
+  const ticket = getTicketById(ticketId);
+  if (!ticket) return null;
+
+  if (status) ticket.status = status;
+  if (assignedTo) ticket.assignedTo = assignedTo;
+  ticket.updatedAt = new Date().toISOString();
+
+  return ticket;
+}
+
 module.exports = {
   supportTickets,
   callbackQueue,
@@ -251,5 +265,6 @@ module.exports = {
   getTicketById,
   addMessage,
   createCallback,
-  sendDirectMail
+  sendDirectMail,
+  updateTicketStatus
 };

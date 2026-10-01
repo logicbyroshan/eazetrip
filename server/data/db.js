@@ -430,6 +430,20 @@ class PersistentDB {
     return updated;
   }
 
+  deleteBooking(idOrPnr) {
+    const existing = this.getBookingByIdOrPnr(idOrPnr);
+    if (!existing) return false;
+
+    if (!this.isNativeSqlite) {
+      this.fallbackStore.bookings = this.fallbackStore.bookings.filter((b) => b.id !== existing.id && b.pnr !== existing.pnr);
+      this.saveFallback();
+      return true;
+    }
+
+    this.db.prepare('DELETE FROM bookings WHERE id = ? OR pnr = ?').run(existing.id, existing.pnr);
+    return true;
+  }
+
   // ==========================================
   // USERS CRUD
   // ==========================================
@@ -508,6 +522,40 @@ class PersistentDB {
     );
 
     return merged;
+  }
+
+  getSavedTravellers(userId) {
+    const user = this.findUserById(userId);
+    if (!user) return [];
+    return Array.isArray(user.savedTravellers) ? user.savedTravellers : [];
+  }
+
+  saveTraveller(userId, traveller) {
+    const user = this.findUserById(userId);
+    if (!user) return null;
+
+    const list = Array.isArray(user.savedTravellers) ? [...user.savedTravellers] : [];
+    const travellerId = traveller.id || `TRV-${Date.now()}-${Math.floor(100 + Math.random() * 900)}`;
+    const newTraveller = { ...traveller, id: travellerId };
+
+    const idx = list.findIndex((t) => t.id === travellerId);
+    if (idx !== -1) {
+      list[idx] = newTraveller;
+    } else {
+      list.push(newTraveller);
+    }
+
+    this.upsertUser({ ...user, savedTravellers: list });
+    return newTraveller;
+  }
+
+  deleteTraveller(userId, travellerId) {
+    const user = this.findUserById(userId);
+    if (!user) return false;
+
+    const list = Array.isArray(user.savedTravellers) ? user.savedTravellers.filter((t) => t.id !== travellerId) : [];
+    this.upsertUser({ ...user, savedTravellers: list });
+    return true;
   }
 
   // ==========================================
