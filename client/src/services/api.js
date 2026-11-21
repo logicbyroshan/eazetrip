@@ -9,7 +9,14 @@ import { mockTrains } from '../data/trainData';
 import { mockHolidayPackages } from '../data/holidayData';
 import { siteOffers, siteFaqs } from '../data/siteData';
 
-const BASE_URL = import.meta.env.VITE_API_URL || '';
+const rawApiUrl = import.meta.env.VITE_API_URL || '';
+const isLocalOrigin =
+  typeof window !== 'undefined' &&
+  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+const BASE_URL =
+  !isLocalOrigin && /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/i.test(rawApiUrl)
+    ? ''
+    : rawApiUrl;
 const DEFAULT_TIMEOUT_MS = 10000;
 
 async function request(endpoint, options = {}) {
